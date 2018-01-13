@@ -35,7 +35,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>MaterialForms.Demo.App</StartupObject>
+    <StartupObject>Forge.Forms.Demo.App</StartupObject>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="AttributeBuilder.Standard, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
