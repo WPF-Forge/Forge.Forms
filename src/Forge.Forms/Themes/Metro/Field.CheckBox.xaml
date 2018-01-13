@@ -1,0 +1,50 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:defaults="clr-namespace:Forge.Forms.Components.Fields.Defaults"
+    xmlns:fields="clr-namespace:Forge.Forms.Components.Fields">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="pack://application:,,,/MaterialForms;component/Themes/Metro/IconStyles.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.CheckBox.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+    <ControlTemplate x:Key="MetroCheckBoxPresenterTemplate" TargetType="{x:Type defaults:CheckBoxPresenter}">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <materialDesign:PackIcon
+                Grid.Column="0"
+                Width="24"
+                Height="24"
+                Margin="0,0,8,0"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Kind="{fields:FormBinding Icon}"
+                Style="{StaticResource MetroColoredIconStyle}"
+                Visibility="{fields:FormBinding IconVisibility}" />
+            <CheckBox
+                Name="ValueHolderControl"
+                Grid.Column="1"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                VerticalContentAlignment="Center"
+                Content="{fields:FormBinding Name}"
+                FontSize="{TemplateBinding FontSize}"
+                IsChecked="{fields:FormBinding Value}"
+                Style="{StaticResource MetroCheckBox}"
+                ToolTip="{fields:FormBinding ToolTip}" />
+        </Grid>
+    </ControlTemplate>
+
+    <Style x:Key="MetroCheckBoxPresenterStyle" TargetType="defaults:CheckBoxPresenter">
+        <Setter Property="Margin" Value="8" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Template" Value="{StaticResource MetroCheckBoxPresenterTemplate}" />
+    </Style>
+
+</ResourceDictionary>

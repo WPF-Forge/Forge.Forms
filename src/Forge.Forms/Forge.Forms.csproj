@@ -1,0 +1,375 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{4E0C323D-5AFC-4105-815F-587346AA5321}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Forge.Forms</RootNamespace>
+    <AssemblyName>Forge.Forms</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="AttributeBuilder.Standard" Version="1.3.27" />
+    <PackageReference Include="Bindables.Fody" Version="0.4.0" />
+    <PackageReference Include="FastMember" Version="1.1.0" />
+    <PackageReference Include="Fody" Version="2.3.14" />
+    <PackageReference Include="Humanizer.Core" Version="2.2.0" />
+    <PackageReference Include="MahApps.Metro" Version="1.5.0" />
+    <PackageReference Include="Material.Application" Version="1.0.0-CI-20171226-172359" />
+    <PackageReference Include="MaterialDesignColors" Version="1.1.3" />
+    <PackageReference Include="MaterialDesignThemes">
+      <Version>2.3.1.953</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.DotNet.PlatformAbstractions" Version="2.0.4" />
+    <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="2.0.4" />
+    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
+    <PackageReference Include="Ninject" Version="3.3.4" />
+    <PackageReference Include="Proxier" Version="1.4.4" />
+    <PackageReference Include="System.Diagnostics.Tools" Version="4.3.0" />
+    <PackageReference Include="System.IO" Version="4.3.0" />
+    <PackageReference Include="System.Linq" Version="4.3.0" />
+    <PackageReference Include="System.Linq.Expressions" Version="4.3.0" />
+    <PackageReference Include="System.Reflection" Version="4.3.0" />
+    <PackageReference Include="System.Reflection.Emit" Version="4.3.0" />
+    <PackageReference Include="System.Reflection.Emit.ILGeneration" Version="4.3.0" />
+    <PackageReference Include="System.Reflection.Primitives" Version="4.3.0" />
+    <PackageReference Include="System.Resources.ResourceManager" Version="4.3.0" />
+    <PackageReference Include="System.Runtime" Version="4.3.0" />
+    <PackageReference Include="System.Runtime.Loader" Version="4.3.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Bindables, Version=0.4.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\..\packages\Bindables.Fody.0.4.0\lib\net40\Bindables.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Windows" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ActionEventArgs.cs" />
+    <Compile Include="Annotations\BindingAttribute.cs" />
+    <Compile Include="Annotations\CardAttribute.cs" />
+    <Compile Include="Annotations\Content\ActionAttribute.cs" />
+    <Compile Include="Annotations\Content\BreakAttribute.cs" />
+    <Compile Include="Annotations\Content\DividerAttribute.cs" />
+    <Compile Include="Annotations\Content\FormContentAttribute.cs" />
+    <Compile Include="Annotations\Content\TextElementAttribute.cs" />
+    <Compile Include="Annotations\DefaultFields.cs" />
+    <Compile Include="Annotations\Display\PasswordAttribute.cs" />
+    <Compile Include="Annotations\Display\SliderAttribute.cs" />
+    <Compile Include="Annotations\Display\ToggleAttribute.cs" />
+    <Compile Include="Annotations\EnumDisplayAttribute.cs" />
+    <Compile Include="Annotations\FieldAttribute.cs" />
+    <Compile Include="Annotations\FieldIgnoreAttribute.cs" />
+    <Compile Include="Annotations\FormAttribute.cs" />
+    <Compile Include="Annotations\Must.cs" />
+    <Compile Include="Annotations\ReplaceAttribute.cs" />
+    <Compile Include="Annotations\ResourceAttribute.cs" />
+    <Compile Include="Annotations\SelectFromAttribute.cs" />
+    <Compile Include="Annotations\SelectionType.cs" />
+    <Compile Include="Annotations\ValidationAction.cs" />
+    <Compile Include="Annotations\ValueAttribute.cs" />
+    <Compile Include="AttachedProperties\PasswordBoxHelper.cs" />
+    <Compile Include="ColorAssist.cs" />
+    <Compile Include="Components\Fields\BindingProvider.cs" />
+    <Compile Include="Components\Fields\ContentElement.cs" />
+    <Compile Include="Components\Fields\DataFormField.cs" />
+    <Compile Include="Components\Fields\Defaults\ActionAlignerElement.cs" />
+    <Compile Include="Components\Fields\Defaults\ActionElement.cs" />
+    <Compile Include="Components\Fields\Defaults\BooleanField.cs" />
+    <Compile Include="Components\Fields\Defaults\BreakElement.cs" />
+    <Compile Include="Components\Fields\Defaults\CardElement.cs" />
+    <Compile Include="Components\Fields\Defaults\ConvertedField.cs" />
+    <Compile Include="Components\Fields\Defaults\DateField.cs" />
+    <Compile Include="Components\Fields\Defaults\DividerElement.cs" />
+    <Compile Include="Components\Fields\Defaults\HeadingElement.cs" />
+    <Compile Include="Components\Fields\Defaults\SelectionField.cs" />
+    <Compile Include="Components\Fields\Defaults\SliderField.cs" />
+    <Compile Include="Components\Fields\Defaults\StringField.cs" />
+    <Compile Include="Components\Fields\Defaults\TextElement.cs" />
+    <Compile Include="Components\Fields\Defaults\TitleElement.cs" />
+    <Compile Include="Components\Fields\FormBindingExtension.cs" />
+    <Compile Include="Components\Fields\FormDefinition.cs" />
+    <Compile Include="Components\Fields\FormElement.cs" />
+    <Compile Include="Components\Fields\FormField.cs" />
+    <Compile Include="Components\Fields\FormRow.cs" />
+    <Compile Include="Components\Fields\ReplacementPipe.cs" />
+    <Compile Include="Components\Fields\StringTypeConverter.cs" />
+    <Compile Include="Components\Fields\ValueBindingProvider.cs" />
+    <Compile Include="Components\LoadingButton.cs" />
+    <Compile Include="Controls\ActionPanel.cs" />
+    <Compile Include="Controls\DynamicForm.cs" />
+    <Compile Include="Controls\MaterialDialog.cs" />
+    <Compile Include="Controls\SelectTextOnFocus.cs" />
+    <Compile Include="Controls\TextProperties.cs" />
+    <Compile Include="FormBuilding\CustomCulture.cs" />
+    <Compile Include="FormBuilding\Defaults\Initializers\BindingInitializer.cs" />
+    <Compile Include="FormBuilding\Defaults\Initializers\FieldInitializer.cs" />
+    <Compile Include="FormBuilding\Defaults\Initializers\ValidatorInitializer.cs" />
+    <Compile Include="FormBuilding\Defaults\Primitive.cs" />
+    <Compile Include="FormBuilding\Defaults\Properties\SelectFromBuilder.cs" />
+    <Compile Include="FormBuilding\Defaults\Properties\SliderBuilder.cs" />
+    <Compile Include="FormBuilding\Defaults\Types\DefaultTypeBuilders.cs" />
+    <Compile Include="FormBuilding\Defaults\Types\TypeBuilder.cs" />
+    <Compile Include="FormBuilding\Deserializers.cs" />
+    <Compile Include="FormBuilding\DynamicProperty.cs" />
+    <Compile Include="FormBuilding\FormBuilder.cs" />
+    <Compile Include="FormBuilding\PropertyInfoWrapper.cs" />
+    <Compile Include="FormBuilding\Utilities.cs" />
+    <Compile Include="FormBuilding\ValidatorProvider.cs" />
+    <Compile Include="Forms\ActionEventArgs.cs" />
+    <Compile Include="Forms\Alert.cs" />
+    <Compile Include="Forms\Base\DialogBase.cs" />
+    <Compile Include="Forms\Base\FormBase.cs" />
+    <Compile Include="Forms\Confirm.cs" />
+    <Compile Include="Forms\Prompt.cs" />
+    <Compile Include="Interfaces\IActionHandler.cs" />
+    <Compile Include="Interfaces\IBindingProvider.cs" />
+    <Compile Include="Interfaces\IDataBindingProvider.cs" />
+    <Compile Include="Interfaces\IDynamicForm.cs" />
+    <Compile Include="Interfaces\IFieldBuilder.cs" />
+    <Compile Include="Interfaces\IFieldInitializer.cs" />
+    <Compile Include="Interfaces\IFormDefinition.cs" />
+    <Compile Include="Interfaces\IFormProperty.cs" />
+    <Compile Include="Interfaces\IProxy.cs" />
+    <Compile Include="Interfaces\IResourceContext.cs" />
+    <Compile Include="Interfaces\IValueProvider.cs" />
+    <Compile Include="Mappers\MaterialMapper.cs" />
+    <Compile Include="ModelState.cs" />
+    <Compile Include="Utils\BindingOptions.cs" />
+    <Compile Include="Utils\BindingProxy.cs" />
+    <Compile Include="Utils\BoolProxy.cs" />
+    <Compile Include="Utils\BoundExpression.cs" />
+    <Compile Include="Utils\BoundValue.cs" />
+    <Compile Include="Utils\CoercedValueProvider.cs" />
+    <Compile Include="Utils\ContextPropertyBinding.cs" />
+    <Compile Include="Utils\ConvertedDataBinding.cs" />
+    <Compile Include="Utils\ConvertedDirectBinding.cs" />
+    <Compile Include="Utils\DataBinding.cs" />
+    <Compile Include="Utils\DeferredProxyResource.cs" />
+    <Compile Include="Utils\DirectBinding.cs" />
+    <Compile Include="Utils\DynamicResource.cs" />
+    <Compile Include="Utils\EnumerableStringValueProvider.cs" />
+    <Compile Include="Utils\EnumerableValueProvider.cs" />
+    <Compile Include="Utils\FormResourceContext.cs" />
+    <Compile Include="Utils\LiteralValue.cs" />
+    <Compile Include="Utils\PropertyBinding.cs" />
+    <Compile Include="Utils\ProxyResource.cs" />
+    <Compile Include="Utils\Resource.cs" />
+    <Compile Include="Utils\StaticResource.cs" />
+    <Compile Include="Utils\StringProxy.cs" />
+    <Compile Include="Utils\ValueConverters\AsBoolConverter.cs" />
+    <Compile Include="Utils\ValueConverters\BoolOrVisibilityConverter.cs" />
+    <Compile Include="Utils\ValueConverters\ConverterWrapper.cs" />
+    <Compile Include="Utils\ValueConverters\IsEmptyConverter.cs" />
+    <Compile Include="Utils\ValueConverters\IsNotEmptyConverter.cs" />
+    <Compile Include="Utils\ValueConverters\IsNotNullConverter.cs" />
+    <Compile Include="Utils\ValueConverters\IsNullConverter.cs" />
+    <Compile Include="Utils\ValueConverters\LengthValueConverter.cs" />
+    <Compile Include="Utils\ValueConverters\NegateConverter.cs" />
+    <Compile Include="Utils\ValueConverters\ToLowerConverter.cs" />
+    <Compile Include="Utils\ValueConverters\ToStringConverter.cs" />
+    <Compile Include="Utils\ValueConverters\ToUpperConverter.cs" />
+    <Compile Include="Utils\ValueConverters\VisibilityConverter.cs" />
+    <Compile Include="Validation\ComparisonValidator.cs" />
+    <Compile Include="Validation\ConversionValidator.cs" />
+    <Compile Include="Validation\EmptyValidator.cs" />
+    <Compile Include="Validation\EqualsValidator.cs" />
+    <Compile Include="Validation\ExistsInValidator.cs" />
+    <Compile Include="Validation\FalseValidator.cs" />
+    <Compile Include="Validation\FieldValidator.cs" />
+    <Compile Include="Validation\GreaterThanEqualValidator.cs" />
+    <Compile Include="Validation\GreaterThanValidator.cs" />
+    <Compile Include="Validation\IErrorStringProvider.cs" />
+    <Compile Include="Validation\IValidatorProvider.cs" />
+    <Compile Include="Validation\LessThanEqualValidator.cs" />
+    <Compile Include="Validation\LessThanValidator.cs" />
+    <Compile Include="Validation\MatchPatternValidator.cs" />
+    <Compile Include="Validation\MethodInvocationValidator.cs" />
+    <Compile Include="Validation\NotEmptyValidator.cs" />
+    <Compile Include="Validation\NotEqualsValidator.cs" />
+    <Compile Include="Validation\NotExistsInValidator.cs" />
+    <Compile Include="Validation\NotMatchPatternValidator.cs" />
+    <Compile Include="Validation\NotNullValidator.cs" />
+    <Compile Include="Validation\NullValidator.cs" />
+    <Compile Include="Validation\TrueValidator.cs" />
+    <Compile Include="Validation\ValidationContext.cs" />
+    <Compile Include="Validation\ValidationPipe.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="FodyWeavers.xml" />
+    <None Include="MaterialForms.nuspec" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Resources\DialogViewResources.xaml">
+      <SubType>Designer</SubType>
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
+    <Page Include="Resources\Material.xaml">
+      <SubType>Designer</SubType>
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
+    <Page Include="Resources\TextStyles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
+    <Page Include="Themes\Elements\Text.xaml">
+      <SubType>Designer</SubType>
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
+    <Page Include="Themes\Generic.xaml">
+      <SubType>Designer</SubType>
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
+    <Page Include="Themes\Material.xaml">
+      <SubType>Designer</SubType>
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
+    <Page Include="Themes\Material\Element.Action.xaml">
+      <SubType>Designer</SubType>
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
+    <Page Include="Themes\Material\Element.Text.xaml">
+      <SubType>Designer</SubType>
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
+    <Page Include="Themes\Material\Field.CheckBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
+    <Page Include="Themes\Material\Field.Converted.xaml">
+      <SubType>Designer</SubType>
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
+    <Page Include="Themes\Material\Field.DatePicker.xaml">
+      <SubType>Designer</SubType>
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
+    <Page Include="Themes\Material\Field.Password.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\Material\Field.Selection.xaml">
+      <SubType>Designer</SubType>
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
+    <Page Include="Themes\Material\Field.Slider.xaml">
+      <SubType>Designer</SubType>
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
+    <Page Include="Themes\Material\Field.String.xaml">
+      <SubType>Designer</SubType>
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
+    <Page Include="Themes\Material\Field.Switch.xaml">
+      <SubType>Designer</SubType>
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
+    <Page Include="Themes\Material\IconStyles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
+    <Page Include="Themes\Metro.xaml">
+      <SubType>Designer</SubType>
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
+    <Page Include="Themes\Metro\Element.Action.xaml">
+      <SubType>Designer</SubType>
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
+    <Page Include="Themes\Metro\Element.Text.xaml">
+      <SubType>Designer</SubType>
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
+    <Page Include="Themes\Metro\Field.CheckBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
+    <Page Include="Themes\Metro\Field.Converted.xaml">
+      <SubType>Designer</SubType>
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
+    <Page Include="Themes\Metro\Field.Password.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\Metro\Field.String.xaml">
+      <SubType>Designer</SubType>
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
+    <Page Include="Themes\Metro\Field.Switch.xaml">
+      <SubType>Designer</SubType>
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
+    <Page Include="Themes\Metro\IconStyles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
+    <Page Include="Themes\Wpf.xaml">
+      <SubType>Designer</SubType>
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
+    <Page Include="Themes\Wpf\Element.Action.xaml">
+      <SubType>Designer</SubType>
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
+    <Page Include="Themes\Wpf\Field.CheckBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
+    <Page Include="Themes\Wpf\Field.Converted.xaml">
+      <SubType>Designer</SubType>
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
+    <Page Include="Themes\Wpf\Field.Password.xaml">
+      <SubType>Designer</SubType>
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
+    <Page Include="Themes\Wpf\Field.String.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\Wpf\Field.Switch.xaml">
+      <SubType>Designer</SubType>
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
+    <Page Include="Themes\Wpf\IconStyles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\..\packages\Fody.2.3.14\build\net452\Fody.targets" Condition="Exists('..\..\packages\Fody.2.3.14\build\net452\Fody.targets')" />
+</Project>

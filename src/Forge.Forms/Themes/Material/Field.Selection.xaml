@@ -1,0 +1,177 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:annotations="clr-namespace:Forge.Forms.Annotations"
+    xmlns:defaults="clr-namespace:Forge.Forms.Components.Fields.Defaults"
+    xmlns:fields="clr-namespace:Forge.Forms.Components.Fields">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="pack://application:,,,/MaterialForms;component/Themes/Material/IconStyles.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ComboBox.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.RadioButton.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+    <ControlTemplate x:Key="MaterialComboBoxSelectionPresenterTemplate" TargetType="{x:Type defaults:SelectionPresenter}">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <materialDesign:PackIcon
+                Grid.Column="0"
+                Width="24"
+                Height="24"
+                Margin="0,0,16,0"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Kind="{fields:FormBinding Icon}"
+                Style="{StaticResource MaterialColoredIconStyle}"
+                Visibility="{fields:FormBinding IconVisibility}" />
+            <ComboBox
+                Name="ValueHolderControl"
+                Grid.Column="1"
+                Margin="0,-14,0,0"
+                VerticalAlignment="Center"
+                materialDesign:ComboBoxAssist.ShowSelectedItem="True"
+                materialDesign:HintAssist.Hint="{fields:FormBinding Name}"
+                DisplayMemberPath="{fields:FormBinding DisplayPath}"
+                IsEnabled="{fields:FormBinding IsNotReadOnly}"
+                ItemStringFormat="{fields:FormBinding ItemStringFormat}"
+                ItemsSource="{fields:FormBinding ItemsSource}"
+                SelectedValue="{fields:FormBinding Value}"
+                SelectedValuePath="{fields:FormBinding ValuePath}"
+                Style="{StaticResource MaterialDesignFloatingHintComboBox}"
+                ToolTip="{fields:FormBinding ToolTip}" />
+        </Grid>
+    </ControlTemplate>
+
+    <ControlTemplate x:Key="MaterialEditableComboBoxSelectionPresenterTemplate" TargetType="{x:Type defaults:SelectionPresenter}">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <materialDesign:PackIcon
+                Grid.Column="0"
+                Width="24"
+                Height="24"
+                Margin="0,0,16,0"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Kind="{fields:FormBinding Icon}"
+                Style="{StaticResource MaterialColoredIconStyle}"
+                Visibility="{fields:FormBinding IconVisibility}" />
+            <ComboBox
+                Name="ValueHolderControl"
+                Grid.Column="1"
+                Margin="0,-14,0,0"
+                VerticalAlignment="Center"
+                materialDesign:ComboBoxAssist.ShowSelectedItem="True"
+                materialDesign:HintAssist.Hint="{fields:FormBinding Name}"
+                DisplayMemberPath="{fields:FormBinding DisplayPath}"
+                IsEditable="True"
+                IsEnabled="{fields:FormBinding IsNotReadOnly}"
+                ItemStringFormat="{fields:FormBinding ItemStringFormat}"
+                ItemsSource="{fields:FormBinding ItemsSource}"
+                Style="{StaticResource MaterialDesignFloatingHintComboBox}"
+                Text="{fields:FormBinding Value}"
+                ToolTip="{fields:FormBinding ToolTip}" />
+        </Grid>
+    </ControlTemplate>
+
+    <ControlTemplate x:Key="MaterialRadioButtonsSelectionPresenterTemplate" TargetType="{x:Type defaults:SelectionPresenter}">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <materialDesign:PackIcon
+                Grid.Row="0"
+                Grid.Column="0"
+                Width="24"
+                Height="24"
+                Margin="0,0,16,0"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Kind="{fields:FormBinding Icon}"
+                Visibility="{fields:FormBinding IconVisibility}">
+                <materialDesign:PackIcon.Style>
+                    <Style TargetType="{x:Type materialDesign:PackIcon}">
+                        <Setter Property="Foreground" Value="{DynamicResource MaterialDesignBodyLight}" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsMouseOver, ElementName=HintText, Mode=OneWay}" Value="True">
+                                <Setter Property="Foreground" Value="{DynamicResource PrimaryHueMidBrush}" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding IsMouseOver, ElementName=ValueHolderControl, Mode=OneWay}" Value="True">
+                                <Setter Property="Foreground" Value="{DynamicResource PrimaryHueMidBrush}" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding IsFocused, ElementName=ValueHolderControl, Mode=OneWay}" Value="True">
+                                <Setter Property="Foreground" Value="{DynamicResource PrimaryHueMidBrush}" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </materialDesign:PackIcon.Style>
+            </materialDesign:PackIcon>
+            <TextBlock
+                Name="HintText"
+                Grid.Row="0"
+                Grid.Column="1"
+                VerticalAlignment="Center"
+                FontSize="{TemplateBinding FontSize}"
+                Text="{fields:FormBinding Name}"
+                ToolTip="{fields:FormBinding ToolTip}" />
+            <ListBox
+                Name="ValueHolderControl"
+                Grid.Row="1"
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Padding="0,8,0,0"
+                DisplayMemberPath="{fields:FormBinding DisplayPath}"
+                IsEnabled="{fields:FormBinding IsNotReadOnly}"
+                ItemStringFormat="{fields:FormBinding ItemStringFormat}"
+                ItemsSource="{fields:FormBinding ItemsSource}"
+                SelectedValue="{fields:FormBinding Value}"
+                SelectedValuePath="{fields:FormBinding ValuePath}">
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem">
+                        <Setter Property="Margin" Value="2,6,0,6" />
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="ListBoxItem">
+                                    <RadioButton
+                                        Padding="20,0,0,0"
+                                        IsChecked="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=IsSelected, Mode=TwoWay}"
+                                        Style="{StaticResource MaterialDesignRadioButton}">
+                                        <ContentPresenter />
+                                    </RadioButton>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ListBox.ItemContainerStyle>
+            </ListBox>
+        </Grid>
+    </ControlTemplate>
+
+    <Style x:Key="MaterialSelectionPresenterStyle" TargetType="defaults:SelectionPresenter">
+        <Setter Property="Margin" Value="8,16" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Template" Value="{StaticResource MaterialComboBoxSelectionPresenterTemplate}" />
+        <Style.Triggers>
+            <DataTrigger Binding="{fields:FormBinding SelectionType}" Value="{x:Static annotations:SelectionType.RadioButtons}">
+                <Setter Property="Margin" Value="8" />
+                <Setter Property="Template" Value="{StaticResource MaterialRadioButtonsSelectionPresenterTemplate}" />
+            </DataTrigger>
+            <DataTrigger Binding="{fields:FormBinding SelectionType}" Value="{x:Static annotations:SelectionType.ComboBoxEditable}">
+                <Setter Property="Template" Value="{StaticResource MaterialEditableComboBoxSelectionPresenterTemplate}" />
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+</ResourceDictionary>

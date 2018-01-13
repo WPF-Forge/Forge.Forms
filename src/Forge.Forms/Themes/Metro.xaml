@@ -1,0 +1,28 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:defaults="clr-namespace:Forge.Forms.Components.Fields.Defaults">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="pack://application:,,,/MaterialForms;component/Themes/Metro/Field.CheckBox.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/MaterialForms;component/Themes/Metro/Field.Converted.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/MaterialForms;component/Themes/Metro/Field.String.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/MaterialForms;component/Themes/Metro/Field.Password.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/MaterialForms;component/Themes/Metro/Field.Switch.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/MaterialForms;component/Themes/Metro/Element.Text.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/MaterialForms;component/Themes/Metro/Element.Action.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+    <Style BasedOn="{StaticResource MetroStringPresenterStyle}" TargetType="{x:Type defaults:StringPresenter}" />
+    <Style BasedOn="{StaticResource MetroPasswordPresenterStyle}" TargetType="{x:Type defaults:PasswordPresenter}" />
+    <Style BasedOn="{StaticResource MetroConvertedPresenterStyle}" TargetType="{x:Type defaults:ConvertedPresenter}" />
+    <Style BasedOn="{StaticResource MetroCheckBoxPresenterStyle}" TargetType="{x:Type defaults:CheckBoxPresenter}" />
+    <Style BasedOn="{StaticResource MetroSwitchPresenterStyle}" TargetType="{x:Type defaults:SwitchPresenter}" />
+
+    <Style BasedOn="{StaticResource MetroTitlePresenterStyle}" TargetType="{x:Type defaults:TitlePresenter}" />
+    <Style BasedOn="{StaticResource MetroHeadingPresenterStyle}" TargetType="{x:Type defaults:HeadingPresenter}" />
+    <Style BasedOn="{StaticResource MetroTextPresenterStyle}" TargetType="{x:Type defaults:TextPresenter}" />
+
+    <Style BasedOn="{StaticResource MetroActionPresenterStyle}" TargetType="{x:Type defaults:ActionPresenter}" />
+
+</ResourceDictionary>

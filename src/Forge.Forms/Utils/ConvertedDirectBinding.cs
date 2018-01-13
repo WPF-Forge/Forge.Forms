@@ -1,0 +1,49 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Windows.Data;
+using Forge.Forms.Components.Fields;
+using Forge.Forms.Interfaces;
+using Forge.Forms.Validation;
+
+namespace Forge.Forms.Utils
+{
+    public sealed class ConvertedDirectBinding : IValueProvider
+    {
+        public ConvertedDirectBinding(BindingOptions bindingOptions,
+            List<IValidatorProvider> validationRules, ReplacementPipe replacementPipe,
+            Func<IResourceContext, IErrorStringProvider> conversionErrorStringProvider)
+        {
+            BindingOptions = bindingOptions ?? throw new ArgumentNullException(nameof(bindingOptions));
+            ReplacementPipe = replacementPipe ?? throw new ArgumentNullException(nameof(replacementPipe));
+            ValidationRules = validationRules ?? new List<IValidatorProvider>();
+            ConversionErrorStringProvider = conversionErrorStringProvider;
+        }
+
+        public BindingOptions BindingOptions { get; }
+
+        public List<IValidatorProvider> ValidationRules { get; }
+
+        public ReplacementPipe ReplacementPipe { get; }
+
+        public Func<IResourceContext, IErrorStringProvider> ConversionErrorStringProvider { get; }
+
+        public BindingBase ProvideBinding(IResourceContext context)
+        {
+            var binding = context.CreateDirectModelBinding();
+            BindingOptions.Apply(binding);
+            var deserializer = ReplacementPipe.CreateDeserializer(context);
+            binding.Converter = new StringTypeConverter(deserializer);
+            binding.ValidationRules.Add(new ConversionValidator(deserializer, ConversionErrorStringProvider(context), binding.ConverterCulture));
+            var pipe = new ValidationPipe();
+            foreach (var validatorProvider in ValidationRules)
+            {
+                binding.ValidationRules.Add(validatorProvider.GetValidator(context, pipe));
+            }
+
+            binding.ValidationRules.Add(pipe);
+            return binding;
+        }
+
+        public object ProvideValue(IResourceContext context) => ProvideBinding(context);
+    }
+}

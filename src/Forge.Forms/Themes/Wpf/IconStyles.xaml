@@ -1,0 +1,15 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes">
+
+    <Style x:Key="WpfColoredIconStyle" TargetType="{x:Type materialDesign:PackIcon}">
+        <Setter Property="Foreground" Value="{Binding Foreground, ElementName=ValueHolderControl}" />
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding ElementName=ValueHolderControl, Path=(Validation.HasError)}" Value="True">
+                <Setter Property="Foreground" Value="#FFDB000C" />
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+</ResourceDictionary>

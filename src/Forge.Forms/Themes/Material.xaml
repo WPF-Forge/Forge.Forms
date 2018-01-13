@@ -1,0 +1,32 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:defaults="clr-namespace:Forge.Forms.Components.Fields.Defaults">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="pack://application:,,,/MaterialForms;component/Themes/Material/Field.CheckBox.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/MaterialForms;component/Themes/Material/Field.Converted.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/MaterialForms;component/Themes/Material/Field.String.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/MaterialForms;component/Themes/Material/Field.Password.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/MaterialForms;component/Themes/Material/Field.DatePicker.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/MaterialForms;component/Themes/Material/Field.Switch.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/MaterialForms;component/Themes/Material/Field.Selection.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/MaterialForms;component/Themes/Material/Field.Slider.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/MaterialForms;component/Themes/Material/Element.Text.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/MaterialForms;component/Themes/Material/Element.Action.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+    <Style BasedOn="{StaticResource MaterialStringPresenterStyle}" TargetType="{x:Type defaults:StringPresenter}" />
+    <Style BasedOn="{StaticResource MaterialPasswordPresenterStyle}" TargetType="{x:Type defaults:PasswordPresenter}" />
+    <Style BasedOn="{StaticResource MaterialConvertedPresenterStyle}" TargetType="{x:Type defaults:ConvertedPresenter}" />
+    <Style BasedOn="{StaticResource MaterialCheckBoxPresenterStyle}" TargetType="{x:Type defaults:CheckBoxPresenter}" />
+    <Style BasedOn="{StaticResource MaterialSwitchPresenterStyle}" TargetType="{x:Type defaults:SwitchPresenter}" />
+    <Style BasedOn="{StaticResource MaterialSelectionPresenterStyle}" TargetType="{x:Type defaults:SelectionPresenter}" />
+    <Style BasedOn="{StaticResource MaterialSliderPresenterStyle}" TargetType="{x:Type defaults:SliderPresenter}" />
+    <Style BasedOn="{StaticResource MaterialTitlePresenterStyle}" TargetType="{x:Type defaults:TitlePresenter}" />
+    <Style BasedOn="{StaticResource MaterialHeadingPresenterStyle}" TargetType="{x:Type defaults:HeadingPresenter}" />
+    <Style BasedOn="{StaticResource MaterialTextPresenterStyle}" TargetType="{x:Type defaults:TextPresenter}" />
+    <Style BasedOn="{StaticResource MaterialActionPresenterStyle}" TargetType="{x:Type defaults:ActionPresenter}" />
+    <Style BasedOn="{StaticResource MaterialDatePickerPresenterStyle}" TargetType="{x:Type defaults:DatePresenter}" />
+
+</ResourceDictionary>

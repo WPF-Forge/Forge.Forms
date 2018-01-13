@@ -1,0 +1,39 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:defaults="clr-namespace:Forge.Forms.Components.Fields.Defaults"
+    xmlns:fields="clr-namespace:Forge.Forms.Components.Fields">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.Buttons.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+    <ControlTemplate x:Key="MetroActionPresenterTemplate" TargetType="{x:Type defaults:ActionPresenter}">
+        <Button
+            MinHeight="36"
+            Padding="{TemplateBinding Padding}"
+            Command="{TemplateBinding Command}"
+            Style="{StaticResource SquareButtonStyle}">
+            <StackPanel Orientation="Horizontal">
+                <materialDesign:PackIcon
+                    Width="18"
+                    Height="18"
+                    Margin="0,0,4,0"
+                    VerticalAlignment="Center"
+                    Kind="{fields:FormBinding Icon}"
+                    Visibility="{fields:FormBinding IconVisibility}" />
+                <TextBlock VerticalAlignment="Center" Text="{fields:FormBinding Content}" />
+            </StackPanel>
+        </Button>
+    </ControlTemplate>
+
+    <Style x:Key="MetroActionPresenterStyle" TargetType="defaults:ActionPresenter">
+        <Setter Property="Margin" Value="4" />
+        <Setter Property="Padding" Value="8,2" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Template" Value="{StaticResource MetroActionPresenterTemplate}" />
+    </Style>
+
+</ResourceDictionary>

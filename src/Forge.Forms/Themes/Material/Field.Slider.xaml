@@ -1,0 +1,61 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:defaults="clr-namespace:Forge.Forms.Components.Fields.Defaults"
+    xmlns:fields="clr-namespace:Forge.Forms.Components.Fields">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="pack://application:,,,/MaterialForms;component/Themes/Material/IconStyles.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Slider.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+    <ControlTemplate x:Key="MaterialSliderPresenterTemplate" TargetType="{x:Type defaults:SliderPresenter}">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <materialDesign:PackIcon
+                Grid.Row="0"
+                Grid.RowSpan="2"
+                Grid.Column="0"
+                Width="24"
+                Height="24"
+                Margin="0,0,16,0"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Kind="{fields:FormBinding Icon}"
+                Style="{StaticResource MaterialColoredIconStyle}"
+                Visibility="{fields:FormBinding IconVisibility}" />
+            <TextBlock
+                Grid.Row="0"
+                Grid.Column="1"
+                Margin="0,0,0,4"
+                Text="{fields:FormBinding Name}" />
+            <Slider
+                x:Name="ValueHolderControl"
+                Grid.Row="1"
+                Grid.Column="1"
+                Margin="0,4,0,0"
+                VerticalAlignment="Center"
+                Maximum="{fields:FormBinding Maximum}"
+                Minimum="{fields:FormBinding Minimum}"
+                Style="{StaticResource MaterialDesignSlider}"
+                ToolTip="{fields:FormBinding ToolTip}"
+                Value="{fields:FormBinding Value}" />
+        </Grid>
+    </ControlTemplate>
+
+    <Style x:Key="MaterialSliderPresenterStyle" TargetType="{x:Type defaults:SliderPresenter}">
+        <Setter Property="Margin" Value="8,16" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Template" Value="{StaticResource MaterialSliderPresenterTemplate}" />
+    </Style>
+
+</ResourceDictionary>

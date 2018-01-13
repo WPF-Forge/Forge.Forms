@@ -1,0 +1,52 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:defaults="clr-namespace:Forge.Forms.Components.Fields.Defaults"
+    xmlns:fields="clr-namespace:Forge.Forms.Components.Fields">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="pack://application:,,,/MaterialForms;component/Themes/Material/IconStyles.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.CheckBox.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+    <ControlTemplate x:Key="MaterialCheckBoxPresenterTemplate" TargetType="{x:Type defaults:CheckBoxPresenter}">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <materialDesign:PackIcon
+                Grid.Column="0"
+                Width="24"
+                Height="24"
+                Margin="0,0,16,0"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Kind="{fields:FormBinding Icon}"
+                Style="{StaticResource MaterialValidationIconStyle}"
+                Visibility="{fields:FormBinding IconVisibility}" />
+            <CheckBox
+                Name="ValueHolderControl"
+                Grid.Column="1"
+                Margin="2,0,0,0"
+                Padding="20,0,8,0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                VerticalContentAlignment="Center"
+                Content="{fields:FormBinding Name}"
+                FontSize="{TemplateBinding FontSize}"
+                IsChecked="{fields:FormBinding Value}"
+                Style="{StaticResource MaterialDesignCheckBox}"
+                ToolTip="{fields:FormBinding ToolTip}" />
+        </Grid>
+    </ControlTemplate>
+
+    <Style x:Key="MaterialCheckBoxPresenterStyle" TargetType="defaults:CheckBoxPresenter">
+        <Setter Property="Margin" Value="8" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Template" Value="{StaticResource MaterialCheckBoxPresenterTemplate}" />
+    </Style>
+
+</ResourceDictionary>

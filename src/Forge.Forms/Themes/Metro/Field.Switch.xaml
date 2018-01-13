@@ -1,0 +1,54 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+    xmlns:defaults="clr-namespace:Forge.Forms.Components.Fields.Defaults"
+    xmlns:fields="clr-namespace:Forge.Forms.Components.Fields">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="pack://application:,,,/MaterialForms;component/Themes/Metro/IconStyles.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.ToggleSwitch.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+    <ControlTemplate x:Key="MetroSwitchPresenterTemplate" TargetType="{x:Type defaults:SwitchPresenter}">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <materialDesign:PackIcon
+                Grid.Column="0"
+                Width="24"
+                Height="24"
+                Margin="0,0,8,0"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Kind="{fields:FormBinding Icon}"
+                Visibility="{fields:FormBinding IconVisibility}">
+            </materialDesign:PackIcon>
+            <TextBlock
+                Grid.Column="1"
+                VerticalAlignment="Center"
+                Text="{fields:FormBinding Name}"
+                ToolTip="{fields:FormBinding ToolTip}" />
+            <controls:ToggleSwitch
+                Name="ValueHolderControl"
+                Grid.Column="2"
+                Margin="0"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                IsChecked="{fields:FormBinding Value}"
+                Style="{StaticResource MahApps.Metro.Styles.ToggleSwitch.Win10}" />
+        </Grid>
+    </ControlTemplate>
+
+    <Style x:Key="MetroSwitchPresenterStyle" TargetType="defaults:SwitchPresenter">
+        <Setter Property="Margin" Value="8,12" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Template" Value="{StaticResource MetroSwitchPresenterTemplate}" />
+    </Style>
+
+</ResourceDictionary>
