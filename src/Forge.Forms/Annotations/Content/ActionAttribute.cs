@@ -20,7 +20,7 @@ namespace Forge.Forms.Annotations.Content
             // Actions are inserted after elements by default.
             InsertAfter = true;
             // Actions are displayed to the right by default.
-            LinePosition = Controls.Position.Right;
+            LinePosition = Components.Controls.Position.Right;
         }
 
         /// <summary>

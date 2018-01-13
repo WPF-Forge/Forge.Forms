@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Input;
-using Forge.Forms.Controls;
+using Forge.Forms.Components.Controls;
 using Forge.Forms.Interfaces;
-using Forge.Forms.Mappers;
 using Forge.Forms.Utils;
 using MaterialDesignThemes.Wpf;
 using Proxier.Mappers;

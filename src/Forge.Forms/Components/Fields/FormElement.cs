@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Forge.Forms.Controls;
+using Forge.Forms.Components.Controls;
 using Forge.Forms.Interfaces;
 using Forge.Forms.Utils;
 

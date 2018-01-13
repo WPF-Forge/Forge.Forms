@@ -1,9 +1,9 @@
 ﻿using System.Windows;
 using Forge.Forms.Annotations;
-using Forge.Forms.Controls;
+using Forge.Forms.Components.Controls;
 using Forge.Forms.Demo.Models;
 using Forge.Forms.Demo.Routes;
-using Forge.Forms.Mappers;
+using Forge.Forms.Utils;
 using MahApps.Metro.Controls;
 using Material.Application.Infrastructure;
 using Material.Application.Routing;

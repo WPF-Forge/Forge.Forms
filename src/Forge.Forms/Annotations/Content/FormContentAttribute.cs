@@ -1,6 +1,6 @@
 using System;
+using Forge.Forms.Components.Controls;
 using Forge.Forms.Components.Fields;
-using Forge.Forms.Controls;
 using Forge.Forms.FormBuilding;
 
 namespace Forge.Forms.Annotations.Content
@@ -14,7 +14,7 @@ namespace Forge.Forms.Annotations.Content
         protected FormContentAttribute(int position)
         {
             Position = position;
-            LinePosition = Controls.Position.Left;
+            LinePosition = Components.Controls.Position.Left;
         }
 
         /// <summary>

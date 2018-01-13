@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Data;
-using Forge.Forms.Controls;
+using Forge.Forms.Components.Controls;
 using Forge.Forms.Interfaces;
 
 namespace Forge.Forms.Utils
