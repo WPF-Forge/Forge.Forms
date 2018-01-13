@@ -6,7 +6,8 @@ namespace Forge.Forms.Components.Fields.Defaults
 {
     public class TextElement : ContentElement
     {
-        protected internal override IBindingProvider CreateBindingProvider(IResourceContext context, IDictionary<string, IValueProvider> formResources)
+        protected internal override IBindingProvider CreateBindingProvider(IResourceContext context,
+            IDictionary<string, IValueProvider> formResources)
         {
             return new TextPresenter(context, Resources, formResources);
         }
@@ -16,10 +17,12 @@ namespace Forge.Forms.Components.Fields.Defaults
     {
         static TextPresenter()
         {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(TextPresenter), new FrameworkPropertyMetadata(typeof(TextPresenter)));
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(TextPresenter),
+                new FrameworkPropertyMetadata(typeof(TextPresenter)));
         }
 
-        public TextPresenter(IResourceContext context, IDictionary<string, IValueProvider> fieldResources, IDictionary<string, IValueProvider> formResources)
+        public TextPresenter(IResourceContext context, IDictionary<string, IValueProvider> fieldResources,
+            IDictionary<string, IValueProvider> formResources)
             : base(context, fieldResources, formResources, true)
         {
         }

@@ -2,18 +2,22 @@
 {
     public abstract class DialogBase : FormBase
     {
-        private string title;
+        private bool confirmed;
         private string message;
         private string negativeAction = "CANCEL";
         private string positiveAction = "OK";
-        private bool confirmed;
+        private string title;
 
         public string Title
         {
             get => title;
             set
             {
-                if (value == title) return;
+                if (value == title)
+                {
+                    return;
+                }
+
                 title = value;
                 OnPropertyChanged();
             }
@@ -24,7 +28,11 @@
             get => message;
             set
             {
-                if (value == message) return;
+                if (value == message)
+                {
+                    return;
+                }
+
                 message = value;
                 OnPropertyChanged();
             }
@@ -35,7 +43,11 @@
             get => negativeAction;
             set
             {
-                if (value == negativeAction) return;
+                if (value == negativeAction)
+                {
+                    return;
+                }
+
                 negativeAction = value;
                 OnPropertyChanged();
             }
@@ -46,7 +58,11 @@
             get => positiveAction;
             set
             {
-                if (value == positiveAction) return;
+                if (value == positiveAction)
+                {
+                    return;
+                }
+
                 positiveAction = value;
                 OnPropertyChanged();
             }
@@ -57,7 +73,11 @@
             get => confirmed;
             private set
             {
-                if (value == confirmed) return;
+                if (value == confirmed)
+                {
+                    return;
+                }
+
                 confirmed = value;
                 OnPropertyChanged();
             }

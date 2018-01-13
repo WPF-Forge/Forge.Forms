@@ -36,7 +36,7 @@ namespace Forge.Forms.Utils
             if (other is StaticResource resource)
             {
                 return ResourceKey == resource.ResourceKey
-                    && ValueConverter == resource.ValueConverter;
+                       && ValueConverter == resource.ValueConverter;
             }
 
             return false;

@@ -6,7 +6,8 @@ namespace Forge.Forms.Validation
 {
     public class NullValidator : FieldValidator
     {
-        public NullValidator(ValidationPipe pipe, IErrorStringProvider errorProvider, IBoolProxy isEnforced, IValueConverter valueConverter,
+        public NullValidator(ValidationPipe pipe, IErrorStringProvider errorProvider, IBoolProxy isEnforced,
+            IValueConverter valueConverter,
             bool strictValidation, bool validatesOnTargetUpdated)
             : base(pipe, errorProvider, isEnforced, valueConverter, strictValidation, validatesOnTargetUpdated)
         {

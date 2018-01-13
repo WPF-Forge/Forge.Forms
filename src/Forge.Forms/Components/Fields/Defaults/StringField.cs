@@ -25,7 +25,7 @@ namespace Forge.Forms.Components.Fields.Defaults
             IDictionary<string, IValueProvider> formResources)
         {
             return !IsPassword
-                ? (IBindingProvider) new StringPresenter(context, Resources, formResources)
+                ? (IBindingProvider)new StringPresenter(context, Resources, formResources)
                 : new PasswordPresenter(context, Resources, formResources);
         }
     }

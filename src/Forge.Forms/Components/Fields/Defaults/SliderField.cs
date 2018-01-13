@@ -8,7 +8,7 @@ namespace Forge.Forms.Components.Fields.Defaults
 {
     public class SliderField : DataFormField
     {
-        public SliderField(string key, Type propertyType) 
+        public SliderField(string key, Type propertyType)
             : base(key, propertyType)
         {
         }
@@ -28,7 +28,8 @@ namespace Forge.Forms.Components.Fields.Defaults
             Resources.Add(nameof(IsDiscrete), IsDiscrete ?? LiteralValue.False);
         }
 
-        protected internal override IBindingProvider CreateBindingProvider(IResourceContext context, IDictionary<string, IValueProvider> formResources)
+        protected internal override IBindingProvider CreateBindingProvider(IResourceContext context,
+            IDictionary<string, IValueProvider> formResources)
         {
             return new SliderPresenter(context, Resources, formResources);
         }
@@ -38,7 +39,8 @@ namespace Forge.Forms.Components.Fields.Defaults
     {
         static SliderPresenter()
         {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(SliderPresenter), new FrameworkPropertyMetadata(typeof(SliderPresenter)));
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(SliderPresenter),
+                new FrameworkPropertyMetadata(typeof(SliderPresenter)));
         }
 
         public SliderPresenter(IResourceContext context,

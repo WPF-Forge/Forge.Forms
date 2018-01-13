@@ -61,62 +61,62 @@ namespace Forge.Forms.FormBuilding.Defaults
 
         public static FormDefinition Char()
         {
-            return BuildConverted(typeof(Char), Deserializers.Char);
+            return BuildConverted(typeof(char), Deserializers.Char);
         }
 
         public static FormDefinition Byte()
         {
-            return BuildConverted(typeof(Byte), Deserializers.Byte);
+            return BuildConverted(typeof(byte), Deserializers.Byte);
         }
 
         public static FormDefinition SByte()
         {
-            return BuildConverted(typeof(SByte), Deserializers.SByte);
+            return BuildConverted(typeof(sbyte), Deserializers.SByte);
         }
 
         public static FormDefinition Int16()
         {
-            return BuildConverted(typeof(Int16), Deserializers.Int16);
+            return BuildConverted(typeof(short), Deserializers.Int16);
         }
 
         public static FormDefinition Int32()
         {
-            return BuildConverted(typeof(Int32), Deserializers.Int32);
+            return BuildConverted(typeof(int), Deserializers.Int32);
         }
 
         public static FormDefinition Int64()
         {
-            return BuildConverted(typeof(Int64), Deserializers.Int64);
+            return BuildConverted(typeof(long), Deserializers.Int64);
         }
 
         public static FormDefinition UInt16()
         {
-            return BuildConverted(typeof(UInt16), Deserializers.UInt16);
+            return BuildConverted(typeof(ushort), Deserializers.UInt16);
         }
 
         public static FormDefinition UInt32()
         {
-            return BuildConverted(typeof(UInt32), Deserializers.UInt32);
+            return BuildConverted(typeof(uint), Deserializers.UInt32);
         }
 
         public static FormDefinition UInt64()
         {
-            return BuildConverted(typeof(UInt64), Deserializers.UInt64);
+            return BuildConverted(typeof(ulong), Deserializers.UInt64);
         }
 
         public static FormDefinition Single()
         {
-            return BuildConverted(typeof(Single), Deserializers.Single);
+            return BuildConverted(typeof(float), Deserializers.Single);
         }
 
         public static FormDefinition Double()
         {
-            return BuildConverted(typeof(Double), Deserializers.Double);
+            return BuildConverted(typeof(double), Deserializers.Double);
         }
 
         public static FormDefinition Decimal()
         {
-            return BuildConverted(typeof(Decimal), Deserializers.Decimal);
+            return BuildConverted(typeof(decimal), Deserializers.Decimal);
         }
     }
 }

@@ -32,7 +32,8 @@ namespace Forge.Forms.Components.Fields.Defaults
             Resources.Add(nameof(SelectionType), SelectionType ?? new LiteralValue(Annotations.SelectionType.ComboBox));
         }
 
-        protected internal override IBindingProvider CreateBindingProvider(IResourceContext context, IDictionary<string, IValueProvider> formResources)
+        protected internal override IBindingProvider CreateBindingProvider(IResourceContext context,
+            IDictionary<string, IValueProvider> formResources)
         {
             return new SelectionPresenter(context, Resources, formResources);
         }
@@ -42,7 +43,8 @@ namespace Forge.Forms.Components.Fields.Defaults
     {
         static SelectionPresenter()
         {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(SelectionPresenter), new FrameworkPropertyMetadata(typeof(SelectionPresenter)));
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(SelectionPresenter),
+                new FrameworkPropertyMetadata(typeof(SelectionPresenter)));
         }
 
         public SelectionPresenter(IResourceContext context,

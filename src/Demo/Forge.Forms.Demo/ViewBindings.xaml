@@ -14,5 +14,5 @@
     <DataTemplate DataType="{x:Type routes:XmlExamplesRoute}">
         <views:XmlExamplesView />
     </DataTemplate>
-    
+
 </ResourceDictionary>

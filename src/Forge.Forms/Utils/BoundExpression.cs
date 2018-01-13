@@ -51,41 +51,6 @@ namespace Forge.Forms.Utils
 
         public bool IsSingleResource => StringFormat == null && Resources != null && Resources.Count == 1;
 
-        internal IProxy GetProxy(IResourceContext context)
-        {
-            if (IsPlainString)
-            {
-                return new PlainObject(StringFormat);
-            }
-
-            if (IsSingleResource)
-            {
-                return Resources[0].GetValue(context);
-            }
-
-            if (StringFormat != null)
-            {
-                return this.GetStringValue(context);
-            }
-
-            return this.GetValue(context);
-        }
-
-        public IValueProvider GetValueProvider()
-        {
-            if (IsPlainString)
-            {
-                return new LiteralValue(StringFormat);
-            }
-
-            if (IsSingleResource)
-            {
-                return Resources[0];
-            }
-
-            return this;
-        }
-
         public BindingBase ProvideBinding(IResourceContext context)
         {
             if (Resources == null || Resources.Count == 0)
@@ -126,6 +91,41 @@ namespace Forge.Forms.Utils
             }
 
             return ProvideBinding(context);
+        }
+
+        internal IProxy GetProxy(IResourceContext context)
+        {
+            if (IsPlainString)
+            {
+                return new PlainObject(StringFormat);
+            }
+
+            if (IsSingleResource)
+            {
+                return Resources[0].GetValue(context);
+            }
+
+            if (StringFormat != null)
+            {
+                return this.GetStringValue(context);
+            }
+
+            return this.GetValue(context);
+        }
+
+        public IValueProvider GetValueProvider()
+        {
+            if (IsPlainString)
+            {
+                return new LiteralValue(StringFormat);
+            }
+
+            if (IsSingleResource)
+            {
+                return Resources[0];
+            }
+
+            return this;
         }
 
         public IValueProvider Simplified()
@@ -214,7 +214,8 @@ namespace Forge.Forms.Utils
             return Parse(expression, Factory);
         }
 
-        public static BoundExpression Parse(string expression, Func<string, bool, string, IValueProvider> contextualResource)
+        public static BoundExpression Parse(string expression,
+            Func<string, bool, string, IValueProvider> contextualResource)
         {
             if (expression == null)
             {

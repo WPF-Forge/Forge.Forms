@@ -2,27 +2,31 @@
 using System.Windows;
 using Forge.Forms.Demo.Infrastructure;
 
-namespace Forge.Forms.Demo {
+namespace Forge.Forms.Demo
+{
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>
-    public partial class App : Application {
-        [STAThread]
-        public static void Main () {
-            var app = new App ();
-            app.InitializeComponent ();
-            app.Run ();
+    public partial class App : Application
+    {
+        public App()
+        {
+            Controller = new DemoAppController();
         }
 
         public DemoAppController Controller { get; }
 
-        public App () {
-
-            Controller = new DemoAppController ();
+        [STAThread]
+        public static void Main()
+        {
+            var app = new App();
+            app.InitializeComponent();
+            app.Run();
         }
 
-        protected void OnStartup (object sender, StartupEventArgs e) {
-            Controller.ShowApplicationWindow ();
+        protected void OnStartup(object sender, StartupEventArgs e)
+        {
+            Controller.ShowApplicationWindow();
         }
     }
 }

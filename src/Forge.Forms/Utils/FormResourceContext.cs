@@ -22,14 +22,20 @@ namespace Forge.Forms.Utils
 
         public string BasePath { get; }
 
-        public object GetModelInstance() => Form.Value;
+        public object GetModelInstance()
+        {
+            return Form.Value;
+        }
 
         public BindingExpressionBase[] GetBindings()
         {
             return ModelState.GetBindings(Form.Value);
         }
 
-        public object GetContextInstance() => Form.Context;
+        public object GetContextInstance()
+        {
+            return Form.Context;
+        }
 
         public Binding CreateDirectModelBinding()
         {

@@ -55,7 +55,7 @@ namespace Forge.Forms.Annotations.Content
         /// Accepts a boolean or a dynamic resource.
         /// </summary>
         public object IsEnabled { get; set; }
-        
+
         /// <summary>
         /// Determines whether this button is loading or not.
         /// </summary>

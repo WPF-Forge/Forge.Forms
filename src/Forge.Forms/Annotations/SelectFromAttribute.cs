@@ -34,7 +34,7 @@ namespace Forge.Forms.Annotations
         public string ItemStringFormat { get; set; }
 
         /// <summary>
-        /// Field selection type. Accepts a <see cref="SelectionType"/> or a dynamic resource.
+        /// Field selection type. Accepts a <see cref="SelectionType" /> or a dynamic resource.
         /// </summary>
         public object SelectionType { get; set; }
     }

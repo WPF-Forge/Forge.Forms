@@ -6,9 +6,8 @@ namespace Forge.Forms.Utils.ValueConverters
 {
     internal class ConverterWrapper : IValueConverter
     {
-        private readonly IValueConverter outerConverter;
-
         private readonly IValueConverter innerConverter;
+        private readonly IValueConverter outerConverter;
 
         public ConverterWrapper(IValueConverter outerConverter, IValueConverter innerConverter)
         {

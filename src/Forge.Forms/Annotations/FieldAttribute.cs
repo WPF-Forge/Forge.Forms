@@ -9,8 +9,8 @@ namespace Forge.Forms.Annotations
     [AttributeUsage(AttributeTargets.Property)]
     public sealed class FieldAttribute : Attribute
     {
-        private string name;
         internal bool HasName;
+        private string name;
 
         /// <summary>
         /// The display name of the field. Accepts a string or a dynamic expression.
@@ -64,12 +64,12 @@ namespace Forge.Forms.Annotations
         public string Row { get; set; }
 
         /// <summary>
-        /// Specifies the column number. Applicable only when <see cref="Row"/> is set.
+        /// Specifies the column number. Applicable only when <see cref="Row" /> is set.
         /// </summary>
         public int Column { get; set; }
 
         /// <summary>
-        /// Specifies the column span. Applicable only when <see cref="Row"/> is set.
+        /// Specifies the column span. Applicable only when <see cref="Row" /> is set.
         /// </summary>
         public int ColumnSpan { get; set; } = 1;
     }

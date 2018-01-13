@@ -72,8 +72,8 @@ namespace Forge.Forms.Components.Fields
     internal class CompiledRegexReplacement
     {
         private readonly StringProxy pattern;
-        private readonly StringProxy replacement;
         private readonly BindingProxy regexOptions;
+        private readonly StringProxy replacement;
 
         public CompiledRegexReplacement(StringProxy pattern, StringProxy replacement, BindingProxy regexOptions)
         {

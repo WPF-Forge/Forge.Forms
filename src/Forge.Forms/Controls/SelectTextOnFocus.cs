@@ -18,7 +18,7 @@ namespace Forge.Forms.Controls
         {
             if (d is TextBox)
             {
-                TextBox textBox = d as TextBox;
+                var textBox = d as TextBox;
                 if ((e.NewValue as bool?).GetValueOrDefault(false))
                 {
                     textBox.GotKeyboardFocus += OnKeyboardFocusSelectText;
@@ -34,7 +34,7 @@ namespace Forge.Forms.Controls
 
         private static void OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            DependencyObject dependencyObject = GetParentFromVisualTree(e.OriginalSource);
+            var dependencyObject = GetParentFromVisualTree(e.OriginalSource);
 
             if (dependencyObject == null)
             {
@@ -62,7 +62,7 @@ namespace Forge.Forms.Controls
 
         private static void OnKeyboardFocusSelectText(object sender, KeyboardFocusChangedEventArgs e)
         {
-            TextBox textBox = e.OriginalSource as TextBox;
+            var textBox = e.OriginalSource as TextBox;
             if (textBox != null)
             {
                 textBox.SelectAll();

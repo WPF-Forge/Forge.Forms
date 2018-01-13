@@ -8,8 +8,8 @@ namespace Forge.Forms.Utils
 {
     public class EnumerableKeyValueProvider : IValueProvider
     {
-        private readonly IEnumerable<KeyValuePair<ValueType, IValueProvider>> elements;
         private readonly bool addNull;
+        private readonly IEnumerable<KeyValuePair<ValueType, IValueProvider>> elements;
 
         public EnumerableKeyValueProvider(IEnumerable<KeyValuePair<ValueType, IValueProvider>> elements, bool addNull)
         {

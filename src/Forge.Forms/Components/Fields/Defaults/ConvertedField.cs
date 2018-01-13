@@ -51,7 +51,8 @@ namespace Forge.Forms.Components.Fields.Defaults
     {
         static ConvertedPresenter()
         {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(ConvertedPresenter), new FrameworkPropertyMetadata(typeof(ConvertedPresenter)));
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(ConvertedPresenter),
+                new FrameworkPropertyMetadata(typeof(ConvertedPresenter)));
         }
 
         public ConvertedPresenter(IResourceContext context,

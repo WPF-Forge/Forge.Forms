@@ -13,11 +13,6 @@ namespace Forge.Forms.Components.Fields
     /// </summary>
     public class FormBindingExtension : MarkupExtension
     {
-        [ConstructorArgument("name")]
-        public string Name { get; set; }
-
-        public string Converter { get; set; }
-
         public FormBindingExtension()
         {
         }
@@ -27,6 +22,11 @@ namespace Forge.Forms.Components.Fields
             Name = name;
         }
 
+        [ConstructorArgument("name")]
+        public string Name { get; set; }
+
+        public string Converter { get; set; }
+
         public override object ProvideValue(IServiceProvider serviceProvider)
         {
             var pvt = serviceProvider as IProvideValueTarget;
@@ -34,7 +34,7 @@ namespace Forge.Forms.Components.Fields
             {
                 return null;
             }
-            
+
             if (pvt.TargetObject is FrameworkElement frameworkElement)
             {
                 var field = frameworkElement.DataContext as IBindingProvider;

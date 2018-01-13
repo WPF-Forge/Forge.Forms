@@ -23,7 +23,7 @@ namespace Forge.Forms.Demo.Models
         public string Password { get; set; }
 
         public bool RememberMe { get; set; }
-        
+
         public bool Loading { get; set; }
 
         public PackIconKind PasswordIcon => PackIconKind.Key;
@@ -33,6 +33,5 @@ namespace Forge.Forms.Demo.Models
         {
             Loading = !Loading;
         }
-
     }
 }

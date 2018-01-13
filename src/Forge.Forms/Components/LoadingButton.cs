@@ -10,6 +10,12 @@ namespace Forge.Forms.Components
     {
         private object _oldContent;
 
+        public LoadingButton()
+        {
+            Width = double.NaN;
+            CircularProgressBar.Foreground = Foreground;
+        }
+
         private ProgressBar CircularProgressBar { get; } = new ProgressBar
         {
             IsIndeterminate = true,
@@ -24,7 +30,7 @@ namespace Forge.Forms.Components
         public static void IsLoadingChanged(DependencyObject dependencyObject,
             DependencyPropertyChangedEventArgs eventArgs)
         {
-            var button = (LoadingButton) dependencyObject;
+            var button = (LoadingButton)dependencyObject;
             button.Invoke(() =>
             {
                 if (button.IsLoading)
@@ -45,18 +51,14 @@ namespace Forge.Forms.Components
             });
         }
 
-        public LoadingButton()
-        {
-            Width = double.NaN;
-            CircularProgressBar.Foreground = Foreground;
-        }
-
         protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
         {
             base.OnPropertyChanged(e);
 
             if (e.Property == ForegroundProperty)
-                CircularProgressBar.Foreground = (Brush) e.NewValue;
+            {
+                CircularProgressBar.Foreground = (Brush)e.NewValue;
+            }
         }
     }
 }

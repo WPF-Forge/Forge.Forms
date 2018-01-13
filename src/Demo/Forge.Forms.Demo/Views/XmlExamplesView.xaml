@@ -57,7 +57,7 @@
             VerticalAlignment="Center">
             <ScrollViewer VerticalScrollBarVisibility="Auto">
                 <ScrollViewer.Resources>
-                    <SolidColorBrush x:Key="MaterialDesignPaper" Color="#FFFFFFFF"></SolidColorBrush>
+                    <SolidColorBrush x:Key="MaterialDesignPaper" Color="#FFFFFFFF" />
                 </ScrollViewer.Resources>
                 <controls:DynamicForm Margin="12,12,12,8" Model="{Binding CompiledDefinition}" />
             </ScrollViewer>

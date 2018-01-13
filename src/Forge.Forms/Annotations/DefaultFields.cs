@@ -9,12 +9,14 @@
         /// Properties with public getters and setters are displayed by default.
         /// </summary>
         AllExcludingReadonly,
+
         /// <summary>
         /// All public properties are displayed by default.
         /// </summary>
         AllIncludingReadonly,
+
         /// <summary>
-        /// No properties are displayed by default. Use <see cref="FieldAttribute"/> to add properties.
+        /// No properties are displayed by default. Use <see cref="FieldAttribute" /> to add properties.
         /// </summary>
         None
     }

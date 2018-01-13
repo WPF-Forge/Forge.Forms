@@ -8,7 +8,7 @@
         <ResourceDictionary Source="pack://application:,,,/MaterialForms;component/Themes/Elements/Text.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
-    <Style x:Key="MaterialTitlePresenterStyle"  TargetType="defaults:TitlePresenter">
+    <Style x:Key="MaterialTitlePresenterStyle" TargetType="defaults:TitlePresenter">
         <Setter Property="Margin" Value="8" />
         <Setter Property="FontWeight" Value="Medium" />
         <Setter Property="HorizontalAlignment" Value="Stretch" />
@@ -21,7 +21,7 @@
         </Style.Triggers>
     </Style>
 
-    <Style x:Key="MaterialHeadingPresenterStyle"  TargetType="defaults:HeadingPresenter">
+    <Style x:Key="MaterialHeadingPresenterStyle" TargetType="defaults:HeadingPresenter">
         <Setter Property="Margin" Value="8" />
         <Setter Property="Foreground" Value="{DynamicResource PrimaryHueMidBrush}" />
         <Setter Property="FontWeight" Value="Medium" />
@@ -35,7 +35,7 @@
         </Style.Triggers>
     </Style>
 
-    <Style x:Key="MaterialTextPresenterStyle"  TargetType="defaults:TextPresenter">
+    <Style x:Key="MaterialTextPresenterStyle" TargetType="defaults:TextPresenter">
         <Setter Property="Margin" Value="8" />
         <Setter Property="HorizontalAlignment" Value="Stretch" />
         <Setter Property="VerticalAlignment" Value="Center" />

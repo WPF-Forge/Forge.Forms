@@ -7,9 +7,11 @@ namespace Forge.Forms.Validation
 {
     public class MatchPatternValidator : ComparisonValidator
     {
-        public MatchPatternValidator(ValidationPipe pipe, IProxy argument, IErrorStringProvider errorProvider, IBoolProxy isEnforced,
+        public MatchPatternValidator(ValidationPipe pipe, IProxy argument, IErrorStringProvider errorProvider,
+            IBoolProxy isEnforced,
             IValueConverter valueConverter, bool strictValidation, bool validatesOnTargetUpdated)
-            : base(pipe, argument, errorProvider, isEnforced, valueConverter, strictValidation, validatesOnTargetUpdated)
+            : base(pipe, argument, errorProvider, isEnforced, valueConverter, strictValidation,
+                validatesOnTargetUpdated)
         {
         }
 

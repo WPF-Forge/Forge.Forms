@@ -35,7 +35,8 @@ namespace Forge.Forms.FormBuilding.Defaults.Initializers
             }
         }
 
-        private static IValidatorProvider CreateValidator(Type modelType, string propertyKey, ValueAttribute attribute, Func<string, object> deserializer)
+        private static IValidatorProvider CreateValidator(Type modelType, string propertyKey, ValueAttribute attribute,
+            Func<string, object> deserializer)
         {
             Func<IResourceContext, IProxy> argumentProvider;
             var argument = attribute.Argument;
@@ -229,23 +230,28 @@ namespace Forge.Forms.FormBuilding.Defaults.Initializers
                         errorProvider(context), isEnforcedProvider(context), GetConverter(context), strictValidation,
                         validateOnTargetUpdated));
                 case Must.NotBeEqualTo:
-                    return new ValidatorProvider((context, pipe) => new NotEqualsValidator(pipe, argumentProvider(context),
+                    return new ValidatorProvider((context, pipe) => new NotEqualsValidator(pipe,
+                        argumentProvider(context),
                         errorProvider(context), isEnforcedProvider(context), GetConverter(context), strictValidation,
                         validateOnTargetUpdated));
                 case Must.BeGreaterThan:
-                    return new ValidatorProvider((context, pipe) => new GreaterThanValidator(pipe, argumentProvider(context),
+                    return new ValidatorProvider((context, pipe) => new GreaterThanValidator(pipe,
+                        argumentProvider(context),
                         errorProvider(context), isEnforcedProvider(context), GetConverter(context), strictValidation,
                         validateOnTargetUpdated));
                 case Must.BeGreaterThanOrEqualTo:
-                    return new ValidatorProvider((context, pipe) => new GreaterThanEqualValidator(pipe, argumentProvider(context),
+                    return new ValidatorProvider((context, pipe) => new GreaterThanEqualValidator(pipe,
+                        argumentProvider(context),
                         errorProvider(context), isEnforcedProvider(context), GetConverter(context), strictValidation,
                         validateOnTargetUpdated));
                 case Must.BeLessThan:
-                    return new ValidatorProvider((context, pipe) => new LessThanValidator(pipe, argumentProvider(context),
+                    return new ValidatorProvider((context, pipe) => new LessThanValidator(pipe,
+                        argumentProvider(context),
                         errorProvider(context), isEnforcedProvider(context), GetConverter(context), strictValidation,
                         validateOnTargetUpdated));
                 case Must.BeLessThanOrEqualTo:
-                    return new ValidatorProvider((context, pipe) => new LessThanEqualValidator(pipe, argumentProvider(context),
+                    return new ValidatorProvider((context, pipe) => new LessThanEqualValidator(pipe,
+                        argumentProvider(context),
                         errorProvider(context), isEnforcedProvider(context), GetConverter(context), strictValidation,
                         validateOnTargetUpdated));
                 case Must.BeEmpty:
@@ -273,35 +279,43 @@ namespace Forge.Forms.FormBuilding.Defaults.Initializers
                         isEnforcedProvider(context), GetConverter(context), strictValidation,
                         validateOnTargetUpdated));
                 case Must.ExistIn:
-                    return new ValidatorProvider((context, pipe) => new ExistsInValidator(pipe, argumentProvider(context),
+                    return new ValidatorProvider((context, pipe) => new ExistsInValidator(pipe,
+                        argumentProvider(context),
                         errorProvider(context), isEnforcedProvider(context), GetConverter(context), strictValidation,
                         validateOnTargetUpdated));
                 case Must.NotExistIn:
-                    return new ValidatorProvider((context, pipe) => new NotExistsInValidator(pipe, argumentProvider(context),
+                    return new ValidatorProvider((context, pipe) => new NotExistsInValidator(pipe,
+                        argumentProvider(context),
                         errorProvider(context), isEnforcedProvider(context), GetConverter(context), strictValidation,
                         validateOnTargetUpdated));
                 case Must.MatchPattern:
-                    return new ValidatorProvider((context, pipe) => new MatchPatternValidator(pipe, argumentProvider(context),
+                    return new ValidatorProvider((context, pipe) => new MatchPatternValidator(pipe,
+                        argumentProvider(context),
                         errorProvider(context), isEnforcedProvider(context), GetConverter(context), strictValidation,
                         validateOnTargetUpdated));
                 case Must.NotMatchPattern:
-                    return new ValidatorProvider((context, pipe) => new NotMatchPatternValidator(pipe, argumentProvider(context),
+                    return new ValidatorProvider((context, pipe) => new NotMatchPatternValidator(pipe,
+                        argumentProvider(context),
                         errorProvider(context), isEnforcedProvider(context), GetConverter(context), strictValidation,
                         validateOnTargetUpdated));
                 case Must.SatisfyContextMethod:
                     var methodName = GetMethodName(attribute.Argument, propertyKey);
                     var propertyName = propertyKey;
                     return new ValidatorProvider(
-                        (context, pipe) => new MethodInvocationValidator(pipe, GetContextMethodValidator(propertyName, methodName, context),
-                            errorProvider(context), isEnforcedProvider(context), GetConverter(context), strictValidation,
+                        (context, pipe) => new MethodInvocationValidator(pipe,
+                            GetContextMethodValidator(propertyName, methodName, context),
+                            errorProvider(context), isEnforcedProvider(context), GetConverter(context),
+                            strictValidation,
                             validateOnTargetUpdated));
                 case Must.SatisfyMethod:
                     var type = modelType;
                     methodName = GetMethodName(attribute.Argument, propertyKey);
                     propertyName = propertyKey;
                     return new ValidatorProvider(
-                        (context, pipe) => new MethodInvocationValidator(pipe, GetModelMethodValidator(type, propertyName, methodName, context),
-                            errorProvider(context), isEnforcedProvider(context), GetConverter(context), strictValidation,
+                        (context, pipe) => new MethodInvocationValidator(pipe,
+                            GetModelMethodValidator(type, propertyName, methodName, context),
+                            errorProvider(context), isEnforcedProvider(context), GetConverter(context),
+                            strictValidation,
                             validateOnTargetUpdated));
                 default:
                     throw new ArgumentException($"Invalid validator condition for property {propertyKey}.",
@@ -321,7 +335,8 @@ namespace Forge.Forms.FormBuilding.Defaults.Initializers
         }
 
         // Called on binding -> not performance critical.
-        private static Func<object, CultureInfo, bool, bool> GetModelMethodValidator(Type modelType, string propertyName, string methodName, IResourceContext context)
+        private static Func<object, CultureInfo, bool, bool> GetModelMethodValidator(Type modelType,
+            string propertyName, string methodName, IResourceContext context)
         {
             var method = GetMethod(modelType, methodName);
             if (method == null)
@@ -346,7 +361,8 @@ namespace Forge.Forms.FormBuilding.Defaults.Initializers
         }
 
         // Called on binding = not performance critical.
-        private static Func<object, CultureInfo, bool, bool> GetContextMethodValidator(string propertyName, string methodName, IResourceContext context)
+        private static Func<object, CultureInfo, bool, bool> GetContextMethodValidator(string propertyName,
+            string methodName, IResourceContext context)
         {
             Type currentType = null;
             Func<ValidationContext, bool> method = null;
@@ -383,6 +399,7 @@ namespace Forge.Forms.FormBuilding.Defaults.Initializers
         private static Func<ValidationContext, bool> GetMethod(Type type, string methodName)
         {
             var delegateType = typeof(Func<ValidationContext, bool>);
+
             bool IsMatch(MethodInfo methodInfo)
             {
                 if (methodInfo.Name != methodName)

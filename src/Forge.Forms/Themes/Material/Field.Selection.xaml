@@ -8,11 +8,14 @@
 
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="pack://application:,,,/MaterialForms;component/Themes/Material/IconStyles.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ComboBox.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.RadioButton.xaml" />
+        <ResourceDictionary
+            Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ComboBox.xaml" />
+        <ResourceDictionary
+            Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.RadioButton.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
-    <ControlTemplate x:Key="MaterialComboBoxSelectionPresenterTemplate" TargetType="{x:Type defaults:SelectionPresenter}">
+    <ControlTemplate x:Key="MaterialComboBoxSelectionPresenterTemplate"
+                     TargetType="{x:Type defaults:SelectionPresenter}">
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
@@ -46,7 +49,8 @@
         </Grid>
     </ControlTemplate>
 
-    <ControlTemplate x:Key="MaterialEditableComboBoxSelectionPresenterTemplate" TargetType="{x:Type defaults:SelectionPresenter}">
+    <ControlTemplate x:Key="MaterialEditableComboBoxSelectionPresenterTemplate"
+                     TargetType="{x:Type defaults:SelectionPresenter}">
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
@@ -80,7 +84,8 @@
         </Grid>
     </ControlTemplate>
 
-    <ControlTemplate x:Key="MaterialRadioButtonsSelectionPresenterTemplate" TargetType="{x:Type defaults:SelectionPresenter}">
+    <ControlTemplate x:Key="MaterialRadioButtonsSelectionPresenterTemplate"
+                     TargetType="{x:Type defaults:SelectionPresenter}">
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
@@ -104,13 +109,16 @@
                     <Style TargetType="{x:Type materialDesign:PackIcon}">
                         <Setter Property="Foreground" Value="{DynamicResource MaterialDesignBodyLight}" />
                         <Style.Triggers>
-                            <DataTrigger Binding="{Binding IsMouseOver, ElementName=HintText, Mode=OneWay}" Value="True">
+                            <DataTrigger Binding="{Binding IsMouseOver, ElementName=HintText, Mode=OneWay}"
+                                         Value="True">
                                 <Setter Property="Foreground" Value="{DynamicResource PrimaryHueMidBrush}" />
                             </DataTrigger>
-                            <DataTrigger Binding="{Binding IsMouseOver, ElementName=ValueHolderControl, Mode=OneWay}" Value="True">
+                            <DataTrigger Binding="{Binding IsMouseOver, ElementName=ValueHolderControl, Mode=OneWay}"
+                                         Value="True">
                                 <Setter Property="Foreground" Value="{DynamicResource PrimaryHueMidBrush}" />
                             </DataTrigger>
-                            <DataTrigger Binding="{Binding IsFocused, ElementName=ValueHolderControl, Mode=OneWay}" Value="True">
+                            <DataTrigger Binding="{Binding IsFocused, ElementName=ValueHolderControl, Mode=OneWay}"
+                                         Value="True">
                                 <Setter Property="Foreground" Value="{DynamicResource PrimaryHueMidBrush}" />
                             </DataTrigger>
                         </Style.Triggers>
@@ -164,11 +172,13 @@
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="Template" Value="{StaticResource MaterialComboBoxSelectionPresenterTemplate}" />
         <Style.Triggers>
-            <DataTrigger Binding="{fields:FormBinding SelectionType}" Value="{x:Static annotations:SelectionType.RadioButtons}">
+            <DataTrigger Binding="{fields:FormBinding SelectionType}"
+                         Value="{x:Static annotations:SelectionType.RadioButtons}">
                 <Setter Property="Margin" Value="8" />
                 <Setter Property="Template" Value="{StaticResource MaterialRadioButtonsSelectionPresenterTemplate}" />
             </DataTrigger>
-            <DataTrigger Binding="{fields:FormBinding SelectionType}" Value="{x:Static annotations:SelectionType.ComboBoxEditable}">
+            <DataTrigger Binding="{fields:FormBinding SelectionType}"
+                         Value="{x:Static annotations:SelectionType.ComboBoxEditable}">
                 <Setter Property="Template" Value="{StaticResource MaterialEditableComboBoxSelectionPresenterTemplate}" />
             </DataTrigger>
         </Style.Triggers>

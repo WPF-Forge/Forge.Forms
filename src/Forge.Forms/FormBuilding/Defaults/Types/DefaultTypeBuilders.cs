@@ -9,7 +9,7 @@ using Forge.Forms.Interfaces;
 
 namespace Forge.Forms.FormBuilding.Defaults.Types
 {
-    internal class StringFieldBuilder : TypeBuilder<String>
+    internal class StringFieldBuilder : TypeBuilder<string>
     {
         protected override FormElement Build(IFormProperty property, Func<string, object> deserializer)
         {
@@ -138,5 +138,4 @@ namespace Forge.Forms.FormBuilding.Defaults.Types
     //        throw new NotImplementedException();
     //    }
     //}
-
 }

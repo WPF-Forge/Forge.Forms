@@ -18,12 +18,12 @@ namespace Forge.Forms.Annotations
         {
         }
 
-        public ValueAttribute(Must condition) 
+        public ValueAttribute(Must condition)
             : this(null, condition, null, false)
         {
         }
 
-        public ValueAttribute(Must condition, object argument) 
+        public ValueAttribute(Must condition, object argument)
             : this(null, condition, argument, true)
         {
         }

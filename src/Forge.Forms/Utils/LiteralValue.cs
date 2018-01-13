@@ -7,9 +7,9 @@ namespace Forge.Forms.Utils
     public sealed class LiteralValue : Resource
     {
         public static readonly LiteralValue Null = new LiteralValue(null);
-                      
+
         public static readonly LiteralValue True = new LiteralValue(true);
-                      
+
         public static readonly LiteralValue False = new LiteralValue(false);
 
         public LiteralValue(object value)
@@ -54,7 +54,7 @@ namespace Forge.Forms.Utils
             if (other is LiteralValue resource)
             {
                 return Equals(Value, resource.Value)
-                    && ValueConverter == other.ValueConverter;
+                       && ValueConverter == other.ValueConverter;
             }
 
             return false;

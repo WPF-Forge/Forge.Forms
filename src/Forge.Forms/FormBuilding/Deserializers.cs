@@ -322,7 +322,7 @@ namespace Forge.Forms.FormBuilding
         }
 
         public static object CultureInvariantInt16(string expression, CultureInfo culture)
-       {
+        {
             return short.Parse(expression, CultureInfo.InvariantCulture);
         }
 
@@ -703,10 +703,8 @@ namespace Forge.Forms.FormBuilding
                     ? null
                     : System.Enum.Parse(enumType, expr, ignoreCase);
             }
-            else
-            {
-                return expr => System.Enum.Parse(enumType, expr, ignoreCase);
-            }
+
+            return expr => System.Enum.Parse(enumType, expr, ignoreCase);
         }
 
         #endregion

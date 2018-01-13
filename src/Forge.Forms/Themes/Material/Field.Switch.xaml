@@ -7,7 +7,8 @@
 
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="pack://application:,,,/MaterialForms;component/Themes/Material/IconStyles.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ToggleButton.xaml" />
+        <ResourceDictionary
+            Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ToggleButton.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
     <ControlTemplate x:Key="MaterialSwitchPresenterTemplate" TargetType="{x:Type defaults:SwitchPresenter}">
@@ -30,13 +31,16 @@
                     <Style TargetType="{x:Type materialDesign:PackIcon}">
                         <Setter Property="Foreground" Value="{DynamicResource MaterialDesignBodyLight}" />
                         <Style.Triggers>
-                            <DataTrigger Binding="{Binding IsMouseOver, ElementName=HintText, Mode=OneWay}" Value="True">
+                            <DataTrigger Binding="{Binding IsMouseOver, ElementName=HintText, Mode=OneWay}"
+                                         Value="True">
                                 <Setter Property="Foreground" Value="{DynamicResource PrimaryHueMidBrush}" />
                             </DataTrigger>
-                            <DataTrigger Binding="{Binding IsMouseOver, ElementName=ValueHolderControl, Mode=OneWay}" Value="True">
+                            <DataTrigger Binding="{Binding IsMouseOver, ElementName=ValueHolderControl, Mode=OneWay}"
+                                         Value="True">
                                 <Setter Property="Foreground" Value="{DynamicResource PrimaryHueMidBrush}" />
                             </DataTrigger>
-                            <DataTrigger Binding="{Binding IsFocused, ElementName=ValueHolderControl, Mode=OneWay}" Value="True">
+                            <DataTrigger Binding="{Binding IsFocused, ElementName=ValueHolderControl, Mode=OneWay}"
+                                         Value="True">
                                 <Setter Property="Foreground" Value="{DynamicResource PrimaryHueMidBrush}" />
                             </DataTrigger>
                         </Style.Triggers>

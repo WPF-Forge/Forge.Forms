@@ -8,9 +8,11 @@ namespace Forge.Forms.Validation
 {
     public class NotExistsInValidator : ComparisonValidator
     {
-        public NotExistsInValidator(ValidationPipe pipe, IProxy argument, IErrorStringProvider errorProvider, IBoolProxy isEnforced,
+        public NotExistsInValidator(ValidationPipe pipe, IProxy argument, IErrorStringProvider errorProvider,
+            IBoolProxy isEnforced,
             IValueConverter valueConverter, bool strictValidation, bool validatesOnTargetUpdated)
-            : base(pipe, argument, errorProvider, isEnforced, valueConverter, strictValidation, validatesOnTargetUpdated)
+            : base(pipe, argument, errorProvider, isEnforced, valueConverter, strictValidation,
+                validatesOnTargetUpdated)
         {
         }
 

@@ -57,10 +57,10 @@ namespace Forge.Forms.Components.Fields.Defaults
     {
         private readonly IProxy action;
         private readonly IProxy actionParameter;
-        private readonly IResourceContext context;
 
         private readonly IBoolProxy canExecute;
         private readonly IBoolProxy closesDialog;
+        private readonly IResourceContext context;
         private readonly IBoolProxy resets;
         private readonly IBoolProxy validates;
 
@@ -85,11 +85,11 @@ namespace Forge.Forms.Components.Fields.Defaults
                     break;
             }
 
-            this.validates = validates != null ? (IBoolProxy) validates.GetBoolValue(context) : new PlainBool(false);
+            this.validates = validates != null ? (IBoolProxy)validates.GetBoolValue(context) : new PlainBool(false);
             this.closesDialog = closesDialog != null
-                ? (IBoolProxy) closesDialog.GetBoolValue(context)
+                ? (IBoolProxy)closesDialog.GetBoolValue(context)
                 : new PlainBool(true);
-            resets = isReset != null ? (IBoolProxy) isReset.GetBoolValue(context) : new PlainBool(false);
+            resets = isReset != null ? (IBoolProxy)isReset.GetBoolValue(context) : new PlainBool(false);
             this.actionParameter = actionParameter?.GetBestMatchingProxy(context) ?? new PlainObject(null);
         }
 
@@ -114,10 +114,12 @@ namespace Forge.Forms.Components.Fields.Defaults
             else
             {
                 if (ModelState.IsModel(model))
+                {
                     foreach (var binding in context.GetBindings())
                     {
                         binding.UpdateSource();
                     }
+                }
             }
 
             if (closesDialog.Value && context is IFrameworkResourceContext fwContext)
@@ -197,7 +199,7 @@ namespace Forge.Forms.Components.Fields.Defaults
 
         public ICommand Command
         {
-            get => (ICommand) GetValue(CommandProperty);
+            get => (ICommand)GetValue(CommandProperty);
             set => SetValue(CommandProperty, value);
         }
     }

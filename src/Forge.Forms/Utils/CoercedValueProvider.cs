@@ -5,8 +5,8 @@ namespace Forge.Forms.Utils
 {
     public class CoercedValueProvider<T> : IValueProvider
     {
-        private readonly IValueProvider innerProvider;
         private readonly object defaultValue;
+        private readonly IValueProvider innerProvider;
 
         public CoercedValueProvider(IValueProvider innerProvider, object defaultValue)
         {

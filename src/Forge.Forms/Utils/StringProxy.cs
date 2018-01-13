@@ -23,16 +23,15 @@ namespace Forge.Forms.Utils
                 typeof(StringProxy),
                 new UIPropertyMetadata(PropertyChangedCallback));
 
-        private static void PropertyChangedCallback(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs dependencyPropertyChangedEventArgs)
-        {
-            ((StringProxy)dependencyObject).ValueChanged?.Invoke();
-        }
-
         public object Key
         {
             get => GetValue(KeyProperty);
             set => SetValue(KeyProperty, value);
         }
+
+        object IProxy.Value => Value;
+
+        public Action ValueChanged { get; set; }
 
         public string Value
         {
@@ -40,11 +39,16 @@ namespace Forge.Forms.Utils
             set => SetValue(ValueProperty, value);
         }
 
-        object IProxy.Value => Value;
+        private static void PropertyChangedCallback(DependencyObject dependencyObject,
+            DependencyPropertyChangedEventArgs dependencyPropertyChangedEventArgs)
+        {
+            ((StringProxy)dependencyObject).ValueChanged?.Invoke();
+        }
 
-        public Action ValueChanged { get; set; }
-
-        public override string ToString() => Value;
+        public override string ToString()
+        {
+            return Value;
+        }
 
         protected override Freezable CreateInstanceCore()
         {

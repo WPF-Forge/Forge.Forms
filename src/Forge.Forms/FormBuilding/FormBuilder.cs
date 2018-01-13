@@ -124,7 +124,7 @@ namespace Forge.Forms.FormBuilding
                 [typeof(ulong?)] = AsList(new ConvertedFieldBuilder(Deserializers.NullableUInt64)),
                 [typeof(float?)] = AsList(new ConvertedFieldBuilder(Deserializers.NullableSingle)),
                 [typeof(double?)] = AsList(new ConvertedFieldBuilder(Deserializers.NullableDouble)),
-                [typeof(decimal?)] = AsList(new ConvertedFieldBuilder(Deserializers.NullableDecimal)),
+                [typeof(decimal?)] = AsList(new ConvertedFieldBuilder(Deserializers.NullableDecimal))
             };
 
             FieldInitializers = new List<IFieldInitializer>
@@ -276,6 +276,7 @@ namespace Forge.Forms.FormBuilding
             };
 
             var gridLength = form.Grid.Length;
+
             void AddRow(FormElement formElement)
             {
                 form.FormRows.Add(new FormRow
@@ -563,7 +564,8 @@ namespace Forge.Forms.FormBuilding
             return element;
         }
 
-        private static List<FormRow> CreateRows(IEnumerable<(FormContentAttribute attr, FormElement element)> elements, int gridLength)
+        private static List<FormRow> CreateRows(IEnumerable<(FormContentAttribute attr, FormElement element)> elements,
+            int gridLength)
         {
             var rows = new List<FormRow>();
             List<FormElement> currentLine = null;

@@ -11,9 +11,9 @@ namespace Forge.Forms.Tests
 {
     public class DummyForm : IDynamicForm, INotifyPropertyChanged
     {
-        private object value;
         private object context;
         private object model;
+        private object value;
 
         public object Model
         {
@@ -64,14 +64,20 @@ namespace Forge.Forms.Tests
             this.form = form;
         }
 
-        public object GetModelInstance() => form.Value;
+        public object GetModelInstance()
+        {
+            return form.Value;
+        }
 
         public BindingExpressionBase[] GetBindings()
         {
             return null;
         }
 
-        public object GetContextInstance() => form.Context;
+        public object GetContextInstance()
+        {
+            return form.Context;
+        }
 
         public Binding CreateDirectModelBinding()
         {
@@ -188,7 +194,8 @@ namespace Forge.Forms.Tests
                 BoundExpression.Parse(
                     "Your name is {Binding Name}. Hello {Binding Name,-30}, welcome to {ContextProperty Place}. It is year {DynamicResource CurrentYear:yyyy}!");
 
-            Assert.AreEqual("Your name is {0}. Hello {0,-30}, welcome to {1}. It is year {2:yyyy}!", expression.StringFormat);
+            Assert.AreEqual("Your name is {0}. Hello {0,-30}, welcome to {1}. It is year {2:yyyy}!",
+                expression.StringFormat);
             Assert.AreEqual(3, expression.Resources.Count);
         }
 
@@ -204,7 +211,8 @@ namespace Forge.Forms.Tests
             {
             }
 
-            var expression = BoundExpression.Parse("Escaped {{Binding Name}} {StaticResource }}N{{a}}me{{}}{{:{{dd/MM/yyyy}}}");
+            var expression =
+                BoundExpression.Parse("Escaped {{Binding Name}} {StaticResource }}N{{a}}me{{}}{{:{{dd/MM/yyyy}}}");
             Assert.AreEqual("Escaped {{Binding Name}} {0:{{dd/MM/yyyy}}}", expression.StringFormat);
             Assert.AreEqual(1, expression.Resources.Count);
             var resource = (StaticResource)expression.Resources[0];
@@ -355,17 +363,6 @@ namespace Forge.Forms.Tests
             Assert.IsTrue(expression.Resources[0] is PropertyBinding b && b.PropertyPath == "");
         }
 
-        private class Model
-        {
-            public string Name { get; set; }
-
-            public int Value { get; set; }
-
-            public DateTime Date { get; set; }
-
-            public List<int> Grades { get; set; }
-        }
-
         [TestMethod]
         public void TestValueConverters()
         {
@@ -387,6 +384,17 @@ namespace Forge.Forms.Tests
 
             expression = BoundExpression.Parse("{Binding Name|ToUpper}");
             Assert.IsNull(expression.StringFormat);
+        }
+
+        private class Model
+        {
+            public string Name { get; set; }
+
+            public int Value { get; set; }
+
+            public DateTime Date { get; set; }
+
+            public List<int> Grades { get; set; }
         }
     }
 }

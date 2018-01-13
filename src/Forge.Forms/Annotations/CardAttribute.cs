@@ -7,7 +7,7 @@ namespace Forge.Forms.Annotations
 {
     public sealed class CardAttribute : FormContentAttribute
     {
-        public CardAttribute(int rows, [CallerLineNumber] int position = 0) 
+        public CardAttribute(int rows, [CallerLineNumber] int position = 0)
             : base(position)
         {
             StartsNewRow = false;

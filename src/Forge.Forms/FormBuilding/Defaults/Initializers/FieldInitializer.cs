@@ -53,7 +53,8 @@ namespace Forge.Forms.FormBuilding.Defaults.Initializers
                 {
                     // Null for reference types and nullables.
                     dataField.DefaultValue = LiteralValue.Null;
-                } else if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
+                }
+                else if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
                 {
                     // Same for nullables.
                     dataField.DefaultValue = LiteralValue.Null;

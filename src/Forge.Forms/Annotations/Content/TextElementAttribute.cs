@@ -26,7 +26,7 @@ namespace Forge.Forms.Annotations.Content
         /// Push text to the right to align with icons. Accepts a boolean or a dynamic resource.
         /// </summary>
         public object IconPadding { get; set; }
-        
+
         protected override void InitializeElement(FormElement element)
         {
             if (element is ContentElement contentElement)

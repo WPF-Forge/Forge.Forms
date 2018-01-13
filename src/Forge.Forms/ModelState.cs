@@ -129,7 +129,7 @@ namespace Forge.Forms
 
         /// <summary>
         /// Updates form fields with model values.
-        /// Has a similar effect to <see cref="INotifyPropertyChanged"/>.
+        /// Has a similar effect to <see cref="INotifyPropertyChanged" />.
         /// </summary>
         public static void UpdateFields(object model)
         {
@@ -141,7 +141,7 @@ namespace Forge.Forms
 
         /// <summary>
         /// Updates form fields with property values.
-        /// Has a similar effect to <see cref="INotifyPropertyChanged"/>.
+        /// Has a similar effect to <see cref="INotifyPropertyChanged" />.
         /// </summary>
         public static void UpdateFields(object model, params string[] properties)
         {

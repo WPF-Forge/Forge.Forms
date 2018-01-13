@@ -19,6 +19,25 @@ namespace Forge.Forms.Components.Fields
             BindingOptions = new BindingOptions();
         }
 
+        public Type PropertyType { get; }
+
+        public IValueProvider IsReadOnly { get; set; }
+
+        /// <summary>
+        /// Gets or sets the default value for this field.
+        /// </summary>
+        public IValueProvider DefaultValue { get; set; }
+
+        public BindingOptions BindingOptions { get; }
+
+        public List<IValidatorProvider> Validators { get; set; }
+
+        public IValueProvider SelectOnFocus { get; set; }
+
+        protected internal bool IsDirectBinding { get; set; }
+
+        protected internal bool CreateBinding { get; set; } = true;
+
         protected internal override void Freeze()
         {
             const string isNotReadOnly = "IsNotReadOnly";
@@ -56,25 +75,6 @@ namespace Forge.Forms.Components.Fields
             Resources.Add(nameof(DefaultValue), DefaultValue ?? new LiteralValue(null));
             Resources.Add(nameof(SelectOnFocus), SelectOnFocus ?? LiteralValue.True);
         }
-
-        public Type PropertyType { get; }
-
-        public IValueProvider IsReadOnly { get; set; }
-
-        /// <summary>
-        /// Gets or sets the default value for this field.
-        /// </summary>
-        public IValueProvider DefaultValue { get; set; }
-
-        public BindingOptions BindingOptions { get; }
-
-        public List<IValidatorProvider> Validators { get; set; }
-
-        public IValueProvider SelectOnFocus { get; set; }
-
-        protected internal bool IsDirectBinding { get; set; }
-
-        protected internal bool CreateBinding { get; set; } = true;
 
         public virtual object GetDefaultValue(IResourceContext context)
         {

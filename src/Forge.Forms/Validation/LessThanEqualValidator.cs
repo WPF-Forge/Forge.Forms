@@ -7,9 +7,11 @@ namespace Forge.Forms.Validation
 {
     public class LessThanEqualValidator : ComparisonValidator
     {
-        public LessThanEqualValidator(ValidationPipe pipe, IProxy argument, IErrorStringProvider errorProvider, IBoolProxy isEnforced,
+        public LessThanEqualValidator(ValidationPipe pipe, IProxy argument, IErrorStringProvider errorProvider,
+            IBoolProxy isEnforced,
             IValueConverter valueConverter, bool strictValidation, bool validatesOnTargetUpdated)
-            : base(pipe, argument, errorProvider, isEnforced, valueConverter, strictValidation, validatesOnTargetUpdated)
+            : base(pipe, argument, errorProvider, isEnforced, valueConverter, strictValidation,
+                validatesOnTargetUpdated)
         {
         }
 
@@ -26,7 +28,7 @@ namespace Forge.Forms.Validation
                 return false;
             }
 
-            if (/*value != null &&*/ comparand is IConvertible && value.GetType() != comparand.GetType())
+            if ( /*value != null &&*/ comparand is IConvertible && value.GetType() != comparand.GetType())
             {
                 comparand = Convert.ChangeType(comparand, value.GetType(), CultureInfo.InvariantCulture);
             }

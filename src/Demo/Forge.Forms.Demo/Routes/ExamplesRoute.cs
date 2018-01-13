@@ -4,7 +4,6 @@ using System.Linq;
 using Forge.Forms.Demo.Models;
 using Forge.Forms.Forms;
 using Forge.Forms.Interfaces;
-using Forge.Forms.Wpf;
 using Material.Application.Infrastructure;
 using Material.Application.Routing;
 using MaterialDesignThemes.Wpf;
@@ -22,8 +21,10 @@ namespace Forge.Forms.Demo.Routes
             RouteConfig.Title = "Examples";
             RouteConfig.Icon = PackIconKind.ViewList;
 
-            RouteConfig.RouteCommands.Add(Command("Validate model", PackIconKind.CheckAll, () => ModelState.Validate(CurrentModel.Object)));
-            RouteConfig.RouteCommands.Add(Command("Reset model", PackIconKind.Undo, () => ModelState.Reset(CurrentModel.Object)));
+            RouteConfig.RouteCommands.Add(Command("Validate model", PackIconKind.CheckAll,
+                () => ModelState.Validate(CurrentModel.Object)));
+            RouteConfig.RouteCommands.Add(Command("Reset model", PackIconKind.Undo,
+                () => ModelState.Reset(CurrentModel.Object)));
 
             this.notificationService = notificationService;
         }
@@ -39,6 +40,11 @@ namespace Forge.Forms.Demo.Routes
         }
 
         public ObservableCollection<ExamplePresenter> Models { get; private set; }
+
+        public void HandleAction(object model, string action, object parameter)
+        {
+            notificationService.Notify($"Action '{action}'");
+        }
 
         protected override void RouteInitializing()
         {
@@ -69,13 +75,14 @@ namespace Forge.Forms.Demo.Routes
             yield return new ExamplePresenter(new Confirm
             {
                 Message = "Discard draft?",
-                PositiveAction = "DISCARD",
+                PositiveAction = "DISCARD"
             }, "Confirm 1", small);
 
             yield return new ExamplePresenter(new Confirm
             {
                 Title = "Use Google's location service?",
-                Message = "Let Google help apps determine location. This means sending anonymous location data to Google, even when no apps are running.",
+                Message =
+                    "Let Google help apps determine location. This means sending anonymous location data to Google, even when no apps are running.",
                 PositiveAction = "AGREE",
                 NegativeAction = "DISAGREE"
             }, "Confirm 2", small);
@@ -83,22 +90,17 @@ namespace Forge.Forms.Demo.Routes
 
             yield return new ExamplePresenter(new Prompt<string>
             {
-                Title = "Enter your name",
+                Title = "Enter your name"
             }, "Prompt 1", small);
 
             yield return new ExamplePresenter(new Prompt<bool>
             {
                 Message = "Discard draft?",
                 PositiveAction = "DISCARD",
-                Name = "Prevent future dialogs",
+                Name = "Prevent future dialogs"
             }, "Prompt 2", small);
 
             yield return new ExamplePresenter(new DataTypes(), "Data types", large);
-        }
-
-        public void HandleAction(object model, string action, object parameter)
-        {
-            notificationService.Notify($"Action '{action}'");
         }
     }
 }

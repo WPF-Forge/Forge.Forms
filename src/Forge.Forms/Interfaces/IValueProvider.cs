@@ -48,7 +48,8 @@ namespace Forge.Forms.Interfaces
             return GetStringValue(valueProvider, context, false);
         }
 
-        public static StringProxy GetStringValue(this IValueProvider valueProvider, IResourceContext context, bool setKey)
+        public static StringProxy GetStringValue(this IValueProvider valueProvider, IResourceContext context,
+            bool setKey)
         {
             var proxy = new StringProxy();
             var value = valueProvider.ProvideValue(context);

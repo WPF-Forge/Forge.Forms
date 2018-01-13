@@ -40,7 +40,10 @@ namespace Forge.Forms.Utils
 
         public abstract BindingBase ProvideBinding(IResourceContext context);
 
-        public virtual object ProvideValue(IResourceContext context) => ProvideBinding(context);
+        public virtual object ProvideValue(IResourceContext context)
+        {
+            return ProvideBinding(context);
+        }
 
         protected IValueConverter GetValueConverter(IResourceContext context)
         {

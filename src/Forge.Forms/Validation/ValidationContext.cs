@@ -8,9 +8,10 @@ namespace Forge.Forms.Validation
     public sealed class ValidationContext
     {
         /// <summary>
-        /// Creates a new <see cref="ValidationContext"/>.
+        /// Creates a new <see cref="ValidationContext" />.
         /// </summary>
-        public ValidationContext(object model, object modelContext, string propertyName, object propertyValue, CultureInfo cultureInfo, bool willCommit)
+        public ValidationContext(object model, object modelContext, string propertyName, object propertyValue,
+            CultureInfo cultureInfo, bool willCommit)
         {
             Model = model;
             ModelContext = modelContext;
@@ -41,7 +42,7 @@ namespace Forge.Forms.Validation
         public object PropertyValue { get; }
 
         /// <summary>
-        /// Gets the <see cref="CultureInfo"/> in which this validation is performed.
+        /// Gets the <see cref="CultureInfo" /> in which this validation is performed.
         /// </summary>
         public CultureInfo CultureInfo { get; }
 

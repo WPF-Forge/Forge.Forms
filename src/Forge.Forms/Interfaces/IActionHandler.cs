@@ -1,5 +1,4 @@
-﻿
-namespace Forge.Forms.Interfaces
+﻿namespace Forge.Forms.Interfaces
 {
     public interface IActionHandler
     {

@@ -36,7 +36,7 @@ namespace Forge.Forms.Annotations
 
         /// <summary>
         /// Regex search options.
-        /// Accepts a dynamic resource or <see cref="System.Text.RegularExpressions.RegexOptions"/>.
+        /// Accepts a dynamic resource or <see cref="System.Text.RegularExpressions.RegexOptions" />.
         /// </summary>
         public object RegexOptions { get; set; }
 
@@ -47,7 +47,8 @@ namespace Forge.Forms.Annotations
             return new RegexReplacement(
                 Utilities.GetStringResource(Pattern),
                 Utilities.GetStringResource(Replacement),
-                Utilities.GetResource<RegexOptions>(RegexOptions, default(RegexOptions), Deserializers.Enum<RegexOptions>()));
+                Utilities.GetResource<RegexOptions>(RegexOptions, default(RegexOptions),
+                    Deserializers.Enum<RegexOptions>()));
         }
     }
 }

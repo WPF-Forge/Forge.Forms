@@ -29,7 +29,11 @@ namespace Forge.Forms.Demo.Routes
             get => compiledDefinition;
             private set
             {
-                if (Equals(compiledDefinition, value)) return;
+                if (Equals(compiledDefinition, value))
+                {
+                    return;
+                }
+
                 compiledDefinition = value;
                 NotifyPropertyChanged();
             }
@@ -40,7 +44,11 @@ namespace Forge.Forms.Demo.Routes
             get => xmlString;
             set
             {
-                if (Equals(xmlString, value)) return;
+                if (Equals(xmlString, value))
+                {
+                    return;
+                }
+
                 xmlString = value;
                 NotifyPropertyChanged();
             }
@@ -48,10 +56,15 @@ namespace Forge.Forms.Demo.Routes
 
         public ICommand BuildDefinitionCommand { get; }
 
+        public void HandleAction(object model, string action, object parameter)
+        {
+            notificationService.Notify($"Action '{action}'");
+        }
+
         protected override void RouteInitializing()
         {
             XmlString =
-@"<form>
+                @"<form>
     <title>Create account</title>
     <heading>Personal details</heading>
     <input type=""string"" name=""FirstName""
@@ -107,10 +120,6 @@ namespace Forge.Forms.Demo.Routes
 </form>";
 
             BuildDefinition();
-        }
-        public void HandleAction(object model, string action, object parameter)
-        {
-            notificationService.Notify($"Action '{action}'");
         }
 
         private void BuildDefinition()

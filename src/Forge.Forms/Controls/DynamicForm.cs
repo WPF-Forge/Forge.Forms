@@ -43,12 +43,6 @@ namespace Forge.Forms.Controls
 
         public static readonly DependencyProperty ValueProperty = ValuePropertyKey.DependencyProperty;
 
-        public event EventHandler<string> Action;
-
-        [DependencyProperty(Options = FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
-            OnPropertyChanged = "KernelChanged")]
-        public IKernel Kernel { get; set; }
-
         internal static readonly HashSet<DynamicForm> ActiveForms = new HashSet<DynamicForm>();
 
         private readonly List<FrameworkElement> currentElements;
@@ -86,6 +80,10 @@ namespace Forge.Forms.Controls
 
             Unloaded += (s, e) => { ActiveForms.Remove(this); };
         }
+
+        [DependencyProperty(Options = FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
+            OnPropertyChanged = "KernelChanged")]
+        public IKernel Kernel { get; set; }
 
         /// <summary>
         /// Gets or sets the form builder that is responsible for building forms.
@@ -136,6 +134,8 @@ namespace Forge.Forms.Controls
             set => SetValue(ContextProperty, value);
         }
 
+        public event EventHandler<string> Action;
+
         public void ReloadElements()
         {
             DetachBindings();
@@ -149,11 +149,13 @@ namespace Forge.Forms.Controls
 
         private static void KernelChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
         {
-            var form = (DynamicForm) obj;
-            var kernel = (IKernel) e.NewValue;
+            var form = (DynamicForm)obj;
+            var kernel = (IKernel)e.NewValue;
 
             if (kernel == null)
+            {
                 return;
+            }
 
             if (form.Model != null)
             {
@@ -173,6 +175,7 @@ namespace Forge.Forms.Controls
             {
                 form.Kernel?.Inject(objec);
             }
+
             form.UpdateModel(e.OldValue, objec);
         }
 

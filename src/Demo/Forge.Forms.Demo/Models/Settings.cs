@@ -9,24 +9,23 @@ namespace Forge.Forms.Demo.Models
 {
     public class Settings : INotifyPropertyChanged
     {
-        private bool wiFi;
-        private bool mobileData;
-        private bool personalHotspot;
-        private string hotspotName;
         private bool bluetooth;
+        private string deviceName;
 
         private bool facebook;
-        private bool twitter;
+        private string hotspotName;
         private bool instagram;
-        private string deviceName;
-        private double volume;
+        private bool mobileData;
+        private bool personalHotspot;
         private bool sendAnonymousData;
+        private bool twitter;
+        private double volume;
+        private bool wiFi;
 
         [Title("Settings")]
-
         [Heading("Connectivity", Icon = "Signal")]
-
-        [Field(Name = "Wi-Fi", Icon = "Wifi"), Toggle]
+        [Field(Name = "Wi-Fi", Icon = "Wifi")]
+        [Toggle]
         public bool WiFi
         {
             get => wiFi;
@@ -37,7 +36,8 @@ namespace Forge.Forms.Demo.Models
             }
         }
 
-        [Field(Icon = "Signal"), Toggle]
+        [Field(Icon = "Signal")]
+        [Toggle]
         public bool MobileData
         {
             get => mobileData;
@@ -48,7 +48,8 @@ namespace Forge.Forms.Demo.Models
             }
         }
 
-        [Field(Icon = "AccessPoint"), Toggle]
+        [Field(Icon = "AccessPoint")]
+        [Toggle]
         public bool PersonalHotspot
         {
             get => personalHotspot;
@@ -70,7 +71,8 @@ namespace Forge.Forms.Demo.Models
             }
         }
 
-        [Field(Icon = "Bluetooth"), Toggle]
+        [Field(Icon = "Bluetooth")]
+        [Toggle]
         public bool Bluetooth
         {
             get => bluetooth;
@@ -83,8 +85,8 @@ namespace Forge.Forms.Demo.Models
 
         [Divider]
         [Heading("Notifications", Icon = PackIconKind.MessageOutline)]
-
-        [Field(Icon = "Twitter"), Toggle]
+        [Field(Icon = "Twitter")]
+        [Toggle]
         public bool Twitter
         {
             get => twitter;
@@ -95,7 +97,8 @@ namespace Forge.Forms.Demo.Models
             }
         }
 
-        [Field(Icon = "Facebook"), Toggle]
+        [Field(Icon = "Facebook")]
+        [Toggle]
         public bool Facebook
         {
             get => facebook;
@@ -106,7 +109,8 @@ namespace Forge.Forms.Demo.Models
             }
         }
 
-        [Field(Icon = "Instagram"), Toggle]
+        [Field(Icon = "Instagram")]
+        [Toggle]
         public bool Instagram
         {
             get => instagram;
@@ -130,7 +134,8 @@ namespace Forge.Forms.Demo.Models
             }
         }
 
-        [Slider(Minimum = 0d, Maximum = 100d), Field(Icon = "{Binding VolumeIcon}")]
+        [Slider(Minimum = 0d, Maximum = 100d)]
+        [Field(Icon = "{Binding VolumeIcon}")]
         public double Volume
         {
             get => volume;

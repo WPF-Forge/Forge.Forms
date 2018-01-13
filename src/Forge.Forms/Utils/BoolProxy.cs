@@ -16,11 +16,6 @@ namespace Forge.Forms.Utils
                 typeof(BoolProxy),
                 new UIPropertyMetadata(PropertyChangedCallback));
 
-        private static void PropertyChangedCallback(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs dependencyPropertyChangedEventArgs)
-        {
-            ((BoolProxy)dependencyObject).ValueChanged?.Invoke();
-        }
-
         public bool Value
         {
             get => (bool)GetValue(ValueProperty);
@@ -30,6 +25,12 @@ namespace Forge.Forms.Utils
         object IProxy.Value => Value;
 
         public Action ValueChanged { get; set; }
+
+        private static void PropertyChangedCallback(DependencyObject dependencyObject,
+            DependencyPropertyChangedEventArgs dependencyPropertyChangedEventArgs)
+        {
+            ((BoolProxy)dependencyObject).ValueChanged?.Invoke();
+        }
 
         protected override Freezable CreateInstanceCore()
         {

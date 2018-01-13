@@ -26,8 +26,7 @@
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 Kind="{fields:FormBinding Icon}"
-                Visibility="{fields:FormBinding IconVisibility}">
-            </materialDesign:PackIcon>
+                Visibility="{fields:FormBinding IconVisibility}" />
             <TextBlock
                 Grid.Column="1"
                 VerticalAlignment="Center"

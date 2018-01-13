@@ -9,10 +9,12 @@
         /// Does nothing.
         /// </summary>
         DoNothing,
+
         /// <summary>
         /// Validates the field.
         /// </summary>
         ValidateField,
+
         /// <summary>
         /// Clears the field of validation errors.
         /// </summary>

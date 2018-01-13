@@ -18,7 +18,8 @@ namespace Forge.Forms.Utils
         {
         }
 
-        public DataBinding(string propertyPath, BindingOptions bindingOptions, List<IValidatorProvider> validationRules, string valueConverter)
+        public DataBinding(string propertyPath, BindingOptions bindingOptions, List<IValidatorProvider> validationRules,
+            string valueConverter)
             : base(valueConverter)
         {
             PropertyPath = propertyPath;

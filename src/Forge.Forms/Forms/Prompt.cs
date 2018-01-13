@@ -6,17 +6,16 @@ using MaterialDesignThemes.Wpf;
 namespace Forge.Forms.Forms
 {
     [Form(Mode = DefaultFields.None)]
-
     [Title("{Binding Title}", IsVisible = "{Binding Title|IsNotEmpty}")]
     [Text("{Binding Message}", IsVisible = "{Binding Message|IsNotEmpty}")]
     [Action("negative", "{Binding NegativeAction}", IsVisible = "{Binding NegativeAction|IsNotEmpty}")]
     [Action("positive", "{Binding PositiveAction}", IsVisible = "{Binding PositiveAction|IsNotEmpty}")]
     public sealed class Prompt<T> : DialogBase
     {
-        private T value;
+        private PackIconKind? icon;
         private string name;
         private string toolTip;
-        private PackIconKind? icon;
+        private T value;
 
         [Field(Name = "{Binding Name}",
             ToolTip = "{Binding ToolTip}",
@@ -26,7 +25,11 @@ namespace Forge.Forms.Forms
             get => value;
             set
             {
-                if (Equals(value, this.value)) return;
+                if (Equals(value, this.value))
+                {
+                    return;
+                }
+
                 this.value = value;
                 OnPropertyChanged();
             }
@@ -37,7 +40,11 @@ namespace Forge.Forms.Forms
             get => name;
             set
             {
-                if (value == name) return;
+                if (value == name)
+                {
+                    return;
+                }
+
                 name = value;
                 OnPropertyChanged();
             }
@@ -48,7 +55,11 @@ namespace Forge.Forms.Forms
             get => toolTip;
             set
             {
-                if (value == toolTip) return;
+                if (value == toolTip)
+                {
+                    return;
+                }
+
                 toolTip = value;
                 OnPropertyChanged();
             }
@@ -59,7 +70,11 @@ namespace Forge.Forms.Forms
             get => icon;
             set
             {
-                if (value == icon) return;
+                if (value == icon)
+                {
+                    return;
+                }
+
                 icon = value;
                 OnPropertyChanged();
             }

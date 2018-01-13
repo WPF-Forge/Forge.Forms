@@ -17,7 +17,7 @@
     <Style BasedOn="{StaticResource WpfConvertedPresenterStyle}" TargetType="{x:Type defaults:ConvertedPresenter}" />
     <Style BasedOn="{StaticResource WpfCheckBoxPresenterStyle}" TargetType="{x:Type defaults:CheckBoxPresenter}" />
     <Style BasedOn="{StaticResource WpfSwitchPresenterStyle}" TargetType="{x:Type defaults:SwitchPresenter}" />
-    
+
     <Style BasedOn="{StaticResource WpfActionPresenterStyle}" TargetType="{x:Type defaults:ActionPresenter}" />
 
 </ResourceDictionary>

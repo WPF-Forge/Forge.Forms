@@ -92,13 +92,15 @@ namespace Forge.Forms.Annotations
         NotMatchPattern,
 
         /// <summary>
-        /// Property value must satisfy model's static method of signature: public static bool &lt;Argument&gt;(<see cref="ValidationContext"/> context).
+        /// Property value must satisfy model's static method of signature: public static bool &lt;Argument&gt;(
+        /// <see cref="ValidationContext" /> context).
         /// Throws if no such method is found.
         /// </summary>
         SatisfyMethod,
 
         /// <summary>
-        /// Property value must satisfy context's static method of signature: public static bool &lt;Argument&gt;(<see cref="ValidationContext"/> context).
+        /// Property value must satisfy context's static method of signature: public static bool &lt;Argument&gt;(
+        /// <see cref="ValidationContext" /> context).
         /// Does nothing if no such method is found.
         /// </summary>
         SatisfyContextMethod

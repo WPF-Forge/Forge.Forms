@@ -10,7 +10,8 @@ namespace Forge.Forms.Validation
         private readonly IErrorStringProvider errorProvider;
         private readonly CultureInfo overrideCulture;
 
-        public ConversionValidator(Func<string, CultureInfo, object> deserializer, IErrorStringProvider errorProvider, CultureInfo overrideCulture)
+        public ConversionValidator(Func<string, CultureInfo, object> deserializer, IErrorStringProvider errorProvider,
+            CultureInfo overrideCulture)
             : base(ValidationStep.RawProposedValue, false)
         {
             this.deserializer = deserializer;

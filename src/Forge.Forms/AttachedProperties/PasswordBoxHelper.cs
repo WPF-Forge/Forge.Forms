@@ -16,16 +16,6 @@ namespace Forge.Forms.AttachedProperties
             DependencyProperty.RegisterAttached("SettingPassword", typeof(bool), typeof(PasswordBoxHelper),
                 new PropertyMetadata(false));
 
-        public static string GetPassword(DependencyObject obj)
-        {
-            return (string) obj.GetValue(PasswordProperty);
-        }
-
-        public static void SetPassword(DependencyObject obj, string value)
-        {
-            obj.SetValue(PasswordProperty, value);
-        }
-
         public static readonly DependencyProperty PasswordProperty =
             DependencyProperty.RegisterAttached("Password", typeof(string), typeof(PasswordBoxHelper),
                 new FrameworkPropertyMetadata(Guid.NewGuid().ToString(), HandleBoundPasswordChanged)
@@ -34,20 +24,34 @@ namespace Forge.Forms.AttachedProperties
                     DefaultUpdateSourceTrigger = UpdateSourceTrigger.LostFocus // Match the default on Binding
                 });
 
+        public static string GetPassword(DependencyObject obj)
+        {
+            return (string)obj.GetValue(PasswordProperty);
+        }
+
+        public static void SetPassword(DependencyObject obj, string value)
+        {
+            obj.SetValue(PasswordProperty, value);
+        }
+
         private static void HandleBoundPasswordChanged(DependencyObject dp, DependencyPropertyChangedEventArgs e)
         {
             try
             {
                 if (!(dp is PasswordBox passwordBox))
+                {
                     return;
+                }
 
                 // If we're being called because we set the value of the property we're bound to (from inside 
                 // HandlePasswordChanged, then do nothing - we already have the latest value).
-                if ((bool) passwordBox.GetValue(SettingPasswordProperty))
+                if ((bool)passwordBox.GetValue(SettingPasswordProperty))
+                {
                     return;
+                }
 
                 // If this is the initial set (see the comment on PasswordProperty), set ourselves up
-                if (!(bool) passwordBox.GetValue(PasswordInitializedProperty))
+                if (!(bool)passwordBox.GetValue(PasswordInitializedProperty))
                 {
                     passwordBox.SetValue(PasswordInitializedProperty, true);
                     passwordBox.PasswordChanged += HandlePasswordChanged;
@@ -63,7 +67,7 @@ namespace Forge.Forms.AttachedProperties
 
         private static void HandlePasswordChanged(object sender, RoutedEventArgs e)
         {
-            var passwordBox = (PasswordBox) sender;
+            var passwordBox = (PasswordBox)sender;
             passwordBox.SetValue(SettingPasswordProperty, true);
             SetPassword(passwordBox, passwordBox.Password);
             passwordBox.SetValue(SettingPasswordProperty, false);

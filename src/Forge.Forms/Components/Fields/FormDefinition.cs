@@ -18,13 +18,13 @@ namespace Forge.Forms.Components.Fields
             FormRows = new List<FormRow>();
         }
 
+        public List<FormRow> FormRows { get; set; }
+
         public Type ModelType { get; }
 
         public IDictionary<string, IValueProvider> Resources { get; set; }
 
         public double[] Grid { get; set; }
-
-        public List<FormRow> FormRows { get; set; }
 
         IReadOnlyList<FormRow> IFormDefinition.FormRows => FormRows;
 

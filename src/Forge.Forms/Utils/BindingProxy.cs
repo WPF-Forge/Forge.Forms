@@ -16,11 +16,6 @@ namespace Forge.Forms.Utils
                 typeof(BindingProxy),
                 new UIPropertyMetadata(PropertyChangedCallback));
 
-        private static void PropertyChangedCallback(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs dependencyPropertyChangedEventArgs)
-        {
-            ((BindingProxy)dependencyObject).ValueChanged?.Invoke();
-        }
-
         public object Key { get; set; }
 
         public object Value
@@ -28,8 +23,14 @@ namespace Forge.Forms.Utils
             get => GetValue(ValueProperty);
             set => SetValue(ValueProperty, value);
         }
-        
+
         public Action ValueChanged { get; set; }
+
+        private static void PropertyChangedCallback(DependencyObject dependencyObject,
+            DependencyPropertyChangedEventArgs dependencyPropertyChangedEventArgs)
+        {
+            ((BindingProxy)dependencyObject).ValueChanged?.Invoke();
+        }
 
         protected override Freezable CreateInstanceCore()
         {

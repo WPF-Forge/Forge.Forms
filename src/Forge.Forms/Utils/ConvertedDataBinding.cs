@@ -36,7 +36,8 @@ namespace Forge.Forms.Utils
             BindingOptions.Apply(binding);
             var deserializer = ReplacementPipe.CreateDeserializer(context);
             binding.Converter = new StringTypeConverter(deserializer);
-            binding.ValidationRules.Add(new ConversionValidator(deserializer, ConversionErrorStringProvider(context), binding.ConverterCulture));
+            binding.ValidationRules.Add(new ConversionValidator(deserializer, ConversionErrorStringProvider(context),
+                binding.ConverterCulture));
             var pipe = new ValidationPipe();
             foreach (var validatorProvider in ValidationRules)
             {
@@ -47,6 +48,9 @@ namespace Forge.Forms.Utils
             return binding;
         }
 
-        public object ProvideValue(IResourceContext context) => ProvideBinding(context);
+        public object ProvideValue(IResourceContext context)
+        {
+            return ProvideBinding(context);
+        }
     }
 }

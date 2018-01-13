@@ -49,8 +49,8 @@ namespace Forge.Forms.Demo.Models
         }
 
         [Text("You have selected {Binding YourFavoriteFood}", InsertAfter = true)]
-
-        [SelectFrom(new[] { "{Binding FirstFood}, obviously.", "{Binding SecondFood} is best!", "I love {Binding ThirdFood}" })]
+        [SelectFrom(new[]
+            { "{Binding FirstFood}, obviously.", "{Binding SecondFood} is best!", "I love {Binding ThirdFood}" })]
         public string YourFavoriteFood
         {
             get => yourFavoriteFood;

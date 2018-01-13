@@ -19,7 +19,9 @@ namespace Forge.Forms.FormBuilding
         public static List<PropertyInfo> GetProperties(Type type, DefaultFields mode)
         {
             if (type == null)
+            {
                 throw new ArgumentException(nameof(type));
+            }
 
             // First requirement is that properties and getters must be public.
             var properties = type
@@ -64,7 +66,8 @@ namespace Forge.Forms.FormBuilding
             }
         }
 
-        public static IValueProvider GetResource<T>(object value, object defaultValue, Func<string, object> deserializer)
+        public static IValueProvider GetResource<T>(object value, object defaultValue,
+            Func<string, object> deserializer)
         {
             if (value == null)
             {
@@ -153,7 +156,8 @@ namespace Forge.Forms.FormBuilding
                 res => res is DeferredProxyResource resource && resource.ProxyProvider == func))
             {
                 var key = propertyKey;
-                return context => new ValueErrorStringProvider(boundExpression.GetStringValue(context), GetValueProxy(context, key));
+                return context =>
+                    new ValueErrorStringProvider(boundExpression.GetStringValue(context), GetValueProxy(context, key));
             }
 
             return context => new ErrorStringProvider(boundExpression.GetStringValue(context));
@@ -186,6 +190,7 @@ namespace Forge.Forms.FormBuilding
                 {
                     throw new InvalidOperationException("Invalid grid column values.");
                 }
+
                 if (isPixel)
                 {
                     value = -value;
@@ -237,8 +242,8 @@ namespace Forge.Forms.FormBuilding
             }
 
             value = element.Value.Trim();
-            return value == "" 
-                ? null 
+            return value == ""
+                ? null
                 : value;
         }
 

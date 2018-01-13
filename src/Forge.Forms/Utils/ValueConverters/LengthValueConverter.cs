@@ -10,6 +10,28 @@ namespace Forge.Forms.Utils.ValueConverters
 {
     public class LengthValueConverter : IValueConverter
     {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            switch (value)
+            {
+                case string s:
+                    return s.Length;
+                case IEnumerable<object> e:
+                    return e.Count();
+                case IEnumerable e:
+                    return Count(e);
+                case SecureString s:
+                    return s.Length;
+                default:
+                    return null;
+            }
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+
         public static int Count(IEnumerable source)
         {
             if (source is ICollection collection)
@@ -32,28 +54,6 @@ namespace Forge.Forms.Utils.ValueConverters
             {
                 (e as IDisposable)?.Dispose();
             }
-        }
-
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            switch (value)
-            {
-                case string s:
-                    return s.Length;
-                case IEnumerable<object> e:
-                    return e.Count();
-                case IEnumerable e:
-                    return Count(e);
-                case SecureString s:
-                    return s.Length;
-                default:
-                    return null;
-            }
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
         }
     }
 }

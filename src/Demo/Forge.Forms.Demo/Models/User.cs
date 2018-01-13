@@ -11,7 +11,6 @@ namespace Forge.Forms.Demo.Models
     public class User
     {
         [Heading("Personal details")]
-
         [Field(Name = "First Name",
             ToolTip = "Enter your first name here.",
             Icon = PackIconKind.Pencil)]
@@ -30,7 +29,6 @@ namespace Forge.Forms.Demo.Models
         public DateTime? DateOfBirth { get; set; }
 
         [Heading("Account details")]
-
         [Field(Name = "Username",
             Icon = PackIconKind.Account)]
         [Value(Must.MatchPattern, "^[a-zA-Z][a-zA-Z0-9]*$",
@@ -55,17 +53,13 @@ namespace Forge.Forms.Demo.Models
         public string ConfirmPassword { get; set; }
 
         [Break]
-
         [Heading("Review entered information")]
         [Text("Name: {Binding FirstName} {Binding LastName}")]
         [Text("Date of birth: {Binding DateOfBirth:yyyy-MM-dd}")]
         [Text("Username: {Binding Username}")]
-
         [Break]
-
         [Heading("License agreement")]
         [Text("By signing up, you agree to our terms of use, privacy policy, and cookie policy.")]
-
         [Value(Must.BeTrue, Message = "You must accept the license agreement.")]
         public bool AgreeToLicense { get; set; }
     }

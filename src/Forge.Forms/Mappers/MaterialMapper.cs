@@ -23,15 +23,21 @@ namespace Forge.Forms.Mappers
                 var shouldHave = Mappings.Select(i => i.PropertyInfo).Where(i => i != null).ToList();
                 foreach (var prop in propertyInfos)
                 {
-                    if (shouldHave.Any(i => i.Name == prop.Name)) continue;
+                    if (shouldHave.Any(i => i.Name == prop.Name))
+                    {
+                        continue;
+                    }
+
                     {
                         if (Mappings.Any(i => i.PropertyInfo?.Name == prop.Name))
+                        {
                             continue;
+                        }
 
                         Mappings.Add(new Mapper(this)
                         {
                             Expression = new Expression<Func<Attribute>>[]
-                                {() => new FieldAttribute {IsVisible = false}},
+                                { () => new FieldAttribute { IsVisible = false } },
                             PropertyInfo = prop
                         });
                     }
@@ -53,7 +59,7 @@ namespace Forge.Forms.Mappers
         }
 
         /// <summary>
-        ///     Adds a mapper.
+        /// Adds a mapper.
         /// </summary>
         /// <typeparam name="TProperty"></typeparam>
         /// <param name="expression"></param>
@@ -64,18 +70,24 @@ namespace Forge.Forms.Mappers
             var type = Type;
 
             if (!(propertyLambda.Body is MemberExpression member))
+            {
                 throw new ArgumentException(
                     $"Expression '{propertyLambda}' refers to a method, not a property.");
+            }
 
             var propInfo = member.Member as PropertyInfo;
             if (propInfo == null)
+            {
                 throw new ArgumentException(
                     $"Expression '{propertyLambda}' refers to a field, not a property.");
+            }
 
             if (type != propInfo.ReflectedType &&
                 !type.IsSubclassOf(propInfo.ReflectedType))
+            {
                 throw new ArgumentException(
                     $"Expresion '{propertyLambda}' refers to a property that is not from type {type}.");
+            }
 
             var mapper = new Mapper(this)
             {
@@ -87,7 +99,7 @@ namespace Forge.Forms.Mappers
         }
 
         /// <summary>
-        ///     Called when [action happened]
+        /// Called when [action happened]
         /// </summary>
         /// <param name="model">The model.</param>
         /// <param name="action">The action.</param>
@@ -101,7 +113,7 @@ namespace Forge.Forms.Mappers
         /// <param name="parameter">The parameter.</param>
         public override void HandleAction(object model, string action, object parameter)
         {
-            Action((TSource) model.CopyTo(Activator.CreateInstance(BaseType.AddParameterlessConstructor())), action,
+            Action((TSource)model.CopyTo(Activator.CreateInstance(BaseType.AddParameterlessConstructor())), action,
                 parameter);
         }
     }

@@ -17,8 +17,8 @@ namespace Forge.Forms.FormBuilding
                 return null;
             }
 
-            return CustomCultures.TryGetValue(name, out var value) 
-                ? value 
+            return CustomCultures.TryGetValue(name, out var value)
+                ? value
                 : CultureInfo.GetCultureInfo(name);
         }
 

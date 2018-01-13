@@ -9,7 +9,8 @@ namespace Forge.Forms.Validation
     {
         private readonly Func<object, CultureInfo, bool, bool> method;
 
-        public MethodInvocationValidator(ValidationPipe pipe, Func<object, CultureInfo, bool, bool> method, IErrorStringProvider errorProvider,
+        public MethodInvocationValidator(ValidationPipe pipe, Func<object, CultureInfo, bool, bool> method,
+            IErrorStringProvider errorProvider,
             IBoolProxy isEnforced, IValueConverter valueConverter, bool strictValidation, bool validatesOnTargetUpdated)
             : base(pipe, errorProvider, isEnforced, valueConverter, strictValidation, validatesOnTargetUpdated)
         {

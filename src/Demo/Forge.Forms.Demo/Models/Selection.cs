@@ -11,12 +11,9 @@ namespace Forge.Forms.Demo.Models
 
     public enum AgeGroup
     {
-        [EnumDisplay("0-18")]
-        ZeroToEighteen,
-        [EnumDisplay("18-39")]
-        EighteenToThirtyNine,
-        [EnumDisplay("40+")]
-        FortyPlus
+        [EnumDisplay("0-18")] ZeroToEighteen,
+        [EnumDisplay("18-39")] EighteenToThirtyNine,
+        [EnumDisplay("40+")] FortyPlus
     }
 
     public enum YesNo

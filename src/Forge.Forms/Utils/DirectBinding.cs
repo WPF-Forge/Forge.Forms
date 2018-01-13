@@ -18,7 +18,8 @@ namespace Forge.Forms.Utils
         {
         }
 
-        public DirectBinding(BindingOptions bindingOptions, List<IValidatorProvider> validationRules, string valueConverter)
+        public DirectBinding(BindingOptions bindingOptions, List<IValidatorProvider> validationRules,
+            string valueConverter)
             : base(valueConverter)
         {
             BindingOptions = bindingOptions ?? throw new ArgumentNullException(nameof(bindingOptions));
