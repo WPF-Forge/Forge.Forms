@@ -10,7 +10,6 @@ using Forge.Forms.Interfaces;
 using Forge.Forms.Utils;
 using Forge.Forms.Validation;
 using MaterialDesignThemes.Wpf;
-using Proxier.Mappers;
 
 namespace Forge.Forms.FormBuilding
 {
@@ -24,11 +23,7 @@ namespace Forge.Forms.FormBuilding
             }
 
             // First requirement is that properties and getters must be public.
-            var properties = type
-                .GetHighestProperties()
-                .Where(p => p.PropertyInfo.CanRead && p.PropertyInfo.GetGetMethod(true).IsPublic)
-                .OrderBy(p => p.Token)
-                .Select(i => i.PropertyInfo);
+            var properties = Transformation.GetTransformation(type).GetProperties.Invoke(type);
 
             switch (mode)
             {

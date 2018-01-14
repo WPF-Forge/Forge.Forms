@@ -10,7 +10,6 @@ using Forge.Forms.Interfaces;
 using Forge.Forms.Utils;
 using Forge.Forms.Utils.ValueConverters;
 using Ninject;
-using Proxier.Mappers;
 
 namespace Forge.Forms.Components.Controls
 {
@@ -159,24 +158,17 @@ namespace Forge.Forms.Components.Controls
 
             if (form.Model != null)
             {
-                var oldModel = form.Model;
-                var newModel = form.Model.CopyTo(form.Model.GetType());
-                kernel.Inject(newModel);
-                form.UpdateModel(oldModel, newModel);
+                form.UpdateModel(form.Model,
+                    Transformation.GetTransformation(form.Model).KernelChanged.Invoke(form.Model, kernel));
             }
         }
 
         private static void ModelChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
         {
             var form = (DynamicForm)obj;
-            Mapper.InitializeMapperClasses(form.Kernel);
-            var objec = e.NewValue.GetInjectedObject();
-            if (objec != null)
-            {
-                form.Kernel?.Inject(objec);
-            }
-
-            form.UpdateModel(e.OldValue, objec);
+            var transform = Transformation.GetTransformation(e.NewValue);
+            var newModel = transform?.ModelChanged.Invoke(e.OldValue, e.NewValue, form.Kernel) ?? e.NewValue;
+            form.UpdateModel(e.OldValue, newModel);
         }
 
         private void UpdateModel(object oldModel, object newModel)
