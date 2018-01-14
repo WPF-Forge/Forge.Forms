@@ -6,9 +6,9 @@ using Ninject;
 
 namespace Forge.Forms.Utils
 {
-    public class Transformation
+    public class TransformationBase
     {
-        static Transformation()
+        static TransformationBase()
         {
             var moduleInit = AppDomain.CurrentDomain.GetAssemblies().SelectMany(i => i.GetReferencedAssemblies())
                 .Select(Assembly.Load).SelectMany(assembly => assembly.GetTypes())
@@ -18,36 +18,69 @@ namespace Forge.Forms.Utils
             moduleInit?.GetMethod("Initialize")?.Invoke(null, null);
         }
 
-        public static Transformation GlobalTransformation { get; set; } = new Transformation();
+        /// <summary>
+        /// If no transformation is set for a specific type this is used as a fallback.
+        /// </summary>
+        public static Transformation Default { get; set; } = new Transformation();
 
         private static Dictionary<Type, Transformation> Transformations { get; } =
             new Dictionary<Type, Transformation>();
 
-        public Func<object, string, object, object> OnAction { get; set; } = (o, s, arg3) => o;
-
-        public Func<object, object, IKernel, object> ModelChanged { get; set; } =
-            (oldModel, newModel, kernel) => newModel;
-
-        public Func<object, IKernel, object> KernelChanged { get; set; } = (o, k) => o;
-
-        public Func<Type, IEnumerable<PropertyInfo>> GetProperties { get; set; } = o => o
-            .GetProperties(BindingFlags.Public | BindingFlags.Instance)
-            .Where(p => p.CanRead && p.GetGetMethod(true).IsPublic)
-            .OrderBy(p => p.MetadataToken);
-
+        /// <summary>
+        /// Adds a specific transformation for a type.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="transformation"></param>
         public static void AddTransformation(Type type, Transformation transformation)
         {
             Transformations.Add(type, transformation);
         }
 
+        /// <summary>
+        /// Gets a transformation from an object.
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         public static Transformation GetTransformation(object model)
         {
             return model != null ? GetTransformation(model.GetType()) : null;
         }
 
+        /// <summary>
+        /// Gets a transformation from a type.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
         public static Transformation GetTransformation(Type type)
         {
-            return Transformations.ContainsKey(type) ? Transformations[type] : GlobalTransformation;
+            return Transformations.ContainsKey(type) ? Transformations[type] : Default;
         }
+    }
+
+    public class Transformation : TransformationBase
+    {
+        /// <summary>
+        /// Happens when a non-command action happens.
+        /// </summary>
+        public Func<object, string, object, object> OnAction { get; set; } = (o, s, arg3) => o;
+
+        /// <summary>
+        /// Happens whenever a model update is called.
+        /// </summary>
+        public Func<object, object, IKernel, object> ModelChanged { get; set; } =
+            (oldModel, newModel, kernel) => newModel;
+
+        /// <summary>
+        /// Happens whenever a kernel update is called.
+        /// </summary>
+        public Func<object, IKernel, object> KernelChanged { get; set; } = (o, k) => o;
+
+        /// <summary>
+        /// Used to get properties during the form building process.
+        /// </summary>
+        public Func<Type, IEnumerable<PropertyInfo>> GetProperties { get; set; } = o => o
+            .GetProperties(BindingFlags.Public | BindingFlags.Instance)
+            .Where(p => p.CanRead && p.GetGetMethod(true).IsPublic)
+            .OrderBy(p => p.MetadataToken);
     }
 }

@@ -20,7 +20,7 @@ namespace Forge.Forms.Mapper
                 OnAction = OnAction
             };
 
-            Transformation.GlobalTransformation = transformation;
+            Transformation.Default = transformation;
         }
 
         private static object OnAction(object model, string actionName, object arg)
