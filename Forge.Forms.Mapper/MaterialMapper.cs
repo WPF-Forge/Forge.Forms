@@ -8,7 +8,7 @@ using Proxier.Mappers;
 namespace Forge.Forms.Mapper
 {
     public class MaterialMapper : AttributeMapper
-    {        
+    {
         protected MaterialMapper(Type type) : base(type)
         {
         }
@@ -18,7 +18,9 @@ namespace Forge.Forms.Mapper
         public override object TransfomSpawn(object createInstance)
         {
             if (!AutoHide)
+            {
                 return base.TransfomSpawn(createInstance);
+            }
 
             var propertyInfos = Type.GetHighestProperties().Select(i => i.PropertyInfo);
             var shouldHave = Mappings.Select(i => i.PropertyInfo).Where(i => i != null).ToList();
@@ -53,7 +55,7 @@ namespace Forge.Forms.Mapper
     }
 
     public class MaterialMapper<TSource> : MaterialMapper
-    {        
+    {
         public MaterialMapper() : base(typeof(TSource))
         {
         }

@@ -4,7 +4,6 @@ using Forge.Forms.Components.Controls;
 using Forge.Forms.Demo.Models;
 using Forge.Forms.Demo.Routes;
 using Forge.Forms.Mapper;
-using Forge.Forms.Utils;
 using MahApps.Metro.Controls;
 using Material.Application.Infrastructure;
 using Material.Application.Routing;

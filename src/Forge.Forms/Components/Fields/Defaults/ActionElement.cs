@@ -142,6 +142,7 @@ namespace Forge.Forms.Components.Fields.Defaults
                     {
                         contextHandler.HandleAction(modelToUse, actionName, arg);
                     }
+
                     context.OnAction(model, actionName, arg);
                     break;
                 case ICommand command:

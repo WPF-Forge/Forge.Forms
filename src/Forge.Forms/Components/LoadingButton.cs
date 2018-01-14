@@ -6,9 +6,9 @@ using MahApps.Metro.Controls;
 
 namespace Forge.Forms.Components
 {
-    public class LoadingButton : Button
+    internal class LoadingButton : Button
     {
-        private object _oldContent;
+        private object oldContent;
 
         public LoadingButton()
         {
@@ -35,18 +35,18 @@ namespace Forge.Forms.Components
             {
                 if (button.IsLoading)
                 {
-                    button._oldContent = button.Content;
+                    button.oldContent = button.Content;
                     button.Content = button.CircularProgressBar;
                     button.IsEnabled = false;
                 }
-                else if (button._oldContent != null)
+                else if (button.oldContent != null)
                 {
-                    button.Content = button._oldContent;
+                    button.Content = button.oldContent;
                     button.IsEnabled = true;
                 }
                 else
                 {
-                    button._oldContent = button.Content;
+                    button.oldContent = button.Content;
                 }
             });
         }

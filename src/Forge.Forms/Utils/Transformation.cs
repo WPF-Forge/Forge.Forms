@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Security.Policy;
 using Ninject;
 
 namespace Forge.Forms.Utils
@@ -11,17 +10,8 @@ namespace Forge.Forms.Utils
     {
         public static Transformation GlobalTransformation { get; set; } = new Transformation();
 
-        private static Dictionary<Type, Transformation> Transformations { get; set; } =
+        private static Dictionary<Type, Transformation> Transformations { get; } =
             new Dictionary<Type, Transformation>();
-
-        public static void AddTransformation(Type type, Transformation transformation) =>
-            Transformations.Add(type, transformation);
-
-        public static Transformation GetTransformation(object model) =>
-            model != null ? GetTransformation(model.GetType()) : null;
-
-        public static Transformation GetTransformation(Type type) =>
-            Transformations.ContainsKey(type) ? Transformations[type] : GlobalTransformation;
 
         public Func<object, string, object, object> OnAction { get; set; } = (o, s, arg3) => o;
 
@@ -34,5 +24,20 @@ namespace Forge.Forms.Utils
             .GetProperties(BindingFlags.Public | BindingFlags.Instance)
             .Where(p => p.CanRead && p.GetGetMethod(true).IsPublic)
             .OrderBy(p => p.MetadataToken);
+
+        public static void AddTransformation(Type type, Transformation transformation)
+        {
+            Transformations.Add(type, transformation);
+        }
+
+        public static Transformation GetTransformation(object model)
+        {
+            return model != null ? GetTransformation(model.GetType()) : null;
+        }
+
+        public static Transformation GetTransformation(Type type)
+        {
+            return Transformations.ContainsKey(type) ? Transformations[type] : GlobalTransformation;
+        }
     }
 }
