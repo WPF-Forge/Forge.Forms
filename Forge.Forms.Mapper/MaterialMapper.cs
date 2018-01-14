@@ -5,10 +5,10 @@ using System.Reflection;
 using Forge.Forms.Annotations;
 using Proxier.Mappers;
 
-namespace Forge.Forms.Utils
+namespace Forge.Forms.Mapper
 {
     public class MaterialMapper : AttributeMapper
-    {
+    {        
         protected MaterialMapper(Type type) : base(type)
         {
         }
@@ -53,7 +53,7 @@ namespace Forge.Forms.Utils
     }
 
     public class MaterialMapper<TSource> : MaterialMapper
-    {
+    {        
         public MaterialMapper() : base(typeof(TSource))
         {
         }

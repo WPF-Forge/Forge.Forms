@@ -34,9 +34,11 @@ namespace Forge.Forms.Mapper
         private static object ModelChanged(object oldModel, object newModel, IKernel kernel)
         {
             Proxier.Mappers.Mapper.InitializeMapperClasses(kernel);
+            newModel = newModel.GetInjectedObject();
+
             if (newModel != null)
             {
-                kernel.Inject(newModel);
+                kernel?.Inject(newModel);
             }
 
             return newModel;
@@ -45,13 +47,13 @@ namespace Forge.Forms.Mapper
         private static object KernelChanged(object o, IKernel kernel)
         {
             var newModel = o.CopyTo(o.GetType());
-            kernel.Inject(newModel);
+            kernel?.Inject(newModel);
             return newModel;
         }
 
-        private static IEnumerable<PropertyInfo> GetProperties(object o)
+        private static IEnumerable<PropertyInfo> GetProperties(Type o)
         {
-            return o.GetType()
+            return o
                 .GetHighestProperties()
                 .Where(p => p.PropertyInfo.CanRead && p.PropertyInfo.GetGetMethod(true).IsPublic)
                 .OrderBy(p => p.Token)

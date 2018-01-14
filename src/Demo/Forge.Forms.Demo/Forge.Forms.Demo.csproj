@@ -195,6 +195,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Forge.Forms.Mapper\Forge.Forms.Mapper.csproj">
+      <Project>{FC05C575-2B2F-439C-8D29-4971406957E1}</Project>
+      <Name>Forge.Forms.Mapper</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Forge.Forms\Forge.Forms.csproj">
       <Project>{703572ce-5a7e-4b37-9f12-ff9a11483de2}</Project>
       <Name>Forge.Forms</Name>

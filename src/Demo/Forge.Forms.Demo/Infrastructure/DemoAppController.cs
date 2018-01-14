@@ -3,6 +3,7 @@ using Forge.Forms.Annotations;
 using Forge.Forms.Components.Controls;
 using Forge.Forms.Demo.Models;
 using Forge.Forms.Demo.Routes;
+using Forge.Forms.Mapper;
 using Forge.Forms.Utils;
 using MahApps.Metro.Controls;
 using Material.Application.Infrastructure;
@@ -10,23 +11,24 @@ using Material.Application.Routing;
 
 namespace Forge.Forms.Demo.Infrastructure
 {
-//    public class LoginExtensions : MaterialMapper<Login>
-//    {
-//        public LoginExtensions()
-//        {
-//            AddPropertyAttribute(i => i.RememberMe, () => new FieldAttribute { Name = "sdfgsrysert" });
-//        }
-//
-//        public override void Action(Login model, string action, object parameter)
-//        {
-//            base.Action(model, action, parameter);
-//        }
-//    }
+    public class LoginExtensions : MaterialMapper<Login>
+    {
+        public LoginExtensions()
+        {
+            AddPropertyAttribute(i => i.RememberMe, () => new FieldAttribute { Name = "sdfgsrysert" });
+        }
+
+        public override void Action(Login model, string action, object parameter)
+        {
+            base.Action(model, action, parameter);
+        }
+    }
 
     public class DemoAppController : AppController
     {
         protected override void OnInitializing()
         {
+            ModuleInitializer.Initialize();
             var factory = Routes.RouteFactory;
             Routes.MenuRoutes.Add(InitialRoute = factory.Get<HomeRoute>());
             Routes.MenuRoutes.Add(factory.Get<ExamplesRoute>());
