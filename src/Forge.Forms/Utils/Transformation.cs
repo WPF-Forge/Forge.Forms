@@ -8,6 +8,16 @@ namespace Forge.Forms.Utils
 {
     public class Transformation
     {
+        static Transformation()
+        {
+            var moduleInit = AppDomain.CurrentDomain.GetAssemblies().SelectMany(i => i.GetReferencedAssemblies())
+                .Select(Assembly.Load).SelectMany(assembly => assembly.GetTypes())
+                .Where(i => i.Namespace == "Forge.Forms.Mapper")
+                .FirstOrDefault(i => i.Name == "ModuleInitializer");
+
+            moduleInit?.GetMethod("Initialize")?.Invoke(null, null);
+        }
+
         public static Transformation GlobalTransformation { get; set; } = new Transformation();
 
         private static Dictionary<Type, Transformation> Transformations { get; } =
