@@ -13,15 +13,24 @@ namespace Forge.Forms.Components
         public LoadingButton()
         {
             Width = double.NaN;
-            CircularProgressBar.Foreground = Foreground;
+
+            try
+            {
+                CircularProgressBar = new ProgressBar
+                {
+                    IsIndeterminate = true,
+                    Style = Application.Current.TryFindResource("MaterialDesignCircularProgressBar") as Style ??
+                            Application.Current.TryFindResource("ProgressRing") as Style,
+                    Foreground = Foreground
+                };
+            }
+            catch
+            {
+                // ignored
+            }
         }
 
-        private ProgressBar CircularProgressBar { get; } = new ProgressBar
-        {
-            IsIndeterminate = true,
-            Style = Application.Current.TryFindResource("MaterialDesignCircularProgressBar") as Style ??
-                    Application.Current.TryFindResource("ProgressRing") as Style
-        };
+        private ProgressBar CircularProgressBar { get; }
 
 
         [DependencyProperty(OnPropertyChanged = nameof(IsLoadingChanged))]
@@ -33,11 +42,17 @@ namespace Forge.Forms.Components
             var button = (LoadingButton)dependencyObject;
             button.Invoke(() =>
             {
-                if (button.IsLoading)
+                if (button.IsLoading && button.CircularProgressBar != null)
                 {
                     button.oldContent = button.Content;
                     button.Content = button.CircularProgressBar;
                     button.IsEnabled = false;
+                }
+                else if (button.IsLoading && button.CircularProgressBar == null)
+                {
+                    button.IsEnabled = false;
+                    button.oldContent = button.Content;
+                    button.Content = "Loading...";
                 }
                 else if (button.oldContent != null)
                 {
@@ -57,7 +72,8 @@ namespace Forge.Forms.Components
 
             if (e.Property == ForegroundProperty)
             {
-                CircularProgressBar.Foreground = (Brush)e.NewValue;
+                if (CircularProgressBar != null)
+                    CircularProgressBar.Foreground = (Brush)e.NewValue;
             }
         }
     }
