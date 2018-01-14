@@ -59,6 +59,7 @@
     <PackageReference Include="System.Resources.ResourceManager" Version="4.3.0" />
     <PackageReference Include="System.Runtime" Version="4.3.0" />
     <PackageReference Include="System.Runtime.Loader" Version="4.3.0" />
+    <PackageReference Include="System.ValueTuple" Version="4.4.0" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Bindables, Version=0.4.0.0, Culture=neutral, PublicKeyToken=null">
@@ -190,6 +191,7 @@
     <Compile Include="Utils\Resource.cs" />
     <Compile Include="Utils\StaticResource.cs" />
     <Compile Include="Utils\StringProxy.cs" />
+    <Compile Include="Utils\Transformation.cs" />
     <Compile Include="Utils\ValueConverters\AsBoolConverter.cs" />
     <Compile Include="Utils\ValueConverters\BoolOrVisibilityConverter.cs" />
     <Compile Include="Utils\ValueConverters\ConverterWrapper.cs" />
