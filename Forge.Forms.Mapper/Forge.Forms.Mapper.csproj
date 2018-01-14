@@ -49,12 +49,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Fody" Version="2.3.20" />
-    <PackageReference Include="ModuleInit.Fody" Version="1.7.1" />
     <PackageReference Include="Proxier" Version="1.4.7" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="FodyWeavers.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
