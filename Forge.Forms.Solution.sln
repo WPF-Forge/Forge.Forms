@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Forge.Forms", "src\Forge.Fo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Forge.Forms.Tests", "src\Forge.Forms.Tests\Forge.Forms.Tests.csproj", "{528FBDC1-500C-4C3B-AD72-F8FB49E778FE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Forge.Forms.Mapper", "Forge.Forms.Mapper\Forge.Forms.Mapper.csproj", "{FC05C575-2B2F-439C-8D29-4971406957E1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		AppVeyor|Any CPU = AppVeyor|Any CPU
@@ -33,6 +35,12 @@ Global
 		{528FBDC1-500C-4C3B-AD72-F8FB49E778FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{528FBDC1-500C-4C3B-AD72-F8FB49E778FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{528FBDC1-500C-4C3B-AD72-F8FB49E778FE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FC05C575-2B2F-439C-8D29-4971406957E1}.AppVeyor|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC05C575-2B2F-439C-8D29-4971406957E1}.AppVeyor|Any CPU.Build.0 = Debug|Any CPU
+		{FC05C575-2B2F-439C-8D29-4971406957E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC05C575-2B2F-439C-8D29-4971406957E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC05C575-2B2F-439C-8D29-4971406957E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC05C575-2B2F-439C-8D29-4971406957E1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
