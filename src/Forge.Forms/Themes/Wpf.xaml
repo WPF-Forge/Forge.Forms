@@ -4,12 +4,12 @@
     xmlns:defaults="clr-namespace:Forge.Forms.Components.Fields.Defaults">
 
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="pack://application:,,,/MaterialForms;component/Themes/Wpf/Field.CheckBox.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/MaterialForms;component/Themes/Wpf/Field.Password.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/MaterialForms;component/Themes/Wpf/Field.Converted.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/MaterialForms;component/Themes/Wpf/Field.String.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/MaterialForms;component/Themes/Wpf/Field.Switch.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/MaterialForms;component/Themes/Wpf/Element.Action.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Forge.Forms;component/Themes/Wpf/Field.CheckBox.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Forge.Forms;component/Themes/Wpf/Field.Password.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Forge.Forms;component/Themes/Wpf/Field.Converted.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Forge.Forms;component/Themes/Wpf/Field.String.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Forge.Forms;component/Themes/Wpf/Field.Switch.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Forge.Forms;component/Themes/Wpf/Element.Action.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
     <Style BasedOn="{StaticResource WpfStringPresenterStyle}" TargetType="{x:Type defaults:StringPresenter}" />

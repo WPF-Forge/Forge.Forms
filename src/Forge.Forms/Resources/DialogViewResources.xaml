@@ -51,6 +51,6 @@
             Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ScrollViewer.xaml" />
         <ResourceDictionary
             Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ProgressBar.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/MaterialForms;component/Resources/TextStyles.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Forge.Forms;component/Resources/TextStyles.xaml" />
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

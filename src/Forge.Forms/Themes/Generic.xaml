@@ -6,8 +6,8 @@
     xmlns:fields="clr-namespace:Forge.Forms.Components.Fields"
     xmlns:controls="clr-namespace:Forge.Forms.Components.Controls">
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="pack://application:,,,/MaterialForms;component/Themes/Elements/Text.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/MaterialForms;component/Themes/Wpf.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Forge.Forms;component/Themes/Elements/Text.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Forge.Forms;component/Themes/Wpf.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
     <Style TargetType="defaults:DividerPresenter">

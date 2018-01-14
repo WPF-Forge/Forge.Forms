@@ -7,7 +7,7 @@
     xmlns:fields="clr-namespace:Forge.Forms.Components.Fields">
 
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="pack://application:,,,/MaterialForms;component/Themes/Metro/IconStyles.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Forge.Forms;component/Themes/Metro/IconStyles.xaml" />
         <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.Textbox.xaml" />
     </ResourceDictionary.MergedDictionaries>
 

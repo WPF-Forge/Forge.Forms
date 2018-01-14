@@ -10,18 +10,18 @@ using Material.Application.Routing;
 
 namespace Forge.Forms.Demo.Infrastructure
 {
-    public class LoginExtensions : MaterialMapper<Login>
-    {
-        public LoginExtensions()
-        {
-            AddPropertyAttribute(i => i.RememberMe, () => new FieldAttribute { Name = "sdfgsrysert" });
-        }
-
-        public override void Action(Login model, string action, object parameter)
-        {
-            base.Action(model, action, parameter);
-        }
-    }
+//    public class LoginExtensions : MaterialMapper<Login>
+//    {
+//        public LoginExtensions()
+//        {
+//            AddPropertyAttribute(i => i.RememberMe, () => new FieldAttribute { Name = "sdfgsrysert" });
+//        }
+//
+//        public override void Action(Login model, string action, object parameter)
+//        {
+//            base.Action(model, action, parameter);
+//        }
+//    }
 
     public class DemoAppController : AppController
     {

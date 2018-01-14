@@ -4,13 +4,13 @@
     xmlns:defaults="clr-namespace:Forge.Forms.Components.Fields.Defaults">
 
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="pack://application:,,,/MaterialForms;component/Themes/Metro/Field.CheckBox.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/MaterialForms;component/Themes/Metro/Field.Converted.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/MaterialForms;component/Themes/Metro/Field.String.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/MaterialForms;component/Themes/Metro/Field.Password.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/MaterialForms;component/Themes/Metro/Field.Switch.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/MaterialForms;component/Themes/Metro/Element.Text.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/MaterialForms;component/Themes/Metro/Element.Action.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Forge.Forms;component/Themes/Metro/Field.CheckBox.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Forge.Forms;component/Themes/Metro/Field.Converted.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Forge.Forms;component/Themes/Metro/Field.String.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Forge.Forms;component/Themes/Metro/Field.Password.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Forge.Forms;component/Themes/Metro/Field.Switch.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Forge.Forms;component/Themes/Metro/Element.Text.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Forge.Forms;component/Themes/Metro/Element.Action.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
     <Style BasedOn="{StaticResource MetroStringPresenterStyle}" TargetType="{x:Type defaults:StringPresenter}" />

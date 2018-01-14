@@ -6,7 +6,7 @@
     xmlns:fields="clr-namespace:Forge.Forms.Components.Fields">
 
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="pack://application:,,,/MaterialForms;component/Themes/Material/IconStyles.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Forge.Forms;component/Themes/Material/IconStyles.xaml" />
         <ResourceDictionary
             Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.CheckBox.xaml" />
     </ResourceDictionary.MergedDictionaries>

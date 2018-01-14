@@ -5,7 +5,7 @@
     xmlns:fields="clr-namespace:Forge.Forms.Components.Fields">
 
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="pack://application:,,,/MaterialForms;component/Themes/Elements/Text.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Forge.Forms;component/Themes/Elements/Text.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
     <Style x:Key="MaterialTitlePresenterStyle" TargetType="defaults:TitlePresenter">

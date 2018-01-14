@@ -1,6 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:materialForms="clr-namespace:Forge.Forms"
+                    xmlns:Forge.Forms="clr-namespace:Forge.Forms"
                     xmlns:utils="clr-namespace:Forge.Forms.Utils">
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary
