@@ -6,7 +6,6 @@ using Forge.Forms.Components.Controls;
 using Forge.Forms.Interfaces;
 using Forge.Forms.Utils;
 using MaterialDesignThemes.Wpf;
-using Proxier.Mappers;
 
 namespace Forge.Forms.Components.Fields.Defaults
 {
@@ -133,23 +132,16 @@ namespace Forge.Forms.Components.Fields.Defaults
             switch (action.Value)
             {
                 case string actionName:
+                    var modelToUse = Transformation.GetTransformation(model).OnAction.Invoke(model, actionName, arg);
                     if (model is IActionHandler modelHandler)
                     {
-                        modelHandler.HandleAction(
-                            model.GetInjectedObject()
-                                ?.CopyTo(model.GetType().FindOverridableType()?.BaseType ?? model.GetType()) ?? model,
-                            actionName, arg);
+                        modelHandler.HandleAction(modelToUse, actionName, arg);
                     }
 
                     if (context.GetContextInstance() is IActionHandler contextHandler)
                     {
-                        contextHandler.HandleAction(
-                            model.GetInjectedObject()
-                                ?.CopyTo(model.GetType().FindOverridableType()?.BaseType ?? model.GetType()) ?? model,
-                            actionName, arg);
+                        contextHandler.HandleAction(modelToUse, actionName, arg);
                     }
-
-                    model.GetType().FindOverridableType<MaterialMapper>()?.HandleAction(model, actionName, arg);
                     context.OnAction(model, actionName, arg);
                     break;
                 case ICommand command:
