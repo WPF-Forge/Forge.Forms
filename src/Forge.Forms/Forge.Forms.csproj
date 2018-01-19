@@ -77,6 +77,12 @@
     <Compile Include="Annotations\ValidationAction.cs" />
     <Compile Include="Annotations\ValueAttribute.cs" />
     <Compile Include="Annotations\Content\Position.cs" />
+    <Compile Include="Controls\BoolToResizeModeConverter.cs" />
+    <Compile Include="WindowOptions.cs" />
+    <Compile Include="DialogOptions.cs" />
+    <Compile Include="Controls\DialogWindow.xaml.cs">
+      <DependentUpon>DialogWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Internal\PasswordBoxHelper.cs" />
     <Compile Include="Controls\Internal\ActionPanel.cs" />
     <Compile Include="Controls\DynamicForm.cs" />
@@ -174,6 +180,7 @@
     <Compile Include="DynamicExpressions\ValueConverters\ToStringConverter.cs" />
     <Compile Include="DynamicExpressions\ValueConverters\ToUpperConverter.cs" />
     <Compile Include="DynamicExpressions\ValueConverters\VisibilityConverter.cs" />
+    <Compile Include="Show.cs" />
     <Compile Include="Validation\ComparisonValidator.cs" />
     <Compile Include="Validation\ConversionValidator.cs" />
     <Compile Include="Validation\EmptyValidator.cs" />
@@ -203,6 +210,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Controls\DialogWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Themes\Elements\Text.xaml">
       <SubType>Designer</SubType>
       <Generator>XamlIntelliSenseFileGenerator</Generator>

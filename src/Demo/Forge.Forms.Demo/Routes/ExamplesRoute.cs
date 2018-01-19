@@ -65,6 +65,8 @@ namespace Forge.Forms.Demo.Routes
 
             yield return new ExamplePresenter(new FoodSelection(), "Food Selection", large);
 
+            yield return new ExamplePresenter(new Dialogs(), "Dialogs", large);
+
             yield return new ExamplePresenter(new Alert
             {
                 Message = "Item deleted."
