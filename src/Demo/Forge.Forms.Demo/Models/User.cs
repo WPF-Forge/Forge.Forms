@@ -1,6 +1,5 @@
 ﻿using System;
 using Forge.Forms.Annotations;
-using Forge.Forms.Annotations.Content;
 using MaterialDesignThemes.Wpf;
 
 namespace Forge.Forms.Demo.Models

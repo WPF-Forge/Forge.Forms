@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
-using Forge.Forms.Components.Fields;
 using Forge.Forms.FormBuilding;
 
 namespace Forge.Forms.Annotations

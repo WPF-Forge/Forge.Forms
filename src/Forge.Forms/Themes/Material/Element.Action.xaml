@@ -2,23 +2,22 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-    xmlns:components="clr-namespace:Forge.Forms.Components"
-    xmlns:defaults="clr-namespace:Forge.Forms.Components.Fields.Defaults"
-    xmlns:fields="clr-namespace:Forge.Forms.Components.Fields">
+    xmlns:formBuilding="clr-namespace:Forge.Forms.FormBuilding"
+    xmlns:defaults="clr-namespace:Forge.Forms.FormBuilding.Defaults">
 
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary
-            Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ProgressBar.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
     <ControlTemplate x:Key="MaterialActionPresenterTemplate" TargetType="{x:Type defaults:ActionPresenter}">
-        <components:LoadingButton
+        <Button
+            MinWidth="48"
             MinHeight="36"
-            IsDefault="{fields:FormBinding IsDefault}"
-            IsCancel="{fields:FormBinding IsCancel}"
             Padding="{TemplateBinding Padding}"
             Command="{TemplateBinding Command}"
-            IsLoading="{fields:FormBinding IsLoading}"
+            IsCancel="{formBuilding:FormBinding IsCancel}"
+            IsDefault="{formBuilding:FormBinding IsDefault}"
             Style="{StaticResource MaterialDesignFlatButton}">
             <StackPanel Orientation="Horizontal">
                 <materialDesign:PackIcon
@@ -27,11 +26,21 @@
                     Margin="0,0,4,0"
                     VerticalAlignment="Center"
                     Foreground="{DynamicResource MaterialDesignBody}"
-                    Kind="{fields:FormBinding Icon}"
-                    Visibility="{fields:FormBinding IconVisibility}" />
-                <TextBlock VerticalAlignment="Center" Text="{fields:FormBinding Content}" />
+                    Kind="{formBuilding:FormBinding Icon}"
+                    Visibility="{formBuilding:FormBinding IconVisibility}" />
+                <TextBlock VerticalAlignment="Center" Text="{formBuilding:FormBinding Content}" />
             </StackPanel>
-        </components:LoadingButton>
+        </Button>
+    </ControlTemplate>
+
+    <ControlTemplate x:Key="MaterialActionPresenterLoadingTemplate" TargetType="{x:Type defaults:ActionPresenter}">
+        <Border MinWidth="48" MinHeight="36">
+            <ProgressBar
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                IsIndeterminate="True"
+                Style="{StaticResource MaterialDesignCircularProgressBar}" />
+        </Border>
     </ControlTemplate>
 
     <Style x:Key="MaterialActionPresenterStyle" TargetType="defaults:ActionPresenter">
@@ -39,6 +48,11 @@
         <Setter Property="Padding" Value="8,2" />
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="Template" Value="{StaticResource MaterialActionPresenterTemplate}" />
+        <Style.Triggers>
+            <DataTrigger Binding="{formBuilding:FormBinding IsLoading}" Value="True">
+                <Setter Property="Template" Value="{StaticResource MaterialActionPresenterLoadingTemplate}" />
+            </DataTrigger>
+        </Style.Triggers>
     </Style>
 
 </ResourceDictionary>

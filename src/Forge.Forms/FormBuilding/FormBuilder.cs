@@ -4,14 +4,11 @@ using System.Linq;
 using System.Reflection;
 using System.Xml.Linq;
 using Forge.Forms.Annotations;
-using Forge.Forms.Annotations.Content;
-using Forge.Forms.Components.Fields;
+using Forge.Forms.DynamicExpressions;
 using Forge.Forms.FormBuilding.Defaults;
 using Forge.Forms.FormBuilding.Defaults.Initializers;
 using Forge.Forms.FormBuilding.Defaults.Properties;
 using Forge.Forms.FormBuilding.Defaults.Types;
-using Forge.Forms.Interfaces;
-using Forge.Forms.Utils;
 
 namespace Forge.Forms.FormBuilding
 {
@@ -417,8 +414,8 @@ namespace Forge.Forms.FormBuilding
             var formDefinition = new FormDefinition(type);
             var mode = DefaultFields.AllExcludingReadonly;
             var grid = new[] { 1d };
-            var beforeFormContent = new List<(FormContentAttribute attr, FormElement element)>();
-            var afterFormContent = new List<(FormContentAttribute attr, FormElement element)>();
+            var beforeFormContent = new List<AttrElementTuple>();
+            var afterFormContent = new List<AttrElementTuple>();
             foreach (var attribute in type.GetCustomAttributes())
             {
                 switch (attribute)
@@ -440,19 +437,19 @@ namespace Forge.Forms.FormBuilding
                     case FormContentAttribute contentAttribute:
                         if (contentAttribute.InsertAfter)
                         {
-                            afterFormContent.Add((contentAttribute, contentAttribute.GetElement()));
+                            afterFormContent.Add(new AttrElementTuple(contentAttribute, contentAttribute.GetElement()));
                         }
                         else
                         {
-                            beforeFormContent.Add((contentAttribute, contentAttribute.GetElement()));
+                            beforeFormContent.Add(new AttrElementTuple(contentAttribute, contentAttribute.GetElement()));
                         }
 
                         break;
                 }
             }
 
-            beforeFormContent.Sort((a, b) => a.attr.Position.CompareTo(b.attr.Position));
-            afterFormContent.Sort((a, b) => a.attr.Position.CompareTo(b.attr.Position));
+            beforeFormContent.Sort((a, b) => a.Attr.Position.CompareTo(b.Attr.Position));
+            afterFormContent.Sort((a, b) => a.Attr.Position.CompareTo(b.Attr.Position));
 
             var gridLength = grid.Length;
 
@@ -510,19 +507,19 @@ namespace Forge.Forms.FormBuilding
 
             foreach (var row in layout)
             {
-                var before = new List<(FormContentAttribute attr, FormElement element)>();
-                var after = new List<(FormContentAttribute attr, FormElement element)>();
+                var before = new List<AttrElementTuple>();
+                var after = new List<AttrElementTuple>();
                 foreach (var element in row.Elements)
                 {
                     var property = element.Property;
                     foreach (var attr in property.GetCustomAttributes<FormContentAttribute>())
                     {
-                        (attr.InsertAfter ? after : before).Add((attr, attr.GetElement()));
+                        (attr.InsertAfter ? after : before).Add(new AttrElementTuple(attr, attr.GetElement()));
                     }
                 }
 
-                before.Sort((a, b) => a.attr.Position.CompareTo(b.attr.Position));
-                after.Sort((a, b) => a.attr.Position.CompareTo(b.attr.Position));
+                before.Sort((a, b) => a.Attr.Position.CompareTo(b.Attr.Position));
+                after.Sort((a, b) => a.Attr.Position.CompareTo(b.Attr.Position));
 
                 // Before element.
                 rows.AddRange(CreateRows(before, gridLength));
@@ -564,13 +561,27 @@ namespace Forge.Forms.FormBuilding
             return element;
         }
 
-        private static List<FormRow> CreateRows(IEnumerable<(FormContentAttribute attr, FormElement element)> elements,
+        private struct AttrElementTuple
+        {
+            public AttrElementTuple(FormContentAttribute attr, FormElement element)
+            {
+                Attr = attr;
+                Element = element;
+            }
+
+            public FormContentAttribute Attr;
+            public FormElement Element;
+        }
+
+        private static List<FormRow> CreateRows(IEnumerable<AttrElementTuple> elements,
             int gridLength)
         {
             var rows = new List<FormRow>();
             List<FormElement> currentLine = null;
-            foreach (var (attr, element) in elements)
+            foreach (var item in elements)
             {
+                var attr = item.Attr;
+                var element = item.Element;
                 if (!attr.StartsNewRow)
                 {
                     rows.Add(new FormRow(false, attr.RowSpan)

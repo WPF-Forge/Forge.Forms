@@ -1,7 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
-using Forge.Forms.Annotations.Content;
-using Forge.Forms.Components.Fields;
-using Forge.Forms.Components.Fields.Defaults;
+using Forge.Forms.FormBuilding;
+using Forge.Forms.FormBuilding.Defaults;
 
 namespace Forge.Forms.Annotations
 {

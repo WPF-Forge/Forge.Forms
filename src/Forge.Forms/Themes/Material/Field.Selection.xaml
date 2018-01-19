@@ -3,8 +3,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:annotations="clr-namespace:Forge.Forms.Annotations"
-    xmlns:defaults="clr-namespace:Forge.Forms.Components.Fields.Defaults"
-    xmlns:fields="clr-namespace:Forge.Forms.Components.Fields">
+    xmlns:formBuilding="clr-namespace:Forge.Forms.FormBuilding"
+    xmlns:defaults="clr-namespace:Forge.Forms.FormBuilding.Defaults">
 
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="pack://application:,,,/Forge.Forms;component/Themes/Material/IconStyles.xaml" />
@@ -28,24 +28,24 @@
                 Margin="0,0,16,0"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
-                Kind="{fields:FormBinding Icon}"
+                Kind="{formBuilding:FormBinding Icon}"
                 Style="{StaticResource MaterialColoredIconStyle}"
-                Visibility="{fields:FormBinding IconVisibility}" />
+                Visibility="{formBuilding:FormBinding IconVisibility}" />
             <ComboBox
                 Name="ValueHolderControl"
                 Grid.Column="1"
                 Margin="0,-14,0,0"
                 VerticalAlignment="Center"
                 materialDesign:ComboBoxAssist.ShowSelectedItem="True"
-                materialDesign:HintAssist.Hint="{fields:FormBinding Name}"
-                DisplayMemberPath="{fields:FormBinding DisplayPath}"
-                IsEnabled="{fields:FormBinding IsNotReadOnly}"
-                ItemStringFormat="{fields:FormBinding ItemStringFormat}"
-                ItemsSource="{fields:FormBinding ItemsSource}"
-                SelectedValue="{fields:FormBinding Value}"
-                SelectedValuePath="{fields:FormBinding ValuePath}"
+                materialDesign:HintAssist.Hint="{formBuilding:FormBinding Name}"
+                DisplayMemberPath="{formBuilding:FormBinding DisplayPath}"
+                IsEnabled="{formBuilding:FormBinding IsNotReadOnly}"
+                ItemStringFormat="{formBuilding:FormBinding ItemStringFormat}"
+                ItemsSource="{formBuilding:FormBinding ItemsSource}"
+                SelectedValue="{formBuilding:FormBinding Value}"
+                SelectedValuePath="{formBuilding:FormBinding ValuePath}"
                 Style="{StaticResource MaterialDesignFloatingHintComboBox}"
-                ToolTip="{fields:FormBinding ToolTip}" />
+                ToolTip="{formBuilding:FormBinding ToolTip}" />
         </Grid>
     </ControlTemplate>
 
@@ -63,24 +63,24 @@
                 Margin="0,0,16,0"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
-                Kind="{fields:FormBinding Icon}"
+                Kind="{formBuilding:FormBinding Icon}"
                 Style="{StaticResource MaterialColoredIconStyle}"
-                Visibility="{fields:FormBinding IconVisibility}" />
+                Visibility="{formBuilding:FormBinding IconVisibility}" />
             <ComboBox
                 Name="ValueHolderControl"
                 Grid.Column="1"
                 Margin="0,-14,0,0"
                 VerticalAlignment="Center"
                 materialDesign:ComboBoxAssist.ShowSelectedItem="True"
-                materialDesign:HintAssist.Hint="{fields:FormBinding Name}"
-                DisplayMemberPath="{fields:FormBinding DisplayPath}"
+                materialDesign:HintAssist.Hint="{formBuilding:FormBinding Name}"
+                DisplayMemberPath="{formBuilding:FormBinding DisplayPath}"
                 IsEditable="True"
-                IsEnabled="{fields:FormBinding IsNotReadOnly}"
-                ItemStringFormat="{fields:FormBinding ItemStringFormat}"
-                ItemsSource="{fields:FormBinding ItemsSource}"
+                IsEnabled="{formBuilding:FormBinding IsNotReadOnly}"
+                ItemStringFormat="{formBuilding:FormBinding ItemStringFormat}"
+                ItemsSource="{formBuilding:FormBinding ItemsSource}"
                 Style="{StaticResource MaterialDesignFloatingHintComboBox}"
-                Text="{fields:FormBinding Value}"
-                ToolTip="{fields:FormBinding ToolTip}" />
+                Text="{formBuilding:FormBinding Value}"
+                ToolTip="{formBuilding:FormBinding ToolTip}" />
         </Grid>
     </ControlTemplate>
 
@@ -103,8 +103,8 @@
                 Margin="0,0,16,0"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
-                Kind="{fields:FormBinding Icon}"
-                Visibility="{fields:FormBinding IconVisibility}">
+                Kind="{formBuilding:FormBinding Icon}"
+                Visibility="{formBuilding:FormBinding IconVisibility}">
                 <materialDesign:PackIcon.Style>
                     <Style TargetType="{x:Type materialDesign:PackIcon}">
                         <Setter Property="Foreground" Value="{DynamicResource MaterialDesignBodyLight}" />
@@ -131,20 +131,20 @@
                 Grid.Column="1"
                 VerticalAlignment="Center"
                 FontSize="{TemplateBinding FontSize}"
-                Text="{fields:FormBinding Name}"
-                ToolTip="{fields:FormBinding ToolTip}" />
+                Text="{formBuilding:FormBinding Name}"
+                ToolTip="{formBuilding:FormBinding ToolTip}" />
             <ListBox
                 Name="ValueHolderControl"
                 Grid.Row="1"
                 Grid.Column="0"
                 Grid.ColumnSpan="2"
                 Padding="0,8,0,0"
-                DisplayMemberPath="{fields:FormBinding DisplayPath}"
-                IsEnabled="{fields:FormBinding IsNotReadOnly}"
-                ItemStringFormat="{fields:FormBinding ItemStringFormat}"
-                ItemsSource="{fields:FormBinding ItemsSource}"
-                SelectedValue="{fields:FormBinding Value}"
-                SelectedValuePath="{fields:FormBinding ValuePath}">
+                DisplayMemberPath="{formBuilding:FormBinding DisplayPath}"
+                IsEnabled="{formBuilding:FormBinding IsNotReadOnly}"
+                ItemStringFormat="{formBuilding:FormBinding ItemStringFormat}"
+                ItemsSource="{formBuilding:FormBinding ItemsSource}"
+                SelectedValue="{formBuilding:FormBinding Value}"
+                SelectedValuePath="{formBuilding:FormBinding ValuePath}">
                 <ListBox.ItemContainerStyle>
                     <Style TargetType="ListBoxItem">
                         <Setter Property="Margin" Value="2,6,0,6" />
@@ -172,12 +172,12 @@
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="Template" Value="{StaticResource MaterialComboBoxSelectionPresenterTemplate}" />
         <Style.Triggers>
-            <DataTrigger Binding="{fields:FormBinding SelectionType}"
+            <DataTrigger Binding="{formBuilding:FormBinding SelectionType}"
                          Value="{x:Static annotations:SelectionType.RadioButtons}">
                 <Setter Property="Margin" Value="8" />
                 <Setter Property="Template" Value="{StaticResource MaterialRadioButtonsSelectionPresenterTemplate}" />
             </DataTrigger>
-            <DataTrigger Binding="{fields:FormBinding SelectionType}"
+            <DataTrigger Binding="{formBuilding:FormBinding SelectionType}"
                          Value="{x:Static annotations:SelectionType.ComboBoxEditable}">
                 <Setter Property="Template" Value="{StaticResource MaterialEditableComboBoxSelectionPresenterTemplate}" />
             </DataTrigger>

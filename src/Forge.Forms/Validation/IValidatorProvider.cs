@@ -1,4 +1,4 @@
-﻿using Forge.Forms.Interfaces;
+﻿using Forge.Forms.FormBuilding;
 
 namespace Forge.Forms.Validation
 {

@@ -3,8 +3,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
-    xmlns:defaults="clr-namespace:Forge.Forms.Components.Fields.Defaults"
-    xmlns:fields="clr-namespace:Forge.Forms.Components.Fields">
+    xmlns:formBuilding="clr-namespace:Forge.Forms.FormBuilding"
+    xmlns:defaults="clr-namespace:Forge.Forms.FormBuilding.Defaults">
 
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="pack://application:,,,/Forge.Forms;component/Themes/Metro/IconStyles.xaml" />
@@ -25,20 +25,20 @@
                 Margin="0,0,8,0"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
-                Kind="{fields:FormBinding Icon}"
-                Visibility="{fields:FormBinding IconVisibility}" />
+                Kind="{formBuilding:FormBinding Icon}"
+                Visibility="{formBuilding:FormBinding IconVisibility}" />
             <TextBlock
                 Grid.Column="1"
                 VerticalAlignment="Center"
-                Text="{fields:FormBinding Name}"
-                ToolTip="{fields:FormBinding ToolTip}" />
+                Text="{formBuilding:FormBinding Name}"
+                ToolTip="{formBuilding:FormBinding ToolTip}" />
             <controls:ToggleSwitch
                 Name="ValueHolderControl"
                 Grid.Column="2"
                 Margin="0"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
-                IsChecked="{fields:FormBinding Value}"
+                IsChecked="{formBuilding:FormBinding Value}"
                 Style="{StaticResource MahApps.Metro.Styles.ToggleSwitch.Win10}" />
         </Grid>
     </ControlTemplate>

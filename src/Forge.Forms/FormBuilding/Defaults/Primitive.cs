@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Globalization;
-using Forge.Forms.Components.Fields;
-using Forge.Forms.Components.Fields.Defaults;
 
 namespace Forge.Forms.FormBuilding.Defaults
 {
-    public static class Primitive
+    internal static class Primitive
     {
         private static FormDefinition BuildWith(DataFormField field)
         {

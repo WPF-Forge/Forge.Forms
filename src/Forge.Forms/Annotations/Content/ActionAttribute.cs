@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
-using Forge.Forms.Components.Fields;
-using Forge.Forms.Components.Fields.Defaults;
+using Forge.Forms.DynamicExpressions;
 using Forge.Forms.FormBuilding;
-using Forge.Forms.Utils;
+using Forge.Forms.FormBuilding.Defaults;
 
-namespace Forge.Forms.Annotations.Content
+namespace Forge.Forms.Annotations
 {
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Property, AllowMultiple = true)]
     public class ActionAttribute : FormContentAttribute
@@ -20,7 +19,7 @@ namespace Forge.Forms.Annotations.Content
             // Actions are inserted after elements by default.
             InsertAfter = true;
             // Actions are displayed to the right by default.
-            LinePosition = Components.Controls.Position.Right;
+            LinePosition = Annotations.Position.Right;
         }
 
         /// <summary>

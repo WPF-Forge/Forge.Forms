@@ -6,7 +6,7 @@
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:routes="clr-namespace:Forge.Forms.Demo.Routes"
-    xmlns:controls="clr-namespace:Forge.Forms.Components.Controls;assembly=Forge.Forms"
+    xmlns:controls="clr-namespace:Forge.Forms.Controls;assembly=Forge.Forms"
     d:DataContext="{d:DesignInstance Type=routes:ExamplesRoute,
                                      IsDesignTimeCreatable=False}"
     d:DesignHeight="600"

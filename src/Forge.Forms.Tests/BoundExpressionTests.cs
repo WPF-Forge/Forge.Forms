@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Data;
-using Forge.Forms.Interfaces;
-using Forge.Forms.Utils;
+using Forge.Forms.DynamicExpressions;
+using Forge.Forms.FormBuilding;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Forge.Forms.Tests

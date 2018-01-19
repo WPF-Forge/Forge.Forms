@@ -1,6 +1,5 @@
 ﻿using System.Windows;
 using Forge.Forms.Demo.Models.Home;
-using Forge.Forms.Interfaces;
 using Material.Application.Infrastructure;
 using Material.Application.Routing;
 using MaterialDesignThemes.Wpf;

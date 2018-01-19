@@ -1,8 +1,5 @@
 ﻿using System;
 using Forge.Forms.Annotations;
-using Forge.Forms.Components.Fields;
-using Forge.Forms.Components.Fields.Defaults;
-using Forge.Forms.Interfaces;
 
 namespace Forge.Forms.FormBuilding.Defaults.Initializers
 {

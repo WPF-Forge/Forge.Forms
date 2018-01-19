@@ -5,9 +5,7 @@ using System.Reflection;
 using System.Windows.Data;
 using System.Xml.Linq;
 using Forge.Forms.Annotations;
-using Forge.Forms.Annotations.Content;
-using Forge.Forms.Interfaces;
-using Forge.Forms.Utils;
+using Forge.Forms.DynamicExpressions;
 using Forge.Forms.Validation;
 using MaterialDesignThemes.Wpf;
 
@@ -23,7 +21,11 @@ namespace Forge.Forms.FormBuilding
             }
 
             // First requirement is that properties and getters must be public.
-            var properties = Transformation.GetTransformation(type).GetProperties.Invoke(type);
+            var properties = type
+                .GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                .Where(p => p.CanRead && p.GetGetMethod(true).IsPublic)
+                .OrderBy(p => p.MetadataToken);
+
 
             switch (mode)
             {

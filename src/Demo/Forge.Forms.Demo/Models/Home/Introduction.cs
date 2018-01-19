@@ -1,6 +1,5 @@
 ﻿using System.Windows.Data;
 using Forge.Forms.Annotations;
-using Forge.Forms.Annotations.Content;
 using Material.Application.Models;
 
 namespace Forge.Forms.Demo.Models.Home

@@ -2,7 +2,6 @@
 using System.Windows;
 using System.Windows.Input;
 using Forge.Forms.FormBuilding;
-using Forge.Forms.Interfaces;
 using Material.Application.Infrastructure;
 using Material.Application.Routing;
 using MaterialDesignThemes.Wpf;
