@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Data;
@@ -323,11 +324,6 @@ namespace Forge.Forms.DynamicExpressions
             // Resource name.
             while ((c = expression[i]) != ',' && c != ':' && c != '|')
             {
-                if (char.IsWhiteSpace(c))
-                {
-                    break;
-                }
-
                 if (c == '{')
                 {
                     if (++i == length)
@@ -483,6 +479,22 @@ namespace Forge.Forms.DynamicExpressions
                     break;
                 case "ContextProperty":
                     resource = new ContextPropertyBinding(key, true, converter);
+                    break;
+                case "FileBinding":
+                    resource = new FileBinding(key, converter);
+                    break;
+                case "File":
+                    var content = "";
+                    try
+                    {
+                        content = File.ReadAllText(key);
+                    }
+                    catch
+                    {
+                        // We can not throw here...
+                    }
+
+                    resource = new LiteralValue(content, converter);
                     break;
                 default:
                     resource = contextualResource?.Invoke(resourceTypeString + key, oneTimeBind, converter);
