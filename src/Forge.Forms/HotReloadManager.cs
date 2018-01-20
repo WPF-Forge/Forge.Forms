@@ -1,6 +1,8 @@
 ﻿using System;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -13,30 +15,40 @@ using Proxier.Extensions;
 
 namespace Forge.Forms
 {
+    /// <summary>
+    /// Hot reload manager
+    /// </summary>
     public static class HotReloadManager
     {
-        private static bool HasAlreadyBeenInitialized { get; set; }
+        private static ObservableCollection<string> Directories { get; set; }
+            = new ObservableCollection<string>();
 
-        public static void Init(string directory)
+        static HotReloadManager()
         {
-            if (HasAlreadyBeenInitialized)
+            Directories.CollectionChanged += DirectoriesOnCollectionChanged;
+        }
+
+        private static void DirectoriesOnCollectionChanged(object s, NotifyCollectionChangedEventArgs e)
+        {
+            foreach (var item in e.NewItems)
             {
-                return;
+                if (!(item is string directory))
+                {
+                    continue;
+                }
+                var watcher = new FileSystemWatcher
+                {
+                    NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite
+                                   | NotifyFilters.FileName | NotifyFilters.DirectoryName,
+                    Filter = "*.cs",
+                    Path = directory,
+                    IncludeSubdirectories = true
+                };
+
+                watcher.Changed += OnChanged;
+                watcher.Error += (sender, eventArgs) => { };
+                watcher.EnableRaisingEvents = true;
             }
-
-            var watcher = new FileSystemWatcher
-            {
-                NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite
-                                                        | NotifyFilters.FileName | NotifyFilters.DirectoryName,
-                Filter = "*.cs",
-                Path = directory,
-                IncludeSubdirectories = true
-            };
-
-            watcher.Changed += OnChanged;
-            watcher.Error += (sender, eventArgs) => { };
-            watcher.EnableRaisingEvents = true;
-            HasAlreadyBeenInitialized = true;
         }
 
         private static void OnChanged(object sender, FileSystemEventArgs e)
@@ -44,14 +56,19 @@ namespace Forge.Forms
             try
             {
                 var types = GetTypesFromFile(e.FullPath).ToList();
-                ApplyTypesToForms(types);
+                ApplyTypesToDynamicForms(types);
             }
             catch
             {
+                // ignored
             }
         }
 
-        public static void ApplyTypesToForms(List<Type> types)
+        /// <summary>
+        /// Applies the types to dynamic forms.
+        /// </summary>
+        /// <param name="types">The types.</param>
+        public static void ApplyTypesToDynamicForms(List<Type> types)
         {
             Application.Current.Dispatcher.Invoke(delegate
             {
@@ -67,6 +84,10 @@ namespace Forge.Forms
             });
         }
 
+        /// <summary>
+        /// Gets the visual studio installed path.
+        /// </summary>
+        /// <returns></returns>
         internal static string GetVisualStudioInstalledPath()
         {
             var visualStudioInstalledPath = string.Empty;
@@ -118,7 +139,7 @@ namespace Forge.Forms
             return visualStudioInstalledPath;
         }
 
-        private static CSharpCodeProvider CSharpCodeProvider()
+        private static CSharpCodeProvider CreateCSharpCodeProvider()
         {
             var csc = new CSharpCodeProvider();
             var settings = csc
@@ -144,14 +165,20 @@ namespace Forge.Forms
                 using (var reader = new StreamReader(stream))
                 {
                     var readToEnd = reader.ReadToEnd();
-                    return CompileString(readToEnd);
+                    return CompileCode(readToEnd);
                 }
             }
         }
 
-        public static IEnumerable<Type> CompileString(string code)
+        /// <summary>
+        /// Compiles the code.
+        /// </summary>
+        /// <param name="code">The code.</param>
+        /// <returns></returns>
+        /// <exception cref="InvalidOperationException"></exception>
+        public static IEnumerable<Type> CompileCode(string code)
         {
-            var provider = CSharpCodeProvider();
+            var provider = CreateCSharpCodeProvider();
 
             var parameters = new CompilerParameters();
 
@@ -163,6 +190,7 @@ namespace Forge.Forms
                 }
                 catch
                 {
+                    // ignored
                 }
             }
 

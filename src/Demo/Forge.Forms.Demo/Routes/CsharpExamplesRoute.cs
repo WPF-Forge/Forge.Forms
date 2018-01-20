@@ -24,6 +24,12 @@ namespace Forge.Forms.Demo.Routes
             BuildDefinitionCommand = Command(BuildDefinition);
         }
 
+        /// <summary>
+        /// Gets the compiled definition.
+        /// </summary>
+        /// <value>
+        /// The compiled definition.
+        /// </value>
         public object CompiledDefinition
         {
             get => compiledDefinition;
@@ -39,6 +45,12 @@ namespace Forge.Forms.Demo.Routes
             }
         }
 
+        /// <summary>
+        /// Gets or sets the csharp string.
+        /// </summary>
+        /// <value>
+        /// The csharp string.
+        /// </value>
         public string CsharpString
         {
             get => csharpString;
@@ -104,6 +116,9 @@ namespace Forge.Forms.Demo.Models
             BuildDefinition();
         }
 
+        /// <summary>
+        /// Builds the definition.
+        /// </summary>
         private void BuildDefinition()
         {
             Task.Factory.StartNew(() =>
@@ -111,10 +126,14 @@ namespace Forge.Forms.Demo.Models
                 try
                 {
                     if (CompiledDefinition == null)
+                    {
                         CompiledDefinition =
-                            Activator.CreateInstance(HotReloadManager.CompileString(CsharpString).First());
+                            Activator.CreateInstance(HotReloadManager.CompileCode(CsharpString).First());
+                    }
                     else
-                        HotReloadManager.ApplyTypesToForms(HotReloadManager.CompileString(CsharpString).ToList());
+                    {
+                        HotReloadManager.ApplyTypesToDynamicForms(HotReloadManager.CompileCode(CsharpString).ToList());
+                    }
                 }
                 catch (Exception ex)
                 {
