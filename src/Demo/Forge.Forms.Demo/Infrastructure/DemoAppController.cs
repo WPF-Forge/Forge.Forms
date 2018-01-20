@@ -13,6 +13,7 @@ namespace Forge.Forms.Demo.Infrastructure
             Routes.MenuRoutes.Add(InitialRoute = factory.Get<HomeRoute>());
             Routes.MenuRoutes.Add(factory.Get<ExamplesRoute>());
             Routes.MenuRoutes.Add(factory.Get<XmlExamplesRoute>());
+            Routes.MenuRoutes.Add(factory.Get<CsharpExamplesRoute>());
             FontSize = 15d;
         }
     }

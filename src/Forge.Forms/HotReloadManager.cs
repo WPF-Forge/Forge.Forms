@@ -44,20 +44,25 @@ namespace Forge.Forms
                 Application.Current.Dispatcher.Invoke(delegate
                 {
                     var types = GetTypesFromFile(e.FullPath).ToList();
-                    var dynamicForms =
-                        DynamicForm.ActiveForms.Where(i =>
-                            types.Select(o => o.FullName).Contains(i.Model?.GetType().FullName));
-
-                    foreach (var dynamicForm in dynamicForms)
-                    {
-                        dynamicForm.Model =
-                            Activator.CreateInstance(
-                                types.Last(i => i.FullName == dynamicForm.Model?.GetType().FullName));
-                    }
+                    ApplyTypesToForms(types);
                 });
             }
             catch
             {
+            }
+        }
+
+        public static void ApplyTypesToForms(List<Type> types)
+        {
+            var dynamicForms =
+                DynamicForm.ActiveForms.Where(i =>
+                    types.Select(o => o.FullName).Contains(i.Model?.GetType().FullName));
+
+            foreach (var dynamicForm in dynamicForms)
+            {
+                dynamicForm.Model =
+                    Activator.CreateInstance(
+                        types.Last(i => i.FullName == dynamicForm.Model?.GetType().FullName));
             }
         }
 
@@ -138,12 +143,12 @@ namespace Forge.Forms
                 using (var reader = new StreamReader(stream))
                 {
                     var readToEnd = reader.ReadToEnd();
-                    return CompileFile(readToEnd);
+                    return CompileString(readToEnd);
                 }
             }
         }
 
-        private static IEnumerable<Type> CompileFile(string code)
+        public static IEnumerable<Type> CompileString(string code)
         {
             var provider = CSharpCodeProvider();
 

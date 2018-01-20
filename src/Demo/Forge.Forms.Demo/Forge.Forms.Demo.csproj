@@ -87,6 +87,7 @@
     <Compile Include="Models\Home\Introduction.cs" />
     <Compile Include="Models\ExamplePresenter.cs" />
     <Compile Include="Models\Selection.cs" />
+    <Compile Include="Routes\CsharpExamplesRoute.cs" />
     <Compile Include="Routes\ExamplesRoute.cs" />
     <Compile Include="Routes\HomeRoute.cs" />
     <Compile Include="Routes\XmlExamplesRoute.cs" />
@@ -96,8 +97,8 @@
     <Compile Include="Views\FormView.xaml.cs">
       <DependentUpon>FormView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\XmlExamplesView.xaml.cs">
-      <DependentUpon>XmlExamplesView.xaml</DependentUpon>
+    <Compile Include="Views\CsharpExamplesView.cs">
+      <DependentUpon>CsharpExamplesView.xaml</DependentUpon>
     </Compile>
     <Page Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -109,6 +110,10 @@
     </Compile>
     <Compile Include="Infrastructure\DemoAppController.cs" />
     <Page Include="ViewBindings.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\CsharpExamplesView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
