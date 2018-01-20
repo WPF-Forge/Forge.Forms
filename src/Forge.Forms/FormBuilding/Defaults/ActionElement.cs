@@ -24,6 +24,8 @@ namespace Forge.Forms.FormBuilding.Defaults
 
         public IValueProvider IsLoading { get; set; }
 
+        public IValueProvider IsPrimary { get; set; }
+
         public IValueProvider IsDefault { get; set; }
 
         public IValueProvider IsCancel { get; set; }
@@ -32,6 +34,7 @@ namespace Forge.Forms.FormBuilding.Defaults
         {
             base.Freeze();
             Resources.Add(nameof(IsLoading), IsLoading ?? LiteralValue.True);
+            Resources.Add(nameof(IsPrimary), IsPrimary ?? LiteralValue.False);
             Resources.Add(nameof(IsDefault), IsDefault ?? LiteralValue.False);
             Resources.Add(nameof(IsCancel), IsCancel ?? LiteralValue.False);
         }

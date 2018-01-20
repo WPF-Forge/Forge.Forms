@@ -41,7 +41,7 @@
             Margin="8"
             VerticalAlignment="Center">
             <ScrollViewer VerticalScrollBarVisibility="Auto">
-                <controls:DynamicForm Margin="12,12,12,8" Model="{Binding CurrentModel.Object}" />
+                <controls:DynamicForm Margin="16,16,16,8" Model="{Binding CurrentModel.Object}" />
             </ScrollViewer>
         </materialDesign:Card>
         <materialDesign:ColorZone

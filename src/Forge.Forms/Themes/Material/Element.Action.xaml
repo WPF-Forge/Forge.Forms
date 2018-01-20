@@ -33,6 +33,28 @@
         </Button>
     </ControlTemplate>
 
+    <ControlTemplate x:Key="MaterialPrimaryActionPresenterTemplate" TargetType="{x:Type defaults:ActionPresenter}">
+        <Button
+            MinWidth="48"
+            MinHeight="36"
+            Padding="{TemplateBinding Padding}"
+            Command="{TemplateBinding Command}"
+            IsCancel="{formBuilding:FormBinding IsCancel}"
+            IsDefault="{formBuilding:FormBinding IsDefault}"
+            Style="{StaticResource MaterialDesignRaisedButton}">
+            <StackPanel Orientation="Horizontal">
+                <materialDesign:PackIcon
+                    Width="18"
+                    Height="18"
+                    Margin="0,0,4,0"
+                    VerticalAlignment="Center"
+                    Kind="{formBuilding:FormBinding Icon}"
+                    Visibility="{formBuilding:FormBinding IconVisibility}" />
+                <TextBlock VerticalAlignment="Center" Text="{formBuilding:FormBinding Content}" />
+            </StackPanel>
+        </Button>
+    </ControlTemplate>
+
     <ControlTemplate x:Key="MaterialActionPresenterLoadingTemplate" TargetType="{x:Type defaults:ActionPresenter}">
         <Border MinWidth="48" MinHeight="36">
             <ProgressBar
@@ -49,6 +71,9 @@
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="Template" Value="{StaticResource MaterialActionPresenterTemplate}" />
         <Style.Triggers>
+            <DataTrigger Binding="{formBuilding:FormBinding IsPrimary}" Value="True">
+                <Setter Property="Template" Value="{StaticResource MaterialPrimaryActionPresenterTemplate}" />
+            </DataTrigger>
             <DataTrigger Binding="{formBuilding:FormBinding IsLoading}" Value="True">
                 <Setter Property="Template" Value="{StaticResource MaterialActionPresenterLoadingTemplate}" />
             </DataTrigger>

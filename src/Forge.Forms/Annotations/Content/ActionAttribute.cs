@@ -57,6 +57,7 @@ namespace Forge.Forms.Annotations
 
         /// <summary>
         /// Determines whether this button is loading or not.
+        /// Accepts a boolean or a dynamic resource.
         /// </summary>
         public object IsLoading { get; set; }
 
@@ -67,18 +68,27 @@ namespace Forge.Forms.Annotations
 
         /// <summary>
         /// Determines whether the model will be validated before the action is executed.
+        /// Accepts a boolean or a dynamic resource.
         /// </summary>
         public object Validates { get; set; }
 
         /// <summary>
         /// Determines whether this action will close dialogs that host it.
+        /// Accepts a boolean or a dynamic resource.
         /// </summary>
         public object ClosesDialog { get; set; }
 
         /// <summary>
         /// Determines whether the model will be reset to default values before the action is executed.
+        /// Accepts a boolean or a dynamic resource.
         /// </summary>
         public object IsReset { get; set; }
+
+        /// <summary>
+        /// Determines whether the action has the style of a primary action.
+        /// Accepts a boolean or a dynamic resource.
+        /// </summary>
+        public object IsPrimary { get; set; }
 
         protected override FormElement CreateElement()
         {
@@ -96,7 +106,8 @@ namespace Forge.Forms.Annotations
                 IsEnabled = Utilities.GetResource<bool>(IsEnabled, true, Deserializers.Boolean),
                 IsLoading = Utilities.GetResource<bool>(IsLoading, false, Deserializers.Boolean),
                 IsDefault = Utilities.GetResource<bool>(IsDefault, false, Deserializers.Boolean),
-                IsCancel = Utilities.GetResource<bool>(IsCancel, false, Deserializers.Boolean)
+                IsCancel = Utilities.GetResource<bool>(IsCancel, false, Deserializers.Boolean),
+                IsPrimary = Utilities.GetResource<bool>(IsPrimary, false, Deserializers.Boolean)
             };
         }
     }
