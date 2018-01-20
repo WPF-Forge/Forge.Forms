@@ -80,7 +80,13 @@ namespace Forge.Forms.DynamicExpressions
             {
                 try
                 {
-                    return File.ReadAllText(filePath);
+                    using (var stream = File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                    {
+                        using (var reader = new StreamReader(stream))
+                        {
+                            return reader.ReadToEnd();
+                        }
+                    }
                 }
                 catch
                 {
