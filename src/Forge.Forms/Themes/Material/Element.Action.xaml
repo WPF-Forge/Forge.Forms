@@ -76,6 +76,7 @@
             </DataTrigger>
             <DataTrigger Binding="{formBuilding:FormBinding IsLoading}" Value="True">
                 <Setter Property="Template" Value="{StaticResource MaterialActionPresenterLoadingTemplate}" />
+                <Setter Property="Width" Value="{Binding ActualWidth, RelativeSource={RelativeSource Self}}"></Setter>
             </DataTrigger>
         </Style.Triggers>
     </Style>
