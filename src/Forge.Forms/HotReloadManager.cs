@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows;
 using Forge.Forms.Controls;
@@ -21,7 +20,9 @@ namespace Forge.Forms
         public static void Init(string directory)
         {
             if (HasAlreadyBeenInitialized)
+            {
                 return;
+            }
 
             var watcher = new FileSystemWatcher
             {

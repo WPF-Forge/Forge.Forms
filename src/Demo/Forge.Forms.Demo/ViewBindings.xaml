@@ -14,7 +14,7 @@
     <DataTemplate DataType="{x:Type routes:XmlExamplesRoute}">
         <views:XmlExamplesView />
     </DataTemplate>
-    
+
     <DataTemplate DataType="{x:Type routes:CsharpExamplesRoute}">
         <views:CsharpExamplesView />
     </DataTemplate>

@@ -3,12 +3,12 @@
     public class WindowOptions : DialogOptions
     {
         public static WindowOptions Default = new WindowOptions();
+        private bool canResize;
+        private bool showCloseButton;
+        private bool showMaxRestoreButton = true;
+        private bool showMinButton;
 
         private string title = "Dialog";
-        private bool showMinButton;
-        private bool showMaxRestoreButton = true;
-        private bool showCloseButton;
-        private bool canResize;
 
         public WindowOptions()
             : this(Default)
@@ -35,7 +35,11 @@
             get => title;
             set
             {
-                if (value == title) return;
+                if (value == title)
+                {
+                    return;
+                }
+
                 title = value;
                 OnPropertyChanged();
             }
@@ -46,7 +50,11 @@
             get => showMinButton;
             set
             {
-                if (value == showMinButton) return;
+                if (value == showMinButton)
+                {
+                    return;
+                }
+
                 showMinButton = value;
                 OnPropertyChanged();
             }
@@ -57,7 +65,11 @@
             get => showMaxRestoreButton;
             set
             {
-                if (value == showMaxRestoreButton) return;
+                if (value == showMaxRestoreButton)
+                {
+                    return;
+                }
+
                 showMaxRestoreButton = value;
                 OnPropertyChanged();
             }
@@ -68,7 +80,11 @@
             get => showCloseButton;
             set
             {
-                if (value == showCloseButton) return;
+                if (value == showCloseButton)
+                {
+                    return;
+                }
+
                 showCloseButton = value;
                 OnPropertyChanged();
             }
@@ -79,7 +95,11 @@
             get => canResize;
             set
             {
-                if (value == canResize) return;
+                if (value == canResize)
+                {
+                    return;
+                }
+
                 canResize = value;
                 OnPropertyChanged();
             }
