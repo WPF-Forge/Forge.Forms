@@ -392,6 +392,16 @@ namespace Forge.Forms.Tests
             var expression = BoundExpression.Parse("Hello, {Binding 'FirstName'}");
             Assert.AreEqual("FirstName", ((PropertyBinding)expression.Resources[0]).PropertyPath);
 
+            try
+            {
+                BoundExpression.Parse("Hello, {Binding 'FirstName'www}");
+                Assert.Fail();
+            }
+            catch (FormatException)
+            {
+                // Success
+            }
+
             expression = BoundExpression.Parse("{FileBinding 'C:/Documents, Files/my file.txt'}");
             Assert.AreEqual("C:/Documents, Files/my file.txt", ((FileBinding)expression.Resources[0]).FilePath);
             Assert.IsTrue(((FileBinding)expression.Resources[0]).IsDynamic);

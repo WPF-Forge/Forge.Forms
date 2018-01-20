@@ -481,6 +481,8 @@ namespace Forge.Forms.DynamicExpressions
                 }
             }
 
+            throw new FormatException($"Invalid character '{c}'");
+
             addResource:
             var key = resourceName.ToString();
             IValueProvider resource;
