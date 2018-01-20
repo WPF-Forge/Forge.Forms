@@ -90,6 +90,12 @@ namespace Forge.Forms.Annotations
         /// </summary>
         public object IsPrimary { get; set; }
 
+        /// <summary>
+        /// If set to an <see cref="IActionInterceptor"/>, that object will handle the action.
+        /// Accepts an <see cref="IActionInterceptor"/> or a dynamic resource.
+        /// </summary>
+        public virtual object Interceptor { get; set; }
+
         protected override FormElement CreateElement()
         {
             return new ActionElement
@@ -107,7 +113,8 @@ namespace Forge.Forms.Annotations
                 IsLoading = Utilities.GetResource<bool>(IsLoading, false, Deserializers.Boolean),
                 IsDefault = Utilities.GetResource<bool>(IsDefault, false, Deserializers.Boolean),
                 IsCancel = Utilities.GetResource<bool>(IsCancel, false, Deserializers.Boolean),
-                IsPrimary = Utilities.GetResource<bool>(IsPrimary, false, Deserializers.Boolean)
+                IsPrimary = Utilities.GetResource<bool>(IsPrimary, false, Deserializers.Boolean),
+                ActionInterceptor = Utilities.GetResource<IActionInterceptor>(Interceptor, null, null)
             };
         }
     }
