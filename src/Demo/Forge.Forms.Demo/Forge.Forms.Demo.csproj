@@ -164,7 +164,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Forge.Forms.Scripting\Forge.Forms.Scripting.csproj">
-      <Project>{b8e0b115-b025-4f8f-ad12-eff3ef4aed08}</Project>
+      <Project>{9c524023-524d-4009-85f5-7fd7fd79e7ee}</Project>
       <Name>Forge.Forms.Scripting</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Forge.Forms\Forge.Forms.csproj">
