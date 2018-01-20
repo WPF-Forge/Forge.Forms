@@ -42,11 +42,7 @@
   <ItemGroup>
     <Compile Include="ScriptActionAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="ClearScript.V8">
-      <Version>5.5.1</Version>
-    </PackageReference>
+    <Compile Include="ScriptInterceptor.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Forge.Forms\Forge.Forms.csproj">
@@ -54,12 +50,14 @@
       <Name>Forge.Forms</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="ClearScript.V8">
+      <Version>5.5.1</Version>
+    </PackageReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>
-if not exist "$(TargetDir)" md "$(TargetDir)"
-xcopy /s /y "$(SolutionDir)packages\ClearScript.V8.5.5.1\tools\native\x86\*.*" "$(TargetDir)"
-if not exist "$(TargetDir)" md "$(TargetDir)"
-xcopy /s /y "$(SolutionDir)packages\ClearScript.V8.5.5.1\tools\native\amd64\*.*" "$(TargetDir)"</PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
 </Project>

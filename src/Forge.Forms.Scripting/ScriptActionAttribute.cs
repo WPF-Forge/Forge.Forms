@@ -1,16 +1,20 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 using Forge.Forms.Annotations;
+using Microsoft.ClearScript.V8;
 
 namespace Forge.Forms.Scripting
 {
     public class ScriptActionAttribute : ActionAttribute
     {
-        private object interceptor;
+        internal static readonly V8ScriptEngine ScriptEngine = new V8ScriptEngine();
 
-        public ScriptActionAttribute(string content, string onExecute, [CallerLineNumber] int position = 0)
+        private readonly object interceptor;
+
+        public ScriptActionAttribute(string content, string code, [CallerLineNumber] int position = 0)
             : base("[ScriptAction]", content, position)
         {
+            interceptor = new ScriptInterceptor(ScriptEngine, code);
         }
 
         public override object Interceptor

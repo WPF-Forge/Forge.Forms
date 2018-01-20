@@ -40,6 +40,9 @@
     <StartupObject>Forge.Forms.Demo.App</StartupObject>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ClearScript, Version=5.5.1.0, Culture=neutral, PublicKeyToken=935d0c957da47c73, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\ClearScript.V8.5.5.1\lib\net45\ClearScript.dll</HintPath>
+    </Reference>
     <Reference Include="Dragablz, Version=0.0.3.197, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\Dragablz.0.0.3.197\lib\net45\Dragablz.dll</HintPath>
     </Reference>
@@ -86,6 +89,7 @@
     <Compile Include="Models\FoodSelection.cs" />
     <Compile Include="Models\Home\Introduction.cs" />
     <Compile Include="Models\ExamplePresenter.cs" />
+    <Compile Include="Models\ScriptedCounter.cs" />
     <Compile Include="Models\Selection.cs" />
     <Compile Include="Routes\ExamplesRoute.cs" />
     <Compile Include="Routes\HomeRoute.cs" />
@@ -159,12 +163,23 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Forge.Forms.Scripting\Forge.Forms.Scripting.csproj">
+      <Project>{b8e0b115-b025-4f8f-ad12-eff3ef4aed08}</Project>
+      <Name>Forge.Forms.Scripting</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Forge.Forms\Forge.Forms.csproj">
       <Project>{4e0c323d-5afc-4105-815f-587346aa5321}</Project>
       <Name>Forge.Forms</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>
+if not exist "$(TargetDir)" md "$(TargetDir)"
+xcopy /s /y "$(SolutionDir)packages\ClearScript.V8.5.5.1\tools\native\x86\*.*" "$(TargetDir)"
+if not exist "$(TargetDir)" md "$(TargetDir)"
+xcopy /s /y "$(SolutionDir)packages\ClearScript.V8.5.5.1\tools\native\amd64\*.*" "$(TargetDir)"</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

@@ -67,6 +67,8 @@ namespace Forge.Forms.Demo.Routes
 
             yield return new ExamplePresenter(new Dialogs(), "Dialogs", large);
 
+            yield return new ExamplePresenter(new ScriptedCounter(), "Scripted Counter", small);
+
             yield return new ExamplePresenter(new Alert
             {
                 Message = "Item deleted."
