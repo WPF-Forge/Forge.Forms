@@ -53,14 +53,23 @@ namespace Forge.Forms
         public static IModelHost Window(WindowOptions options)
             => new WindowModelHost(null, options);
 
+        public static IModelHost Window(double width)
+            => new WindowModelHost(null, new WindowOptions { Width = width });
+
         public static IModelHost Window(object context, WindowOptions options)
             => new WindowModelHost(context, options);
+
+        public static IModelHost Window(object context, double width)
+            => new WindowModelHost(context, new WindowOptions { Width = width });
 
         public static IModelHost Dialog()
             => new DialogModelHost(null, null, DialogOptions.Default);
 
         public static IModelHost Dialog(DialogOptions options)
             => new DialogModelHost(null, null, options);
+
+        public static IModelHost Dialog(double width)
+            => new DialogModelHost(null, null, new DialogOptions { Width = width });
 
         public static IModelHost Dialog(object dialogIdentifier)
             => new DialogModelHost(dialogIdentifier, null, DialogOptions.Default);
@@ -71,8 +80,14 @@ namespace Forge.Forms
         public static IModelHost Dialog(object dialogIdentifier, DialogOptions options)
             => new DialogModelHost(dialogIdentifier, null, options);
 
+        public static IModelHost Dialog(object dialogIdentifier, double width)
+            => new DialogModelHost(dialogIdentifier, null, new DialogOptions { Width = width });
+
         public static IModelHost Dialog(object dialogIdentifier, object context, DialogOptions options)
             => new DialogModelHost(dialogIdentifier, context, options);
+
+        public static IModelHost Dialog(object dialogIdentifier, object context, double width)
+            => new DialogModelHost(dialogIdentifier, context, new DialogOptions { Width = width });
     }
 
     public interface IModelHost
@@ -86,5 +101,14 @@ namespace Forge.Forms
         {
             return modelHost.For(typeof(T));
         }
+    }
+
+    public class DialogResult<T>
+    {
+        public T Model { get; }
+
+        public string Action { get; }
+
+        public object ActionParameter { get; }
     }
 }
