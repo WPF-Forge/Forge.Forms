@@ -86,6 +86,7 @@
       <DependentUpon>DynamicFormWrapper.xaml</DependentUpon>
     </Compile>
     <Compile Include="HotReloadManager.cs" />
+    <Compile Include="VisualStudioHelper.cs" />
     <Compile Include="WindowOptions.cs" />
     <Compile Include="DialogOptions.cs" />
     <Compile Include="Controls\DialogWindow.xaml.cs">

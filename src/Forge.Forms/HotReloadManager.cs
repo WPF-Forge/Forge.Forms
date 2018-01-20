@@ -3,6 +3,7 @@ using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -10,7 +11,6 @@ using System.Text;
 using System.Windows;
 using Forge.Forms.Controls;
 using Microsoft.CodeDom.Providers.DotNetCompilerPlatform;
-using Microsoft.Win32;
 using Proxier.Extensions;
 
 namespace Forge.Forms
@@ -20,12 +20,42 @@ namespace Forge.Forms
     /// </summary>
     public static class HotReloadManager
     {
-        private static ObservableCollection<string> Directories { get; set; }
+        /// <summary>
+        /// Directories to be watched
+        /// </summary>
+        public static ObservableCollection<string> Directories { get; set; }
             = new ObservableCollection<string>();
+
+        public static bool IsAssemblyDebugBuild(this Assembly assembly)
+        {
+            return assembly.GetCustomAttributes(false).OfType<DebuggableAttribute>().Any(da => da.IsJITTrackingEnabled);
+        }
 
         static HotReloadManager()
         {
+            var paths = AppDomain.CurrentDomain.GetAssemblies().Where(i => !i.IsDynamic && i.IsAssemblyDebugBuild())
+                .Select(i => Path.GetDirectoryName(i?.CodeBase.Replace("file:///", ""))).Distinct()
+                .Select(i => i.FindProjectRoot())
+                .ToList();
+
             Directories.CollectionChanged += DirectoriesOnCollectionChanged;
+        }
+
+        public static string FindProjectRoot(this string directoryPath)
+        {
+            var directory = new DirectoryInfo(directoryPath);
+
+            while (directory?.Parent != null)
+            {
+                if (directory.GetFiles().Any(i => i.Extension == ".csproj"))
+                {
+                    return directory.FullName;
+                }
+
+                directory = directory.Parent;
+            }
+
+            return "";
         }
 
         private static void DirectoriesOnCollectionChanged(object s, NotifyCollectionChangedEventArgs e)
@@ -36,10 +66,11 @@ namespace Forge.Forms
                 {
                     continue;
                 }
+
                 var watcher = new FileSystemWatcher
                 {
                     NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite
-                                   | NotifyFilters.FileName | NotifyFilters.DirectoryName,
+                                                            | NotifyFilters.FileName | NotifyFilters.DirectoryName,
                     Filter = "*.cs",
                     Path = directory,
                     IncludeSubdirectories = true
@@ -84,60 +115,6 @@ namespace Forge.Forms
             });
         }
 
-        /// <summary>
-        /// Gets the visual studio installed path.
-        /// </summary>
-        /// <returns></returns>
-        internal static string GetVisualStudioInstalledPath()
-        {
-            var visualStudioInstalledPath = string.Empty;
-            var visualStudioRegistryPath =
-                Registry.LocalMachine.OpenSubKey(@"SOFTWARE\WOW6432Node\Microsoft\VisualStudio\14.0");
-            if (visualStudioRegistryPath != null)
-            {
-                visualStudioInstalledPath = visualStudioRegistryPath.GetValue("InstallDir", string.Empty) as string;
-            }
-
-            if (string.IsNullOrEmpty(visualStudioInstalledPath) || !Directory.Exists(visualStudioInstalledPath))
-            {
-                visualStudioRegistryPath = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\VisualStudio\14.0");
-                if (visualStudioRegistryPath != null)
-                {
-                    visualStudioInstalledPath = visualStudioRegistryPath.GetValue("InstallDir", string.Empty) as string;
-                }
-            }
-
-            if (string.IsNullOrEmpty(visualStudioInstalledPath) || !Directory.Exists(visualStudioInstalledPath))
-            {
-                visualStudioRegistryPath =
-                    Registry.LocalMachine.OpenSubKey(@"SOFTWARE\WOW6432Node\Microsoft\VisualStudio\12.0");
-                if (visualStudioRegistryPath != null)
-                {
-                    visualStudioInstalledPath = visualStudioRegistryPath.GetValue("InstallDir", string.Empty) as string;
-                }
-            }
-
-            if (string.IsNullOrEmpty(visualStudioInstalledPath) || !Directory.Exists(visualStudioInstalledPath))
-            {
-                visualStudioRegistryPath = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\VisualStudio\12.0");
-                if (visualStudioRegistryPath != null)
-                {
-                    visualStudioInstalledPath = visualStudioRegistryPath.GetValue("InstallDir", string.Empty) as string;
-                }
-            }
-
-            if (string.IsNullOrEmpty(visualStudioInstalledPath) || !Directory.Exists(visualStudioInstalledPath))
-            {
-                visualStudioRegistryPath =
-                    Registry.LocalMachine.OpenSubKey(@"SOFTWARE\WOW6432Node\Microsoft\VisualStudio\SxS\VS7");
-                if (visualStudioRegistryPath != null)
-                {
-                    visualStudioInstalledPath = visualStudioRegistryPath.GetValue("15.0", string.Empty) as string;
-                }
-            }
-
-            return visualStudioInstalledPath;
-        }
 
         private static CSharpCodeProvider CreateCSharpCodeProvider()
         {
@@ -152,7 +129,7 @@ namespace Forge.Forms
 
             path?.SetValue(settings,
                 Path.Combine(
-                    $"{GetVisualStudioInstalledPath()}MSBuild\\15.0\\Bin\\Roslyn",
+                    $"{VisualStudioHelper.GetVisualStudioInstalledPath()}MSBuild\\15.0\\Bin\\Roslyn",
                     "csc.exe"));
 
             return csc;
