@@ -10,6 +10,7 @@ using System.Windows;
 using Forge.Forms.Controls;
 using Microsoft.CodeDom.Providers.DotNetCompilerPlatform;
 using Microsoft.Win32;
+using Proxier.Extensions;
 
 namespace Forge.Forms
 {
@@ -41,11 +42,8 @@ namespace Forge.Forms
         {
             try
             {
-                Application.Current.Dispatcher.Invoke(delegate
-                {
-                    var types = GetTypesFromFile(e.FullPath).ToList();
-                    ApplyTypesToForms(types);
-                });
+                var types = GetTypesFromFile(e.FullPath).ToList();
+                ApplyTypesToForms(types);
             }
             catch
             {
@@ -54,16 +52,18 @@ namespace Forge.Forms
 
         public static void ApplyTypesToForms(List<Type> types)
         {
-            var dynamicForms =
-                DynamicForm.ActiveForms.Where(i =>
-                    types.Select(o => o.FullName).Contains(i.Model?.GetType().FullName));
-
-            foreach (var dynamicForm in dynamicForms)
+            Application.Current.Dispatcher.Invoke(delegate
             {
-                dynamicForm.Model =
-                    Activator.CreateInstance(
-                        types.Last(i => i.FullName == dynamicForm.Model?.GetType().FullName));
-            }
+                var dynamicForms =
+                    DynamicForm.ActiveForms.Where(i =>
+                        types.Select(o => o.FullName).Contains(i.Model?.GetType().FullName));
+
+                foreach (var dynamicForm in dynamicForms)
+                {
+                    dynamicForm.Model =
+                        dynamicForm.Model.CopyTo(types.Last(i => i.FullName == dynamicForm.Model?.GetType().FullName));
+                }
+            });
         }
 
         internal static string GetVisualStudioInstalledPath()

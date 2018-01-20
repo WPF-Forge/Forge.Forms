@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
-using Forge.Forms.FormBuilding;
 using Material.Application.Infrastructure;
 using Material.Application.Routing;
 using MaterialDesignThemes.Wpf;
@@ -50,7 +50,9 @@ namespace Forge.Forms.Demo.Routes
                 }
 
                 csharpString = value;
+
                 NotifyPropertyChanged();
+                BuildDefinition();
             }
         }
 
@@ -104,19 +106,21 @@ namespace Forge.Forms.Demo.Models
 
         private void BuildDefinition()
         {
-            try
+            Task.Factory.StartNew(() =>
             {
-                if (CompiledDefinition == null)
+                try
                 {
-                    CompiledDefinition = Activator.CreateInstance(HotReloadManager.CompileString(CsharpString).First());
+                    if (CompiledDefinition == null)
+                        CompiledDefinition =
+                            Activator.CreateInstance(HotReloadManager.CompileString(CsharpString).First());
+                    else
+                        HotReloadManager.ApplyTypesToForms(HotReloadManager.CompileString(CsharpString).ToList());
                 }
-                else
-                    HotReloadManager.ApplyTypesToForms(HotReloadManager.CompileString(CsharpString).ToList());
-            }
-            catch (Exception ex)
-            {
-                notificationService.ForceNotify(ex.Message, "COPY", () => Clipboard.SetText(ex.ToString()));
-            }
+                catch (Exception ex)
+                {
+                    notificationService.ForceNotify(ex.Message, "COPY", () => Clipboard.SetText(ex.ToString()));
+                }
+            });
         }
     }
 }
