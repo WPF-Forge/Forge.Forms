@@ -8,24 +8,12 @@ namespace Forge.Forms
     {
         public static DialogOptions Default = new DialogOptions();
 
-        private string title = "Dialog";
         private double width = 350d;
         private double height = double.NaN;
-        private Thickness padding = new Thickness(8d);
+        private Thickness padding = new Thickness(16d, 16d, 16d, 8d);
         private double titleFontSize = 20d;
         private double headingFontSize = 15d;
         private double textFontSize = 15d;
-
-        public string Title
-        {
-            get => title;
-            set
-            {
-                if (value == title) return;
-                title = value;
-                OnPropertyChanged();
-            }
-        }
 
         public double Width
         {

@@ -8,10 +8,11 @@ namespace Forge.Forms.Controls
     /// </summary>
     public partial class DialogWindow : MetroWindow
     {
-        public DialogWindow(object model, WindowOptions options)
+        public DialogWindow(object model, object context, WindowOptions options)
         {
             DataContext = options;
             InitializeComponent();
+            Form.Context = context;
             Form.Model = model;
         }
 
