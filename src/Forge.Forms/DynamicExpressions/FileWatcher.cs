@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
+using Forge.Forms.FormBuilding;
 
 namespace Forge.Forms.DynamicExpressions
 {
@@ -20,7 +21,7 @@ namespace Forge.Forms.DynamicExpressions
             {
                 filePath = initialListener.filePath;
                 listeners = new List<FileWatcher> { initialListener };
-                Value = TryReadFile();
+                Value = Utilities.TryReadFile(filePath);
                 fileSystemWatcher = new FileSystemWatcher
                 {
                     Path = Path.GetDirectoryName(filePath),
@@ -43,7 +44,7 @@ namespace Forge.Forms.DynamicExpressions
                     {
                         if (!isLatestValue)
                         {
-                            value = TryReadFile();
+                            value = Utilities.TryReadFile(filePath);
                             isLatestValue = true;
                         }
 
@@ -77,24 +78,6 @@ namespace Forge.Forms.DynamicExpressions
                 foreach (var listener in listeners)
                 {
                     listener.NotifyChanged();
-                }
-            }
-
-            private string TryReadFile()
-            {
-                try
-                {
-                    using (var stream = File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-                    {
-                        using (var reader = new StreamReader(stream))
-                        {
-                            return reader.ReadToEnd();
-                        }
-                    }
-                }
-                catch
-                {
-                    return "";
                 }
             }
         }

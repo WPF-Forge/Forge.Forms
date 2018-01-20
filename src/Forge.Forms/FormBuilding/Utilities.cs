@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Data;
@@ -13,6 +14,24 @@ namespace Forge.Forms.FormBuilding
 {
     internal static class Utilities
     {
+        public static string TryReadFile(string filePath)
+        {
+            try
+            {
+                using (var stream = File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                {
+                    using (var reader = new StreamReader(stream))
+                    {
+                        return reader.ReadToEnd();
+                    }
+                }
+            }
+            catch
+            {
+                return "";
+            }
+        }
+
         public static List<PropertyInfo> GetProperties(Type type, DefaultFields mode)
         {
             if (type == null)

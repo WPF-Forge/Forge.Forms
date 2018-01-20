@@ -322,37 +322,63 @@ namespace Forge.Forms.DynamicExpressions
             }
 
             // Resource name.
-            while ((c = expression[i]) != ',' && c != ':' && c != '|')
+            if (expression[i] == '\'')
             {
-                if (c == '{')
+                i++;
+                if (i == length)
                 {
+                    throw new FormatException("Unexpected end of input.");
+                }
+
+                while ((c = expression[i]) != '\'')
+                {
+                    resourceName.Append(c);
                     if (++i == length)
                     {
                         throw new FormatException("Unexpected end of input.");
                     }
-
-                    if (expression[i] != '{')
-                    {
-                        throw new FormatException("Invalid unescaped '{'.");
-                    }
-                }
-                else if (c == '}')
-                {
-                    if (++i == length)
-                    {
-                        goto addResource;
-                    }
-
-                    if (expression[i] != '}')
-                    {
-                        goto addResource;
-                    }
                 }
 
-                resourceName.Append(c);
-                if (++i == length)
+                i++;
+                if (i == length)
                 {
                     throw new FormatException("Unexpected end of input.");
+                }
+            }
+            else
+            {
+                while ((c = expression[i]) != ',' && c != ':' && c != '|')
+                {
+                    if (c == '{')
+                    {
+                        if (++i == length)
+                        {
+                            throw new FormatException("Unexpected end of input.");
+                        }
+
+                        if (expression[i] != '{')
+                        {
+                            throw new FormatException("Invalid unescaped '{'.");
+                        }
+                    }
+                    else if (c == '}')
+                    {
+                        if (++i == length)
+                        {
+                            goto addResource;
+                        }
+
+                        if (expression[i] != '}')
+                        {
+                            goto addResource;
+                        }
+                    }
+
+                    resourceName.Append(c);
+                    if (++i == length)
+                    {
+                        throw new FormatException("Unexpected end of input.");
+                    }
                 }
             }
 
@@ -481,20 +507,10 @@ namespace Forge.Forms.DynamicExpressions
                     resource = new ContextPropertyBinding(key, true, converter);
                     break;
                 case "FileBinding":
-                    resource = new FileBinding(key, converter);
+                    resource = new FileBinding(key, true, converter);
                     break;
                 case "File":
-                    var content = "";
-                    try
-                    {
-                        content = File.ReadAllText(key);
-                    }
-                    catch
-                    {
-                        // We can not throw here...
-                    }
-
-                    resource = new LiteralValue(content, converter);
+                    resource = new FileBinding(key, false, converter);
                     break;
                 default:
                     resource = contextualResource?.Invoke(resourceTypeString + key, oneTimeBind, converter);

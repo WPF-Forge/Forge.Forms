@@ -386,6 +386,21 @@ namespace Forge.Forms.Tests
             Assert.IsNull(expression.StringFormat);
         }
 
+        [TestMethod]
+        public void TestApostropheSyntax()
+        {
+            var expression = BoundExpression.Parse("Hello, {Binding 'FirstName'}");
+            Assert.AreEqual("FirstName", ((PropertyBinding)expression.Resources[0]).PropertyPath);
+
+            expression = BoundExpression.Parse("{FileBinding 'C:/Documents, Files/my file.txt'}");
+            Assert.AreEqual("C:/Documents, Files/my file.txt", ((FileBinding)expression.Resources[0]).FilePath);
+            Assert.IsTrue(((FileBinding)expression.Resources[0]).IsDynamic);
+
+            expression = BoundExpression.Parse("{File 'C:/Documents, Files/{my file}.txt',500|ToUpper}");
+            Assert.AreEqual("C:/Documents, Files/{my file}.txt", ((FileBinding)expression.Resources[0]).FilePath);
+            Assert.IsFalse(((FileBinding)expression.Resources[0]).IsDynamic);
+        }
+
         private class Model
         {
             public string Name { get; set; }
