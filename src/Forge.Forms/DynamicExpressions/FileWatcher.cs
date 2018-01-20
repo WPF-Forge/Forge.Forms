@@ -39,13 +39,17 @@ namespace Forge.Forms.DynamicExpressions
             {
                 get
                 {
-                    if (!isLatestValue)
+                    lock (this)
                     {
-                        value = TryReadFile();
-                        isLatestValue = true;
-                    }
+                        if (!isLatestValue)
+                        {
+                            value = TryReadFile();
+                            isLatestValue = true;
+                        }
 
-                    return value;
+                        return value;
+
+                    }
                 }
                 private set => this.value = value;
             }
