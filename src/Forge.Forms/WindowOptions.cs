@@ -10,6 +10,26 @@
         private bool showCloseButton;
         private bool canResize;
 
+        public WindowOptions()
+            : this(Default)
+        {
+        }
+
+        public WindowOptions(WindowOptions defaults)
+            : base(defaults)
+        {
+            if (defaults == null)
+            {
+                return;
+            }
+
+            title = defaults.title;
+            showMinButton = defaults.showMinButton;
+            showMaxRestoreButton = defaults.showMaxRestoreButton;
+            showCloseButton = defaults.showCloseButton;
+            canResize = defaults.canResize;
+        }
+
         public string Title
         {
             get => title;

@@ -15,6 +15,26 @@ namespace Forge.Forms
         private double headingFontSize = 15d;
         private double textFontSize = 15d;
 
+        public DialogOptions()
+            : this(Default)
+        {
+        }
+
+        public DialogOptions(DialogOptions defaults)
+        {
+            if (defaults == null)
+            {
+                return;
+            }
+
+            width = defaults.width;
+            height = defaults.height;
+            padding = defaults.padding;
+            titleFontSize = defaults.titleFontSize;
+            headingFontSize = defaults.headingFontSize;
+            textFontSize = defaults.textFontSize;
+        }
+
         public double Width
         {
             get => width;
