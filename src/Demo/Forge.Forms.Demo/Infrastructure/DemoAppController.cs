@@ -8,6 +8,7 @@ namespace Forge.Forms.Demo.Infrastructure
     {
         protected override void OnInitializing()
         {
+            HotReloadManager.Init(@"C:\Users\Marcos\RiderProjects\HotReloadProofOfConcept\ConsoleApplication2\");
             var factory = Routes.RouteFactory;
             Routes.MenuRoutes.Add(InitialRoute = factory.Get<HomeRoute>());
             Routes.MenuRoutes.Add(factory.Get<ExamplesRoute>());

@@ -36,6 +36,7 @@
     <PackageReference Include="MahApps.Metro" Version="1.5.0" />
     <PackageReference Include="MaterialDesignColors" Version="1.1.3" />
     <PackageReference Include="MaterialDesignThemes" Version="2.3.1.953" />
+    <PackageReference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform" Version="1.0.8" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="PresentationCore" />
@@ -81,6 +82,7 @@
     <Compile Include="Controls\DynamicFormWrapper.xaml.cs">
       <DependentUpon>DynamicFormWrapper.xaml</DependentUpon>
     </Compile>
+    <Compile Include="HotReloadManager.cs" />
     <Compile Include="WindowOptions.cs" />
     <Compile Include="DialogOptions.cs" />
     <Compile Include="Controls\DialogWindow.xaml.cs">
