@@ -139,17 +139,20 @@ namespace Forge.Forms.FormBuilding.Defaults
             switch (action.Value)
             {
                 case string actionName:
+                    var modelToUse = TransformationBase.GetTransformation(model).OnAction
+                        .Invoke(model, actionName, arg);
+                    
                     if (model is IActionHandler modelHandler)
                     {
-                        modelHandler.HandleAction(model, actionName, arg);
+                        modelHandler.HandleAction(modelToUse, actionName, arg);
                     }
 
                     if (context.GetContextInstance() is IActionHandler contextHandler)
                     {
-                        contextHandler.HandleAction(model, actionName, arg);
+                        contextHandler.HandleAction(modelToUse, actionName, arg);
                     }
 
-                    context.OnAction(model, actionName, arg);
+                    context.OnAction(modelToUse, actionName, arg);
                     break;
                 case ICommand command:
                     command.Execute(arg);

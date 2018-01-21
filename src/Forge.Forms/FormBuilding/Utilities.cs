@@ -40,11 +40,7 @@ namespace Forge.Forms.FormBuilding
             }
 
             // First requirement is that properties and getters must be public.
-            var properties = type
-                .GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                .Where(p => p.CanRead && p.GetGetMethod(true).IsPublic)
-                .OrderBy(p => p.MetadataToken);
-
+            var properties = TransformationBase.GetTransformation(type).GetProperties.Invoke(type);
 
             switch (mode)
             {

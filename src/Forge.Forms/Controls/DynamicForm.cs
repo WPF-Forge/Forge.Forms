@@ -139,7 +139,8 @@ namespace Forge.Forms.Controls
         private static void ModelChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
         {
             var form = (DynamicForm)obj;
-            form.UpdateModel(e.OldValue, e.NewValue);
+            var transform = TransformationBase.GetTransformation(e.NewValue);
+            form.UpdateModel(e.OldValue, transform.ModelChanged(e.OldValue, e.NewValue) ?? e.NewValue);
         }
 
         private void UpdateModel(object oldModel, object newModel)
