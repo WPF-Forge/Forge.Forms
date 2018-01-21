@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Forge.Forms.Tests", "src\Fo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Forge.Forms.Scripting", "src\Forge.Forms.Scripting\Forge.Forms.Scripting.csproj", "{9C524023-524D-4009-85F5-7FD7FD79E7EE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Forge.Forms.Livereload", "Forge.Forms.Livereload\Forge.Forms.Livereload.csproj", "{8FC8CC52-9142-4DDA-83C4-1AD6356BBCB1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Forge.Forms.Livereload", "src\Forge.Forms.Livereload\Forge.Forms.Livereload.csproj", "{8FC8CC52-9142-4DDA-83C4-1AD6356BBCB1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
