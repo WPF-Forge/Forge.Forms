@@ -40,6 +40,9 @@
     <StartupObject>Forge.Forms.Demo.App</StartupObject>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ClearScript, Version=5.5.1.0, Culture=neutral, PublicKeyToken=935d0c957da47c73, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\ClearScript.V8.5.5.1\lib\net45\ClearScript.dll</HintPath>
+    </Reference>
     <Reference Include="AttributeBuilder.Standard, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>..\..\..\packages\AttributeBuilder.Standard.1.5.6\lib\net461\AttributeBuilder.Standard.dll</HintPath>
     </Reference>
@@ -101,6 +104,7 @@
     <Compile Include="Models\FoodSelection.cs" />
     <Compile Include="Models\Home\Introduction.cs" />
     <Compile Include="Models\ExamplePresenter.cs" />
+    <Compile Include="Models\ScriptedCounter.cs" />
     <Compile Include="Models\Selection.cs" />
     <Compile Include="Routes\CsharpExamplesRoute.cs" />
     <Compile Include="Routes\ExamplesRoute.cs" />
@@ -179,6 +183,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Forge.Forms.Scripting\Forge.Forms.Scripting.csproj">
+      <Project>{9c524023-524d-4009-85f5-7fd7fd79e7ee}</Project>
+      <Name>Forge.Forms.Scripting</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\Forge.Forms.Livereload\Forge.Forms.Livereload.csproj">
       <Project>{8fc8cc52-9142-4dda-83c4-1ad6356bbcb1}</Project>
       <Name>Forge.Forms.Livereload</Name>
@@ -189,6 +197,13 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>
+if not exist "$(TargetDir)" md "$(TargetDir)"
+xcopy /s /y "$(SolutionDir)packages\ClearScript.V8.5.5.1\tools\native\x86\*.*" "$(TargetDir)"
+if not exist "$(TargetDir)" md "$(TargetDir)"
+xcopy /s /y "$(SolutionDir)packages\ClearScript.V8.5.5.1\tools\native\amd64\*.*" "$(TargetDir)"</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

@@ -30,6 +30,8 @@ namespace Forge.Forms.FormBuilding.Defaults
 
         public IValueProvider IsCancel { get; set; }
 
+        public IValueProvider ActionInterceptor { get; set; }
+
         protected internal override void Freeze()
         {
             base.Freeze();
@@ -45,7 +47,7 @@ namespace Forge.Forms.FormBuilding.Defaults
             return new ActionPresenter(context, Resources, formResources)
             {
                 Command = new ActionElementCommand(context, ActionName, ActionParameter, IsEnabled, Validates,
-                    ClosesDialog, IsReset),
+                    ClosesDialog, IsReset, ActionInterceptor),
                 VerticalAlignment = VerticalAlignment.Center,
                 HorizontalAlignment =
                     LinePosition == Position.Left ? HorizontalAlignment.Left : HorizontalAlignment.Right
@@ -57,6 +59,7 @@ namespace Forge.Forms.FormBuilding.Defaults
     {
         private readonly IProxy action;
         private readonly IProxy actionParameter;
+        private readonly IProxy actionInterceptor;
 
         private readonly IBoolProxy canExecute;
         private readonly IBoolProxy closesDialog;
@@ -64,8 +67,14 @@ namespace Forge.Forms.FormBuilding.Defaults
         private readonly IBoolProxy resets;
         private readonly IBoolProxy validates;
 
-        public ActionElementCommand(IResourceContext context, IValueProvider action, IValueProvider actionParameter,
-            IValueProvider isEnabled, IValueProvider validates, IValueProvider closesDialog, IValueProvider isReset)
+        public ActionElementCommand(IResourceContext context,
+            IValueProvider action,
+            IValueProvider actionParameter,
+            IValueProvider isEnabled,
+            IValueProvider validates,
+            IValueProvider closesDialog,
+            IValueProvider isReset,
+            IValueProvider actionInterceptor)
         {
             this.context = context;
             this.action = action?.GetBestMatchingProxy(context) ?? new PlainObject(null);
@@ -91,13 +100,13 @@ namespace Forge.Forms.FormBuilding.Defaults
                 : new PlainBool(true);
             resets = isReset != null ? (IBoolProxy)isReset.GetBoolValue(context) : new PlainBool(false);
             this.actionParameter = actionParameter?.GetBestMatchingProxy(context) ?? new PlainObject(null);
+            this.actionInterceptor = (IProxy)actionInterceptor?.GetValue(context) ?? new PlainObject(null);
         }
 
         public void Execute(object parameter)
         {
             var arg = actionParameter.Value;
             var model = context.GetModelInstance();
-
 
             if (resets.Value && ModelState.IsModel(model))
             {
@@ -122,6 +131,34 @@ namespace Forge.Forms.FormBuilding.Defaults
                 }
             }
 
+            if (actionInterceptor.Value is IActionInterceptor interceptor)
+            {
+                interceptor.InterceptAction(model, context.GetContextInstance(), arg);
+            }
+
+            switch (action.Value)
+            {
+                case string actionName:
+                    var modelToUse = TransformationBase.GetTransformation(model).OnAction
+                        .Invoke(model, actionName, arg);
+                    
+                    if (model is IActionHandler modelHandler)
+                    {
+                        modelHandler.HandleAction(modelToUse, actionName, arg);
+                    }
+
+                    if (context.GetContextInstance() is IActionHandler contextHandler)
+                    {
+                        contextHandler.HandleAction(modelToUse, actionName, arg);
+                    }
+
+                    context.OnAction(modelToUse, actionName, arg);
+                    break;
+                case ICommand command:
+                    command.Execute(arg);
+                    break;
+            }
+
             if (closesDialog.Value && context is IFrameworkResourceContext fwContext)
             {
                 var frameworkElement = fwContext.GetOwningElement();
@@ -129,26 +166,6 @@ namespace Forge.Forms.FormBuilding.Defaults
                 {
                     DialogHost.CloseDialogCommand.Execute(arg, frameworkElement);
                 }
-            }
-
-            switch (action.Value)
-            {
-                case string actionName:
-                    if (model is IActionHandler modelHandler)
-                    {
-                        modelHandler.HandleAction(model, actionName, arg);
-                    }
-
-                    if (context.GetContextInstance() is IActionHandler contextHandler)
-                    {
-                        contextHandler.HandleAction(model, actionName, arg);
-                    }
-
-                    context.OnAction(model, actionName, arg);
-                    break;
-                case ICommand command:
-                    command.Execute(arg);
-                    break;
             }
         }
 
