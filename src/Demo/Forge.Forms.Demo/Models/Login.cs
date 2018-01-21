@@ -8,7 +8,7 @@ namespace Forge.Forms.Demo.Models
     [Title("Login to continue")]
     [Action("cancel", "CANCEL", IsCancel = true)]
     [Action("login", "LOG IN", IsLoading = "{Binding Loading}", IsDefault = true)]
-    [HotReload]
+    [HotReload(true)]
     public class Login : IActionHandler
     {
         // Enums may be deserialized from strings.

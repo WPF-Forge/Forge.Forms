@@ -38,7 +38,10 @@ namespace Forge.Forms
         /// <param name="transformation">The transformation.</param>
         public static void AddTransformation(Type type, Transformation transformation)
         {
-            Transformations.Add(type, transformation);
+            if (!Transformations.ContainsKey(type))
+                Transformations.Add(type, transformation);
+            else
+                Transformations[type] = transformation;
         }
 
         /// <summary>
@@ -48,7 +51,7 @@ namespace Forge.Forms
         /// <returns></returns>
         public static Transformation GetTransformation(object model)
         {
-            return model != null ? GetTransformation(model.GetType()) : null;
+            return model != null ? GetTransformation(model.GetType()) : Default;
         }
 
         /// <summary>

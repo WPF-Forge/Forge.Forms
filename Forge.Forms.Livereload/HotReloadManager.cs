@@ -170,7 +170,10 @@ namespace Forge.Forms.Livereload
                     var attr = type.GetCustomAttribute<HotReloadAttribute>() ?? new HotReloadAttribute();
                     if (attr.IsPersistent)
                     {
-                        //TODO: Implement persistent
+                        TransformationBase.AddTransformation(GetBaseType(type), new Transformation
+                        {
+                            ModelChanged = (o, o1) => type
+                        });
                     }
                 }
 
@@ -180,6 +183,13 @@ namespace Forge.Forms.Livereload
             {
                 // ignored
             }
+        }
+
+        private static Type GetBaseType(Type type)
+        {
+            return AppDomain.CurrentDomain.GetAssemblies()
+                .Where(i => !i.IsDynamic && i.IsAssemblyDebugBuild())
+                .Select(i => i.GetLoadableTypes()).SelectMany(i => i).Single(i => i.FullName == type.FullName);
         }
 
         /// <summary>
