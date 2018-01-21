@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using Microsoft.Win32;
 
-namespace Forge.Forms
+namespace Forge.Forms.Livereload
 {
     public static class VisualStudioHelper
     {

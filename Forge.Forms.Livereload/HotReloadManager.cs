@@ -10,42 +10,107 @@ using System.Reflection;
 using System.Text;
 using System.Windows;
 using Forge.Forms.Controls;
+using Forge.Forms.Livereload.Annotations;
 using Microsoft.CodeDom.Providers.DotNetCompilerPlatform;
 using Proxier.Extensions;
 
-namespace Forge.Forms
+namespace Forge.Forms.Livereload
 {
     /// <summary>
     /// Hot reload manager
     /// </summary>
     public static class HotReloadManager
     {
+        private static bool watchAllFiles = true;
+
+        static HotReloadManager()
+        {
+            Initialize();
+        }
+
         /// <summary>
         /// Directories to be watched
         /// </summary>
-        public static ObservableCollection<string> Directories { get; set; }
+        public static ObservableCollection<string> Directories { get; }
             = new ObservableCollection<string>();
 
-        public static bool IsAssemblyDebugBuild(this Assembly assembly)
+        public static bool WatchAllFiles
+        {
+            private get => watchAllFiles;
+            set
+            {
+                if (value == watchAllFiles)
+                {
+                    return;
+                }
+
+                watchAllFiles = value;
+                Initialize();
+            }
+        }
+
+        private static List<FileSystemWatcher> Watchers { get; } = new List<FileSystemWatcher>();
+
+        private static bool IsAssemblyDebugBuild(this Assembly assembly)
         {
             return assembly.GetCustomAttributes(false).OfType<DebuggableAttribute>().Any(da => da.IsJITTrackingEnabled);
         }
 
-        static HotReloadManager()
+        private static void Initialize()
         {
-            var paths = AppDomain.CurrentDomain.GetAssemblies().Where(i => !i.IsDynamic && i.IsAssemblyDebugBuild())
-                .Select(i => Path.GetDirectoryName(i?.CodeBase.Replace("file:///", ""))).Distinct()
-                .Select(i => i.FindProjectRoot())
-                .ToList();
+            if (Watchers.Count > 0)
+            {
+                foreach (var systemWatcher in Watchers)
+                {
+                    systemWatcher.Dispose();
+                }
+
+                Watchers.Clear();
+            }
+
+            if (!WatchAllFiles)
+            {
+                var filesToWatch = AppDomain.CurrentDomain.GetAssemblies()
+                    .Where(i => !i.IsDynamic && i.IsAssemblyDebugBuild())
+                    .SelectMany(i => i.GetLoadableTypes())
+                    .Where(i => i.GetCustomAttribute<HotReloadAttribute>() != null)
+                    .Select(i => new
+                    {
+                        FileName = Path.GetFileName(
+                            i.GetCustomAttribute<HotReloadAttribute>().FilePath),
+                        Directory = Path.GetDirectoryName(i.GetCustomAttribute<HotReloadAttribute>().FilePath)
+                    });
+
+                foreach (var toWatch in filesToWatch)
+                {
+                    AddWatcher(toWatch.Directory, toWatch.FileName);
+                }
+
+                return;
+            }
 
             Directories.CollectionChanged += DirectoriesOnCollectionChanged;
+
+            foreach (var path in FindProjects())
+            {
+                Directories.Add(path);
+            }
         }
 
-        public static string FindProjectRoot(this string directoryPath)
+        private static IEnumerable<string> FindProjects()
+        {
+            return AppDomain.CurrentDomain.GetAssemblies().Where(i => !i.IsDynamic && i.IsAssemblyDebugBuild())
+                .Select(i => Path.GetDirectoryName(i?.CodeBase.Replace("file:///", ""))).Distinct()
+                .Select(i => i.FindProjectRoot())
+                .Where(i => !string.IsNullOrEmpty(i))
+                .ToList();
+        }
+
+        private static string FindProjectRoot(this string directoryPath, int maxUpwards = 6)
         {
             var directory = new DirectoryInfo(directoryPath);
-
-            while (directory?.Parent != null)
+            var count = 0;
+            while (directory?.Parent != null && count < maxUpwards)
             {
                 if (directory.GetFiles().Any(i => i.Extension == ".csproj"))
                 {
@@ -53,6 +118,7 @@ namespace Forge.Forms
                 }
 
                 directory = directory.Parent;
+                count++;
             }
 
             return "";
@@ -67,19 +133,30 @@ namespace Forge.Forms
                     continue;
                 }
 
-                var watcher = new FileSystemWatcher
-                {
-                    NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite
-                                                            | NotifyFilters.FileName | NotifyFilters.DirectoryName,
-                    Filter = "*.cs",
-                    Path = directory,
-                    IncludeSubdirectories = true
-                };
-
-                watcher.Changed += OnChanged;
-                watcher.Error += (sender, eventArgs) => { };
-                watcher.EnableRaisingEvents = true;
+                AddWatcher(directory);
             }
+        }
+
+        private static void AddWatcher(string directory1, string filter = "*.cs")
+        {
+            if (Watchers.Any(i => i.Path == directory1 && i.Filter == filter))
+            {
+                return;
+            }
+
+            var watcher = new FileSystemWatcher
+            {
+                NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite
+                                                        | NotifyFilters.FileName | NotifyFilters.DirectoryName,
+                Filter = filter,
+                Path = directory1,
+                IncludeSubdirectories = true
+            };
+
+            watcher.Changed += OnChanged;
+            watcher.Error += (sender, eventArgs) => { };
+            watcher.EnableRaisingEvents = true;
+            Watchers.Add(watcher);
         }
 
         private static void OnChanged(object sender, FileSystemEventArgs e)
@@ -87,6 +164,16 @@ namespace Forge.Forms
             try
             {
                 var types = GetTypesFromFile(e.FullPath).ToList();
+
+                foreach (var type in types)
+                {
+                    var attr = type.GetCustomAttribute<HotReloadAttribute>() ?? new HotReloadAttribute();
+                    if (attr.IsPersistent)
+                    {
+                        //TODO: Implement persistent
+                    }
+                }
+
                 ApplyTypesToDynamicForms(types);
             }
             catch
