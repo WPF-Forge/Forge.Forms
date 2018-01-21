@@ -39,7 +39,7 @@ namespace Forge.Forms.Controls
 
         public static readonly DependencyProperty ValueProperty = ValuePropertyKey.DependencyProperty;
 
-        internal static readonly HashSet<DynamicForm> ActiveForms = new HashSet<DynamicForm>();
+        public static HashSet<DynamicForm> ActiveForms = new HashSet<DynamicForm>();
 
         private readonly List<FrameworkElement> currentElements;
         internal readonly Dictionary<string, IDataBindingProvider> DataBindingProviders;
