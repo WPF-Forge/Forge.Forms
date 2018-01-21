@@ -41,11 +41,6 @@
                     Text="{Binding CsharpString, UpdateSourceTrigger=PropertyChanged, Delay=500}"
                     TextWrapping="Wrap"
                     VerticalScrollBarVisibility="Auto" />
-                <Button
-                    Grid.Row="1"
-                    Margin="0,8,0,0"
-                    Command="{Binding BuildDefinitionCommand}"
-                    Content="BUILD FORM" />
             </Grid>
         </materialDesign:Card>
         <materialDesign:Card
