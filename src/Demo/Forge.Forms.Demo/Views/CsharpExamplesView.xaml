@@ -38,7 +38,7 @@
                     VerticalContentAlignment="Top"
                     materialDesign:HintAssist.Hint="CSharp Definition"
                     AcceptsReturn="True"
-                    Text="{Binding CsharpString, UpdateSourceTrigger=PropertyChanged, Delay=500}"
+                    Text="{Binding CsharpString, UpdateSourceTrigger=PropertyChanged, Delay=1000}"
                     TextWrapping="Wrap"
                     VerticalScrollBarVisibility="Auto" />
             </Grid>
