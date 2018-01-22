@@ -2,62 +2,43 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Forge.Forms.Utils;
-using Ninject;
+using Forge.Forms.Controls;
+using Forge.Forms.Extensions;
+using Forge.Forms.FormBuilding.Defaults;
 using Proxier.Mappers;
 
 namespace Forge.Forms.Mapper
 {
+    class MapperInterceptor : IModelInterceptor
+    {
+        public IModelContext Intercept(IModelContext modelContext)
+        {
+            return modelContext.NewModel == null
+                ? modelContext
+                : new ModelContext(modelContext.NewModel.GetInjectedObject(), modelContext.ResourceContext);
+        }
+    }
+
+    class MapperActionInterceptor : IActionInterceptor
+    {
+        public IActionContext InterceptAction(IActionContext actionContext)
+        {
+            if (actionContext.Model == null)
+                return actionContext;
+
+            return new ActionContext(
+                actionContext.Model.CopyTo(actionContext.Model.GetType().FindOverridableType()?.BaseType ??
+                                           actionContext.Model.GetType()), actionContext.Context, actionContext.Action,
+                actionContext.ActionParameter);
+        }
+    }
+
     public static class ModuleInitializer
     {
         public static void Initialize()
         {
-            var transformation = new Transformation
-            {
-                GetProperties = GetProperties,
-                KernelChanged = KernelChanged,
-                ModelChanged = ModelChanged,
-                OnAction = OnAction
-            };
-
-            Transformation.Default = transformation;
-        }
-
-        private static object OnAction(object model, string actionName, object arg)
-        {
-            var newModel = model.GetInjectedObject()
-                ?.CopyTo(model.GetType().FindOverridableType()?.BaseType ?? model.GetType());
-            model.GetType().FindOverridableType<MaterialMapper>()?.HandleAction(model, actionName, arg);
-            return newModel;
-        }
-
-        private static object ModelChanged(object oldModel, object newModel, IKernel kernel)
-        {
-            Proxier.Mappers.Mapper.InitializeMapperClasses(kernel);
-            newModel = newModel.GetInjectedObject();
-
-            if (newModel != null)
-            {
-                kernel?.Inject(newModel);
-            }
-
-            return newModel;
-        }
-
-        private static object KernelChanged(object o, IKernel kernel)
-        {
-            var newModel = o.CopyTo(o.GetType());
-            kernel?.Inject(newModel);
-            return newModel;
-        }
-
-        private static IEnumerable<PropertyInfo> GetProperties(Type o)
-        {
-            return o
-                .GetHighestProperties()
-                .Where(p => p.PropertyInfo.CanRead && p.PropertyInfo.GetGetMethod(true).IsPublic)
-                .OrderBy(p => p.Token)
-                .Select(i => i.PropertyInfo);
+            DynamicForm.InterceptorChain.Add(new MapperInterceptor());
+            ActionElement.InterceptorChain.Add(new MapperActionInterceptor());
         }
     }
 }

@@ -43,7 +43,7 @@
     <Compile Include="ModuleInitializer.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Forge.Forms\Forge.Forms.csproj">
+    <ProjectReference Include="..\src\Forge.Forms\Forge.Forms.csproj">
       <Project>{4e0c323d-5afc-4105-815f-587346aa5321}</Project>
       <Name>Forge.Forms</Name>
     </ProjectReference>
