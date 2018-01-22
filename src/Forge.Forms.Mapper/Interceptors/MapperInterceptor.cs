@@ -1,4 +1,5 @@
-﻿using Proxier.Mappers;
+﻿using Proxier.Extensions;
+using Proxier.Mappers;
 
 namespace Forge.Forms.Mapper.Interceptors
 {

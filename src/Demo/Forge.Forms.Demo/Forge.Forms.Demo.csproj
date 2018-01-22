@@ -71,6 +71,9 @@
     <Reference Include="Ninject, Version=3.3.4.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7">
       <HintPath>..\..\..\packages\Ninject.3.3.4\lib\net45\Ninject.dll</HintPath>
     </Reference>
+    <Reference Include="Proxier, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\..\..\..\..\..\.nuget\packages\proxier\1.5.6\lib\net461\Proxier.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -177,6 +180,10 @@
     <ProjectReference Include="..\..\Forge.Forms.Livereload\Forge.Forms.Livereload.csproj">
       <Project>{8fc8cc52-9142-4dda-83c4-1ad6356bbcb1}</Project>
       <Name>Forge.Forms.Livereload</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Forge.Forms.Mapper\Forge.Forms.Mapper.csproj">
+      <Project>{fc05c575-2b2f-439c-8d29-4971406957e1}</Project>
+      <Name>Forge.Forms.Mapper</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Forge.Forms.Scripting\Forge.Forms.Scripting.csproj">
       <Project>{9c524023-524d-4009-85f5-7fd7fd79e7ee}</Project>

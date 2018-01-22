@@ -3,12 +3,19 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using Forge.Forms.Annotations;
+using Proxier.Extensions;
 using Proxier.Mappers;
+using Proxier.Mappers.Maps;
 
 namespace Forge.Forms.Mapper
 {
     public class MaterialMapper : AttributeMapper
     {
+        static MaterialMapper()
+        {
+            ModuleInitializer.Initialize();
+        }
+
         protected MaterialMapper(Type type) : base(type)
         {
         }
@@ -23,7 +30,7 @@ namespace Forge.Forms.Mapper
             }
 
             var propertyInfos = Type.GetHighestProperties().Select(i => i.PropertyInfo);
-            var shouldHave = Mappings.Select(i => i.PropertyInfo).Where(i => i != null).ToList();
+            var shouldHave = AttributeMappings.Select(i => i.PropertyInfo).Where(i => i != null).ToList();
             foreach (var prop in propertyInfos)
             {
                 if (shouldHave.Any(i => i.Name == prop.Name))
@@ -32,14 +39,14 @@ namespace Forge.Forms.Mapper
                 }
 
                 {
-                    if (Mappings.Any(i => i.PropertyInfo?.Name == prop.Name))
+                    if (AttributeMappings.Any(i => i.PropertyInfo?.Name == prop.Name))
                     {
                         continue;
                     }
 
-                    Mappings.Add(new Proxier.Mappers.Mapper(this)
+                    AttributeMappings.Add(new AttributeMap(this)
                     {
-                        Expression = new Expression<Func<Attribute>>[]
+                        Attributes = new Expression<Func<Attribute>>[]
                             { () => new FieldAttribute { IsVisible = false } },
                         PropertyInfo = prop
                     });
@@ -84,20 +91,20 @@ namespace Forge.Forms.Mapper
                     $"Expression '{propertyLambda}' refers to a field, not a property.");
             }
 
-            if (type != propInfo.ReflectedType &&
-                !type.IsSubclassOf(propInfo.ReflectedType))
+            if (propInfo.ReflectedType != null && (type != propInfo.ReflectedType &&
+                                                   !type.IsSubclassOf(propInfo.ReflectedType)))
             {
                 throw new ArgumentException(
                     $"Expresion '{propertyLambda}' refers to a property that is not from type {type}.");
             }
 
-            var mapper = new Proxier.Mappers.Mapper(this)
+            var mapper = new AttributeMap(this)
             {
-                Expression = expression,
+                Attributes = expression,
                 PropertyInfo = propInfo
             };
 
-            Mappings.Add(mapper);
+            AttributeMappings.Add(mapper);
         }
 
         /// <summary>

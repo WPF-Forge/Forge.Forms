@@ -1,5 +1,8 @@
-﻿using Forge.Forms.Demo.Routes;
+﻿using Forge.Forms.Annotations;
+using Forge.Forms.Demo.Models;
+using Forge.Forms.Demo.Routes;
 using Forge.Forms.Livereload;
+using Forge.Forms.Mapper;
 using Material.Application.Infrastructure;
 using Material.Application.Routing;
 

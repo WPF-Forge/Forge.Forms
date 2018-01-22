@@ -13,6 +13,7 @@ namespace Forge.Forms.Mapper
     {
         public static void Initialize()
         {
+            Proxier.Mappers.Maps.ProxierMapper.InitializeMapperClasses();
             DynamicForm.InterceptorChain.Add(new MapperInterceptor());
             ActionElement.InterceptorChain.Add(new MapperActionInterceptor());
         }

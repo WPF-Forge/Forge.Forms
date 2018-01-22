@@ -1,4 +1,5 @@
-﻿using Proxier.Mappers;
+﻿using Proxier.Extensions;
+using Proxier.Mappers;
 
 namespace Forge.Forms.Mapper.Interceptors
 {
@@ -10,7 +11,7 @@ namespace Forge.Forms.Mapper.Interceptors
                 return actionContext;
 
             return new ActionContext(
-                actionContext.Model.CopyTo(actionContext.Model.GetType().FindOverridableType()?.BaseType ??
+                actionContext.Model.CopyTo(actionContext.Model.GetType().GetMapper()?.BaseType ??
                                            actionContext.Model.GetType()), actionContext.Context, actionContext.Action,
                 actionContext.ActionParameter);
         }
