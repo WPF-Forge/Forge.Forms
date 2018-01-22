@@ -87,7 +87,6 @@
     <Compile Include="Extensions\PropertyInfoExtensions.cs" />
     <Compile Include="Extensions\PropertyWrapper.cs" />
     <Compile Include="IModelInterceptor.cs" />
-    <Compile Include="Transformation.cs" />
     <Compile Include="WindowOptions.cs" />
     <Compile Include="DialogOptions.cs" />
     <Compile Include="Controls\DialogWindow.xaml.cs">

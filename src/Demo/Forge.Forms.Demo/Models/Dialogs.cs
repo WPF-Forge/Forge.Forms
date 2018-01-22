@@ -3,11 +3,11 @@
 namespace Forge.Forms.Demo.Models
 {
     [Title("Dialogs")]
-    [Action("alert", "ALERT", InsertAfter = false)]
-    [Action("confirm", "CONFIRM", InsertAfter = false)]
-    [Action("long_confirm", "LONG CONFIRM", InsertAfter = false)]
-    [Action("prompt", "PROMPT", InsertAfter = false)]
-    [Action("login", "LOGIN", InsertAfter = false)]
+    [Action("alert", "ALERT", InsertAfter = false, ClosesDialog = false)]
+    [Action("confirm", "CONFIRM", InsertAfter = false, ClosesDialog = false)]
+    [Action("long_confirm", "LONG CONFIRM", InsertAfter = false, ClosesDialog = false)]
+    [Action("prompt", "PROMPT", InsertAfter = false, ClosesDialog = false)]
+    [Action("login", "LOGIN", InsertAfter = false, ClosesDialog = false)]
     [Divider]
     [Title("Windows")]
     [Action("alert", "ALERT", Parameter = "window", InsertAfter = false)]
