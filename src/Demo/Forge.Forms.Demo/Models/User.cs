@@ -5,8 +5,8 @@ using MaterialDesignThemes.Wpf;
 namespace Forge.Forms.Demo.Models
 {
     [Title("Create account")]
-    [Action("cancel", "CANCEL")]
-    [Action("register", "REGISTER")]
+    [Action("cancel", "CANCEL", IsReset = true, IsCancel = true)]
+    [Action("register", "REGISTER", Validates = true, IsDefault = true)]
     public class User
     {
         [Heading("Personal details")]
