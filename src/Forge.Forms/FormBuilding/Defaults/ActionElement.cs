@@ -10,6 +10,12 @@ namespace Forge.Forms.FormBuilding.Defaults
 {
     public class ActionElement : ContentElement
     {
+        /// <summary>
+        /// Global action interceptor chain.
+        /// Pipes each interceptor output to the next one from left to right.
+        /// </summary>
+        public static readonly List<IActionInterceptor> InterceptorChain = new List<IActionInterceptor>();
+
         public IValueProvider ActionName { get; set; }
 
         public IValueProvider ActionParameter { get; set; }
@@ -120,39 +126,52 @@ namespace Forge.Forms.FormBuilding.Defaults
                     return;
                 }
             }
-            else
+            else if (ModelState.IsModel(model))
             {
-                if (ModelState.IsModel(model))
+                foreach (var binding in context.GetBindings())
                 {
-                    foreach (var binding in context.GetBindings())
-                    {
-                        binding.UpdateSource();
-                    }
+                    binding.UpdateSource();
                 }
             }
 
-            if (actionInterceptor.Value is IActionInterceptor interceptor)
+            var modelContext = context.GetContextInstance();
+            IActionContext actionContext = new ActionContext(model, modelContext, action.Value, actionParameter.Value);
+            foreach (var globalInterceptor in ActionElement.InterceptorChain)
             {
-                interceptor.InterceptAction(model, context.GetContextInstance(), arg);
+                actionContext = globalInterceptor.InterceptAction(actionContext);
+                if (actionContext == null)
+                {
+                    // A null indicates cancellation.
+                    return;
+                }
+            }
+
+            if (actionInterceptor.Value is IActionInterceptor localInterceptor)
+            {
+                // Local interceptor.
+                actionContext = localInterceptor.InterceptAction(actionContext);
+            }
+
+            if (actionContext == null)
+            {
+                // A null indicates cancellation.
+                return;
             }
 
             switch (action.Value)
             {
                 case string actionName:
-                    var modelToUse = TransformationBase.GetTransformation(model).OnAction
-                        .Invoke(model, actionName, arg);
-                    
                     if (model is IActionHandler modelHandler)
                     {
-                        modelHandler.HandleAction(modelToUse, actionName, arg);
+                        modelHandler.HandleAction(actionContext);
                     }
 
-                    if (context.GetContextInstance() is IActionHandler contextHandler)
+                    if (modelContext is IActionHandler contextHandler)
                     {
-                        contextHandler.HandleAction(modelToUse, actionName, arg);
+                        contextHandler.HandleAction(actionContext);
                     }
 
-                    context.OnAction(modelToUse, actionName, arg);
+                    context.OnAction(actionContext);
                     break;
                 case ICommand command:
                     command.Execute(arg);

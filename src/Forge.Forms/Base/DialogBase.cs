@@ -83,9 +83,9 @@
             }
         }
 
-        protected override void OnAction(string action, object parameter)
+        protected override void OnAction(object action, object parameter)
         {
-            if (action == "positive")
+            if (action is "positive")
             {
                 Confirmed = true;
             }

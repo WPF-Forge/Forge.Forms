@@ -55,9 +55,9 @@ namespace Forge.Forms.Demo.Routes
 
         public ICommand BuildDefinitionCommand { get; }
 
-        public void HandleAction(object model, string action, object parameter)
+        public void HandleAction(IActionContext actionContext)
         {
-            notificationService.Notify($"Action '{action}'");
+            notificationService.Notify($"Action '{actionContext.Action}'");
         }
 
         protected override void RouteInitializing()

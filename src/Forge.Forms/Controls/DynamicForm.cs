@@ -37,9 +37,17 @@ namespace Forge.Forms.Controls
             typeof(DynamicForm),
             new FrameworkPropertyMetadata(FormBuilding.FormBuilder.Default));
 
+        public static readonly DependencyProperty ModelInterceptorProperty = DependencyProperty.Register(
+            "ModelInterceptor",
+            typeof(IModelInterceptor),
+            typeof(DynamicForm),
+            new FrameworkPropertyMetadata(null));
+
         public static readonly DependencyProperty ValueProperty = ValuePropertyKey.DependencyProperty;
 
         public static HashSet<DynamicForm> ActiveForms = new HashSet<DynamicForm>();
+
+        public static List<IModelInterceptor> InterceptorChain = new List<IModelInterceptor>();
 
         private readonly List<FrameworkElement> currentElements;
         internal readonly Dictionary<string, IDataBindingProvider> DataBindingProviders;
@@ -91,6 +99,17 @@ namespace Forge.Forms.Controls
         public event EventHandler<ActionEventArgs> OnAction;
 
         /// <summary>
+        /// Allows intercepting the model to make changes.
+        /// This is an instance level interceptor.
+        /// See <see cref="InterceptorChain"/> for global hooks.
+        /// </summary>
+        public IModelInterceptor ModelInterceptor
+        {
+            get => (IModelInterceptor)GetValue(ModelInterceptorProperty);
+            set => SetValue(ModelInterceptorProperty, value);
+        }
+
+        /// <summary>
         /// Gets or sets the model associated with this form.
         /// If the value is a IFormDefinition, a form will be built based on that definition.
         /// If the value is a Type, a form will be built and bound to a new instance of that type.
@@ -139,8 +158,27 @@ namespace Forge.Forms.Controls
         private static void ModelChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
         {
             var form = (DynamicForm)obj;
-            var transform = TransformationBase.GetTransformation(e.NewValue);
-            form.UpdateModel(e.OldValue, transform.ModelChanged(e.OldValue, e.NewValue) ?? e.NewValue);
+            IModelContext context = new ModelContext(e.NewValue, form.ResourceContext);
+            foreach (var globalInterceptor in InterceptorChain)
+            {
+                context = globalInterceptor.Intercept(context);
+                if (context == null)
+                {
+                    throw new InvalidOperationException("ModelInterceptors are not allowed to return null.");
+                }
+            }
+
+            var localInterceptor = form.ModelInterceptor;
+            if (localInterceptor != null)
+            {
+                context = localInterceptor.Intercept(context);
+                if (context == null)
+                {
+                    throw new InvalidOperationException("ModelInterceptors are not allowed to return null.");
+                }
+            }
+
+            form.UpdateModel(e.OldValue, context.NewModel);
         }
 
         private void UpdateModel(object oldModel, object newModel)
@@ -367,9 +405,9 @@ namespace Forge.Forms.Controls
             }
         }
 
-        internal void RaiseOnAction(object model, string action, object parameter)
+        internal void RaiseOnAction(IActionContext actionContext)
         {
-            OnAction?.Invoke(this, new ActionEventArgs(model, action, parameter));
+            OnAction?.Invoke(this, new ActionEventArgs(actionContext));
         }
     }
 }
