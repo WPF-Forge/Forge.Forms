@@ -212,6 +212,7 @@ namespace Forge.Forms.Livereload
             });
         }
 
+        private static CSharpCodeProvider CodeDom { get; } = CreateCSharpCodeProvider();
 
         private static CSharpCodeProvider CreateCSharpCodeProvider()
         {
@@ -252,8 +253,6 @@ namespace Forge.Forms.Livereload
         /// <exception cref="InvalidOperationException"></exception>
         public static IEnumerable<Type> CompileCode(string code)
         {
-            var provider = CreateCSharpCodeProvider();
-
             var parameters = new CompilerParameters();
 
             foreach (var assemblyName in AppDomain.CurrentDomain.GetAssemblies())
@@ -271,7 +270,7 @@ namespace Forge.Forms.Livereload
 
             parameters.GenerateInMemory = true;
             parameters.GenerateExecutable = false;
-            var results = provider.CompileAssemblyFromSource(parameters, code);
+            var results = CodeDom.CompileAssemblyFromSource(parameters, code);
             if (results.Errors.HasErrors)
             {
                 var sb = new StringBuilder();
