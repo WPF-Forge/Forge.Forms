@@ -106,7 +106,7 @@ namespace Forge.Forms.Demo.Models
         public PackIconKind PasswordIcon => PackIconKind.Key;
 
         /// <inheritdoc />
-        public void HandleAction(object model, string action, object parameter)
+        public void HandleAction(IActionContext actionContext)
         {
             Loading = !Loading;
         }
