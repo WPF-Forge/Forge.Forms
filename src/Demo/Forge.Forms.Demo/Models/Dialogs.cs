@@ -20,8 +20,8 @@ namespace Forge.Forms.Demo.Models
         public void HandleAction(object model, string action, object parameter)
         {
             var longConfirm = new Confirm(
-                    "Let Google help apps determine location. This means sending anonymous location data to Google, even when no apps are running.",
-                    "Use Google's location service?", "TURN ON SPEED BOOST", "NO THANKS");
+                "Let Google help apps determine location. This means sending anonymous location data to Google, even when no apps are running.",
+                "Use Google's location service?", "TURN ON SPEED BOOST", "NO THANKS");
 
             if (parameter is "window")
             {
@@ -69,7 +69,6 @@ namespace Forge.Forms.Demo.Models
                         return;
                 }
             }
-
         }
     }
 }

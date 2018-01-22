@@ -7,7 +7,8 @@ namespace Forge.Forms
     [Title("{Binding Title}", IsVisible = "{Binding Title|IsNotEmpty}")]
     [Text("{Binding Message}", IsVisible = "{Binding Message|IsNotEmpty}")]
     [Action("negative", "{Binding NegativeAction}", IsCancel = true, IsVisible = "{Binding NegativeAction|IsNotEmpty}")]
-    [Action("positive", "{Binding PositiveAction}", IsDefault = true, IsVisible = "{Binding PositiveAction|IsNotEmpty}")]
+    [Action("positive", "{Binding PositiveAction}", IsDefault = true,
+        IsVisible = "{Binding PositiveAction|IsNotEmpty}")]
     public sealed class Confirm : DialogBase
     {
         public Confirm()

@@ -5,9 +5,9 @@ namespace Forge.Forms.Demo.Views
     /// <summary>
     /// Interaction logic for XmlExamplesView.xaml
     /// </summary>
-    public partial class XmlExamplesView : UserControl
+    public partial class CsharpExamplesView : UserControl
     {
-        public XmlExamplesView()
+        public CsharpExamplesView()
         {
             InitializeComponent();
         }

@@ -36,10 +36,14 @@
     <PackageReference Include="MahApps.Metro" Version="1.5.0" />
     <PackageReference Include="MaterialDesignColors" Version="1.1.3" />
     <PackageReference Include="MaterialDesignThemes" Version="2.3.1.953" />
+    <PackageReference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform" Version="1.0.8" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="Proxier, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\..\packages\Proxier.1.5.6\lib\net461\Proxier.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Windows" />
@@ -83,6 +87,7 @@
     </Compile>
     <Compile Include="DynamicExpressions\FileBinding.cs" />
     <Compile Include="DynamicExpressions\FileWatcher.cs" />
+    <Compile Include="Transformation.cs" />
     <Compile Include="WindowOptions.cs" />
     <Compile Include="DialogOptions.cs" />
     <Compile Include="Controls\DialogWindow.xaml.cs">

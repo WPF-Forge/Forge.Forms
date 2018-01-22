@@ -7,13 +7,13 @@ namespace Forge.Forms
     public class DialogOptions : INotifyPropertyChanged
     {
         public static DialogOptions Default = new DialogOptions();
-
-        private double width = 350d;
+        private double headingFontSize = 15d;
         private double height = double.NaN;
         private Thickness padding = new Thickness(16d, 16d, 16d, 8d);
-        private double titleFontSize = 20d;
-        private double headingFontSize = 15d;
         private double textFontSize = 15d;
+        private double titleFontSize = 20d;
+
+        private double width = 350d;
 
         public DialogOptions()
             : this(Default)
@@ -40,7 +40,11 @@ namespace Forge.Forms
             get => width;
             set
             {
-                if (value.Equals(width)) return;
+                if (value.Equals(width))
+                {
+                    return;
+                }
+
                 width = value;
                 OnPropertyChanged();
             }
@@ -51,7 +55,11 @@ namespace Forge.Forms
             get => height;
             set
             {
-                if (value.Equals(height)) return;
+                if (value.Equals(height))
+                {
+                    return;
+                }
+
                 height = value;
                 OnPropertyChanged();
             }
@@ -63,7 +71,11 @@ namespace Forge.Forms
             get => padding;
             set
             {
-                if (value == padding) return;
+                if (value == padding)
+                {
+                    return;
+                }
+
                 padding = value;
                 OnPropertyChanged();
             }
@@ -74,7 +86,11 @@ namespace Forge.Forms
             get => titleFontSize;
             set
             {
-                if (value == titleFontSize) return;
+                if (value == titleFontSize)
+                {
+                    return;
+                }
+
                 titleFontSize = value;
                 OnPropertyChanged();
             }
@@ -85,7 +101,11 @@ namespace Forge.Forms
             get => headingFontSize;
             set
             {
-                if (value == headingFontSize) return;
+                if (value == headingFontSize)
+                {
+                    return;
+                }
+
                 headingFontSize = value;
                 OnPropertyChanged();
             }
@@ -96,7 +116,11 @@ namespace Forge.Forms
             get => textFontSize;
             set
             {
-                if (value == textFontSize) return;
+                if (value == textFontSize)
+                {
+                    return;
+                }
+
                 textFontSize = value;
                 OnPropertyChanged();
             }

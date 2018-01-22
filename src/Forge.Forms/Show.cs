@@ -5,6 +5,81 @@ namespace Forge.Forms
 {
     public static class Show
     {
+        public static IModelHost Window()
+        {
+            return new WindowModelHost(null, WindowOptions.Default);
+        }
+
+        public static IModelHost Window(object context)
+        {
+            return new WindowModelHost(context, WindowOptions.Default);
+        }
+
+        public static IModelHost Window(WindowOptions options)
+        {
+            return new WindowModelHost(null, options);
+        }
+
+        public static IModelHost Window(double width)
+        {
+            return new WindowModelHost(null, new WindowOptions { Width = width });
+        }
+
+        public static IModelHost Window(object context, WindowOptions options)
+        {
+            return new WindowModelHost(context, options);
+        }
+
+        public static IModelHost Window(object context, double width)
+        {
+            return new WindowModelHost(context, new WindowOptions { Width = width });
+        }
+
+        public static IModelHost Dialog()
+        {
+            return new DialogModelHost(null, null, DialogOptions.Default);
+        }
+
+        public static IModelHost Dialog(DialogOptions options)
+        {
+            return new DialogModelHost(null, null, options);
+        }
+
+        public static IModelHost Dialog(double width)
+        {
+            return new DialogModelHost(null, null, new DialogOptions { Width = width });
+        }
+
+        public static IModelHost Dialog(object dialogIdentifier)
+        {
+            return new DialogModelHost(dialogIdentifier, null, DialogOptions.Default);
+        }
+
+        public static IModelHost Dialog(object dialogIdentifier, object context)
+        {
+            return new DialogModelHost(dialogIdentifier, context, DialogOptions.Default);
+        }
+
+        public static IModelHost Dialog(object dialogIdentifier, DialogOptions options)
+        {
+            return new DialogModelHost(dialogIdentifier, null, options);
+        }
+
+        public static IModelHost Dialog(object dialogIdentifier, double width)
+        {
+            return new DialogModelHost(dialogIdentifier, null, new DialogOptions { Width = width });
+        }
+
+        public static IModelHost Dialog(object dialogIdentifier, object context, DialogOptions options)
+        {
+            return new DialogModelHost(dialogIdentifier, context, options);
+        }
+
+        public static IModelHost Dialog(object dialogIdentifier, object context, double width)
+        {
+            return new DialogModelHost(dialogIdentifier, context, new DialogOptions { Width = width });
+        }
+
         private class WindowModelHost : IModelHost
         {
             private readonly object context;
@@ -26,8 +101,8 @@ namespace Forge.Forms
 
         private class DialogModelHost : IModelHost
         {
-            private readonly object dialogIdentifier;
             private readonly object context;
+            private readonly object dialogIdentifier;
             private readonly DialogOptions options;
 
             public DialogModelHost(object dialogIdentifier, object context, DialogOptions options)
@@ -43,51 +118,6 @@ namespace Forge.Forms
                 return DialogHost.Show(wrapper, dialogIdentifier);
             }
         }
-
-        public static IModelHost Window()
-            => new WindowModelHost(null, WindowOptions.Default);
-
-        public static IModelHost Window(object context)
-            => new WindowModelHost(context, WindowOptions.Default);
-
-        public static IModelHost Window(WindowOptions options)
-            => new WindowModelHost(null, options);
-
-        public static IModelHost Window(double width)
-            => new WindowModelHost(null, new WindowOptions { Width = width });
-
-        public static IModelHost Window(object context, WindowOptions options)
-            => new WindowModelHost(context, options);
-
-        public static IModelHost Window(object context, double width)
-            => new WindowModelHost(context, new WindowOptions { Width = width });
-
-        public static IModelHost Dialog()
-            => new DialogModelHost(null, null, DialogOptions.Default);
-
-        public static IModelHost Dialog(DialogOptions options)
-            => new DialogModelHost(null, null, options);
-
-        public static IModelHost Dialog(double width)
-            => new DialogModelHost(null, null, new DialogOptions { Width = width });
-
-        public static IModelHost Dialog(object dialogIdentifier)
-            => new DialogModelHost(dialogIdentifier, null, DialogOptions.Default);
-
-        public static IModelHost Dialog(object dialogIdentifier, object context)
-            => new DialogModelHost(dialogIdentifier, context, DialogOptions.Default);
-
-        public static IModelHost Dialog(object dialogIdentifier, DialogOptions options)
-            => new DialogModelHost(dialogIdentifier, null, options);
-
-        public static IModelHost Dialog(object dialogIdentifier, double width)
-            => new DialogModelHost(dialogIdentifier, null, new DialogOptions { Width = width });
-
-        public static IModelHost Dialog(object dialogIdentifier, object context, DialogOptions options)
-            => new DialogModelHost(dialogIdentifier, context, options);
-
-        public static IModelHost Dialog(object dialogIdentifier, object context, double width)
-            => new DialogModelHost(dialogIdentifier, context, new DialogOptions { Width = width });
     }
 
     public interface IModelHost

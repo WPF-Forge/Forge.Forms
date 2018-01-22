@@ -441,7 +441,8 @@ namespace Forge.Forms.FormBuilding
                         }
                         else
                         {
-                            beforeFormContent.Add(new AttrElementTuple(contentAttribute, contentAttribute.GetElement()));
+                            beforeFormContent.Add(new AttrElementTuple(contentAttribute,
+                                contentAttribute.GetElement()));
                         }
 
                         break;
@@ -559,18 +560,6 @@ namespace Forge.Forms.FormBuilding
             }
 
             return element;
-        }
-
-        private struct AttrElementTuple
-        {
-            public AttrElementTuple(FormContentAttribute attr, FormElement element)
-            {
-                Attr = attr;
-                Element = element;
-            }
-
-            public FormContentAttribute Attr;
-            public FormElement Element;
         }
 
         private static List<FormRow> CreateRows(IEnumerable<AttrElementTuple> elements,
@@ -812,6 +801,18 @@ namespace Forge.Forms.FormBuilding
             }
 
             return null;
+        }
+
+        private struct AttrElementTuple
+        {
+            public AttrElementTuple(FormContentAttribute attr, FormElement element)
+            {
+                Attr = attr;
+                Element = element;
+            }
+
+            public readonly FormContentAttribute Attr;
+            public readonly FormElement Element;
         }
 
         private class ElementWrapper

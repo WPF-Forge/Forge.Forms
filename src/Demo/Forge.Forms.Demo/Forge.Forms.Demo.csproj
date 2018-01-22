@@ -43,6 +43,9 @@
     <Reference Include="ClearScript, Version=5.5.1.0, Culture=neutral, PublicKeyToken=935d0c957da47c73, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\ClearScript.V8.5.5.1\lib\net45\ClearScript.dll</HintPath>
     </Reference>
+    <Reference Include="AttributeBuilder.Standard, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\..\..\packages\AttributeBuilder.Standard.1.5.6\lib\net461\AttributeBuilder.Standard.dll</HintPath>
+    </Reference>
     <Reference Include="Dragablz, Version=0.0.3.197, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\Dragablz.0.0.3.197\lib\net45\Dragablz.dll</HintPath>
     </Reference>
@@ -59,6 +62,9 @@
     <Reference Include="MaterialDesignThemes.Wpf, Version=2.3.1.953, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\MaterialDesignThemes.2.3.1.953\lib\net45\MaterialDesignThemes.Wpf.dll</HintPath>
     </Reference>
+    <Reference Include="Nanoid, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\..\..\packages\Nanoid.1.0.0\lib\netstandard2.0\Nanoid.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -67,6 +73,15 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Linq, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <HintPath>..\..\..\packages\System.Linq.4.4.0-beta-24913-01\lib\net461\System.Linq.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Linq.Expressions, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <HintPath>..\..\..\packages\System.Linq.Expressions.4.4.0-beta-24913-01\lib\net461\System.Linq.Expressions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <HintPath>..\..\..\packages\System.Runtime.4.4.0-beta-24913-01\lib\net461\System.Runtime.dll</HintPath>
+    </Reference>
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\MahApps.Metro.1.5.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
       <Private>True</Private>
@@ -91,6 +106,7 @@
     <Compile Include="Models\ExamplePresenter.cs" />
     <Compile Include="Models\ScriptedCounter.cs" />
     <Compile Include="Models\Selection.cs" />
+    <Compile Include="Routes\CsharpExamplesRoute.cs" />
     <Compile Include="Routes\ExamplesRoute.cs" />
     <Compile Include="Routes\HomeRoute.cs" />
     <Compile Include="Routes\XmlExamplesRoute.cs" />
@@ -100,8 +116,8 @@
     <Compile Include="Views\FormView.xaml.cs">
       <DependentUpon>FormView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\XmlExamplesView.xaml.cs">
-      <DependentUpon>XmlExamplesView.xaml</DependentUpon>
+    <Compile Include="Views\CsharpExamplesView.cs">
+      <DependentUpon>CsharpExamplesView.xaml</DependentUpon>
     </Compile>
     <Page Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -113,6 +129,10 @@
     </Compile>
     <Compile Include="Infrastructure\DemoAppController.cs" />
     <Page Include="ViewBindings.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\CsharpExamplesView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -166,6 +186,10 @@
     <ProjectReference Include="..\..\Forge.Forms.Scripting\Forge.Forms.Scripting.csproj">
       <Project>{9c524023-524d-4009-85f5-7fd7fd79e7ee}</Project>
       <Name>Forge.Forms.Scripting</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Forge.Forms.Livereload\Forge.Forms.Livereload.csproj">
+      <Project>{8fc8cc52-9142-4dda-83c4-1ad6356bbcb1}</Project>
+      <Name>Forge.Forms.Livereload</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Forge.Forms\Forge.Forms.csproj">
       <Project>{4e0c323d-5afc-4105-815f-587346aa5321}</Project>

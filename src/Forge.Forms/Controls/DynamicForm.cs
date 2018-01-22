@@ -39,7 +39,7 @@ namespace Forge.Forms.Controls
 
         public static readonly DependencyProperty ValueProperty = ValuePropertyKey.DependencyProperty;
 
-        internal static readonly HashSet<DynamicForm> ActiveForms = new HashSet<DynamicForm>();
+        public static HashSet<DynamicForm> ActiveForms = new HashSet<DynamicForm>();
 
         private readonly List<FrameworkElement> currentElements;
         internal readonly Dictionary<string, IDataBindingProvider> DataBindingProviders;
@@ -139,7 +139,8 @@ namespace Forge.Forms.Controls
         private static void ModelChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
         {
             var form = (DynamicForm)obj;
-            form.UpdateModel(e.OldValue, e.NewValue);
+            var transform = TransformationBase.GetTransformation(e.NewValue);
+            form.UpdateModel(e.OldValue, transform.ModelChanged(e.OldValue, e.NewValue) ?? e.NewValue);
         }
 
         private void UpdateModel(object oldModel, object newModel)
