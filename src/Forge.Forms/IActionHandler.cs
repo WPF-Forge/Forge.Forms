@@ -21,7 +21,7 @@
         object ActionParameter { get; }
     }
 
-    internal class ActionContext : IActionContext
+    public class ActionContext : IActionContext
     {
         public ActionContext(object model, object context, object action, object actionParameter)
         {
