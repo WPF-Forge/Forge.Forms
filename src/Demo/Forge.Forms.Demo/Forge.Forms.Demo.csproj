@@ -183,13 +183,13 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Forge.Forms.Livereload\Forge.Forms.Livereload.csproj">
+      <Project>{8fc8cc52-9142-4dda-83c4-1ad6356bbcb1}</Project>
+      <Name>Forge.Forms.Livereload</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Forge.Forms.Scripting\Forge.Forms.Scripting.csproj">
       <Project>{9c524023-524d-4009-85f5-7fd7fd79e7ee}</Project>
       <Name>Forge.Forms.Scripting</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\Forge.Forms.Livereload\Forge.Forms.Livereload.csproj">
-      <Project>{8fc8cc52-9142-4dda-83c4-1ad6356bbcb1}</Project>
-      <Name>Forge.Forms.Livereload</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Forge.Forms\Forge.Forms.csproj">
       <Project>{4e0c323d-5afc-4105-815f-587346aa5321}</Project>
