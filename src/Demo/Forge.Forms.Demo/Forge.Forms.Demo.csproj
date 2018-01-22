@@ -109,6 +109,7 @@
     <Compile Include="Views\CsharpExamplesView.cs">
       <DependentUpon>CsharpExamplesView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\XmlExamplesView.xaml.cs" />
     <Page Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
