@@ -107,7 +107,7 @@ namespace Forge.Forms.Annotations
                 Content = Utilities.GetStringResource(Content),
                 Icon = Utilities.GetIconResource(Icon),
                 Validates = Utilities.GetResource<bool>(Validates, false, Deserializers.Boolean),
-                ClosesDialog = Utilities.GetResource<bool>(ClosesDialog, true, Deserializers.Boolean),
+                ClosesDialog = Utilities.GetResource<bool>(ClosesDialog, false, Deserializers.Boolean),
                 IsReset = Utilities.GetResource<bool>(IsReset, false, Deserializers.Boolean),
                 IsEnabled = Utilities.GetResource<bool>(IsEnabled, true, Deserializers.Boolean),
                 IsLoading = Utilities.GetResource<bool>(IsLoading, false, Deserializers.Boolean),

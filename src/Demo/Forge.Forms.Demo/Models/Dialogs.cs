@@ -3,11 +3,11 @@
 namespace Forge.Forms.Demo.Models
 {
     [Title("Dialogs")]
-    [Action("alert", "ALERT", InsertAfter = false, ClosesDialog = false)]
-    [Action("confirm", "CONFIRM", InsertAfter = false, ClosesDialog = false)]
-    [Action("long_confirm", "LONG CONFIRM", InsertAfter = false, ClosesDialog = false)]
-    [Action("prompt", "PROMPT", InsertAfter = false, ClosesDialog = false)]
-    [Action("login", "LOGIN", InsertAfter = false, ClosesDialog = false)]
+    [Action("alert", "ALERT", InsertAfter = false)]
+    [Action("confirm", "CONFIRM", InsertAfter = false)]
+    [Action("long_confirm", "LONG CONFIRM", InsertAfter = false)]
+    [Action("prompt", "PROMPT", InsertAfter = false)]
+    [Action("login", "LOGIN", InsertAfter = false)]
     [Divider]
     [Title("Windows")]
     [Action("alert", "ALERT", Parameter = "window", InsertAfter = false)]
@@ -21,7 +21,7 @@ namespace Forge.Forms.Demo.Models
         {
             var parameter = actionContext.ActionParameter;
             var action = actionContext.Action as string;
-            var longConfirm = new Confirm(
+            var longConfirm = new Confirmation(
                 "Let Google help apps determine location. This means sending anonymous location data to Google, even when no apps are running.",
                 "Use Google's location service?", "TURN ON SPEED BOOST", "NO THANKS");
 
@@ -33,7 +33,7 @@ namespace Forge.Forms.Demo.Models
                         Show.Window(275d).For(new Alert("Hello world!"));
                         break;
                     case "confirm":
-                        Show.Window(275d).For(new Confirm("Delete item?"));
+                        Show.Window(275d).For(new Confirmation("Delete item?"));
                         break;
                     case "long_confirm":
                         Show.Window(250d).For(longConfirm);
@@ -56,7 +56,7 @@ namespace Forge.Forms.Demo.Models
                         Show.Dialog(275d).For(new Alert("Hello world!"));
                         break;
                     case "confirm":
-                        Show.Dialog(275d).For(new Confirm("Delete item?"));
+                        Show.Dialog(275d).For(new Confirmation("Delete item?"));
                         break;
                     case "long_confirm":
                         Show.Dialog(250d).For(longConfirm);

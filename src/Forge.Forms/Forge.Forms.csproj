@@ -139,7 +139,7 @@
     <Compile Include="Alert.cs" />
     <Compile Include="Base\DialogBase.cs" />
     <Compile Include="Base\FormBase.cs" />
-    <Compile Include="Confirm.cs" />
+    <Compile Include="Confirmation.cs" />
     <Compile Include="Prompt.cs" />
     <Compile Include="IActionHandler.cs" />
     <Compile Include="FormBuilding\IBindingProvider.cs" />

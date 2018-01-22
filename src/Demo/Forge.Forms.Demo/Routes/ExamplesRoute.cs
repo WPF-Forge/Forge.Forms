@@ -74,13 +74,13 @@ namespace Forge.Forms.Demo.Routes
                 Message = "Item deleted."
             }, "Alert", small);
 
-            yield return new ExamplePresenter(new Confirm
+            yield return new ExamplePresenter(new Confirmation
             {
                 Message = "Discard draft?",
                 PositiveAction = "DISCARD"
             }, "Confirm 1", small);
 
-            yield return new ExamplePresenter(new Confirm
+            yield return new ExamplePresenter(new Confirmation
             {
                 Title = "Use Google's location service?",
                 Message =
