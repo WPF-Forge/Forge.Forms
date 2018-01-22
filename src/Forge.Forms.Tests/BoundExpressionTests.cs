@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Data;
-using Forge.Forms.Interfaces;
-using Forge.Forms.Utils;
+using Forge.Forms.DynamicExpressions;
+using Forge.Forms.FormBuilding;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Forge.Forms.Tests
@@ -118,7 +118,7 @@ namespace Forge.Forms.Tests
             throw new NotImplementedException();
         }
 
-        public void OnAction(object model, string action, object parameter)
+        public void OnAction(IActionContext actionContext)
         {
             throw new NotImplementedException();
         }
@@ -384,6 +384,31 @@ namespace Forge.Forms.Tests
 
             expression = BoundExpression.Parse("{Binding Name|ToUpper}");
             Assert.IsNull(expression.StringFormat);
+        }
+
+        [TestMethod]
+        public void TestApostropheSyntax()
+        {
+            var expression = BoundExpression.Parse("Hello, {Binding 'FirstName'}");
+            Assert.AreEqual("FirstName", ((PropertyBinding)expression.Resources[0]).PropertyPath);
+
+            try
+            {
+                BoundExpression.Parse("Hello, {Binding 'FirstName'www}");
+                Assert.Fail();
+            }
+            catch (FormatException)
+            {
+                // Success
+            }
+
+            expression = BoundExpression.Parse("{FileBinding 'C:/Documents, Files/my file.txt'}");
+            Assert.AreEqual("C:/Documents, Files/my file.txt", ((FileBinding)expression.Resources[0]).FilePath);
+            Assert.IsTrue(((FileBinding)expression.Resources[0]).IsDynamic);
+
+            expression = BoundExpression.Parse("{File 'C:/Documents, Files/{my file}.txt',500|ToUpper}");
+            Assert.AreEqual("C:/Documents, Files/{my file}.txt", ((FileBinding)expression.Resources[0]).FilePath);
+            Assert.IsFalse(((FileBinding)expression.Resources[0]).IsDynamic);
         }
 
         private class Model

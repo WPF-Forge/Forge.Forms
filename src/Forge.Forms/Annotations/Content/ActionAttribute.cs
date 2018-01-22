@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
-using Forge.Forms.Components.Fields;
-using Forge.Forms.Components.Fields.Defaults;
+using Forge.Forms.DynamicExpressions;
 using Forge.Forms.FormBuilding;
-using Forge.Forms.Utils;
+using Forge.Forms.FormBuilding.Defaults;
 
-namespace Forge.Forms.Annotations.Content
+namespace Forge.Forms.Annotations
 {
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Property, AllowMultiple = true)]
     public class ActionAttribute : FormContentAttribute
@@ -20,7 +19,7 @@ namespace Forge.Forms.Annotations.Content
             // Actions are inserted after elements by default.
             InsertAfter = true;
             // Actions are displayed to the right by default.
-            LinePosition = Components.Controls.Position.Right;
+            LinePosition = Annotations.Position.Right;
         }
 
         /// <summary>
@@ -58,6 +57,7 @@ namespace Forge.Forms.Annotations.Content
 
         /// <summary>
         /// Determines whether this button is loading or not.
+        /// Accepts a boolean or a dynamic resource.
         /// </summary>
         public object IsLoading { get; set; }
 
@@ -68,18 +68,33 @@ namespace Forge.Forms.Annotations.Content
 
         /// <summary>
         /// Determines whether the model will be validated before the action is executed.
+        /// Accepts a boolean or a dynamic resource.
         /// </summary>
         public object Validates { get; set; }
 
         /// <summary>
         /// Determines whether this action will close dialogs that host it.
+        /// Accepts a boolean or a dynamic resource.
         /// </summary>
         public object ClosesDialog { get; set; }
 
         /// <summary>
         /// Determines whether the model will be reset to default values before the action is executed.
+        /// Accepts a boolean or a dynamic resource.
         /// </summary>
         public object IsReset { get; set; }
+
+        /// <summary>
+        /// Determines whether the action has the style of a primary action.
+        /// Accepts a boolean or a dynamic resource.
+        /// </summary>
+        public object IsPrimary { get; set; }
+
+        /// <summary>
+        /// If set to an <see cref="IActionInterceptor"/>, that object will handle the action.
+        /// Accepts an <see cref="IActionInterceptor"/> or a dynamic resource.
+        /// </summary>
+        public virtual object Interceptor { get; set; }
 
         protected override FormElement CreateElement()
         {
@@ -92,12 +107,14 @@ namespace Forge.Forms.Annotations.Content
                 Content = Utilities.GetStringResource(Content),
                 Icon = Utilities.GetIconResource(Icon),
                 Validates = Utilities.GetResource<bool>(Validates, false, Deserializers.Boolean),
-                ClosesDialog = Utilities.GetResource<bool>(ClosesDialog, true, Deserializers.Boolean),
+                ClosesDialog = Utilities.GetResource<bool>(ClosesDialog, false, Deserializers.Boolean),
                 IsReset = Utilities.GetResource<bool>(IsReset, false, Deserializers.Boolean),
                 IsEnabled = Utilities.GetResource<bool>(IsEnabled, true, Deserializers.Boolean),
                 IsLoading = Utilities.GetResource<bool>(IsLoading, false, Deserializers.Boolean),
                 IsDefault = Utilities.GetResource<bool>(IsDefault, false, Deserializers.Boolean),
-                IsCancel = Utilities.GetResource<bool>(IsCancel, false, Deserializers.Boolean)
+                IsCancel = Utilities.GetResource<bool>(IsCancel, false, Deserializers.Boolean),
+                IsPrimary = Utilities.GetResource<bool>(IsPrimary, false, Deserializers.Boolean),
+                ActionInterceptor = Utilities.GetResource<IActionInterceptor>(Interceptor, null, null)
             };
         }
     }

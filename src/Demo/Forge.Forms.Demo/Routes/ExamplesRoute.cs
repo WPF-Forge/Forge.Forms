@@ -2,9 +2,6 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using Forge.Forms.Demo.Models;
-using Forge.Forms.Forms;
-using Forge.Forms.Interfaces;
-using Forge.Forms.Utils;
 using Material.Application.Infrastructure;
 using Material.Application.Routing;
 using MaterialDesignThemes.Wpf;
@@ -42,9 +39,9 @@ namespace Forge.Forms.Demo.Routes
 
         public ObservableCollection<ExamplePresenter> Models { get; private set; }
 
-        public void HandleAction(object model, string action, object parameter)
+        public void HandleAction(IActionContext actionContext)
         {
-            notificationService.Notify($"Action '{action}'");
+            notificationService.Notify($"Action '{actionContext.Action}'");
         }
 
         protected override void RouteInitializing()
@@ -68,18 +65,22 @@ namespace Forge.Forms.Demo.Routes
 
             yield return new ExamplePresenter(new FoodSelection(), "Food Selection", large);
 
+            yield return new ExamplePresenter(new Dialogs(), "Dialogs", large);
+
+            yield return new ExamplePresenter(new ScriptedCounter(), "Scripted Counter", small);
+
             yield return new ExamplePresenter(new Alert
             {
                 Message = "Item deleted."
             }, "Alert", small);
 
-            yield return new ExamplePresenter(new Confirm
+            yield return new ExamplePresenter(new Confirmation
             {
                 Message = "Discard draft?",
                 PositiveAction = "DISCARD"
             }, "Confirm 1", small);
 
-            yield return new ExamplePresenter(new Confirm
+            yield return new ExamplePresenter(new Confirmation
             {
                 Title = "Use Google's location service?",
                 Message =

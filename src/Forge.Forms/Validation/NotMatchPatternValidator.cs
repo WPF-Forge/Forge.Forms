@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Windows.Data;
-using Forge.Forms.Interfaces;
+using Forge.Forms.DynamicExpressions;
 
 namespace Forge.Forms.Validation
 {

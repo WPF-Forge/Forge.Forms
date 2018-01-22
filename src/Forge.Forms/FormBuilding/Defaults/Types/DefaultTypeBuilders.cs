@@ -3,9 +3,6 @@ using System.Globalization;
 using System.Linq;
 using Forge.Forms.Annotations;
 using Forge.Forms.Annotations.Display;
-using Forge.Forms.Components.Fields;
-using Forge.Forms.Components.Fields.Defaults;
-using Forge.Forms.Interfaces;
 
 namespace Forge.Forms.FormBuilding.Defaults.Types
 {
@@ -61,81 +58,4 @@ namespace Forge.Forms.FormBuilding.Defaults.Types
                 new ReplacementPipe(Deserializer, replacements));
         }
     }
-
-    //internal class ByteFieldBuilder : TypeBuilder<Byte> {
-    //    protected override FormElement Build(PropertyInfo property, Func<string, object> deserializer)
-    //    {
-    //        throw new NotImplementedException();
-    //    }
-    //}
-
-    //internal class SByteFieldBuilder : TypeBuilder<SByte> {
-    //    protected override FormElement Build(PropertyInfo property, Func<string, object> deserializer)
-    //    {
-    //        throw new NotImplementedException();
-    //    }
-    //}
-
-    //internal class Int16FieldBuilder : TypeBuilder<Int16> {
-    //    protected override FormElement Build(PropertyInfo property, Func<string, object> deserializer)
-    //    {
-    //        throw new NotImplementedException();
-    //    }
-    //}
-
-    //internal class Int32FieldBuilder : TypeBuilder<Int32> {
-    //    protected override FormElement Build(PropertyInfo property, Func<string, object> deserializer)
-    //    {
-    //        throw new NotImplementedException();
-    //    }
-    //}
-
-    //internal class Int64FieldBuilder : TypeBuilder<Int64> {
-    //    protected override FormElement Build(PropertyInfo property, Func<string, object> deserializer)
-    //    {
-    //        throw new NotImplementedException();
-    //    }
-    //}
-
-    //internal class UInt16FieldBuilder : TypeBuilder<UInt16> {
-    //    protected override FormElement Build(PropertyInfo property, Func<string, object> deserializer)
-    //    {
-    //        throw new NotImplementedException();
-    //    }
-    //}
-
-    //internal class UInt32FieldBuilder : TypeBuilder<UInt32> {
-    //    protected override FormElement Build(PropertyInfo property, Func<string, object> deserializer)
-    //    {
-    //        throw new NotImplementedException();
-    //    }
-    //}
-
-    //internal class UInt64FieldBuilder : TypeBuilder<UInt64> {
-    //    protected override FormElement Build(PropertyInfo property, Func<string, object> deserializer)
-    //    {
-    //        throw new NotImplementedException();
-    //    }
-    //}
-
-    //internal class SingleFieldBuilder : TypeBuilder<Single> {
-    //    protected override FormElement Build(PropertyInfo property, Func<string, object> deserializer)
-    //    {
-    //        throw new NotImplementedException();
-    //    }
-    //}
-
-    //internal class DoubleFieldBuilder : TypeBuilder<Double> {
-    //    protected override FormElement Build(PropertyInfo property, Func<string, object> deserializer)
-    //    {
-    //        throw new NotImplementedException();
-    //    }
-    //}
-
-    //internal class DecimalFieldBuilder : TypeBuilder<Decimal> {
-    //    protected override FormElement Build(PropertyInfo property, Func<string, object> deserializer)
-    //    {
-    //        throw new NotImplementedException();
-    //    }
-    //}
 }

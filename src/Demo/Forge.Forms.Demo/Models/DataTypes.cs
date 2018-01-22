@@ -1,6 +1,5 @@
 ﻿using System;
 using Forge.Forms.Annotations;
-using Forge.Forms.Annotations.Content;
 
 namespace Forge.Forms.Demo.Models
 {

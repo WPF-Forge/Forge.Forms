@@ -1,9 +1,7 @@
 using System;
-using Forge.Forms.Components.Controls;
-using Forge.Forms.Components.Fields;
 using Forge.Forms.FormBuilding;
 
-namespace Forge.Forms.Annotations.Content
+namespace Forge.Forms.Annotations
 {
     /// <summary>
     /// Represents content attached before or after form elements.
@@ -14,7 +12,7 @@ namespace Forge.Forms.Annotations.Content
         protected FormContentAttribute(int position)
         {
             Position = position;
-            LinePosition = Components.Controls.Position.Left;
+            LinePosition = Annotations.Position.Left;
         }
 
         /// <summary>

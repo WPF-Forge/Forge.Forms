@@ -1,6 +1,4 @@
 ﻿using System;
-using Forge.Forms.Components.Fields;
-using Forge.Forms.Interfaces;
 
 namespace Forge.Forms.FormBuilding.Defaults.Types
 {

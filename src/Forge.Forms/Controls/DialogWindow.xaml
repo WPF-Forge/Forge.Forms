@@ -1,0 +1,55 @@
+﻿<metro:MetroWindow
+    x:Class="Forge.Forms.Controls.DialogWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:Forge.Forms.Controls"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:metro="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+    x:Name="Window"
+    Title="{Binding Title}"
+    Width="{Binding Width}"
+    Height="{Binding Height}"
+    MinWidth="200"
+    BorderThickness="0"
+    FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
+    FontSize="{Binding TextFontSize}"
+    Foreground="{DynamicResource MaterialDesignBody}"
+    GlowBrush="Black"
+    ShowCloseButton="{Binding ShowCloseButton}"
+    ShowMaxRestoreButton="{Binding ShowMaxRestoreButton}"
+    ShowMinButton="{Binding ShowMinButton}"
+    ShowTitleBar="False"
+    SizeToContent="Height"
+    TextOptions.TextFormattingMode="Ideal"
+    TextOptions.TextRenderingMode="Auto"
+    WindowStartupLocation="CenterScreen">
+    <metro:MetroWindow.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colors.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Clean/Clean.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <controls:BoolToResizeModeConverter x:Key="BoolToResizeModeConverter" />
+        </ResourceDictionary>
+    </metro:MetroWindow.Resources>
+    <metro:MetroWindow.Style>
+        <StaticResource ResourceKey="CleanWindowStyleKey" />
+    </metro:MetroWindow.Style>
+    <metro:MetroWindow.ResizeMode>
+        <Binding Converter="{StaticResource BoolToResizeModeConverter}" Path="CanResize" />
+    </metro:MetroWindow.ResizeMode>
+    <metro:MetroWindow.CommandBindings>
+        <CommandBinding
+            x:Name="CloseDialogCommandBinding"
+            CanExecute="CloseDialogCommandBinding_CanExecute"
+            Command="materialDesign:DialogHost.CloseDialogCommand"
+            Executed="CloseDialogCommandBinding_Executed" />
+    </metro:MetroWindow.CommandBindings>
+    <controls:DynamicForm
+        x:Name="Form"
+        Margin="{Binding Padding}"
+        controls:TextProperties.HeadingFontSize="{Binding HeadingFontSize}"
+        controls:TextProperties.TextFontSize="{Binding TextFontSize}"
+        controls:TextProperties.TitleFontSize="{Binding TitleFontSize}" />
+</metro:MetroWindow>

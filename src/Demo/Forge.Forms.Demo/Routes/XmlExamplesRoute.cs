@@ -2,7 +2,6 @@
 using System.Windows;
 using System.Windows.Input;
 using Forge.Forms.FormBuilding;
-using Forge.Forms.Interfaces;
 using Material.Application.Infrastructure;
 using Material.Application.Routing;
 using MaterialDesignThemes.Wpf;
@@ -56,9 +55,9 @@ namespace Forge.Forms.Demo.Routes
 
         public ICommand BuildDefinitionCommand { get; }
 
-        public void HandleAction(object model, string action, object parameter)
+        public void HandleAction(IActionContext actionContext)
         {
-            notificationService.Notify($"Action '{action}'");
+            notificationService.Notify($"Action '{actionContext.Action}'");
         }
 
         protected override void RouteInitializing()

@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Forge.Forms.Annotations;
-using Forge.Forms.Annotations.Content;
 
 namespace Forge.Forms.Demo.Models
 {

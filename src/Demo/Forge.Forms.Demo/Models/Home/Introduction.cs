@@ -1,6 +1,5 @@
 ﻿using System.Windows.Data;
 using Forge.Forms.Annotations;
-using Forge.Forms.Annotations.Content;
 using Material.Application.Models;
 
 namespace Forge.Forms.Demo.Models.Home
@@ -9,9 +8,9 @@ namespace Forge.Forms.Demo.Models.Home
     {
         private string yourName;
 
-        [Title("WPF Material Forms")]
+        [Title("Forge.Forms")]
         [Heading("Introduction")]
-        [Text("Welcome to Material Forms, a library for building dynamic forms.")]
+        [Text("Welcome to Forge.Forms, a library for building dynamic forms.")]
         [Text("This library offers a declarative and MVVM friendly approach " +
               "to consistent forms with minimal boilerplate.")]
         [Text("The control you are currently seeing is a dynamic form, " +
@@ -54,9 +53,6 @@ namespace Forge.Forms.Demo.Models.Home
               "which its definition is cached and subsequent renders will be quite fast.")]
         [Text("See live examples for a quick overview of features.", ShareLine = true)]
         [Action("examples", "VIEW EXAMPLES", InsertAfter = false)]
-        [Break]
-        [Text("The demo for the old v1 API is also available.", ShareLine = true)]
-        [Action("oldexamples", "VIEW OLD DEMO", InsertAfter = false)]
         [Field(IsVisible = false)]
         public string AnnotationDummy { get; set; }
     }

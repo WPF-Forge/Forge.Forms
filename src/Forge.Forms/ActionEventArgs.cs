@@ -4,17 +4,11 @@ namespace Forge.Forms
 {
     public class ActionEventArgs : EventArgs
     {
-        public ActionEventArgs(object model, string action, object parameter)
+        public ActionEventArgs(IActionContext actionContext)
         {
-            Model = model;
-            Action = action;
-            Parameter = parameter;
+            ActionContext = actionContext;
         }
 
-        public object Model { get; }
-
-        public string Action { get; }
-
-        public object Parameter { get; }
+        public IActionContext ActionContext { get; }
     }
 }

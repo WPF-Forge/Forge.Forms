@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Data;
 using System.Xml.Linq;
 using Forge.Forms.Annotations;
-using Forge.Forms.Annotations.Content;
-using Forge.Forms.Interfaces;
-using Forge.Forms.Utils;
+using Forge.Forms.DynamicExpressions;
+using Forge.Forms.Extensions;
 using Forge.Forms.Validation;
 using MaterialDesignThemes.Wpf;
 
@@ -15,6 +15,24 @@ namespace Forge.Forms.FormBuilding
 {
     internal static class Utilities
     {
+        public static string TryReadFile(string filePath)
+        {
+            try
+            {
+                using (var stream = File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                {
+                    using (var reader = new StreamReader(stream))
+                    {
+                        return reader.ReadToEnd();
+                    }
+                }
+            }
+            catch
+            {
+                return "";
+            }
+        }
+
         public static List<PropertyInfo> GetProperties(Type type, DefaultFields mode)
         {
             if (type == null)
@@ -23,7 +41,12 @@ namespace Forge.Forms.FormBuilding
             }
 
             // First requirement is that properties and getters must be public.
-            var properties = Transformation.GetTransformation(type).GetProperties.Invoke(type);
+            var properties = type
+                .GetHighestProperties()
+                .Where(p => p.PropertyInfo.CanRead && p.PropertyInfo.GetGetMethod(true).IsPublic)
+                .OrderBy(p => p.Token)
+                .Select(i => i.PropertyInfo);
+
 
             switch (mode)
             {

@@ -2,9 +2,9 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-    xmlns:defaults="clr-namespace:Forge.Forms.Components.Fields.Defaults"
-    xmlns:fields="clr-namespace:Forge.Forms.Components.Fields"
-    xmlns:controls="clr-namespace:Forge.Forms.Components.Controls">
+    xmlns:controls="clr-namespace:Forge.Forms.Controls"
+    xmlns:formBuilding="clr-namespace:Forge.Forms.FormBuilding"
+    xmlns:defaults="clr-namespace:Forge.Forms.FormBuilding.Defaults">
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="pack://application:,,,/Forge.Forms;component/Themes/Elements/Text.xaml" />
         <ResourceDictionary Source="pack://application:,,,/Forge.Forms;component/Themes/Wpf.xaml" />
@@ -21,7 +21,7 @@
                         Fill="{TemplateBinding Foreground}"
                         Stroke="{x:Null}" />
                     <ControlTemplate.Triggers>
-                        <DataTrigger Binding="{fields:FormBinding HasMargin}" Value="True">
+                        <DataTrigger Binding="{formBuilding:FormBinding HasMargin}" Value="True">
                             <Setter Property="Padding" Value="0,8" />
                         </DataTrigger>
                     </ControlTemplate.Triggers>
@@ -31,7 +31,7 @@
     </Style>
 
     <Style TargetType="defaults:BreakPresenter">
-        <Setter Property="Height" Value="{fields:FormBinding Height}" />
+        <Setter Property="Height" Value="{formBuilding:FormBinding Height}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate />

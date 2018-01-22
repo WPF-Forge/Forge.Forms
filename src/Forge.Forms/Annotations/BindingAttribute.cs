@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Windows.Data;
 using Forge.Forms.FormBuilding;
-using Forge.Forms.Utils;
 
 namespace Forge.Forms.Annotations
 {
