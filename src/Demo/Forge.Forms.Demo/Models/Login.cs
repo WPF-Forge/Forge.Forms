@@ -6,8 +6,8 @@ using MaterialDesignThemes.Wpf;
 namespace Forge.Forms.Demo.Models
 {
     [Title("Login to continue")]
-    [Action("cancel", "CANCEL", IsCancel = true)]
-    [Action("login", "LOG IN", IsLoading = "{Binding Loading}", IsDefault = true)]
+    [Action("cancel", "CANCEL", IsCancel = true, ClosesDialog = true)]
+    [Action("login", "LOG IN", IsLoading = "{Binding Loading}", IsDefault = true, ClosesDialog = true)]
     [HotReload(true)]
     public class Login : IActionHandler
     {
