@@ -12,8 +12,8 @@ namespace Forge.Forms
     {
         static TransformationBase()
         {
-            var moduleInit = AppDomain.CurrentDomain.GetAssemblies().SelectMany(i => i.GetReferencedAssemblies())
-                .Select(Assembly.Load).SelectMany(assembly => assembly.GetTypes())
+            var moduleInit = AppDomain.CurrentDomain.GetAssemblies()
+                .SelectMany(assembly => assembly.GetTypes())
                 .Where(i => i.Namespace == "Forge.Forms.Mapper")
                 .FirstOrDefault(i => i.Name == "ModuleInitializer");
 
@@ -51,7 +51,7 @@ namespace Forge.Forms
         /// <returns></returns>
         public static Transformation GetTransformation(object model)
         {
-            return model != null ? GetTransformation(model.GetType()) : Default;
+            return model != null ? GetTransformation(model.GetType()) ?? Default : Default;
         }
 
         /// <summary>
