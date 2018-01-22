@@ -14,14 +14,13 @@ namespace Forge.Forms.DynamicExpressions
             private readonly FileSystemWatcher fileSystemWatcher;
             private readonly string filePath;
 
-            private bool isLatestValue = true;
+            private bool isLatestValue;
             private string value;
 
             public Watcher(FileWatcher initialListener)
             {
                 filePath = initialListener.filePath;
                 listeners = new List<FileWatcher> { initialListener };
-                Value = Utilities.TryReadFile(filePath);
                 fileSystemWatcher = new FileSystemWatcher
                 {
                     Path = Path.GetDirectoryName(filePath),
@@ -74,10 +73,18 @@ namespace Forge.Forms.DynamicExpressions
 
             private void Update()
             {
-                isLatestValue = false;
-                foreach (var listener in listeners)
+                try
                 {
-                    listener.NotifyChanged();
+                    fileSystemWatcher.EnableRaisingEvents = false;
+                    isLatestValue = false;
+                    foreach (var listener in listeners)
+                    {
+                        listener.NotifyChanged();
+                    }
+                }
+                finally
+                {
+                    fileSystemWatcher.EnableRaisingEvents = true;
                 }
             }
         }
@@ -138,7 +145,11 @@ namespace Forge.Forms.DynamicExpressions
 
         object IProxy.Value => Value;
 
-        public void Dispose() => Dispose(true);
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
 
         private void Dispose(bool disposing)
         {
