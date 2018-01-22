@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.ClearScript;
+﻿using Microsoft.ClearScript;
 
 namespace Forge.Forms.Scripting
 {
@@ -15,9 +14,10 @@ namespace Forge.Forms.Scripting
 }).valueOf()");
         }
 
-        public void InterceptAction(object model, object context, object parameter)
+        public IActionContext InterceptAction(IActionContext actionContext)
         {
-            ((dynamic)action)(model, context, parameter);
+            ((dynamic)action)(actionContext.Model, actionContext.Context, actionContext.ActionParameter);
+            return actionContext;
         }
     }
 }

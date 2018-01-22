@@ -81,9 +81,9 @@ namespace Forge.Forms.Controls
             return Form;
         }
 
-        public void OnAction(object model, string action, object parameter)
+        public void OnAction(IActionContext actionContext)
         {
-            Form.RaiseOnAction(model, action, parameter);
+            Form.RaiseOnAction(actionContext);
         }
     }
 }

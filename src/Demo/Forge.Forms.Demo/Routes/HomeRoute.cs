@@ -20,11 +20,11 @@ namespace Forge.Forms.Demo.Routes
 
         public object Model { get; }
 
-        public void HandleAction(object model, string action, object parameter)
+        public void HandleAction(IActionContext actionContext)
         {
-            switch (action?.ToLower())
+            switch ((actionContext.Action as string)?.ToLower())
             {
-                case "copy" when parameter is string str:
+                case "copy" when actionContext.ActionParameter is string str:
                     Clipboard.SetText(str);
                     notificationService.Notify("Copied to clipboard.");
                     break;

@@ -17,8 +17,10 @@ namespace Forge.Forms.Demo.Models
     [Action("login", "LOGIN", Parameter = "window", InsertAfter = false)]
     public class Dialogs : IActionHandler
     {
-        public void HandleAction(object model, string action, object parameter)
+        public void HandleAction(IActionContext actionContext)
         {
+            var parameter = actionContext.ActionParameter;
+            var action = actionContext.Action as string;
             var longConfirm = new Confirm(
                 "Let Google help apps determine location. This means sending anonymous location data to Google, even when no apps are running.",
                 "Use Google's location service?", "TURN ON SPEED BOOST", "NO THANKS");

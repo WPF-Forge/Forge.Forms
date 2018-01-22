@@ -41,9 +41,6 @@
   <ItemGroup>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <Reference Include="Proxier, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\..\packages\Proxier.1.5.6\lib\net461\Proxier.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Windows" />
@@ -87,6 +84,7 @@
     </Compile>
     <Compile Include="DynamicExpressions\FileBinding.cs" />
     <Compile Include="DynamicExpressions\FileWatcher.cs" />
+    <Compile Include="IModelInterceptor.cs" />
     <Compile Include="Transformation.cs" />
     <Compile Include="WindowOptions.cs" />
     <Compile Include="DialogOptions.cs" />

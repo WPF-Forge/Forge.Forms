@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using Forge.Forms.Annotations;
@@ -151,7 +152,7 @@ namespace Forge.Forms.Controls.Internal
 
                 // Return h / v
                 StackHorizontally(leftChildren, 0d, 0d, leftMaxHeight);
-                StackVertically(rightChildren, finalSize.Width - rightMaxWidth, leftMaxHeight, rightMaxWidth);
+                StackVertically(Enumerable.Reverse(rightChildren), finalSize.Width - rightMaxWidth, leftMaxHeight, rightMaxWidth);
                 return finalSize;
             }
 
@@ -165,11 +166,11 @@ namespace Forge.Forms.Controls.Internal
 
             // Return v / v
             StackVertically(leftChildren, 0d, 0d, leftMaxWidth);
-            StackVertically(rightChildren, finalSize.Width - rightMaxWidth, leftHeight, rightMaxWidth);
+            StackVertically(Enumerable.Reverse(rightChildren), finalSize.Width - rightMaxWidth, leftHeight, rightMaxWidth);
             return finalSize;
         }
 
-        private void StackVertically(List<UIElement> children, double x, double y, double width)
+        private void StackVertically(IEnumerable<UIElement> children, double x, double y, double width)
         {
             var offset = 0d;
             foreach (var child in children)

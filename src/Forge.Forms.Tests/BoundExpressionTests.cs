@@ -118,7 +118,7 @@ namespace Forge.Forms.Tests
             throw new NotImplementedException();
         }
 
-        public void OnAction(object model, string action, object parameter)
+        public void OnAction(IActionContext actionContext)
         {
             throw new NotImplementedException();
         }

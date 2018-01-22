@@ -64,7 +64,7 @@ namespace Forge.Forms.FormBuilding
         /// <summary>
         /// Notifies that an action has occurred.
         /// </summary>
-        void OnAction(object model, string action, object parameter);
+        void OnAction(IActionContext actionContext);
     }
 
     public interface IFrameworkResourceContext : IResourceContext
