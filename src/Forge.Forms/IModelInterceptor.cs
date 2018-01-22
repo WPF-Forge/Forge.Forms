@@ -14,7 +14,7 @@ namespace Forge.Forms
         IResourceContext ResourceContext { get; }
     }
 
-    internal class ModelContext : IModelContext
+    public class ModelContext : IModelContext
     {
         public ModelContext(object newModel, IResourceContext resourceContext)
         {

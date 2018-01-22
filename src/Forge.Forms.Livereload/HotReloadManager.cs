@@ -25,6 +25,7 @@ namespace Forge.Forms.Livereload
 
         static HotReloadManager()
         {
+            DynamicForm.InterceptorChain.Add(new HotReloadInterceptor());
             Initialize();
         }
 
@@ -170,10 +171,7 @@ namespace Forge.Forms.Livereload
                     var attr = type.GetCustomAttribute<HotReloadAttribute>() ?? new HotReloadAttribute();
                     if (attr.IsPersistent)
                     {
-                        TransformationBase.AddTransformation(GetBaseType(type), new Transformation
-                        {
-                            ModelChanged = (o, o1) => type
-                        });
+                        HotReloadInterceptor.AddOrReplaceReplacement(GetBaseType(type), type);
                     }
                 }
 
