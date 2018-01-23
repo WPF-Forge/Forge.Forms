@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 
 namespace Forge.Forms.Collections
@@ -14,6 +15,11 @@ namespace Forge.Forms.Collections
 
         public CrudCollection()
         {
+        }
+
+        public CrudCollection(IEnumerable<T> enumerable)
+        {
+            InternalCollection = enumerable.ToList();
         }
 
         public IEnumerator<T> GetEnumerator()
