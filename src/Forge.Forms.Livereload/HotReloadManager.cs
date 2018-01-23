@@ -52,6 +52,8 @@ namespace Forge.Forms.Livereload
 
         private static List<FileSystemWatcher> Watchers { get; } = new List<FileSystemWatcher>();
 
+        private static CSharpCodeProvider CodeDom { get; } = CreateCSharpCodeProvider();
+
         private static bool IsAssemblyDebugBuild(this Assembly assembly)
         {
             return assembly.GetCustomAttributes(false).OfType<DebuggableAttribute>().Any(da => da.IsJITTrackingEnabled);
@@ -209,8 +211,6 @@ namespace Forge.Forms.Livereload
                 }
             });
         }
-
-        private static CSharpCodeProvider CodeDom { get; } = CreateCSharpCodeProvider();
 
         private static CSharpCodeProvider CreateCSharpCodeProvider()
         {
