@@ -20,11 +20,11 @@ namespace Forge.Forms.Extensions
             {
                 PropertyInfo property = type.GetProperty(name,
                     BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Public);
-                if (property != (PropertyInfo) null)
+                if (property != null)
                     return property;
             }
 
-            return (PropertyInfo) null;
+            return null;
         }
 
         /// <summary>Gets the highest property value.</summary>
@@ -33,22 +33,22 @@ namespace Forge.Forms.Extensions
         /// <returns></returns>
         public static object GetHighestPropertyValue(this object obj, string property)
         {
-            return obj.GetType().GetHighestProperty(property).GetValue(obj, (object[]) null);
+            return obj.GetType().GetHighestProperty(property).GetValue(obj, null);
         }
 
         /// <summary>Get all properties, keeping the token position.</summary>
         /// <param name="type"></param>
         /// <returns></returns>
-        public static IEnumerable<PropertyWrapper> GetHighestProperties(this Type type)
+        public static IEnumerable<PropertyWrapper> GetOutmostProperties(this Type type)
         {
-            return ((IEnumerable<PropertyInfo>) type.GetProperties(BindingFlags.Instance | BindingFlags.Public))
-                .GroupBy<PropertyInfo, string>((Func<PropertyInfo, string>) (i => i.Name))
-                .Select<IGrouping<string, PropertyInfo>, PropertyWrapper>(
-                    (Func<IGrouping<string, PropertyInfo>, PropertyWrapper>) (i => new PropertyWrapper()
+            return type.GetProperties(BindingFlags.Instance | BindingFlags.Public)
+                .GroupBy(i => i.Name)
+                .Select(
+                    i => new PropertyWrapper
                     {
-                        PropertyInfo = i.First<PropertyInfo>(),
-                        Token = i.Last<PropertyInfo>().MetadataToken
-                    }));
+                        PropertyInfo = i.First(),
+                        Token = i.Last().MetadataToken
+                    });
         }
     }
 }

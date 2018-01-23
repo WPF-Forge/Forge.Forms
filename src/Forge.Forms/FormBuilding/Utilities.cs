@@ -42,7 +42,7 @@ namespace Forge.Forms.FormBuilding
 
             // First requirement is that properties and getters must be public.
             var properties = type
-                .GetHighestProperties()
+                .GetOutmostProperties()
                 .Where(p => p.PropertyInfo.CanRead && p.PropertyInfo.GetGetMethod(true).IsPublic)
                 .OrderBy(p => p.Token)
                 .Select(i => i.PropertyInfo);

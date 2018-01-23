@@ -52,7 +52,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform" Version="1.0.8" />
-    <PackageReference Include="Proxier" Version="1.5.6" />
+    <PackageReference Include="Proxier" Version="1.5.7" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Forge.Forms\Forge.Forms.csproj">

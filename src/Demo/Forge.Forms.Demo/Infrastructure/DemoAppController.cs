@@ -13,6 +13,7 @@ namespace Forge.Forms.Demo.Infrastructure
         protected override void OnInitializing()
         {
             HotReloadManager.WatchAllFiles = false;
+            Proxier.Mappers.Maps.ProxierMapper.InitializeMapperClasses();
             var factory = Routes.RouteFactory;
             Routes.MenuRoutes.Add(InitialRoute = factory.Get<HomeRoute>());
             Routes.MenuRoutes.Add(factory.Get<ExamplesRoute>());
