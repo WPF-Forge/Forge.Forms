@@ -82,6 +82,7 @@
     <Compile Include="Controls\DynamicFormWrapper.xaml.cs">
       <DependentUpon>DynamicFormWrapper.xaml</DependentUpon>
     </Compile>
+    <Compile Include="DynamicExpressions\BooleanExpressions\AstNode.cs" />
     <Compile Include="DynamicExpressions\FileBinding.cs" />
     <Compile Include="DynamicExpressions\FileWatcher.cs" />
     <Compile Include="Extensions\PropertyInfoExtensions.cs" />
