@@ -290,7 +290,9 @@ namespace Forge.Forms.Livereload
             {
                 try
                 {
-                    parameters.ReferencedAssemblies.Add(assemblyName.CodeBase.Replace("file:///", ""));
+                    var assemblyPath = assemblyName.CodeBase.Replace("file:///", "");
+                    if (!parameters.ReferencedAssemblies.Contains(assemblyPath))
+                        parameters.ReferencedAssemblies.Add(assemblyPath);
                 }
                 catch
                 {
