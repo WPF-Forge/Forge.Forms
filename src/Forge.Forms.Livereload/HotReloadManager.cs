@@ -129,14 +129,27 @@ namespace Forge.Forms.Livereload
 
         private static void DirectoriesOnCollectionChanged(object s, NotifyCollectionChangedEventArgs e)
         {
-            foreach (var item in e.NewItems)
-            {
-                if (!(item is string directory))
+            if (e.Action == NotifyCollectionChangedAction.Add)
+                foreach (var item in e.NewItems)
                 {
-                    continue;
-                }
+                    if (!(item is string directory))
+                    {
+                        continue;
+                    }
 
-                AddWatcher(directory);
+                    AddWatcher(directory);
+                }
+            else if (e.Action == NotifyCollectionChangedAction.Remove)
+            {
+                foreach (var item in e.OldItems)
+                {
+                    if (!(item is string directory))
+                    {
+                        continue;
+                    }
+
+                    Watchers.Remove(Watchers.First(i => i.Path == directory));
+                }
             }
         }
 
@@ -237,11 +250,12 @@ namespace Forge.Forms.Livereload
             {
                 using (var reader = new StreamReader(stream))
                 {
-                    var readToEnd = reader.ReadToEnd();
-                    return CompileCode(readToEnd);
+                    return CompileCode(reader.ReadToEnd());
                 }
             }
         }
+
+        private static CompilerParameters CompilerParameters { get; } = CreateCompilerParameters();
 
         /// <summary>
         /// Compiles the code.
@@ -250,6 +264,25 @@ namespace Forge.Forms.Livereload
         /// <returns></returns>
         /// <exception cref="InvalidOperationException"></exception>
         public static IEnumerable<Type> CompileCode(string code)
+        {
+            var results = CodeDom.CompileAssemblyFromSource(CompilerParameters, code);
+            if (results.Errors.HasErrors)
+            {
+                var sb = new StringBuilder();
+
+                foreach (CompilerError error in results.Errors)
+                {
+                    sb.AppendLine($"Error ({error.ErrorNumber}): {error.ErrorText}");
+                }
+
+                throw new InvalidOperationException(sb.ToString());
+            }
+
+            var assembly = results.CompiledAssembly;
+            return assembly.GetTypes();
+        }
+
+        private static CompilerParameters CreateCompilerParameters()
         {
             var parameters = new CompilerParameters();
 
@@ -265,24 +298,9 @@ namespace Forge.Forms.Livereload
                 }
             }
 
-
             parameters.GenerateInMemory = true;
             parameters.GenerateExecutable = false;
-            var results = CodeDom.CompileAssemblyFromSource(parameters, code);
-            if (results.Errors.HasErrors)
-            {
-                var sb = new StringBuilder();
-
-                foreach (CompilerError error in results.Errors)
-                {
-                    sb.AppendLine($"Error ({error.ErrorNumber}): {error.ErrorText}");
-                }
-
-                throw new InvalidOperationException(sb.ToString());
-            }
-
-            var assembly = results.CompiledAssembly;
-            return assembly.GetTypes();
+            return parameters;
         }
     }
 }
