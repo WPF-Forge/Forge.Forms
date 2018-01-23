@@ -255,8 +255,6 @@ namespace Forge.Forms.Livereload
             }
         }
 
-        private static CompilerParameters CompilerParameters { get; } = CreateCompilerParameters();
-
         /// <summary>
         /// Compiles the code.
         /// </summary>
@@ -265,7 +263,7 @@ namespace Forge.Forms.Livereload
         /// <exception cref="InvalidOperationException"></exception>
         public static IEnumerable<Type> CompileCode(string code)
         {
-            var results = CodeDom.CompileAssemblyFromSource(CompilerParameters, code);
+            var results = CodeDom.CompileAssemblyFromSource(CreateCompilerParameters(), code);
             if (results.Errors.HasErrors)
             {
                 var sb = new StringBuilder();
@@ -286,20 +284,8 @@ namespace Forge.Forms.Livereload
         {
             var parameters = new CompilerParameters();
 
-            foreach (var assemblyName in AppDomain.CurrentDomain.GetAssemblies())
-            {
-                try
-                {
-                    var assemblyPath = assemblyName.CodeBase.Replace("file:///", "");
-                    if (!parameters.ReferencedAssemblies.Contains(assemblyPath))
-                        parameters.ReferencedAssemblies.Add(assemblyPath);
-                }
-                catch
-                {
-                    // ignored
-                }
-            }
-
+            parameters.ReferencedAssemblies.AddRange(
+                AppDomain.CurrentDomain.GetAssemblies().Where(i => !i.IsDynamic).Select(i => i.Location).ToArray());
             parameters.GenerateInMemory = true;
             parameters.GenerateExecutable = false;
             return parameters;
