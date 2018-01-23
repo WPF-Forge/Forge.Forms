@@ -21,7 +21,7 @@ namespace Forge.Forms.Demo.Routes
         {
             this.notificationService = notificationService;
             RouteConfig.Title = "CSharp Examples";
-            RouteConfig.Icon = PackIconKind.Xml;
+            RouteConfig.Icon = PackIconKind.CodeBraces;
             BuildDefinitionCommand = Command(BuildDefinition);
         }
 
