@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Forge.Forms.Collections.Attributes
+namespace Forge.Forms.Collections.Annotations
 {
     [AttributeUsage(AttributeTargets.Property)]
     public class CrudAttribute : Attribute
