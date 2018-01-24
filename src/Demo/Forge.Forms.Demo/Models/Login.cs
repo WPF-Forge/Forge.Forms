@@ -13,12 +13,6 @@ namespace Forge.Forms.Demo.Models
         {
             AddClassAttribute(() => new ActionAttribute("oka", "Hello world!", 0));
         }
-
-        /// <inheritdoc />
-        public override void HandleAction(IActionContext context)
-        {
-            base.HandleAction(context);
-        }
     }
 
     [Title("Login to continue")]
