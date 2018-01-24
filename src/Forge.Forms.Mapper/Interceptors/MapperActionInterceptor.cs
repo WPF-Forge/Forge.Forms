@@ -29,7 +29,7 @@ namespace Forge.Forms.Mapper.Interceptors
                 materialMapper.HandleAction(interceptAction);
             }
 
-            return interceptAction;
+            return actionContext;
         }
     }
 }
