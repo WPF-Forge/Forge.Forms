@@ -54,16 +54,16 @@ namespace Forge.Forms.Collections.Controls
             }
         }
 
-        public void OpenDialog(object form)
+        private void OpenDialog(object form)
         {
             this.Invoke(() => DialogHost.OpenDialogCommand.Execute(form, null));
         }
 
-        public static void ItemsSourceChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
+        private static void ItemsSourceChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
         {
             if (obj is CrudControl crudControl && crudControl.ItemsSource is IEnumerable enumerable)
             {
-                var itemsList = enumerable.OfType<object>().ToList();
+                var itemsList = new CrudCollection<object>(enumerable.OfType<object>());
                 var itemsTypes = itemsList.DistinctBy(i => i.GetType()).Select(i => i.GetType()).ToList();
                 crudControl.DataGrid.ItemsSource = itemsList;
 
