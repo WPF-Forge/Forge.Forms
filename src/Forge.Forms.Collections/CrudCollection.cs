@@ -81,7 +81,7 @@ namespace Forge.Forms.Collections
             return removeResult;
         }
 
-        public int Count { get; }
+        public int Count => InternalCollection.Count;
         public bool IsReadOnly { get; }
 
         public int IndexOf(T item)

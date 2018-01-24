@@ -42,6 +42,8 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Attributes\CrudAttribute.cs" />
+    <Compile Include="Controls\CrudControl.cs" />
     <Compile Include="CrudCollection.cs" />
     <Compile Include="GridField.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -51,6 +53,15 @@
       <Project>{4E0C323D-5AFC-4105-815F-587346AA5321}</Project>
       <Name>Forge.Forms</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Bindables.Fody" Version="0.4.0" />
+    <PackageReference Include="Fody" Version="2.3.22" />
+    <PackageReference Include="morelinq" Version="2.10.0" />
+    <PackageReference Include="PropertyChanged.Fody" Version="2.2.5" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="FodyWeavers.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

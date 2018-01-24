@@ -40,6 +40,9 @@
     <StartupObject>Forge.Forms.Demo.App</StartupObject>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Bogus, Version=22.0.2.0, Culture=neutral, PublicKeyToken=fa1bb3f3f218129a">
+      <HintPath>..\..\..\packages\Bogus.22.0.2\lib\net40\Bogus.dll</HintPath>
+    </Reference>
     <Reference Include="ClearScript, Version=5.5.1.0, Culture=neutral, PublicKeyToken=935d0c957da47c73, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\ClearScript.V8.5.5.1\lib\net45\ClearScript.dll</HintPath>
     </Reference>
@@ -103,6 +106,7 @@
     <Compile Include="Routes\ExamplesRoute.cs" />
     <Compile Include="Routes\HomeRoute.cs" />
     <Compile Include="Routes\XmlExamplesRoute.cs" />
+    <Compile Include="Views\CrudExample.xaml.cs" />
     <Compile Include="Views\ExamplesView.xaml.cs">
       <DependentUpon>ExamplesView.xaml</DependentUpon>
     </Compile>
@@ -126,6 +130,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\CrudExample.xaml" />
     <Page Include="Views\CsharpExamplesView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -177,6 +182,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Forge.Forms.Collections\Forge.Forms.Collections.csproj">
+      <Project>{b067f5cc-7ff4-44a6-b00e-f05238034a36}</Project>
+      <Name>Forge.Forms.Collections</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Forge.Forms.Livereload\Forge.Forms.Livereload.csproj">
       <Project>{8fc8cc52-9142-4dda-83c4-1ad6356bbcb1}</Project>
       <Name>Forge.Forms.Livereload</Name>
