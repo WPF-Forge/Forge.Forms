@@ -1,20 +1,82 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 
 namespace Forge.Forms.DynamicExpressions.BooleanExpressions
 {
     internal abstract class Token
     {
-        public Token[] Parse(string input)
+        public static Token[] Parse(string input)
         {
-            var result = new List<Token>();
-            using (var reader = new StringReader(input))
+            var chars = input.ToCharArray();
+            var tokens = new List<Token>();
+            var index = 0;
+            char next;
+            char EnsureNext()
             {
-                throw new NotImplementedException();
+                if (index >= chars.Length)
+                {
+                    throw new FormatException("Unexpected end of input.");
+                }
+
+                return next = chars[index++];
             }
 
-            return result.ToArray();
+            while (index < chars.Length)
+            {
+                next = chars[index++];
+                switch (next)
+                {
+                    case ' ':
+                    case '\t':
+                    case '\n':
+                        continue;
+                    case '(':
+                        tokens.Add(new LParenToken());
+                        break;
+                    case ')':
+                        tokens.Add(new RParenToken());
+                        break;
+                    case '&':
+                        EnsureNext();
+                        if (next != '&')
+                        {
+                            throw new FormatException("Invalid symbol '&'");
+                        }
+
+                        tokens.Add(new RParenToken());
+                        break;
+                    case '|':
+                        EnsureNext();
+                        if (next != '|')
+                        {
+                            throw new FormatException("Invalid symbol '|'");
+                        }
+                        break;
+                    case '!':
+                        tokens.Add(new NotToken());
+                        break;
+                    case '{':
+                        var id = "";
+                        while (char.IsDigit(EnsureNext()))
+                        {
+                            id += next;
+                        }
+
+                        while (EnsureNext() != '}')
+                        {
+                        }
+
+                        tokens.Add(new ValueToken
+                        {
+                            Index = int.Parse(id)
+                        });
+                        break;
+                    default:
+                        throw new FormatException("Invalid input sequence.");
+                }
+            }
+
+            return tokens.ToArray();
         }
     }
 
