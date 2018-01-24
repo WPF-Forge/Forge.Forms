@@ -238,7 +238,10 @@ namespace Forge.Forms.Livereload
 
             path?.SetValue(settings,
                 Path.Combine(
-                    $"{VisualStudioHelper.GetVisualStudioInstalledPath()}MSBuild\\15.0\\Bin\\Roslyn",
+                    Path.Combine(
+                        Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ??
+                        throw new InvalidOperationException(), "roslyn-bin")
+                    ,
                     "csc.exe"));
 
             return csc;
