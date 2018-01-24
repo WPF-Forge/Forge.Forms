@@ -10,6 +10,26 @@ namespace Forge.Forms.DynamicExpressions.BooleanExpressions
         {
             throw new NotImplementedException();
         }
+
+        private static int ProduceAnd(Token[] tokens, int index, out AndOperator op)
+        {
+            throw new NotImplementedException();
+        }
+
+        private static int ProduceOr(Token[] tokens, int index, out OrOperator op)
+        {
+            throw new NotImplementedException();
+        }
+
+        private static int ProduceNot(Token[] tokens, int index, out NotOperator op)
+        {
+            throw new NotImplementedException();
+        }
+
+        private static int ProduceAtom(Token[] tokens, int index, out AstNode node)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     internal class AndOperator : AstNode

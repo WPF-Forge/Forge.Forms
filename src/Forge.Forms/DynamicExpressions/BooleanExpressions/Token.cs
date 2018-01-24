@@ -34,4 +34,12 @@ namespace Forge.Forms.DynamicExpressions.BooleanExpressions
     {
         public int Index { get; set; }
     }
+
+    internal class LParenToken : Token
+    {
+    }
+
+    internal class RParenToken : Token
+    {
+    }
 }
