@@ -43,7 +43,7 @@ namespace Forge.Forms.DynamicExpressions.BooleanExpressions
                             throw new FormatException("Invalid symbol '&'");
                         }
 
-                        tokens.Add(new RParenToken());
+                        tokens.Add(new AndToken());
                         break;
                     case '|':
                         EnsureNext();
@@ -51,6 +51,8 @@ namespace Forge.Forms.DynamicExpressions.BooleanExpressions
                         {
                             throw new FormatException("Invalid symbol '|'");
                         }
+
+                        tokens.Add(new OrToken());
                         break;
                     case '!':
                         tokens.Add(new NotToken());
@@ -62,8 +64,11 @@ namespace Forge.Forms.DynamicExpressions.BooleanExpressions
                             id += next;
                         }
 
-                        while (EnsureNext() != '}')
+                        if (next != '}')
                         {
+                            while (EnsureNext() != '}')
+                            {
+                            }
                         }
 
                         tokens.Add(new ValueToken

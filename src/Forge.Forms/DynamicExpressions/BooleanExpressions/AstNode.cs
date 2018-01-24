@@ -36,7 +36,7 @@ namespace Forge.Forms.DynamicExpressions.BooleanExpressions
                  * <and>::='&'
                  * <not>::='!'
                  */
-                index = 0;
+                index = -1;
                 Expression();
                 return root;
             }
@@ -89,11 +89,12 @@ namespace Forge.Forms.DynamicExpressions.BooleanExpressions
                 else if (symbol is LParenToken)
                 {
                     Expression();
-                    symbol = Move();
-                    if (!(symbol is RParenToken))
+                    if (!(Current is RParenToken))
                     {
                         throw new FormatException("Expected closing paranthesis.");
                     }
+
+                    Move();
                 }
                 else
                 {
