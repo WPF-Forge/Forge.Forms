@@ -68,16 +68,10 @@
     <Content Include="roslyn-bin\csc.exe.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="roslyn-bin\csc.rsp">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="roslyn-bin\csi.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="roslyn-bin\csi.exe.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="roslyn-bin\csi.rsp">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="roslyn-bin\Microsoft.Build.Tasks.CodeAnalysis.dll">
@@ -195,9 +189,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="roslyn-bin\vbc.exe.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="roslyn-bin\vbc.rsp">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="roslyn-bin\VBCSCompiler.exe">
