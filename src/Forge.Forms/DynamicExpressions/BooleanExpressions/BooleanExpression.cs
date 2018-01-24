@@ -2,15 +2,15 @@
 
 namespace Forge.Forms.DynamicExpressions.BooleanExpressions
 {
-    internal abstract class AstNode
+    internal abstract class BooleanExpression
     {
         // Source: https://unnikked.ga/how-to-build-a-boolean-expression-evaluator-518e9e068a65
-        class Parser
+        private class Parser
         {
             private readonly Token[] tokens;
             private int index;
 
-            private AstNode root;
+            private BooleanExpression root;
 
             private Token Current => index < tokens.Length ? tokens[index] : null;
 
@@ -25,7 +25,7 @@ namespace Forge.Forms.DynamicExpressions.BooleanExpressions
                 this.tokens = tokens;
             }
 
-            public AstNode Parse()
+            public BooleanExpression Parse()
             {
                 /*
                  * <expression>::=<term>{<or><term>}
@@ -105,18 +105,18 @@ namespace Forge.Forms.DynamicExpressions.BooleanExpressions
 
         public abstract bool Evaluate(bool[] values);
 
-        public static AstNode Parse(string expression)
+        public static BooleanExpression Parse(string expression)
         {
             var tokens = Token.Parse(expression);
             return new Parser(tokens).Parse();
         }
     }
 
-    internal class AndOperator : AstNode
+    internal class AndOperator : BooleanExpression
     {
-        public AstNode Left { get; set; }
+        public BooleanExpression Left { get; set; }
 
-        public AstNode Right { get; set; }
+        public BooleanExpression Right { get; set; }
 
         public override bool Evaluate(bool[] values)
         {
@@ -124,11 +124,11 @@ namespace Forge.Forms.DynamicExpressions.BooleanExpressions
         }
     }
 
-    internal class OrOperator : AstNode
+    internal class OrOperator : BooleanExpression
     {
-        public AstNode Left { get; set; }
+        public BooleanExpression Left { get; set; }
 
-        public AstNode Right { get; set; }
+        public BooleanExpression Right { get; set; }
 
         public override bool Evaluate(bool[] values)
         {
@@ -136,9 +136,9 @@ namespace Forge.Forms.DynamicExpressions.BooleanExpressions
         }
     }
 
-    internal class NotOperator : AstNode
+    internal class NotOperator : BooleanExpression
     {
-        public AstNode Child { get; set; }
+        public BooleanExpression Child { get; set; }
 
         public override bool Evaluate(bool[] values)
         {
@@ -146,7 +146,7 @@ namespace Forge.Forms.DynamicExpressions.BooleanExpressions
         }
     }
 
-    internal class ValueNode : AstNode
+    internal class ValueNode : BooleanExpression
     {
         public int Index { get; set; }
 
