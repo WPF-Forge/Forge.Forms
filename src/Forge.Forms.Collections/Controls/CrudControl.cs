@@ -21,7 +21,7 @@ namespace Forge.Forms.Collections.Controls
             OnPropertyChanged = nameof(ItemsSourceChanged))]
         public object ItemsSource { get; set; }
 
-        private DataGrid DataGrid { get; } = new DataGrid { Height = 300 };
+        private DataGrid DataGrid { get; } = new DataGrid {Height = 300};
 
         private StackPanel StackPanel { get; } = new StackPanel();
 
@@ -29,7 +29,7 @@ namespace Forge.Forms.Collections.Controls
 
         public CrudControl()
         {
-            var content = new Button { Content = "Open dialog" };
+            var content = new Button {Content = "Open dialog"};
             content.Click += (sender, args) => OnClick?.Invoke();
             DataGrid.AutoGenerateColumns = true;
             DataGrid.AutoGeneratingColumn += DataGridOnAutoGeneratingColumn;
@@ -54,7 +54,7 @@ namespace Forge.Forms.Collections.Controls
             }
         }
 
-        public void OpenDialog(DynamicForm form)
+        public void OpenDialog(object form)
         {
             this.Invoke(() => DialogHost.OpenDialogCommand.Execute(form, null));
         }
@@ -67,14 +67,11 @@ namespace Forge.Forms.Collections.Controls
                 var itemsTypes = itemsList.DistinctBy(i => i.GetType()).Select(i => i.GetType()).ToList();
                 crudControl.DataGrid.ItemsSource = itemsList;
 
-                var forms = new List<DynamicForm>();
+                var forms = new List<DynamicFormWrapper>();
 
                 foreach (var type in itemsTypes)
                 {
-                    forms.Add(new DynamicForm
-                    {
-                        Model = Activator.CreateInstance(type)
-                    });
+                    forms.Add(new DynamicFormWrapper(Activator.CreateInstance(type), null, DialogOptions.Default));
                 }
 
                 if (forms.Count == 1)

@@ -42,7 +42,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Attributes\CrudAttribute.cs" />
+    <Compile Include="Annotations\CrudAttribute.cs" />
     <Compile Include="Controls\CrudControl.cs" />
     <Compile Include="CrudCollection.cs" />
     <Compile Include="GridField.cs" />

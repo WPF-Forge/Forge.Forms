@@ -44,8 +44,8 @@ namespace Forge.Forms.Collections
         private void ItemNotifyPropertyChangedOnPropertyChanged(object sender,
             PropertyChangedEventArgs propertyChangedEventArgs)
         {
-            this.OnPropertyChanged("Count");
-            this.OnPropertyChanged("Item[]");
+            OnPropertyChanged("Count");
+            OnPropertyChanged("Item[]");
         }
 
         public void Clear()

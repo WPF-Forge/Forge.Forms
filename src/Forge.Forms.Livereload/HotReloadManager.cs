@@ -3,7 +3,6 @@ using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -11,62 +10,67 @@ using System.Text;
 using System.Windows;
 using Forge.Forms.Controls;
 using Forge.Forms.Livereload.Annotations;
+using Forge.Forms.Livereload.Extensions;
 using Microsoft.CodeDom.Providers.DotNetCompilerPlatform;
 using Proxier.Extensions;
 
 namespace Forge.Forms.Livereload
 {
     /// <summary>
-    /// Hot reload manager
+    ///     Hot reload manager
     /// </summary>
-    public static class HotReloadManager
+    public class HotReloadManager
     {
-        private static bool watchAllFiles = true;
+        private bool watchAllFiles = true;
 
-        static HotReloadManager()
+        public HotReloadManager()
         {
             DynamicForm.InterceptorChain.Add(new HotReloadInterceptor());
             Initialize();
         }
 
         /// <summary>
-        /// Directories to be watched
+        /// Gets the static instance.
         /// </summary>
-        public static ObservableCollection<string> Directories { get; }
+        /// <value>
+        /// The instance.
+        /// </value>
+        public static HotReloadManager Instance { get; } = new HotReloadManager();
+
+
+        /// <summary>
+        ///     Directories to be watched
+        /// </summary>
+        public ObservableCollection<string> Directories { get; }
             = new ObservableCollection<string>();
 
-        public static bool WatchAllFiles
+        public bool WatchAllFiles
         {
             private get => watchAllFiles;
             set
             {
-                if (value == watchAllFiles)
-                {
-                    return;
-                }
+                if (value == watchAllFiles) return;
 
                 watchAllFiles = value;
                 Initialize();
             }
         }
 
-        private static List<FileSystemWatcher> Watchers { get; } = new List<FileSystemWatcher>();
+        private List<FileSystemWatcher> Watchers { get; } = new List<FileSystemWatcher>();
 
-        private static CSharpCodeProvider CodeDom { get; } = CreateCSharpCodeProvider();
+        private CSharpCodeProvider CodeDom { get; } = CreateCSharpCodeProvider();
 
-        private static bool IsAssemblyDebugBuild(this Assembly assembly)
+        ~HotReloadManager()
         {
-            return assembly.GetCustomAttributes(false).OfType<DebuggableAttribute>().Any(da => da.IsJITTrackingEnabled);
+            CodeDom.Dispose();
         }
 
-        private static void Initialize()
+
+        private void Initialize()
         {
             if (Watchers.Count > 0)
             {
-                foreach (var systemWatcher in Watchers)
-                {
-                    systemWatcher.Dispose();
-                }
+                foreach (var systemWatcher in Watchers) systemWatcher.Dispose();
 
                 Watchers.Clear();
             }
@@ -84,20 +88,14 @@ namespace Forge.Forms.Livereload
                         Directory = Path.GetDirectoryName(i.GetCustomAttribute<HotReloadAttribute>().FilePath)
                     });
 
-                foreach (var toWatch in filesToWatch)
-                {
-                    AddWatcher(toWatch.Directory, toWatch.FileName);
-                }
+                foreach (var toWatch in filesToWatch) AddWatcher(toWatch.Directory, toWatch.FileName);
 
                 return;
             }
 
             Directories.CollectionChanged += DirectoriesOnCollectionChanged;
 
-            foreach (var path in FindProjects())
-            {
-                Directories.Add(path);
-            }
+            foreach (var path in FindProjects()) Directories.Add(path);
         }
 
         private static IEnumerable<string> FindProjects()
@@ -109,56 +107,28 @@ namespace Forge.Forms.Livereload
                 .ToList();
         }
 
-        private static string FindProjectRoot(this string directoryPath, int maxUpwards = 6)
-        {
-            var directory = new DirectoryInfo(directoryPath);
-            var count = 0;
-            while (directory?.Parent != null && count < maxUpwards)
-            {
-                if (directory.GetFiles().Any(i => i.Extension == ".csproj"))
-                {
-                    return directory.FullName;
-                }
 
-                directory = directory.Parent;
-                count++;
-            }
-
-            return "";
-        }
-
-        private static void DirectoriesOnCollectionChanged(object s, NotifyCollectionChangedEventArgs e)
+        private void DirectoriesOnCollectionChanged(object s, NotifyCollectionChangedEventArgs e)
         {
             if (e.Action == NotifyCollectionChangedAction.Add)
                 foreach (var item in e.NewItems)
                 {
-                    if (!(item is string directory))
-                    {
-                        continue;
-                    }
+                    if (!(item is string directory)) continue;
 
                     AddWatcher(directory);
                 }
             else if (e.Action == NotifyCollectionChangedAction.Remove)
-            {
                 foreach (var item in e.OldItems)
                 {
-                    if (!(item is string directory))
-                    {
-                        continue;
-                    }
+                    if (!(item is string directory)) continue;
 
                     Watchers.Remove(Watchers.First(i => i.Path == directory));
                 }
-            }
         }
 
-        private static void AddWatcher(string directory1, string filter = "*.cs")
+        private void AddWatcher(string directory1, string filter = "*.cs")
         {
-            if (Watchers.Any(i => i.Path == directory1 && i.Filter == filter))
-            {
-                return;
-            }
+            if (Watchers.Any(i => i.Path == directory1 && i.Filter == filter)) return;
 
             var watcher = new FileSystemWatcher
             {
@@ -175,7 +145,7 @@ namespace Forge.Forms.Livereload
             Watchers.Add(watcher);
         }
 
-        private static void OnChanged(object sender, FileSystemEventArgs e)
+        private void OnChanged(object sender, FileSystemEventArgs e)
         {
             try
             {
@@ -184,10 +154,7 @@ namespace Forge.Forms.Livereload
                 foreach (var type in types)
                 {
                     var attr = type.GetCustomAttribute<HotReloadAttribute>() ?? new HotReloadAttribute();
-                    if (attr.IsPersistent)
-                    {
-                        HotReloadInterceptor.AddOrReplaceReplacement(GetBaseType(type), type);
-                    }
+                    if (attr.IsPersistent) HotReloadInterceptor.AddOrReplaceReplacement(GetBaseType(type), type);
                 }
 
                 ApplyTypesToDynamicForms(types);
@@ -206,7 +173,7 @@ namespace Forge.Forms.Livereload
         }
 
         /// <summary>
-        /// Applies the types to dynamic forms.
+        ///     Applies the types to dynamic forms.
         /// </summary>
         /// <param name="types">The types.</param>
         public static void ApplyTypesToDynamicForms(List<Type> types)
@@ -218,10 +185,8 @@ namespace Forge.Forms.Livereload
                         types.Select(o => o.FullName).Contains(i.Model?.GetType().FullName));
 
                 foreach (var dynamicForm in dynamicForms)
-                {
                     dynamicForm.Model =
                         dynamicForm.Model.CopyTo(types.Last(i => i.FullName == dynamicForm.Model?.GetType().FullName));
-                }
             });
         }
 
@@ -247,7 +212,7 @@ namespace Forge.Forms.Livereload
             return csc;
         }
 
-        private static IEnumerable<Type> GetTypesFromFile(string path)
+        private IEnumerable<Type> GetTypesFromFile(string path)
         {
             using (var stream = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
@@ -259,12 +224,12 @@ namespace Forge.Forms.Livereload
         }
 
         /// <summary>
-        /// Compiles the code.
+        ///     Compiles the code.
         /// </summary>
         /// <param name="code">The code.</param>
         /// <returns></returns>
         /// <exception cref="InvalidOperationException"></exception>
-        public static IEnumerable<Type> CompileCode(string code)
+        public IEnumerable<Type> CompileCode(string code)
         {
             var results = CodeDom.CompileAssemblyFromSource(CreateCompilerParameters(), code);
             if (results.Errors.HasErrors)
@@ -272,9 +237,7 @@ namespace Forge.Forms.Livereload
                 var sb = new StringBuilder();
 
                 foreach (CompilerError error in results.Errors)
-                {
                     sb.AppendLine($"Error ({error.ErrorNumber}): {error.ErrorText}");
-                }
 
                 throw new InvalidOperationException(sb.ToString());
             }
