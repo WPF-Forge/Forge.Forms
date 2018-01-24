@@ -1,4 +1,6 @@
-﻿using Forge.Forms.Demo.Routes;
+﻿using Forge.Forms.Collections;
+using Forge.Forms.Demo.Models;
+using Forge.Forms.Demo.Routes;
 using Forge.Forms.Livereload;
 using Material.Application.Infrastructure;
 using Material.Application.Routing;
@@ -8,7 +10,7 @@ namespace Forge.Forms.Demo.Infrastructure
     public class DemoAppController : AppController
     {
         protected override void OnInitializing()
-        {
+        {     
             HotReloadManager.Instance.WatchAllFiles = false;
             Proxier.Mappers.Maps.ProxierMapper.InitializeMapperClasses();
             var factory = Routes.RouteFactory;
