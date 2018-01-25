@@ -16,7 +16,7 @@ namespace Forge.Forms.FormBuilding.Defaults
         /// </summary>
         public static readonly List<IActionInterceptor> InterceptorChain = new List<IActionInterceptor>();
 
-        public IValueProvider ActionName { get; set; }
+        public IValueProvider Action { get; set; }
 
         public IValueProvider ActionParameter { get; set; }
 
@@ -52,7 +52,7 @@ namespace Forge.Forms.FormBuilding.Defaults
         {
             return new ActionPresenter(context, Resources, formResources)
             {
-                Command = new ActionElementCommand(context, ActionName, ActionParameter, IsEnabled, Validates,
+                Command = new ActionElementCommand(context, Action, ActionParameter, IsEnabled, Validates,
                     ClosesDialog, IsReset, ActionInterceptor),
                 VerticalAlignment = VerticalAlignment.Center,
                 HorizontalAlignment =
@@ -160,7 +160,7 @@ namespace Forge.Forms.FormBuilding.Defaults
 
             switch (action.Value)
             {
-                case string actionName:
+                case string _:
                     if (model is IActionHandler modelHandler)
                     {
                         modelHandler.HandleAction(actionContext);

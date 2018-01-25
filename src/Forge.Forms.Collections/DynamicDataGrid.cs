@@ -6,6 +6,9 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using System.Windows.Controls;
+using Forge.Forms.DynamicExpressions;
+using Forge.Forms.FormBuilding;
+using Forge.Forms.FormBuilding.Defaults;
 
 namespace Forge.Forms.Collections
 {
@@ -108,10 +111,95 @@ namespace Forge.Forms.Collections
                 RefreshItemsView();
             }
         }
+
+        private FormRow GetCreateActions(IFormDefinition formDefinition)
+        {
+            return new FormRow(true, 1)
+            {
+                Elements =
+                {
+                    new FormElementContainer(0, formDefinition.Grid.Length, new ActionElement
+                    {
+                        Action = new LiteralValue("DynamicDataGrid_Create"),
+                        Content = new LiteralValue("CREATE" /* TODO Customize from grid */),
+                        ClosesDialog = LiteralValue.True,
+                        ActionInterceptor = new LiteralValue(new ActionInterceptor(ctx =>
+                        {
+                            // TODO: handle create
+                            return ctx;
+                        })),
+                        ActionParameter = new LiteralValue(null /* TODO */)
+                    }),
+                    new FormElementContainer(0, formDefinition.Grid.Length, new ActionElement
+                    {
+                        Action = new LiteralValue("DynamicDataGrid_Create"),
+                        Content = new LiteralValue("CANCEL" /* TODO Customize from grid */),
+                        ClosesDialog = LiteralValue.True,
+                        ActionInterceptor = new LiteralValue(new ActionInterceptor(ctx =>
+                        {
+                            // TODO: handle cancel
+                            return ctx;
+                        })),
+                        ActionParameter = new LiteralValue(null /* TODO */)
+                    })
+                }
+            };
+        }
+
+        private IFormDefinition AddRows(
+            IFormDefinition formDefinition,
+            params FormRow[] rows)
+        {
+            return new FormDefinitionWrapper(
+                formDefinition.FormRows.Concat(rows ?? new FormRow[0]).ToList().AsReadOnly(),
+                formDefinition.Grid,
+                formDefinition.ModelType,
+                formDefinition.Resources);
+        }
     }
 
     public interface IModelInputProvider
     {
         Task<bool> ShowDialog(object model);
+    }
+
+    internal class ActionInterceptor : IActionInterceptor
+    {
+        private readonly Func<IActionContext, IActionContext> onAction;
+
+        public ActionInterceptor(Func<IActionContext, IActionContext> onAction)
+        {
+            this.onAction = onAction ?? throw new ArgumentNullException(nameof(onAction));
+        }
+
+
+        public IActionContext InterceptAction(IActionContext actionContext)
+        {
+            return onAction(actionContext);
+        }
+    }
+
+    internal class FormDefinitionWrapper : IFormDefinition
+    {
+        public FormDefinitionWrapper(IReadOnlyList<FormRow> formRows, double[] grid, Type modelType, IDictionary<string, IValueProvider> resources)
+        {
+            FormRows = formRows;
+            Grid = grid;
+            ModelType = modelType;
+            Resources = resources;
+        }
+
+        public IReadOnlyList<FormRow> FormRows { get; }
+
+        public double[] Grid { get; set; }
+
+        public Type ModelType { get; }
+
+        public IDictionary<string, IValueProvider> Resources { get; }
+
+        public object CreateInstance(IResourceContext context)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

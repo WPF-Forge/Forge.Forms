@@ -100,7 +100,7 @@ namespace Forge.Forms.Annotations
         {
             return new ActionElement
             {
-                ActionName = BoundExpression.ParseSimplified(ActionName),
+                Action = BoundExpression.ParseSimplified(ActionName),
                 ActionParameter = Parameter is string expr
                     ? BoundExpression.ParseSimplified(expr)
                     : new LiteralValue(Parameter),
