@@ -64,7 +64,9 @@ namespace Forge.Forms.Collections
             var interfaces = collection
                 .GetType()
                 .GetInterfaces()
-                .Where(t => t.GetGenericTypeDefinition() == typeof(ICollection<>))
+                .Where(t =>
+                    t.IsGenericType &&
+                    t.GetGenericTypeDefinition() == typeof(ICollection<>))
                 .ToList();
 
             if (interfaces.Count > 1)
@@ -75,12 +77,25 @@ namespace Forge.Forms.Collections
             if (interfaces.Count == 0)
             {
                 throw new InvalidOperationException("No implementation of ICollection<T> found.");
-
             }
 
             var collectionType = interfaces[0];
             var itemType = collectionType.GetGenericArguments()[0];
-            var item = Activator.CreateInstance(subType ?? itemType);
+            object item;
+            if (subType != null)
+            {
+                if (!itemType.IsAssignableFrom(subType))
+                {
+                    throw new InvalidOperationException($"Type {subType} cannot be assigned to {itemType}");
+                }
+
+                item = Activator.CreateInstance(subType);
+            }
+            else
+            {
+                item = Activator.CreateInstance(itemType);
+            }
+
             var positive = await input.ShowDialog(item);
             if (!positive)
             {
