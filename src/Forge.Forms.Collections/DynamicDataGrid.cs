@@ -24,7 +24,11 @@ namespace Forge.Forms.Collections
             typeof(DynamicDataGrid),
             new FrameworkPropertyMetadata("Save"));
 
-        public string SaveActionContent { get; set; }
+        public string SaveActionContent
+        {
+            get => (string)GetValue(SaveActionContentProperty);
+            set => SetValue(SaveActionContentProperty, value);
+        }
 
         public static readonly DependencyProperty SaveAcitionIconProperty = DependencyProperty.Register(
             nameof(SaveAcitionIcon),
@@ -32,7 +36,11 @@ namespace Forge.Forms.Collections
             typeof(DynamicDataGrid),
             new FrameworkPropertyMetadata(PackIconKind.ContentSave));
 
-        public PackIconKind SaveAcitionIcon { get; set; }
+        public PackIconKind SaveAcitionIcon
+        {
+            get => (PackIconKind)GetValue(SaveAcitionIconProperty);
+            set => SetValue(SaveAcitionIconProperty, value);
+        }
 
         public static readonly DependencyProperty CancelActionContentProperty = DependencyProperty.Register(
             nameof(CancelActionContent),
@@ -40,7 +48,11 @@ namespace Forge.Forms.Collections
             typeof(DynamicDataGrid),
             new FrameworkPropertyMetadata("Cancel"));
 
-        public string CancelActionContent { get; set; }
+        public string CancelActionContent
+        {
+            get => (string)GetValue(CancelActionContentProperty);
+            set => SetValue(CancelActionContentProperty, value);
+        }
 
         public static readonly DependencyProperty CancelActionIconProperty = DependencyProperty.Register(
             nameof(CancelActionIcon),
@@ -48,7 +60,11 @@ namespace Forge.Forms.Collections
             typeof(DynamicDataGrid),
             new FrameworkPropertyMetadata(PackIconKind.Close));
 
-        public PackIconKind CancelActionIcon { get; set; }
+        public PackIconKind CancelActionIcon
+        {
+            get => (PackIconKind)GetValue(CancelActionIconProperty);
+            set => SetValue(CancelActionIconProperty, value);
+        }
 
         public static readonly DependencyProperty UpdateActionContentProperty = DependencyProperty.Register(
             nameof(UpdateActionContent),
@@ -56,7 +72,11 @@ namespace Forge.Forms.Collections
             typeof(DynamicDataGrid),
             new FrameworkPropertyMetadata("Edit"));
 
-        public string UpdateActionContent { get; set; }
+        public string UpdateActionContent
+        {
+            get => (string)GetValue(UpdateActionContentProperty);
+            set => SetValue(UpdateActionContentProperty, value);
+        }
 
         public static readonly DependencyProperty UpdateActionIconProperty = DependencyProperty.Register(
             nameof(UpdateActionIcon),
@@ -64,7 +84,11 @@ namespace Forge.Forms.Collections
             typeof(DynamicDataGrid),
             new FrameworkPropertyMetadata(PackIconKind.Pencil));
 
-        public PackIcon UpdateActionIcon { get; set; }
+        public PackIconKind UpdateActionIcon
+        {
+            get => (PackIconKind)GetValue(UpdateActionIconProperty);
+            set => SetValue(UpdateActionIconProperty, value);
+        }
 
         private static readonly Dictionary<Type, Action<object, object>> AddItemCache =
             new Dictionary<Type, Action<object, object>>();
