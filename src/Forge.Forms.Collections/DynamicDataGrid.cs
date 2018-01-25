@@ -14,8 +14,56 @@ namespace Forge.Forms.Collections
 {
     public class DynamicDataGrid : Control
     {
-        private static readonly Dictionary<Type, Action<object, object>> AddItemCache
-            = new Dictionary<Type, Action<object, object>>();
+        public static readonly DependencyProperty SaveActionContentProperty = DependencyProperty.Register(
+            nameof(SaveActionContent),
+            typeof(string),
+            typeof(DynamicDataGrid),
+            new FrameworkPropertyMetadata("Save"));
+
+        public string SaveActionContent { get; set; }
+
+        public static readonly DependencyProperty SaveAcitionIconProperty = DependencyProperty.Register(
+            nameof(SaveAcitionIcon),
+            typeof(PackIconKind),
+            typeof(DynamicDataGrid),
+            new FrameworkPropertyMetadata(PackIconKind.ContentSave));
+
+        public PackIconKind SaveAcitionIcon { get; set; }
+
+        public static readonly DependencyProperty CancelActionContentProperty = DependencyProperty.Register(
+            nameof(CancelActionContent),
+            typeof(string),
+            typeof(DynamicDataGrid),
+            new FrameworkPropertyMetadata("Cancel"));
+
+        public string CancelActionContent { get; set; }
+
+        public static readonly DependencyProperty CancelActionIconProperty = DependencyProperty.Register(
+            nameof(CancelActionIcon),
+            typeof(PackIconKind),
+            typeof(DynamicDataGrid),
+            new FrameworkPropertyMetadata(PackIconKind.Close));
+
+        public PackIconKind CancelActionIcon { get; set; }
+
+        public static readonly DependencyProperty UpdateActionContentProperty = DependencyProperty.Register(
+            nameof(UpdateActionContent),
+            typeof(string),
+            typeof(DynamicDataGrid),
+            new FrameworkPropertyMetadata("Edit"));
+
+        public string UpdateActionContent { get; set; }
+
+        public static readonly DependencyProperty UpdateActionIconProperty = DependencyProperty.Register(
+            nameof(UpdateActionIcon),
+            typeof(PackIconKind),
+            typeof(DynamicDataGrid),
+            new FrameworkPropertyMetadata(PackIconKind.Pencil));
+
+        public PackIcon UpdateActionIcon { get; set; }
+
+        private static readonly Dictionary<Type, Action<object, object>> AddItemCache =
+            new Dictionary<Type, Action<object, object>>();
 
         // TODO: Dependency properties
         /// <summary>
