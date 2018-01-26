@@ -41,7 +41,7 @@ namespace Forge.Forms.FormBuilding.Defaults
         protected internal override void Freeze()
         {
             base.Freeze();
-            Resources.Add(nameof(IsLoading), IsLoading ?? LiteralValue.True);
+            Resources.Add(nameof(IsLoading), IsLoading ?? LiteralValue.False);
             Resources.Add(nameof(IsPrimary), IsPrimary ?? LiteralValue.False);
             Resources.Add(nameof(IsDefault), IsDefault ?? LiteralValue.False);
             Resources.Add(nameof(IsCancel), IsCancel ?? LiteralValue.False);

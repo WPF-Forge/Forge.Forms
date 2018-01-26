@@ -1,12 +1,27 @@
 <ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes">
+    xmlns:collections="clr-namespace:Forge.Forms.Collections">
 
-    <DataTemplate x:Key="ButtonCrud">
-        <Button Name="PART_CrudEditButton">
-            Hello
-        </Button>
-    </DataTemplate>
-    
+    <ControlTemplate x:Key="DynamicDataGridTemplate" TargetType="{x:Type collections:DynamicDataGrid}">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Button
+                Grid.Row="0"
+                Command="{x:Static collections:DynamicDataGrid.CreateItemCommand}"
+                Content="ADD NEW ITEM" />
+            <DataGrid
+                Name="PART_DataGrid"
+                Grid.Row="1"
+                ItemsSource="{TemplateBinding ItemsSource}" />
+        </Grid>
+    </ControlTemplate>
+
+    <Style TargetType="{x:Type collections:DynamicDataGrid}">
+        <Setter Property="Template" Value="{StaticResource DynamicDataGridTemplate}" />
+    </Style>
+
 </ResourceDictionary>

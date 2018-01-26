@@ -28,6 +28,12 @@ namespace Forge.Forms.FormBuilding
             Resources.Add(nameof(IsVisible), IsVisible ?? LiteralValue.True);
         }
 
+        public FormElement FreezeResources()
+        {
+            Freeze();
+            return this;
+        }
+
         protected internal abstract IBindingProvider CreateBindingProvider(
             IResourceContext context,
             IDictionary<string, IValueProvider> formResources);

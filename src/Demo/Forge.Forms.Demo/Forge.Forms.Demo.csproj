@@ -100,6 +100,7 @@
     <Compile Include="Models\ExamplePresenter.cs" />
     <Compile Include="Models\ScriptedCounter.cs" />
     <Compile Include="Models\Selection.cs" />
+    <Compile Include="Routes\CrudRoute.cs" />
     <Compile Include="Routes\CsharpExamplesRoute.cs" />
     <Compile Include="Routes\ExamplesRoute.cs" />
     <Compile Include="Routes\HomeRoute.cs" />

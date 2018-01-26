@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Windows;
-using Forge.Forms.Demo.Models;
 using Forge.Forms.Demo.Models.Home;
 using Material.Application.Infrastructure;
 using Material.Application.Routing;
@@ -38,17 +36,6 @@ namespace Forge.Forms.Demo.Routes
                     GoToMenuRoute<XmlExamplesRoute>();
                     break;
             }
-        }
-    }
-
-    public class CrudRoute : Route
-    {
-        public List<Login> Items { get; set; } = new List<Login>();
-
-        public CrudRoute()
-        {
-            RouteConfig.Title = "Crud examples";
-            RouteConfig.Icon = PackIconKind.Table;
         }
     }
 }

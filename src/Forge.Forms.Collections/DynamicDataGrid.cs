@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom;
 using System.Windows;
 using System.Collections;
 using System.Collections.Generic;
@@ -14,6 +15,7 @@ using Expression = System.Linq.Expressions.Expression;
 
 namespace Forge.Forms.Collections
 {
+    [TemplatePart(Name = "PART_DataGrid", Type = typeof(DataGrid))]
     public class DynamicDataGrid : Control
     {
         #region Dependency properties
@@ -327,10 +329,17 @@ namespace Forge.Forms.Collections
             CommandBindings.Add(new CommandBinding(CreateItemCommand, ExecuteCreateItem, CanExecuteCreateItem));
             CommandBindings.Add(new CommandBinding(UpdateItemCommand, ExecuteUpdateItem, CanExecuteUpdateItem));
             CommandBindings.Add(new CommandBinding(RemoveItemCommand, ExecuteRemoveItem, CanExecuteRemoveItem));
+            Loaded += (s, e) => OnItemsSource(ItemsSource);
         }
 
+        private DataGrid dataGrid;
         private Type itemType;
         private bool canMutate;
+
+        public override void OnApplyTemplate()
+        {
+            dataGrid = Template.FindName("PART_DataGrid", this) as DataGrid;
+        }
 
         private void OnItemsSource(object collection)
         {
@@ -367,7 +376,6 @@ namespace Forge.Forms.Collections
                 return;
             }
 
-            var collection = ItemsSource;
             DialogResult result;
             var definition = GetCreateDefinition();
             try
@@ -381,10 +389,16 @@ namespace Forge.Forms.Collections
 
             if (result.Action is "DynamicDataGrid_CreateDialogPositive")
             {
-                AddItemToCollection(itemType, collection, result.Model);
-                if (!(collection is INotifyCollectionChanged))
+                var collection = ItemsSource;
+                if (!(collection is INotifyCollectionChanged) && dataGrid != null)
                 {
-                    RefreshItemsView();
+                    ItemsSource = null;
+                    AddItemToCollection(itemType, collection, result.Model);
+                    ItemsSource = collection;
+                }
+                else
+                {
+                    AddItemToCollection(itemType, collection, result.Model);
                 }
             }
         }
@@ -451,7 +465,17 @@ namespace Forge.Forms.Collections
 
                 if (result.Action is "positive")
                 {
-                    RemoveItemFromCollection(itemType, ItemsSource, model);
+                    var collection = ItemsSource;
+                    if (!(collection is INotifyCollectionChanged) && dataGrid != null)
+                    {
+                        ItemsSource = null;
+                        RemoveItemFromCollection(itemType, collection, result.Model);
+                        ItemsSource = collection;
+                    }
+                    else
+                    {
+                        RemoveItemFromCollection(itemType, collection, result.Model);
+                    }
                 }
             }
             catch
@@ -465,11 +489,6 @@ namespace Forge.Forms.Collections
             e.CanExecute = canMutate && e.Parameter != null && itemType.IsInstanceOfType(e.Parameter);
         }
 
-        private void RefreshItemsView()
-        {
-            // TODO
-        }
-
         private IFormDefinition GetCreateDefinition()
         {
             var formDefinition = FormBuilder.GetDefinition(itemType);
@@ -479,8 +498,8 @@ namespace Forge.Forms.Collections
                 {
                     new FormElementContainer(0, formDefinition.Grid.Length, new List<FormElement>
                     {
-                        GetCreateNegativeAction(),
-                        GetCreatePositiveAction()
+                        GetCreateNegativeAction().FreezeResources(),
+                        GetCreatePositiveAction().FreezeResources()
                     })
                 }
             });
@@ -501,8 +520,8 @@ namespace Forge.Forms.Collections
                             {
                                 new FormElementContainer(0, formDefinition.Grid.Length, new List<FormElement>
                                 {
-                                    GetUpdateNegativeAction(),
-                                    GetUpdatePositiveAction()
+                                    GetUpdateNegativeAction().FreezeResources(),
+                                    GetUpdatePositiveAction().FreezeResources()
                                 })
                             }
                         }
@@ -518,7 +537,8 @@ namespace Forge.Forms.Collections
                 Action = new LiteralValue("DynamicDataGrid_CreateDialogPositive"),
                 Content = new LiteralValue(CreateDialogPositiveContent),
                 Icon = new LiteralValue(CreateDialogPositiveIcon),
-                ClosesDialog = LiteralValue.True
+                ClosesDialog = LiteralValue.True,
+                IsDefault = LiteralValue.True
             };
         }
 
@@ -529,7 +549,8 @@ namespace Forge.Forms.Collections
                 Action = new LiteralValue("DynamicDataGrid_CreateDialogNegative"),
                 Content = new LiteralValue(CreateDialogNegativeContent),
                 Icon = new LiteralValue(CreateDialogNegativeIcon),
-                ClosesDialog = LiteralValue.True
+                ClosesDialog = LiteralValue.True,
+                IsCancel = LiteralValue.True
             };
         }
 
@@ -540,7 +561,8 @@ namespace Forge.Forms.Collections
                 Action = new LiteralValue("DynamicDataGrid_UpdateDialogPositive"),
                 Content = new LiteralValue(UpdateDialogPositiveContent),
                 Icon = new LiteralValue(UpdateDialogPositiveIcon),
-                ClosesDialog = LiteralValue.True
+                ClosesDialog = LiteralValue.True,
+                IsDefault = LiteralValue.True
             };
         }
 
@@ -551,7 +573,8 @@ namespace Forge.Forms.Collections
                 Action = new LiteralValue("DynamicDataGrid_UpdateDialogNegative"),
                 Content = new LiteralValue(UpdateDialogNegativeContent),
                 Icon = new LiteralValue(UpdateDialogNegativeIcon),
-                ClosesDialog = LiteralValue.True
+                ClosesDialog = LiteralValue.True,
+                IsCancel = LiteralValue.True
             };
         }
 
