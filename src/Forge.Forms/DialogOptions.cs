@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
+using Forge.Forms.FormBuilding;
 
 namespace Forge.Forms
 {
@@ -12,8 +13,8 @@ namespace Forge.Forms
         private Thickness padding = new Thickness(16d, 16d, 16d, 8d);
         private double textFontSize = 15d;
         private double titleFontSize = 20d;
-
         private double width = 350d;
+        private IFormBuilder formBuilder = FormBuilding.FormBuilder.Default;
 
         public DialogOptions()
             : this(Default)
@@ -33,6 +34,22 @@ namespace Forge.Forms
             titleFontSize = defaults.titleFontSize;
             headingFontSize = defaults.headingFontSize;
             textFontSize = defaults.textFontSize;
+            formBuilder = defaults.formBuilder;
+        }
+
+        public IFormBuilder FormBuilder
+        {
+            get => formBuilder;
+            set
+            {
+                if (value == formBuilder)
+                {
+                    return;
+                }
+
+                formBuilder = value;
+                OnPropertyChanged();
+            }
         }
 
         public double Width

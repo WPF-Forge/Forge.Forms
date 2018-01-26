@@ -262,7 +262,8 @@ namespace Forge.Forms.Collections
             if (!AddItemCache.TryGetValue(itemType, out var action))
             {
                 var collectionType = typeof(ICollection<>).MakeGenericType(itemType);
-                var addMethod = collectionType.GetMethod("Add") ?? throw new InvalidOperationException("This should not happen.");
+                var addMethod = collectionType.GetMethod("Add") ??
+                                throw new InvalidOperationException("This should not happen.");
                 var collectionParam = Expression.Parameter(typeof(object), "collection");
                 var itemParam = Expression.Parameter(typeof(object), "item");
                 var lambda = Expression.Lambda<Action<object, object>>(
@@ -286,7 +287,8 @@ namespace Forge.Forms.Collections
             if (!RemoveItemCache.TryGetValue(itemType, out var action))
             {
                 var collectionType = typeof(ICollection<>).MakeGenericType(itemType);
-                var removeMethod = collectionType.GetMethod("Remove") ?? throw new InvalidOperationException("This should not happen.");
+                var removeMethod = collectionType.GetMethod("Remove") ??
+                                   throw new InvalidOperationException("This should not happen.");
                 var collectionParam = Expression.Parameter(typeof(object), "collection");
                 var itemParam = Expression.Parameter(typeof(object), "item");
                 var lambda = Expression.Lambda<Action<object, object>>(
@@ -417,7 +419,8 @@ namespace Forge.Forms.Collections
 
         private async void ExecuteRemoveItem(object sender, ExecutedRoutedEventArgs e)
         {
-            if (!canMutate || e.Parameter == null)
+            var model = e.Parameter;
+            if (!canMutate || model == null || !itemType.IsInstanceOfType(model))
             {
                 return;
             }
@@ -439,7 +442,7 @@ namespace Forge.Forms.Collections
 
                 if (result.Action is "positive")
                 {
-                    RemoveItemFromCollection(itemType, ItemsSource, e.Parameter);
+                    RemoveItemFromCollection(itemType, ItemsSource, model);
                 }
             }
             catch
@@ -450,110 +453,100 @@ namespace Forge.Forms.Collections
 
         private void CanExecuteRemoveItem(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = canMutate && e.Parameter != null;
+            e.CanExecute = canMutate && e.Parameter != null && itemType.IsInstanceOfType(e.Parameter);
         }
 
         private void RefreshItemsView()
         {
-            throw new NotImplementedException();
+            // TODO
         }
 
         private IFormDefinition GetCreateDefinition()
         {
-            throw new NotImplementedException();
+            var formDefinition = FormBuilder.GetDefinition(itemType);
+            return AddRows(formDefinition, new FormRow(true, 1)
+            {
+                Elements =
+                {
+                    new FormElementContainer(0, formDefinition.Grid.Length, new List<FormElement>
+                    {
+                        GetCreateNegativeAction(),
+                        GetCreatePositiveAction()
+                    })
+                }
+            });
         }
 
         private UpdateFormDefinition GetUpdateDefinition(object model)
         {
-            throw new NotImplementedException();
+            var formDefinition = FormBuilder.GetDefinition(itemType);
+            return new UpdateFormDefinition(
+                formDefinition,
+                model,
+                formDefinition.FormRows.Concat(
+                    new[]
+                    {
+                        new FormRow(true, 1)
+                        {
+                            Elements =
+                            {
+                                new FormElementContainer(0, formDefinition.Grid.Length, new List<FormElement>
+                                {
+                                    GetUpdateNegativeAction(),
+                                    GetUpdatePositiveAction()
+                                })
+                            }
+                        }
+                    }
+                ).ToList().AsReadOnly()
+            );
         }
 
-        //private async Task AddNewItem(object collection, IModelInputProvider input, Type subType)
-        //{
-        //    if (collection == null)
-        //    {
-        //        throw new ArgumentNullException(nameof(collection));
-        //    }
-
-        //    var interfaces = collection
-        //        .GetType()
-        //        .GetInterfaces()
-        //        .Where(t =>
-        //            t.IsGenericType &&
-        //            t.GetGenericTypeDefinition() == typeof(ICollection<>))
-        //        .ToList();
-
-        //    if (interfaces.Count > 1)
-        //    {
-        //        throw new InvalidOperationException("Multiple implementations of ICollection<T> found.");
-        //    }
-
-        //    if (interfaces.Count == 0)
-        //    {
-        //        throw new InvalidOperationException("No implementation of ICollection<T> found.");
-        //    }
-
-        //    var collectionType = interfaces[0];
-        //    var itemType = collectionType.GetGenericArguments()[0];
-        //    object item;
-        //    if (subType != null)
-        //    {
-        //        if (!itemType.IsAssignableFrom(subType))
-        //        {
-        //            throw new InvalidOperationException($"Type {subType} cannot be assigned to {itemType}");
-        //        }
-
-        //        item = Activator.CreateInstance(subType);
-        //    }
-        //    else
-        //    {
-        //        item = Activator.CreateInstance(itemType);
-        //    }
-
-        //    var positive = await input.ShowDialog(item);
-        //    if (!positive)
-        //    {
-        //        return;
-        //    }
-
-        //    AddItem(itemType, collection, item);
-        //}
-
-        private FormRow GetCreateActions(IFormDefinition formDefinition)
+        private ActionElement GetCreatePositiveAction()
         {
-            return new FormRow(true, 1)
+            return new ActionElement
             {
-                Elements =
-                {
-                    new FormElementContainer(0, formDefinition.Grid.Length, new ActionElement
-                    {
-                        Action = new LiteralValue("DynamicDataGrid_Create"),
-                        Content = new LiteralValue("CREATE" /* TODO Customize from grid */),
-                        ClosesDialog = LiteralValue.True,
-                        ActionInterceptor = new LiteralValue(new ActionInterceptor(ctx =>
-                        {
-                            // TODO: handle create
-                            return ctx;
-                        })),
-                        ActionParameter = new LiteralValue(null /* TODO */)
-                    }),
-                    new FormElementContainer(0, formDefinition.Grid.Length, new ActionElement
-                    {
-                        Action = new LiteralValue("DynamicDataGrid_Create"),
-                        Content = new LiteralValue("CANCEL" /* TODO Customize from grid */),
-                        ClosesDialog = LiteralValue.True,
-                        ActionInterceptor = new LiteralValue(new ActionInterceptor(ctx =>
-                        {
-                            // TODO: handle cancel
-                            return ctx;
-                        })),
-                        ActionParameter = new LiteralValue(null /* TODO */)
-                    })
-                }
+                Action = new LiteralValue("DynamicDataGrid_CreateDialogPositive"),
+                Content = new LiteralValue(CreateDialogPositiveContent),
+                Icon = new LiteralValue(CreateDialogPositiveIcon),
+                ClosesDialog = LiteralValue.True
             };
         }
 
-        private IFormDefinition AddRows(
+        private ActionElement GetCreateNegativeAction()
+        {
+            return new ActionElement
+            {
+                Action = new LiteralValue("DynamicDataGrid_CreateDialogNegative"),
+                Content = new LiteralValue(CreateDialogNegativeContent),
+                Icon = new LiteralValue(CreateDialogNegativeIcon),
+                ClosesDialog = LiteralValue.True
+            };
+        }
+
+        private ActionElement GetUpdatePositiveAction()
+        {
+            return new ActionElement
+            {
+                Action = new LiteralValue("DynamicDataGrid_UpdateDialogPositive"),
+                Content = new LiteralValue(UpdateDialogPositiveContent),
+                Icon = new LiteralValue(UpdateDialogPositiveIcon),
+                ClosesDialog = LiteralValue.True
+            };
+        }
+
+        private ActionElement GetUpdateNegativeAction()
+        {
+            return new ActionElement
+            {
+                Action = new LiteralValue("DynamicDataGrid_UpdateDialogNegative"),
+                Content = new LiteralValue(UpdateDialogNegativeContent),
+                Icon = new LiteralValue(UpdateDialogNegativeIcon),
+                ClosesDialog = LiteralValue.True
+            };
+        }
+
+        private static IFormDefinition AddRows(
             IFormDefinition formDefinition,
             params FormRow[] rows)
         {

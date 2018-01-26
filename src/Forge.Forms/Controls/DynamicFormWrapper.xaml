@@ -14,6 +14,7 @@
         Height="{Binding Height}"
         Margin="{Binding Padding}"
         FontSize="{Binding TextFontSize}"
+        FormBuilder="{Binding FormBuilder}"
         local:TextProperties.HeadingFontSize="{Binding HeadingFontSize}"
         local:TextProperties.TextFontSize="{Binding TextFontSize}"
         local:TextProperties.TitleFontSize="{Binding TitleFontSize}" />
