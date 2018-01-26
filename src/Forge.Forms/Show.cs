@@ -1,5 +1,8 @@
-﻿using Forge.Forms.Controls;
+﻿using System.Threading.Tasks;
+using Forge.Forms.Controls;
+using Forge.Forms.FormBuilding;
 using MaterialDesignThemes.Wpf;
+using Type = System.Type;
 
 namespace Forge.Forms
 {
@@ -91,11 +94,34 @@ namespace Forge.Forms
                 this.options = options;
             }
 
-            public object For<T>(T model)
+            public Task<DialogResult<T>> For<T>(T model)
             {
+                return Task.FromResult(ShowWindow(model).MakeGeneric<T>());
+            }
+
+            public Task<DialogResult> For(Type type)
+            {
+                return Task.FromResult(ShowWindow(type));
+            }
+
+            public Task<DialogResult> For(IFormDefinition formDefinition)
+            {
+                return Task.FromResult(ShowWindow(formDefinition));
+            }
+
+            private DialogResult ShowWindow(object model)
+            {
+                object lastAction = null;
+                object lastActionParameter = null;
                 var window = new DialogWindow(model, context, options);
+                window.Form.OnAction += (s, e) =>
+                {
+                    lastAction = e.ActionContext.Action;
+                    lastActionParameter = e.ActionContext.ActionParameter;
+                };
+
                 window.ShowDialog();
-                return null;
+                return new DialogResult(window.Form.Value, lastAction, lastActionParameter);
             }
         }
 
@@ -112,32 +138,89 @@ namespace Forge.Forms
                 this.dialogIdentifier = dialogIdentifier;
             }
 
-            public object For<T>(T model)
+            public async Task<DialogResult<T>> For<T>(T model)
             {
+                return (await ShowDialog(model)).MakeGeneric<T>();
+            }
+
+            public Task<DialogResult> For(Type type)
+            {
+                return ShowDialog(type);
+            }
+
+            public Task<DialogResult> For(IFormDefinition formDefinition)
+            {
+                return ShowDialog(formDefinition);
+            }
+
+            private async Task<DialogResult> ShowDialog(object model)
+            {
+                object lastAction = null;
+                object lastActionParameter = null;
                 var wrapper = new DynamicFormWrapper(model, context, options);
-                return DialogHost.Show(wrapper, dialogIdentifier);
+                wrapper.Form.OnAction += (s, e) =>
+                {
+                    lastAction = e.ActionContext.Action;
+                    lastActionParameter = e.ActionContext.ActionParameter;
+                };
+
+                await DialogHost.Show(wrapper, dialogIdentifier);
+                return new DialogResult(wrapper.Form.Value, lastAction, lastActionParameter);
             }
         }
     }
 
     public interface IModelHost
     {
-        object For<T>(T model);
+        Task<DialogResult<T>> For<T>(T model);
+
+        Task<DialogResult> For(Type type);
+
+        Task<DialogResult> For(IFormDefinition formDefinition);
     }
 
     public static class ModelHostExtensions
     {
-        public static object For<T>(this IModelHost modelHost)
+        public static async Task<DialogResult<T>> For<T>(this IModelHost modelHost)
         {
-            return modelHost.For(typeof(T));
+            var result = await modelHost.For(typeof(T));
+            return new DialogResult<T>((T)result.Model, result.Action, result.ActionParameter);
+        }
+    }
+
+    public class DialogResult
+    {
+        public DialogResult(object model, object action, object actionParameter)
+        {
+            Model = model;
+            Action = action;
+            ActionParameter = actionParameter;
+        }
+
+        public object Model { get; }
+
+        public object Action { get; }
+
+        public object ActionParameter { get; }
+
+        internal DialogResult<T> MakeGeneric<T>()
+        {
+            return new DialogResult<T>((T)Model, Action, ActionParameter);
         }
     }
 
     public class DialogResult<T>
     {
+        public DialogResult(T model, object action, object actionParameter)
+        {
+            Model = model;
+            Action = action;
+            ActionParameter = actionParameter;
+        }
+
         public T Model { get; }
 
-        public string Action { get; }
+        public object Action { get; }
 
         public object ActionParameter { get; }
     }

@@ -17,7 +17,7 @@ namespace Forge.Forms.Demo.Models
     [Action("login", "LOGIN", Parameter = "window", InsertAfter = false)]
     public class Dialogs : IActionHandler
     {
-        public void HandleAction(IActionContext actionContext)
+        public async void HandleAction(IActionContext actionContext)
         {
             var parameter = actionContext.ActionParameter;
             var action = actionContext.Action as string;
@@ -30,19 +30,24 @@ namespace Forge.Forms.Demo.Models
                 switch (action)
                 {
                     case "alert":
-                        Show.Window(275d).For(new Alert("Hello world!"));
+                        await Show.Window(275d).For(new Alert("Hello world!"));
                         break;
                     case "confirm":
-                        Show.Window(275d).For(new Confirmation("Delete item?"));
+                        await Show.Window(275d).For(new Confirmation("Delete item?"));
                         break;
                     case "long_confirm":
-                        Show.Window(250d).For(longConfirm);
+                        await Show.Window(250d).For(longConfirm);
                         break;
                     case "prompt":
-                        Show.Window().For(new Prompt<string> { Title = "What's your name?", Value = "User" });
+                        await Show.Window().For(new Prompt<string> { Title = "What's your name?", Value = "User" });
                         break;
                     case "login":
-                        Show.Window().For<Login>();
+                        var result = await Show.Window().For<Login>();
+                        if (result.Action is "login")
+                        {
+                            await Show.Window(275d).For(new Alert($"Hello {result.Model.Username}!"));
+                        }
+
                         break;
                     default:
                         return;
@@ -53,19 +58,24 @@ namespace Forge.Forms.Demo.Models
                 switch (action)
                 {
                     case "alert":
-                        Show.Dialog(275d).For(new Alert("Hello world!"));
+                        await Show.Dialog(275d).For(new Alert("Hello world!"));
                         break;
                     case "confirm":
-                        Show.Dialog(275d).For(new Confirmation("Delete item?"));
+                        await Show.Dialog(275d).For(new Confirmation("Delete item?"));
                         break;
                     case "long_confirm":
-                        Show.Dialog(250d).For(longConfirm);
+                        await Show.Dialog(250d).For(longConfirm);
                         break;
                     case "prompt":
-                        Show.Dialog().For(new Prompt<string> { Title = "What's your name?", Value = "User" });
+                        await Show.Dialog().For(new Prompt<string> { Title = "What's your name?", Value = "User" });
                         break;
                     case "login":
-                        Show.Dialog().For<Login>();
+                        var result = await Show.Dialog().For<Login>();
+                        if (result.Action is "login")
+                        {
+                            await Show.Dialog(275d).For(new Alert($"Hello {result.Model.Username}!"));
+                        }
+
                         break;
                     default:
                         return;
