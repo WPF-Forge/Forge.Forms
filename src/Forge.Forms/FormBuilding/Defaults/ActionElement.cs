@@ -52,8 +52,16 @@ namespace Forge.Forms.FormBuilding.Defaults
         {
             return new ActionPresenter(context, Resources, formResources)
             {
-                Command = new ActionElementCommand(context, Action, ActionParameter, IsEnabled, Validates,
-                    ClosesDialog, IsReset, ActionInterceptor),
+                Command = new ActionElementCommand(
+                    context,
+                    Action,
+                    ActionParameter,
+                    IsEnabled,
+                    Validates,
+                    ClosesDialog,
+                    IsReset,
+                    IsDefault,
+                    ActionInterceptor),
                 VerticalAlignment = VerticalAlignment.Center,
                 HorizontalAlignment =
                     LinePosition == Position.Left ? HorizontalAlignment.Left : HorizontalAlignment.Right

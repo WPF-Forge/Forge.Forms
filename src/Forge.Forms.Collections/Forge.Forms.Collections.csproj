@@ -34,9 +34,6 @@
   <ItemGroup>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <Reference Include="Proxier, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\..\..\..\..\.nuget\packages\proxier\1.5.6\lib\net461\Proxier.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
@@ -49,7 +46,6 @@
     <Compile Include="Controls\CrudControl.cs" />
     <Compile Include="DynamicDataGrid.cs" />
     <Compile Include="Controls\RelayCommand.cs" />
-    <Compile Include="CrudCollection.cs" />
     <Compile Include="GridField.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -58,16 +54,6 @@
       <Project>{4E0C323D-5AFC-4105-815F-587346AA5321}</Project>
       <Name>Forge.Forms</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Bindables.Fody" Version="0.4.0" />
-    <PackageReference Include="Fody" Version="2.3.22" />
-    <PackageReference Include="Microsoft.CSharp" Version="4.4.1" />
-    <PackageReference Include="morelinq" Version="2.10.0" />
-    <PackageReference Include="PropertyChanged.Fody" Version="2.2.5" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="FodyWeavers.xml" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="Themes\Generic.xaml">

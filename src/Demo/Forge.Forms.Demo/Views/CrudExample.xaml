@@ -8,6 +8,5 @@
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
-        <controls:CrudControl ItemsSource="{Binding Items}"/>
     </Grid>
 </UserControl>

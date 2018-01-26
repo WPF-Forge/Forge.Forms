@@ -1,11 +1,16 @@
-﻿namespace Forge.Forms.Base
+﻿using MaterialDesignThemes.Wpf;
+
+namespace Forge.Forms.Base
 {
     public abstract class DialogBase : FormBase
     {
         private bool confirmed;
         private string message;
-        private string negativeAction = "CANCEL";
         private string positiveAction = "OK";
+        private string negativeAction = "CANCEL";
+        private PackIconKind? positiveActionIcon;
+        private PackIconKind? negativeActionIcon;
+
         private string title;
 
         public string Title
@@ -38,6 +43,31 @@
             }
         }
 
+        public string PositiveAction
+        {
+            get => positiveAction;
+            set
+            {
+                if (value == positiveAction)
+                {
+                    return;
+                }
+
+                positiveAction = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public PackIconKind? PositiveActionIcon
+        {
+            get => positiveActionIcon;
+            set
+            {
+                positiveActionIcon = value;
+                OnPropertyChanged();
+            }
+        }
+
         public string NegativeAction
         {
             get => negativeAction;
@@ -53,17 +83,12 @@
             }
         }
 
-        public string PositiveAction
+        public PackIconKind? NegativeActionIcon
         {
-            get => positiveAction;
+            get => negativeActionIcon;
             set
             {
-                if (value == positiveAction)
-                {
-                    return;
-                }
-
-                positiveAction = value;
+                negativeActionIcon = value;
                 OnPropertyChanged();
             }
         }

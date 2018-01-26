@@ -40,9 +40,6 @@
     <StartupObject>Forge.Forms.Demo.App</StartupObject>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Bogus, Version=22.0.2.0, Culture=neutral, PublicKeyToken=fa1bb3f3f218129a">
-      <HintPath>..\..\..\packages\Bogus.22.0.2\lib\net40\Bogus.dll</HintPath>
-    </Reference>
     <Reference Include="ClearScript, Version=5.5.1.0, Culture=neutral, PublicKeyToken=935d0c957da47c73, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\ClearScript.V8.5.5.1\lib\net45\ClearScript.dll</HintPath>
     </Reference>

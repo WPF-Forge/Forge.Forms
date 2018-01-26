@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows;
-using Bogus;
 using Forge.Forms.Demo.Models;
 using Forge.Forms.Demo.Models.Home;
 using Material.Application.Infrastructure;
@@ -48,12 +47,6 @@ namespace Forge.Forms.Demo.Routes
 
         public CrudRoute()
         {
-            var fake1r = new Faker<Login>()
-                .RuleFor(i => i.Username, f => f.Name.FirstName())
-                .RuleFor(i => i.Password, f => Guid.NewGuid().ToString())
-                .RuleFor(i => i.RememberMe, f => f.PickRandom(true, false))
-                .FinishWith((faker, login) => Items.Add(login)).Generate(500);
-
             RouteConfig.Title = "Crud examples";
             RouteConfig.Icon = PackIconKind.Table;
         }

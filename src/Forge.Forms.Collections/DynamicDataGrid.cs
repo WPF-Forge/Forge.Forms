@@ -4,9 +4,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Input;
+using Forge.Forms.Annotations;
 using Forge.Forms.DynamicExpressions;
 using Forge.Forms.FormBuilding;
 using Forge.Forms.FormBuilding.Defaults;
@@ -68,54 +68,78 @@ namespace Forge.Forms.Collections
             set => SetValue(CreateDialogNegativeIconProperty, value);
         }
 
-        public static readonly DependencyProperty EditDialogPositiveContentProperty = DependencyProperty.Register(
-            nameof(EditDialogPositiveContent),
+        public static readonly DependencyProperty UpdateDialogPositiveContentProperty = DependencyProperty.Register(
+            nameof(UpdateDialogPositiveContent),
             typeof(string),
             typeof(DynamicDataGrid),
             new FrameworkPropertyMetadata("SAVE"));
 
-        public string EditDialogPositiveContent
+        public string UpdateDialogPositiveContent
         {
-            get => (string)GetValue(EditDialogPositiveContentProperty);
-            set => SetValue(EditDialogPositiveContentProperty, value);
+            get => (string)GetValue(UpdateDialogPositiveContentProperty);
+            set => SetValue(UpdateDialogPositiveContentProperty, value);
         }
 
-        public static readonly DependencyProperty EditDialogPositiveIconProperty =
+        public static readonly DependencyProperty UpdateDialogPositiveIconProperty =
             DependencyProperty.Register(
-                nameof(EditDialogPositiveIcon),
+                nameof(UpdateDialogPositiveIcon),
                 typeof(PackIconKind?),
                 typeof(DynamicDataGrid),
                 new FrameworkPropertyMetadata(PackIconKind.Check));
 
-        public PackIconKind? EditDialogPositiveIcon
+        public PackIconKind? UpdateDialogPositiveIcon
         {
-            get => (PackIconKind)GetValue(EditDialogPositiveIconProperty);
-            set => SetValue(EditDialogPositiveIconProperty, value);
+            get => (PackIconKind)GetValue(UpdateDialogPositiveIconProperty);
+            set => SetValue(UpdateDialogPositiveIconProperty, value);
         }
 
-        public static readonly DependencyProperty EditDialogNegativeContentProperty = DependencyProperty.Register(
-            nameof(EditDialogNegativeContent),
+        public static readonly DependencyProperty UpdateDialogNegativeContentProperty = DependencyProperty.Register(
+            nameof(UpdateDialogNegativeContent),
             typeof(string),
             typeof(DynamicDataGrid),
             new FrameworkPropertyMetadata("CANCEL"));
 
-        public string EditDialogNegativeContent
+        public string UpdateDialogNegativeContent
         {
-            get => (string)GetValue(EditDialogNegativeContentProperty);
-            set => SetValue(EditDialogNegativeContentProperty, value);
+            get => (string)GetValue(UpdateDialogNegativeContentProperty);
+            set => SetValue(UpdateDialogNegativeContentProperty, value);
         }
 
-        public static readonly DependencyProperty EditDialogNegativeIconProperty =
+        public static readonly DependencyProperty UpdateDialogNegativeIconProperty =
             DependencyProperty.Register(
-                nameof(EditDialogNegativeIcon),
+                nameof(UpdateDialogNegativeIcon),
                 typeof(PackIconKind?),
                 typeof(DynamicDataGrid),
                 new FrameworkPropertyMetadata(PackIconKind.Close));
 
-        public PackIconKind? EditDialogNegativeIcon
+        public PackIconKind? UpdateDialogNegativeIcon
         {
-            get => (PackIconKind)GetValue(EditDialogNegativeIconProperty);
-            set => SetValue(EditDialogNegativeIconProperty, value);
+            get => (PackIconKind)GetValue(UpdateDialogNegativeIconProperty);
+            set => SetValue(UpdateDialogNegativeIconProperty, value);
+        }
+
+        public static readonly DependencyProperty RemoveDialogTitleContentProperty = DependencyProperty.Register(
+            nameof(RemoveDialogTitleContent),
+            typeof(string),
+            typeof(DynamicDataGrid),
+            new FrameworkPropertyMetadata());
+
+        public string RemoveDialogTitleContent
+        {
+            get => (string)GetValue(RemoveDialogTitleContentProperty);
+            set => SetValue(RemoveDialogTitleContentProperty, value);
+        }
+
+        public static readonly DependencyProperty RemoveDialogTextContentProperty = DependencyProperty.Register(
+            nameof(RemoveDialogTextContent),
+            typeof(string),
+            typeof(DynamicDataGrid),
+            new FrameworkPropertyMetadata("Remove item?"));
+
+        public string RemoveDialogTextContent
+        {
+            get => (string)GetValue(RemoveDialogTextContentProperty);
+            set => SetValue(RemoveDialogTextContentProperty, value);
         }
 
         public static readonly DependencyProperty RemoveDialogPositiveContentProperty = DependencyProperty.Register(
@@ -186,12 +210,30 @@ namespace Forge.Forms.Collections
                 nameof(DialogOptions),
                 typeof(DialogOptions),
                 typeof(DynamicDataGrid),
-                new FrameworkPropertyMetadata(DialogOptions.Default));
+                new FrameworkPropertyMetadata(DialogOptions.Default, ItemsSourceChanged));
+
+        private static void ItemsSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            ((DynamicDataGrid)d).OnItemsSource(e.NewValue);
+        }
 
         public DialogOptions DialogOptions
         {
             get => (DialogOptions)GetValue(DialogOptionsProperty);
             set => SetValue(DialogOptionsProperty, value);
+        }
+
+        public static readonly DependencyProperty FormBuilderProperty =
+            DependencyProperty.Register(
+                nameof(FormBuilder),
+                typeof(IFormBuilder),
+                typeof(DynamicDataGrid),
+                new FrameworkPropertyMetadata(FormBuilding.FormBuilder.Default));
+
+        public IFormBuilder FormBuilder
+        {
+            get => (IFormBuilder)GetValue(FormBuilderProperty);
+            set => SetValue(FormBuilderProperty, value);
         }
 
         public static readonly DependencyProperty TargetDialogIdentifierProperty =
@@ -207,61 +249,20 @@ namespace Forge.Forms.Collections
             set => SetValue(TargetDialogIdentifierProperty, value);
         }
 
+        #region Collection helpers
+
         private static readonly Dictionary<Type, Action<object, object>> AddItemCache =
             new Dictionary<Type, Action<object, object>>();
 
-        public static RoutedCommand AddItemCommand = new RoutedCommand();
-        public static RoutedCommand EditItemCommand = new RoutedCommand();
-        public static RoutedCommand RemoveItemCommand = new RoutedCommand();
+        private static readonly Dictionary<Type, Action<object, object>> RemoveItemCache =
+            new Dictionary<Type, Action<object, object>>();
 
-        public DynamicDataGrid()
-        {
-            CommandBindings.Add(new CommandBinding(AddItemCommand, ExecuteAddItem, CanExecuteAddItem));
-            CommandBindings.Add(new CommandBinding(EditItemCommand, ExecuteEditItem, CanExecuteEditItem));
-            CommandBindings.Add(new CommandBinding(AddItemCommand, ExecuteDeleteItem, CanExecuteDeleteItem));
-        }
-
-        private void ExecuteAddItem(object sender, ExecutedRoutedEventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
-        private void CanExecuteAddItem(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = ItemsSource != null;
-        }
-
-        private void ExecuteEditItem(object sender, ExecutedRoutedEventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
-        private void CanExecuteEditItem(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = ItemsSource != null;
-        }
-
-        private void ExecuteDeleteItem(object sender, ExecutedRoutedEventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
-        private void CanExecuteDeleteItem(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = ItemsSource != null;
-        }
-
-        private void RefreshItemsView()
-        {
-            throw new NotImplementedException();
-        }
-
-        private static void AddItem(Type itemType, object collection, object item)
+        private static void AddItemToCollection(Type itemType, object collection, object item)
         {
             if (!AddItemCache.TryGetValue(itemType, out var action))
             {
                 var collectionType = typeof(ICollection<>).MakeGenericType(itemType);
-                var addMethod = collectionType.GetMethod("Add");
+                var addMethod = collectionType.GetMethod("Add") ?? throw new InvalidOperationException("This should not happen.");
                 var collectionParam = Expression.Parameter(typeof(object), "collection");
                 var itemParam = Expression.Parameter(typeof(object), "item");
                 var lambda = Expression.Lambda<Action<object, object>>(
@@ -280,11 +281,53 @@ namespace Forge.Forms.Collections
             action(collection, item);
         }
 
-        private async Task AddNewItem(object collection, IModelInputProvider input, Type subType)
+        private static void RemoveItemFromCollection(Type itemType, object collection, object item)
         {
+            if (!RemoveItemCache.TryGetValue(itemType, out var action))
+            {
+                var collectionType = typeof(ICollection<>).MakeGenericType(itemType);
+                var removeMethod = collectionType.GetMethod("Remove") ?? throw new InvalidOperationException("This should not happen.");
+                var collectionParam = Expression.Parameter(typeof(object), "collection");
+                var itemParam = Expression.Parameter(typeof(object), "item");
+                var lambda = Expression.Lambda<Action<object, object>>(
+                    Expression.Call(
+                        Expression.Convert(collectionParam, collectionType),
+                        removeMethod,
+                        Expression.Convert(itemParam, itemType)),
+                    collectionParam,
+                    itemParam
+                );
+
+                action = lambda.Compile();
+                RemoveItemCache[itemType] = action;
+            }
+
+            action(collection, item);
+        }
+
+        #endregion
+
+        public static readonly RoutedCommand CreateItemCommand = new RoutedCommand();
+        public static readonly RoutedCommand UpdateItemCommand = new RoutedCommand();
+        public static readonly RoutedCommand RemoveItemCommand = new RoutedCommand();
+
+        public DynamicDataGrid()
+        {
+            CommandBindings.Add(new CommandBinding(CreateItemCommand, ExecuteCreateItem, CanExecuteCreateItem));
+            CommandBindings.Add(new CommandBinding(UpdateItemCommand, ExecuteUpdateItem, CanExecuteUpdateItem));
+            CommandBindings.Add(new CommandBinding(RemoveItemCommand, ExecuteRemoveItem, CanExecuteRemoveItem));
+        }
+
+        private Type itemType;
+        private bool canMutate;
+
+        private void OnItemsSource(object collection)
+        {
+            itemType = null;
             if (collection == null)
             {
-                throw new ArgumentNullException(nameof(collection));
+                canMutate = false;
+                return;
             }
 
             var interfaces = collection
@@ -295,45 +338,186 @@ namespace Forge.Forms.Collections
                     t.GetGenericTypeDefinition() == typeof(ICollection<>))
                 .ToList();
 
-            if (interfaces.Count > 1)
+            if (interfaces.Count > 1 || interfaces.Count == 0)
             {
-                throw new InvalidOperationException("Multiple implementations of ICollection<T> found.");
-            }
-
-            if (interfaces.Count == 0)
-            {
-                throw new InvalidOperationException("No implementation of ICollection<T> found.");
+                canMutate = false;
+                return;
             }
 
             var collectionType = interfaces[0];
-            var itemType = collectionType.GetGenericArguments()[0];
-            object item;
-            if (subType != null)
-            {
-                if (!itemType.IsAssignableFrom(subType))
-                {
-                    throw new InvalidOperationException($"Type {subType} cannot be assigned to {itemType}");
-                }
+            itemType = collectionType.GetGenericArguments()[0];
+            canMutate = itemType.GetConstructor(Type.EmptyTypes) != null;
+        }
 
-                item = Activator.CreateInstance(subType);
-            }
-            else
-            {
-                item = Activator.CreateInstance(itemType);
-            }
-
-            var positive = await input.ShowDialog(item);
-            if (!positive)
+        private async void ExecuteCreateItem(object sender, ExecutedRoutedEventArgs e)
+        {
+            if (!canMutate)
             {
                 return;
             }
 
-            AddItem(itemType, collection, item);
-            if (!(collection is INotifyCollectionChanged))
+            var collection = ItemsSource;
+            DialogResult result;
+            var definition = GetCreateDefinition();
+            try
             {
-                RefreshItemsView();
+                result = await Show.Dialog(TargetDialogIdentifier, DialogOptions).For(definition);
+            }
+            catch
+            {
+                return;
+            }
+
+            if (result.Action is "DynamicDataGrid_CreateDialogPositive")
+            {
+                AddItemToCollection(itemType, collection, result.Model);
+                if (!(collection is INotifyCollectionChanged))
+                {
+                    RefreshItemsView();
+                }
             }
         }
+
+        private void CanExecuteCreateItem(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = canMutate;
+        }
+
+        private async void ExecuteUpdateItem(object sender, ExecutedRoutedEventArgs e)
+        {
+            var model = e.Parameter;
+            if (!canMutate || model == null || !itemType.IsInstanceOfType(model))
+            {
+                return;
+            }
+
+            DialogResult result;
+            var definition = GetUpdateDefinition(model);
+            try
+            {
+                result = await Show
+                    .Dialog(TargetDialogIdentifier, DialogOptions)
+                    .For((IFormDefinition)definition);
+            }
+            catch
+            {
+                return;
+            }
+
+            if (result.Action is "DynamicDataGrid_UpdateDialogNegative")
+            {
+                definition.Snapshot.Apply(model);
+            }
+        }
+
+        private void CanExecuteUpdateItem(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = canMutate && e.Parameter != null && itemType.IsInstanceOfType(e.Parameter);
+        }
+
+        private async void ExecuteRemoveItem(object sender, ExecutedRoutedEventArgs e)
+        {
+            if (!canMutate || e.Parameter == null)
+            {
+                return;
+            }
+
+            try
+            {
+                var result = await Show
+                    .Dialog(TargetDialogIdentifier, DialogOptions)
+                    .For(new Confirmation(
+                        RemoveDialogTextContent,
+                        RemoveDialogTitleContent,
+                        RemoveDialogPositiveContent,
+                        RemoveDialogNegativeContent
+                    )
+                    {
+                        PositiveActionIcon = RemoveDialogPositiveIcon,
+                        NegativeActionIcon = RemoveDialogNegativeIcon
+                    });
+
+                if (result.Action is "positive")
+                {
+                    RemoveItemFromCollection(itemType, ItemsSource, e.Parameter);
+                }
+            }
+            catch
+            {
+                return;
+            }
+        }
+
+        private void CanExecuteRemoveItem(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = canMutate && e.Parameter != null;
+        }
+
+        private void RefreshItemsView()
+        {
+            throw new NotImplementedException();
+        }
+
+        private IFormDefinition GetCreateDefinition()
+        {
+            throw new NotImplementedException();
+        }
+
+        private UpdateFormDefinition GetUpdateDefinition(object model)
+        {
+            throw new NotImplementedException();
+        }
+
+        //private async Task AddNewItem(object collection, IModelInputProvider input, Type subType)
+        //{
+        //    if (collection == null)
+        //    {
+        //        throw new ArgumentNullException(nameof(collection));
+        //    }
+
+        //    var interfaces = collection
+        //        .GetType()
+        //        .GetInterfaces()
+        //        .Where(t =>
+        //            t.IsGenericType &&
+        //            t.GetGenericTypeDefinition() == typeof(ICollection<>))
+        //        .ToList();
+
+        //    if (interfaces.Count > 1)
+        //    {
+        //        throw new InvalidOperationException("Multiple implementations of ICollection<T> found.");
+        //    }
+
+        //    if (interfaces.Count == 0)
+        //    {
+        //        throw new InvalidOperationException("No implementation of ICollection<T> found.");
+        //    }
+
+        //    var collectionType = interfaces[0];
+        //    var itemType = collectionType.GetGenericArguments()[0];
+        //    object item;
+        //    if (subType != null)
+        //    {
+        //        if (!itemType.IsAssignableFrom(subType))
+        //        {
+        //            throw new InvalidOperationException($"Type {subType} cannot be assigned to {itemType}");
+        //        }
+
+        //        item = Activator.CreateInstance(subType);
+        //    }
+        //    else
+        //    {
+        //        item = Activator.CreateInstance(itemType);
+        //    }
+
+        //    var positive = await input.ShowDialog(item);
+        //    if (!positive)
+        //    {
+        //        return;
+        //    }
+
+        //    AddItem(itemType, collection, item);
+        //}
 
         private FormRow GetCreateActions(IFormDefinition formDefinition)
         {
@@ -374,16 +558,9 @@ namespace Forge.Forms.Collections
             params FormRow[] rows)
         {
             return new FormDefinitionWrapper(
-                formDefinition.FormRows.Concat(rows ?? new FormRow[0]).ToList().AsReadOnly(),
-                formDefinition.Grid,
-                formDefinition.ModelType,
-                formDefinition.Resources);
+                formDefinition,
+                formDefinition.FormRows.Concat(rows ?? new FormRow[0]).ToList().AsReadOnly());
         }
-    }
-
-    public interface IModelInputProvider
-    {
-        Task<bool> ShowDialog(object model);
     }
 
     internal class ActionInterceptor : IActionInterceptor
@@ -404,26 +581,69 @@ namespace Forge.Forms.Collections
 
     internal class FormDefinitionWrapper : IFormDefinition
     {
-        public FormDefinitionWrapper(IReadOnlyList<FormRow> formRows, double[] grid, Type modelType,
-            IDictionary<string, IValueProvider> resources)
+        private readonly IFormDefinition inner;
+
+        public FormDefinitionWrapper(IFormDefinition inner, IReadOnlyList<FormRow> formRows)
         {
+            this.inner = inner;
             FormRows = formRows;
-            Grid = grid;
-            ModelType = modelType;
-            Resources = resources;
         }
 
         public IReadOnlyList<FormRow> FormRows { get; }
 
-        public double[] Grid { get; set; }
+        public double[] Grid
+        {
+            get => inner.Grid;
+            set => inner.Grid = value;
+        }
 
-        public Type ModelType { get; }
+        public Type ModelType => inner.ModelType;
 
-        public IDictionary<string, IValueProvider> Resources { get; }
+        public IDictionary<string, IValueProvider> Resources => inner.Resources;
 
         public object CreateInstance(IResourceContext context)
         {
-            throw new NotImplementedException();
+            return inner.CreateInstance(context);
+        }
+    }
+
+    internal class UpdateFormDefinition : IFormDefinition
+    {
+        private readonly IFormDefinition inner;
+
+        public UpdateFormDefinition(
+            IFormDefinition inner,
+            object model,
+            IReadOnlyList<FormRow> formRows)
+        {
+            this.inner = inner;
+            FormRows = formRows;
+            Model = model;
+            Snapshot = new Snapshot(model, new HashSet<string>(formRows
+                .SelectMany(r => r.Elements.SelectMany(e => e.Elements))
+                .Where(e => e is DataFormField)
+                .Select(f => ((DataFormField)f).Key)));
+        }
+
+        public object Model { get; }
+
+        public Snapshot Snapshot { get; }
+
+        public IReadOnlyList<FormRow> FormRows { get; }
+
+        public double[] Grid
+        {
+            get => inner.Grid;
+            set => inner.Grid = value;
+        }
+
+        public Type ModelType => inner.ModelType;
+
+        public IDictionary<string, IValueProvider> Resources => inner.Resources;
+
+        public object CreateInstance(IResourceContext context)
+        {
+            return Model;
         }
     }
 }
