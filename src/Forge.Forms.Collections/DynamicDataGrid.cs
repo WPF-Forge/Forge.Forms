@@ -591,11 +591,7 @@ namespace Forge.Forms.Collections
 
         public IReadOnlyList<FormRow> FormRows { get; }
 
-        public double[] Grid
-        {
-            get => inner.Grid;
-            set => inner.Grid = value;
-        }
+        public double[] Grid => inner.Grid;
 
         public Type ModelType => inner.ModelType;
 
@@ -631,11 +627,7 @@ namespace Forge.Forms.Collections
 
         public IReadOnlyList<FormRow> FormRows { get; }
 
-        public double[] Grid
-        {
-            get => inner.Grid;
-            set => inner.Grid = value;
-        }
+        public double[] Grid => inner.Grid;
 
         public Type ModelType => inner.ModelType;
 
