@@ -31,6 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="FastDeepCloner">
+      <Version>1.0.25</Version>
+    </PackageReference>
     <PackageReference Include="FastMember" Version="1.1.0" />
     <PackageReference Include="Humanizer.Core" Version="2.2.0" />
     <PackageReference Include="MahApps.Metro" Version="1.5.0" />
@@ -91,6 +94,7 @@
     <Compile Include="Extensions\PropertyInfoExtensions.cs" />
     <Compile Include="Extensions\PropertyWrapper.cs" />
     <Compile Include="IModelInterceptor.cs" />
+    <Compile Include="Snapshot.cs" />
     <Compile Include="WindowOptions.cs" />
     <Compile Include="DialogOptions.cs" />
     <Compile Include="Controls\DialogWindow.xaml.cs">

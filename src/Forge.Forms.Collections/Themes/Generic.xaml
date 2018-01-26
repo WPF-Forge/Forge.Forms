@@ -4,7 +4,7 @@
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes">
 
     <DataTemplate x:Key="ButtonCrud">
-        <Button Command="{Binding AddItemCommand}">
+        <Button Name="PART_CrudEditButton">
             Hello
         </Button>
     </DataTemplate>
