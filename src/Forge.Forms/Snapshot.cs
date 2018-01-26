@@ -2,10 +2,54 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using FastMember;
 
 namespace Forge.Forms
 {
+    /// <inheritdoc />
+    /// <summary>
+    ///     Generic version of snapshot
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <seealso cref="T:Forge.Forms.Snapshot" />
+    public class Snapshot<T> : Snapshot
+    {
+        /// <summary>
+        /// Gets the object.
+        /// </summary>
+        /// <value>
+        /// The object.
+        /// </value>
+        public new T Object
+        {
+            get
+            {
+                var obj = ((Snapshot) this).Object;
+                if (!(obj is IList objList)) return (T) obj;
+                var method = typeof(Enumerable).GetMethod("OfType");
+                if (method == null) return (T) obj;
+
+                var result = (IEnumerable<object>) method.MakeGenericMethod(EnumerableType).Invoke
+                    (null, new object[] {objList});
+
+                if (!(Activator.CreateInstance(typeof(T)) is IList newList))
+                    return (T)obj;
+
+                foreach (var o in result.ToArray())
+                {
+                    newList.Add(o);
+                }
+
+                return (T) newList;
+            }
+        }
+
+        /// <inheritdoc />
+        public Snapshot(T o) : base(o)
+        {
+        }
+    }
+
+
     /// <summary>
     ///     Stores an object in its current state
     /// </summary>
@@ -31,6 +75,14 @@ namespace Forge.Forms
         public Type SnapshotType => Object.GetType();
 
         /// <summary>
+        /// Gets the type of the enumerable. Null if the object is not a enumerable.
+        /// </summary>
+        /// <value>
+        /// The type of the enumerable.
+        /// </value>
+        public Type EnumerableType { get; private set; }
+
+        /// <summary>
         ///     Gets the object.
         /// </summary>
         /// <value>
@@ -40,41 +92,33 @@ namespace Forge.Forms
 
         private List<object> CreateSnapshot(IEnumerable o, Type enumerableType)
         {
-            return o.OfType<object>().Select(i => CreateSnapshot(i, enumerableType)).ToList();
+            return o.OfType<object>().Select(CreateSnapshot).ToList();
         }
 
         private object CreateSnapshot(object o)
         {
-            return CreateSnapshot(o, SnapshotType);
-        }
-
-        private object CreateSnapshot(object o, Type type)
-        {
             if (o is IEnumerable enumerable)
             {
-                var genericArguments = o.GetType().GetGenericArguments();
+                var genericArguments = GetEnumerableGenericArguments(o);
 
                 if (genericArguments.Length <= 0)
                     throw new Exception($"Couldnt determine the type of an enumerable. {enumerable}");
 
-                var enumerableType = genericArguments.First();
-                return CreateSnapshot(enumerable, enumerableType);
+                EnumerableType = genericArguments.First();
+                return CreateSnapshot(enumerable, EnumerableType);
             }
 
-            var objectClone = Activator.CreateInstance(type);
-            var accessor = TypeAccessor.Create(type);
+            return FastDeepCloner.DeepCloner.Clone(o);
+        }
 
-            foreach (var member in accessor.GetMembers())
-                try
-                {
-                    accessor[objectClone, member.Name] = accessor[o, member.Name];
-                }
-                catch
-                {
-                    // ignored
-                }
-
-            return objectClone;
+        /// <summary>
+        /// Gets the enumerable generic arguments.
+        /// </summary>
+        /// <param name="o">The o.</param>
+        /// <returns></returns>
+        public static Type[] GetEnumerableGenericArguments(object o)
+        {
+            return o.GetType().GetGenericArguments();
         }
 
         /// <summary>
