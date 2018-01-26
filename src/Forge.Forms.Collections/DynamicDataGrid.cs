@@ -6,7 +6,6 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Input;
-using Forge.Forms.Annotations;
 using Forge.Forms.DynamicExpressions;
 using Forge.Forms.FormBuilding;
 using Forge.Forms.FormBuilding.Defaults;
@@ -17,12 +16,14 @@ namespace Forge.Forms.Collections
 {
     public class DynamicDataGrid : Control
     {
+        #region Dependency properties
+
         public static readonly DependencyProperty CreateDialogPositiveContentProperty =
             DependencyProperty.Register(
                 nameof(CreateDialogPositiveContent),
                 typeof(string),
                 typeof(DynamicDataGrid),
-                new FrameworkPropertyMetadata("ADD"));
+                new FrameworkPropertyMetadata("OK"));
 
         public string CreateDialogPositiveContent
         {
@@ -72,7 +73,7 @@ namespace Forge.Forms.Collections
             nameof(UpdateDialogPositiveContent),
             typeof(string),
             typeof(DynamicDataGrid),
-            new FrameworkPropertyMetadata("SAVE"));
+            new FrameworkPropertyMetadata("OK"));
 
         public string UpdateDialogPositiveContent
         {
@@ -249,6 +250,8 @@ namespace Forge.Forms.Collections
             set => SetValue(TargetDialogIdentifierProperty, value);
         }
 
+        #endregion
+
         #region Collection helpers
 
         private static readonly Dictionary<Type, Action<object, object>> AddItemCache =
@@ -312,6 +315,12 @@ namespace Forge.Forms.Collections
         public static readonly RoutedCommand CreateItemCommand = new RoutedCommand();
         public static readonly RoutedCommand UpdateItemCommand = new RoutedCommand();
         public static readonly RoutedCommand RemoveItemCommand = new RoutedCommand();
+
+        static DynamicDataGrid()
+        {
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(DynamicDataGrid),
+                new FrameworkPropertyMetadata(typeof(DynamicDataGrid)));
+        }
 
         public DynamicDataGrid()
         {
@@ -564,7 +573,6 @@ namespace Forge.Forms.Collections
         {
             this.onAction = onAction ?? throw new ArgumentNullException(nameof(onAction));
         }
-
 
         public IActionContext InterceptAction(IActionContext actionContext)
         {
