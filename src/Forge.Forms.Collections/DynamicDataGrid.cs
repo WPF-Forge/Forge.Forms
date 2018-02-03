@@ -259,9 +259,6 @@ namespace Forge.Forms.Collections
         private static readonly Dictionary<Type, Action<object, object>> AddItemCache =
             new Dictionary<Type, Action<object, object>>();
 
-        private static readonly Dictionary<Type, Action<object, object>> RemoveItemCache =
-            new Dictionary<Type, Action<object, object>>();
-
         private static void AddItemToCollection(Type itemType, object collection, object item)
         {
             if (!AddItemCache.TryGetValue(itemType, out var action))
@@ -289,27 +286,13 @@ namespace Forge.Forms.Collections
 
         private static void RemoveItemFromCollection(Type itemType, object collection, object item)
         {
-            if (!RemoveItemCache.TryGetValue(itemType, out var action))
+            var collectionType = collection.GetType();
+            var removeFromCollection = collectionType.GetMethod("Remove");
+
+            if (removeFromCollection != null)
             {
-                var collectionType = typeof(ICollection<>).MakeGenericType(itemType);
-                var removeMethod = collectionType.GetMethod("Remove") ??
-                                   throw new InvalidOperationException("This should not happen.");
-                var collectionParam = Expression.Parameter(typeof(object), "collection");
-                var itemParam = Expression.Parameter(typeof(object), "item");
-                var lambda = Expression.Lambda<Action<object, object>>(
-                    Expression.Call(
-                        Expression.Convert(collectionParam, collectionType),
-                        removeMethod,
-                        Expression.Convert(itemParam, itemType)),
-                    collectionParam,
-                    itemParam
-                );
-
-                action = lambda.Compile();
-                RemoveItemCache[itemType] = action;
+                removeFromCollection.Invoke(collection, new[] { item });
             }
-
-            action(collection, item);
         }
 
         #endregion
