@@ -153,7 +153,11 @@ namespace Forge.Forms.FormBuilding.Defaults
             }
 
             var modelContext = context.GetContextInstance();
-            IActionContext actionContext = new ActionContext(model, modelContext, action.Value, actionParameter.Value);
+            IActionContext actionContext = new ActionContext(model, 
+                modelContext,
+                action.Value, 
+                actionParameter.Value,
+                context);
             foreach (var globalInterceptor in ActionElement.InterceptorChain)
             {
                 actionContext = globalInterceptor.InterceptAction(actionContext);
