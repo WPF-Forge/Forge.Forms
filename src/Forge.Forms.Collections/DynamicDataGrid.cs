@@ -5,11 +5,15 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Reflection;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
+using System.Windows.Data;
 using System.Windows.Input;
 using Forge.Forms.DynamicExpressions;
 using Forge.Forms.FormBuilding;
 using Forge.Forms.FormBuilding.Defaults;
+using Humanizer;
 using MaterialDesignThemes.Wpf;
 using Expression = System.Linq.Expressions.Expression;
 
@@ -316,17 +320,48 @@ namespace Forge.Forms.Collections
         }
 
         private DataGrid dataGrid;
-        private Type itemType;
+
+
+        private List<DataGridColumn> ProtectedColumns { get; set; }
+
+        private Type ItemType
+        {
+            get { return itemType; }
+            set
+            {
+                itemType = value;
+                if (dataGrid != null && itemType != null)
+                {
+                    foreach (var dataGridColumn in dataGrid.Columns.Except(ProtectedColumns))
+                    {
+                        dataGrid.Columns.Remove(dataGridColumn);
+                    }
+
+                    foreach (var propertyInfo in ItemType.GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                        .Reverse())
+                    {
+                        dataGrid.Columns.Insert(0, new DataGridTextColumn
+                        {
+                            Header = propertyInfo.Name.Humanize(),
+                            Binding = new Binding(propertyInfo.Name)
+                        });
+                    }
+                }
+            }
+        }
+
         private bool canMutate;
+        private Type itemType;
 
         public override void OnApplyTemplate()
         {
             dataGrid = Template.FindName("PART_DataGrid", this) as DataGrid;
+            ProtectedColumns = dataGrid?.Columns.ToList();
         }
 
         private void OnItemsSource(object collection)
         {
-            itemType = null;
+            ItemType = null;
             if (collection == null)
             {
                 canMutate = false;
@@ -348,8 +383,8 @@ namespace Forge.Forms.Collections
             }
 
             var collectionType = interfaces[0];
-            itemType = collectionType.GetGenericArguments()[0];
-            canMutate = itemType.GetConstructor(Type.EmptyTypes) != null;
+            ItemType = collectionType.GetGenericArguments()[0];
+            canMutate = ItemType.GetConstructor(Type.EmptyTypes) != null;
         }
 
         private async void ExecuteCreateItem(object sender, ExecutedRoutedEventArgs e)
@@ -376,12 +411,12 @@ namespace Forge.Forms.Collections
                 if (!(collection is INotifyCollectionChanged) && dataGrid != null)
                 {
                     ItemsSource = null;
-                    AddItemToCollection(itemType, collection, result.Model);
+                    AddItemToCollection(ItemType, collection, result.Model);
                     ItemsSource = collection;
                 }
                 else
                 {
-                    AddItemToCollection(itemType, collection, result.Model);
+                    AddItemToCollection(ItemType, collection, result.Model);
                 }
             }
         }
@@ -394,7 +429,7 @@ namespace Forge.Forms.Collections
         private async void ExecuteUpdateItem(object sender, ExecutedRoutedEventArgs e)
         {
             var model = e.Parameter;
-            if (!canMutate || model == null || !itemType.IsInstanceOfType(model))
+            if (!canMutate || model == null || !ItemType.IsInstanceOfType(model))
             {
                 return;
             }
@@ -420,13 +455,13 @@ namespace Forge.Forms.Collections
 
         private void CanExecuteUpdateItem(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = canMutate && e.Parameter != null && itemType.IsInstanceOfType(e.Parameter);
+            e.CanExecute = canMutate && e.Parameter != null && ItemType.IsInstanceOfType(e.Parameter);
         }
 
         private async void ExecuteRemoveItem(object sender, ExecutedRoutedEventArgs e)
         {
             var model = e.Parameter;
-            if (!canMutate || model == null || !itemType.IsInstanceOfType(model))
+            if (!canMutate || model == null || !ItemType.IsInstanceOfType(model))
             {
                 return;
             }
@@ -452,12 +487,12 @@ namespace Forge.Forms.Collections
                     if (!(collection is INotifyCollectionChanged) && dataGrid != null)
                     {
                         ItemsSource = null;
-                        RemoveItemFromCollection(itemType, collection, result.Model);
+                        RemoveItemFromCollection(ItemType, collection, model);
                         ItemsSource = collection;
                     }
                     else
                     {
-                        RemoveItemFromCollection(itemType, collection, result.Model);
+                        RemoveItemFromCollection(ItemType, collection, model);
                     }
                 }
             }
@@ -469,12 +504,12 @@ namespace Forge.Forms.Collections
 
         private void CanExecuteRemoveItem(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = canMutate && e.Parameter != null && itemType.IsInstanceOfType(e.Parameter);
+            e.CanExecute = canMutate && e.Parameter != null && ItemType.IsInstanceOfType(e.Parameter);
         }
 
         private IFormDefinition GetCreateDefinition()
         {
-            var formDefinition = FormBuilder.GetDefinition(itemType);
+            var formDefinition = FormBuilder.GetDefinition(ItemType);
             return AddRows(formDefinition, new FormRow(true, 1)
             {
                 Elements =
@@ -490,7 +525,7 @@ namespace Forge.Forms.Collections
 
         private UpdateFormDefinition GetUpdateDefinition(object model)
         {
-            var formDefinition = FormBuilder.GetDefinition(itemType);
+            var formDefinition = FormBuilder.GetDefinition(ItemType);
             return new UpdateFormDefinition(
                 formDefinition,
                 model,

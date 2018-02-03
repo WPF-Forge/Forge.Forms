@@ -9,14 +9,37 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition />
             </Grid.RowDefinitions>
+
             <Button
                 Grid.Row="0"
                 Command="{x:Static collections:DynamicDataGrid.CreateItemCommand}"
                 Content="ADD NEW ITEM" />
+
             <DataGrid
-                Name="PART_DataGrid"
-                Grid.Row="1"
-                ItemsSource="{TemplateBinding ItemsSource}" />
+                Name="PART_DataGrid" AutoGenerateColumns="False"
+                Grid.Row="1" CanUserAddRows="False"
+                ItemsSource="{TemplateBinding ItemsSource}">
+                <DataGrid.Columns>
+                    <DataGridTemplateColumn>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Content="EDIT"
+                                        Command="{x:Static collections:DynamicDataGrid.UpdateItemCommand}"
+                                        CommandParameter="{Binding}" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Content="REMOVE"
+                                        Command="{x:Static collections:DynamicDataGrid.RemoveItemCommand}"
+                                        CommandParameter="{Binding}" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
         </Grid>
     </ControlTemplate>
 
