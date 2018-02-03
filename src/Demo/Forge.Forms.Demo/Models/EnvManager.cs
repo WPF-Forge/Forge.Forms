@@ -19,6 +19,7 @@ namespace Forge.Forms.Demo.Models
         [Text("Env 'create'", IsVisible = "{Env CREATE}")] // Env keys are case insensitive.
         [Text("Env 'update'", IsVisible = "{Env Update}")]
         [Text("Env 'delete'", IsVisible = "{Env delete}")]
+        [Text("All envs", IsVisible = "{Env CREATE} && {Env UPDATE} && {Env DELETE}")]
 
         [Break]
 
