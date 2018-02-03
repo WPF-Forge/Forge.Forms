@@ -507,6 +507,9 @@ namespace Forge.Forms.DynamicExpressions
                 case "ContextProperty":
                     resource = new ContextPropertyBinding(key, true, converter);
                     break;
+                case "Env":
+                    resource = new EnvironmentBinding(key, oneTimeBind, converter);
+                    break;
                 case "FileBinding":
                     resource = new FileBinding(key, true, converter);
                     break;

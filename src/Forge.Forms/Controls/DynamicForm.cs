@@ -73,6 +73,7 @@ namespace Forge.Forms.Controls
             currentElements = new List<FrameworkElement>();
             DataFields = new Dictionary<string, DataFormField>();
             DataBindingProviders = new Dictionary<string, IDataBindingProvider>();
+            Environment = new FormEnvironment();
             BindingOperations.SetBinding(this, ContextProperty, new Binding
             {
                 Source = this,
@@ -83,6 +84,11 @@ namespace Forge.Forms.Controls
             Loaded += (s, e) => { ActiveForms.Add(this); };
             Unloaded += (s, e) => { ActiveForms.Remove(this); };
         }
+
+        /// <summary>
+        /// Returns the environment flags for this control.
+        /// </summary>
+        public IEnvironment Environment { get; }
 
         /// <summary>
         /// Gets or sets the form builder that is responsible for building forms.
