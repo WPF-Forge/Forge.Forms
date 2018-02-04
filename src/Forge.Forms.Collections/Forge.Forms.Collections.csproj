@@ -43,9 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Annotations\CrudAttribute.cs" />
-    <Compile Include="Controls\CrudControl.cs" />
     <Compile Include="DynamicDataGrid.cs" />
-    <Compile Include="Controls\RelayCommand.cs" />
     <Compile Include="GridField.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
