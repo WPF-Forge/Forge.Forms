@@ -5,19 +5,9 @@
 
     <ControlTemplate x:Key="DynamicDataGridTemplate" TargetType="{x:Type collections:DynamicDataGrid}">
         <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition />
-            </Grid.RowDefinitions>
-
-            <Button
-                Grid.Row="0"
-                Command="{x:Static collections:DynamicDataGrid.CreateItemCommand}"
-                Content="ADD NEW ITEM" />
-
             <DataGrid
                 Name="PART_DataGrid" AutoGenerateColumns="False"
-                Grid.Row="1" CanUserAddRows="False"
+                CanUserAddRows="False"
                 ItemsSource="{TemplateBinding ItemsSource}">
                 <DataGrid.Columns>
                     <DataGridTemplateColumn>
@@ -40,6 +30,11 @@
                     </DataGridTemplateColumn>
                 </DataGrid.Columns>
             </DataGrid>
+            
+            <Button VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,10,10"
+                    Command="{x:Static collections:DynamicDataGrid.CreateItemCommand}"
+                    Content="ADD NEW ITEM" />
+
         </Grid>
     </ControlTemplate>
 
