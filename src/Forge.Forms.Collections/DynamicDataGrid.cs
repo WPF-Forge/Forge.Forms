@@ -1,5 +1,4 @@
 ﻿using System;
-using System.CodeDom;
 using System.Windows;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,9 +6,10 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Input;
+using Forge.Forms.Annotations;
+using Forge.Forms.Collections.Interfaces;
 using Forge.Forms.DynamicExpressions;
 using Forge.Forms.FormBuilding;
 using Forge.Forms.FormBuilding.Defaults;
@@ -33,7 +33,7 @@ namespace Forge.Forms.Collections
 
         public string CreateDialogPositiveContent
         {
-            get => (string)GetValue(CreateDialogPositiveContentProperty);
+            get => (string) GetValue(CreateDialogPositiveContentProperty);
             set => SetValue(CreateDialogPositiveContentProperty, value);
         }
 
@@ -46,7 +46,7 @@ namespace Forge.Forms.Collections
 
         public PackIconKind? CreateDialogPositiveIcon
         {
-            get => (PackIconKind)GetValue(CreateDialogPositiveIconProperty);
+            get => (PackIconKind) GetValue(CreateDialogPositiveIconProperty);
             set => SetValue(CreateDialogPositiveIconProperty, value);
         }
 
@@ -58,7 +58,7 @@ namespace Forge.Forms.Collections
 
         public string CreateDialogNegativeContent
         {
-            get => (string)GetValue(CreateDialogNegativeContentProperty);
+            get => (string) GetValue(CreateDialogNegativeContentProperty);
             set => SetValue(CreateDialogNegativeContentProperty, value);
         }
 
@@ -71,7 +71,7 @@ namespace Forge.Forms.Collections
 
         public PackIconKind? CreateDialogNegativeIcon
         {
-            get => (PackIconKind)GetValue(CreateDialogNegativeIconProperty);
+            get => (PackIconKind) GetValue(CreateDialogNegativeIconProperty);
             set => SetValue(CreateDialogNegativeIconProperty, value);
         }
 
@@ -83,7 +83,7 @@ namespace Forge.Forms.Collections
 
         public string UpdateDialogPositiveContent
         {
-            get => (string)GetValue(UpdateDialogPositiveContentProperty);
+            get => (string) GetValue(UpdateDialogPositiveContentProperty);
             set => SetValue(UpdateDialogPositiveContentProperty, value);
         }
 
@@ -96,7 +96,7 @@ namespace Forge.Forms.Collections
 
         public PackIconKind? UpdateDialogPositiveIcon
         {
-            get => (PackIconKind)GetValue(UpdateDialogPositiveIconProperty);
+            get => (PackIconKind) GetValue(UpdateDialogPositiveIconProperty);
             set => SetValue(UpdateDialogPositiveIconProperty, value);
         }
 
@@ -108,7 +108,7 @@ namespace Forge.Forms.Collections
 
         public string UpdateDialogNegativeContent
         {
-            get => (string)GetValue(UpdateDialogNegativeContentProperty);
+            get => (string) GetValue(UpdateDialogNegativeContentProperty);
             set => SetValue(UpdateDialogNegativeContentProperty, value);
         }
 
@@ -121,7 +121,7 @@ namespace Forge.Forms.Collections
 
         public PackIconKind? UpdateDialogNegativeIcon
         {
-            get => (PackIconKind)GetValue(UpdateDialogNegativeIconProperty);
+            get => (PackIconKind) GetValue(UpdateDialogNegativeIconProperty);
             set => SetValue(UpdateDialogNegativeIconProperty, value);
         }
 
@@ -133,7 +133,7 @@ namespace Forge.Forms.Collections
 
         public string RemoveDialogTitleContent
         {
-            get => (string)GetValue(RemoveDialogTitleContentProperty);
+            get => (string) GetValue(RemoveDialogTitleContentProperty);
             set => SetValue(RemoveDialogTitleContentProperty, value);
         }
 
@@ -145,7 +145,7 @@ namespace Forge.Forms.Collections
 
         public string RemoveDialogTextContent
         {
-            get => (string)GetValue(RemoveDialogTextContentProperty);
+            get => (string) GetValue(RemoveDialogTextContentProperty);
             set => SetValue(RemoveDialogTextContentProperty, value);
         }
 
@@ -157,7 +157,7 @@ namespace Forge.Forms.Collections
 
         public string RemoveDialogPositiveContent
         {
-            get => (string)GetValue(RemoveDialogPositiveContentProperty);
+            get => (string) GetValue(RemoveDialogPositiveContentProperty);
             set => SetValue(RemoveDialogPositiveContentProperty, value);
         }
 
@@ -170,7 +170,7 @@ namespace Forge.Forms.Collections
 
         public PackIconKind? RemoveDialogPositiveIcon
         {
-            get => (PackIconKind)GetValue(RemoveDialogPositiveIconProperty);
+            get => (PackIconKind) GetValue(RemoveDialogPositiveIconProperty);
             set => SetValue(RemoveDialogPositiveIconProperty, value);
         }
 
@@ -182,7 +182,7 @@ namespace Forge.Forms.Collections
 
         public string RemoveDialogNegativeContent
         {
-            get => (string)GetValue(RemoveDialogNegativeContentProperty);
+            get => (string) GetValue(RemoveDialogNegativeContentProperty);
             set => SetValue(RemoveDialogNegativeContentProperty, value);
         }
 
@@ -195,7 +195,7 @@ namespace Forge.Forms.Collections
 
         public PackIconKind? RemoveDialogNegativeIcon
         {
-            get => (PackIconKind)GetValue(RemoveDialogNegativeIconProperty);
+            get => (PackIconKind) GetValue(RemoveDialogNegativeIconProperty);
             set => SetValue(RemoveDialogNegativeIconProperty, value);
         }
 
@@ -208,7 +208,7 @@ namespace Forge.Forms.Collections
 
         public IEnumerable ItemsSource
         {
-            get => (IEnumerable)GetValue(ItemsSourceProperty);
+            get => (IEnumerable) GetValue(ItemsSourceProperty);
             set => SetValue(ItemsSourceProperty, value);
         }
 
@@ -221,12 +221,12 @@ namespace Forge.Forms.Collections
 
         private static void ItemsSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            ((DynamicDataGrid)d).OnItemsSource(e.NewValue);
+            ((DynamicDataGrid) d).OnItemsSource(e.NewValue);
         }
 
         public DialogOptions DialogOptions
         {
-            get => (DialogOptions)GetValue(DialogOptionsProperty);
+            get => (DialogOptions) GetValue(DialogOptionsProperty);
             set => SetValue(DialogOptionsProperty, value);
         }
 
@@ -239,7 +239,7 @@ namespace Forge.Forms.Collections
 
         public IFormBuilder FormBuilder
         {
-            get => (IFormBuilder)GetValue(FormBuilderProperty);
+            get => (IFormBuilder) GetValue(FormBuilderProperty);
             set => SetValue(FormBuilderProperty, value);
         }
 
@@ -295,7 +295,7 @@ namespace Forge.Forms.Collections
 
             if (removeFromCollection != null)
             {
-                removeFromCollection.Invoke(collection, new[] { item });
+                removeFromCollection.Invoke(collection, new[] {item});
             }
         }
 
@@ -304,6 +304,10 @@ namespace Forge.Forms.Collections
         public static readonly RoutedCommand CreateItemCommand = new RoutedCommand();
         public static readonly RoutedCommand UpdateItemCommand = new RoutedCommand();
         public static readonly RoutedCommand RemoveItemCommand = new RoutedCommand();
+
+        public static List<IAddActionInterceptor> AddInterceptorChain = new List<IAddActionInterceptor>();
+        public static List<IUpdateActionInterceptor> UpdateInterceptorChain = new List<IUpdateActionInterceptor>();
+        public static List<IRemoveActionInterceptor> RemoveInterceptorChain = new List<IRemoveActionInterceptor>();
 
         static DynamicDataGrid()
         {
@@ -340,6 +344,9 @@ namespace Forge.Forms.Collections
                     foreach (var propertyInfo in ItemType.GetProperties(BindingFlags.Public | BindingFlags.Instance)
                         .Reverse())
                     {
+                        if (propertyInfo.GetCustomAttribute<FieldIgnoreAttribute>() != null)
+                            continue;
+
                         dataGrid.Columns.Insert(0, new DataGridTextColumn
                         {
                             Header = propertyInfo.Name.Humanize(),
@@ -408,15 +415,26 @@ namespace Forge.Forms.Collections
             if (result.Action is "DynamicDataGrid_CreateDialogPositive")
             {
                 var collection = ItemsSource;
+
+                IAddActionContext context = new AddActionContext(result.Model);
+                foreach (var globalInterceptor in AddInterceptorChain)
+                {
+                    context = globalInterceptor.Intercept(context);
+                    if (context == null)
+                    {
+                        throw new InvalidOperationException($"{globalInterceptor.GetType().Name} are not allowed to return null.");
+                    }
+                }
+
                 if (!(collection is INotifyCollectionChanged) && dataGrid != null)
                 {
                     ItemsSource = null;
-                    AddItemToCollection(ItemType, collection, result.Model);
+                    AddItemToCollection(ItemType, collection, context.NewModel);
                     ItemsSource = collection;
                 }
                 else
                 {
-                    AddItemToCollection(ItemType, collection, result.Model);
+                    AddItemToCollection(ItemType, collection, context.NewModel);
                 }
             }
         }
@@ -435,12 +453,13 @@ namespace Forge.Forms.Collections
             }
 
             DialogResult result;
+
             var definition = GetUpdateDefinition(model);
             try
             {
                 result = await Show
                     .Dialog(TargetDialogIdentifier, DialogOptions)
-                    .For((IFormDefinition)definition);
+                    .For((IFormDefinition) definition);
             }
             catch
             {
@@ -450,7 +469,39 @@ namespace Forge.Forms.Collections
             if (result.Action is "DynamicDataGrid_UpdateDialogNegative")
             {
                 definition.Snapshot.Apply(model);
+                return;
             }
+
+            var oldModel = GetOldModel(definition);
+            IUpdateActionContext context = new UpdateActionContext(oldModel, definition.Model);
+     
+            foreach (var globalInterceptor in UpdateInterceptorChain)
+            {
+                context = globalInterceptor.Intercept(context);
+                if (context == null)
+                {
+                    throw new InvalidOperationException($"{globalInterceptor.GetType().Name} are not allowed to return null.");
+                }
+            }
+
+            var contextDefinition = GetUpdateDefinition(context.NewModel);
+            contextDefinition.Snapshot.Apply(model);
+        }
+
+        private static object GetOldModel(UpdateFormDefinition definition)
+        {
+            try
+            {
+                var oldModel = Activator.CreateInstance(definition.ModelType);
+                definition.Snapshot.Apply(oldModel);
+                return oldModel;
+            }
+            catch
+            {
+                // ignored
+            }
+
+            return null;
         }
 
         private void CanExecuteUpdateItem(object sender, CanExecuteRoutedEventArgs e)
@@ -484,6 +535,14 @@ namespace Forge.Forms.Collections
                 if (result.Action is "positive")
                 {
                     var collection = ItemsSource;
+
+                    IRemoveActionContext context = new RemoveActionContext(result.Model);
+                    
+                    foreach (var globalInterceptor in RemoveInterceptorChain)
+                    {
+                        globalInterceptor.Intercept(context);
+                    }
+
                     if (!(collection is INotifyCollectionChanged) && dataGrid != null)
                     {
                         ItemsSource = null;
@@ -660,7 +719,7 @@ namespace Forge.Forms.Collections
             Snapshot = new Snapshot(model, new HashSet<string>(formRows
                 .SelectMany(r => r.Elements.SelectMany(e => e.Elements))
                 .Where(e => e is DataFormField)
-                .Select(f => ((DataFormField)f).Key)));
+                .Select(f => ((DataFormField) f).Key)));
         }
 
         public object Model { get; }

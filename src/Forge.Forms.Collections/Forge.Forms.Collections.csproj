@@ -45,6 +45,15 @@
     <Compile Include="Annotations\CrudAttribute.cs" />
     <Compile Include="DynamicDataGrid.cs" />
     <Compile Include="GridField.cs" />
+    <Compile Include="Interfaces\AddActionContext.cs" />
+    <Compile Include="Interfaces\IAddActionContext.cs" />
+    <Compile Include="Interfaces\IAddActionInterceptor.cs" />
+    <Compile Include="Interfaces\IRemoveActionContext.cs" />
+    <Compile Include="Interfaces\IRemoveActionInterceptor.cs" />
+    <Compile Include="Interfaces\IUpdateActionContext.cs" />
+    <Compile Include="Interfaces\IUpdateActionInterceptor.cs" />
+    <Compile Include="Interfaces\RemoveActionContext.cs" />
+    <Compile Include="Interfaces\UpdateActionContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
