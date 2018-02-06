@@ -405,7 +405,7 @@ namespace Forge.Forms.Collections
             var definition = GetCreateDefinition();
             try
             {
-                result = await Show.Dialog(TargetDialogIdentifier, DialogOptions).For(definition);
+                result = await Show.Dialog(TargetDialogIdentifier, DataContext, DialogOptions).For(definition);
             }
             catch
             {
@@ -458,7 +458,7 @@ namespace Forge.Forms.Collections
             try
             {
                 result = await Show
-                    .Dialog(TargetDialogIdentifier, DialogOptions)
+                    .Dialog(TargetDialogIdentifier, DataContext, DialogOptions)
                     .For((IFormDefinition) definition);
             }
             catch
@@ -520,7 +520,7 @@ namespace Forge.Forms.Collections
             try
             {
                 var result = await Show
-                    .Dialog(TargetDialogIdentifier, DialogOptions)
+                    .Dialog(TargetDialogIdentifier, DataContext, DialogOptions)
                     .For(new Confirmation(
                         RemoveDialogTextContent,
                         RemoveDialogTitleContent,
