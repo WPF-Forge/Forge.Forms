@@ -1,6 +1,6 @@
 ﻿namespace Forge.Forms.Collections.Interfaces
 {
-    internal class RemoveActionContext : IRemoveActionContext
+    public class RemoveActionContext : IRemoveActionContext
     {
         /// <inheritdoc />
         public RemoveActionContext(object oldModel)

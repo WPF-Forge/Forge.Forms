@@ -1,6 +1,6 @@
 ﻿namespace Forge.Forms.Collections.Interfaces
 {
-    internal class UpdateActionContext : IUpdateActionContext
+    public class UpdateActionContext : IUpdateActionContext
     {
         /// <inheritdoc />
         public UpdateActionContext(object oldModel, object newModel)

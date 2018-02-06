@@ -1,6 +1,6 @@
 ﻿namespace Forge.Forms.Collections.Interfaces
 {
-    internal class AddActionContext : IAddActionContext
+    public class AddActionContext : IAddActionContext
     {
         /// <inheritdoc />
         public AddActionContext(object newModel)
