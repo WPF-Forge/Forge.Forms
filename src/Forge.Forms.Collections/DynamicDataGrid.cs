@@ -422,7 +422,7 @@ namespace Forge.Forms.Collections
                     context = globalInterceptor.Intercept(context);
                     if (context == null)
                     {
-                        throw new InvalidOperationException($"{globalInterceptor.GetType().Name} are not allowed to return null.");
+                        return;
                     }
                 }
 
