@@ -3,6 +3,7 @@ using System.Windows;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Controls;
@@ -350,8 +351,14 @@ namespace Forge.Forms.Collections
                         var dataGridTextColumn = new MaterialDataGridTextColumn
                         {
                             Header = propertyInfo.Name.Humanize(),
-                            Binding = new Binding(propertyInfo.Name),
-                            MaxLength = 255
+                            Binding = new Binding(propertyInfo.Name)
+                            {
+                                Mode = propertyInfo.CanRead && propertyInfo.CanWrite
+                                    ? BindingMode.TwoWay
+                                    : BindingMode.Default,
+                                UpdateSourceTrigger = UpdateSourceTrigger.LostFocus
+                            },
+                            MaxLength = propertyInfo.GetCustomAttribute<StringLengthAttribute>()?.MaximumLength ?? 0
                         };
 
                         if (TryFindResource("MaterialDesignDataGridTextColumnPopupEditingStyle") is Style editingElementStyle)
