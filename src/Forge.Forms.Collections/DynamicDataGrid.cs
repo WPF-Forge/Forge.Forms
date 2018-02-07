@@ -147,6 +147,11 @@ namespace Forge.Forms.Collections
         private DataGrid dataGrid;
         private Type itemType;
 
+        private CheckBox HeaderButton { get; } = new CheckBox
+        {
+            Margin = new Thickness(8, 0, 0, 0)
+        };
+
         static DynamicDataGrid()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(DynamicDataGrid),
@@ -202,24 +207,24 @@ namespace Forge.Forms.Collections
                     Mode = BindingMode.TwoWay
                 });
 
-                var headerCheckBox = new FrameworkElementFactory(typeof(CheckBox));
-                headerCheckBox.SetValue(ButtonBase.CommandProperty, new RelayCommand(_ =>
+                HeaderButton.Command = new RelayCommand(_ =>
                 {
                     IsSelectAll = !IsSelectAll;
 
-                    foreach (var item in ItemsSource)
+                    if (IsSelectAll)
                     {
-                        if (dataGrid.ItemContainerGenerator.ContainerFromItem(item) is DataGridRow row)
-                        {
-                            row.IsSelected = IsSelectAll;
-                        }
+                        dataGrid.SelectAll();
                     }
-                }));
+                    else
+                    {
+                        dataGrid.UnselectAll();
+                    }
+                });
 
                 dataGrid.Columns.Insert(0, new DataGridTemplateColumn
                 {
                     CellTemplate = new DataTemplate { VisualTree = rowCheckBox },
-                    HeaderTemplate = new DataTemplate { VisualTree = headerCheckBox }
+                    Header = HeaderButton
                 });
             }
         }
@@ -261,7 +266,24 @@ namespace Forge.Forms.Collections
                 dataGrid.MouseDoubleClick += DataGridOnMouseDoubleClick;
                 dataGrid.PreviewMouseDown += PreviewMouseDownHandler;
                 dataGrid.MouseEnter += MouseEnterHandler;
+                dataGrid.SelectionChanged += DataGridOnSelectionChanged;
                 ProtectedColumns = dataGrid?.Columns.ToList();
+            }
+        }
+
+        private void DataGridOnSelectionChanged(object sender, SelectionChangedEventArgs selectionChangedEventArgs)
+        {
+            if (dataGrid.SelectedItems.Count == dataGrid.Items.Count)
+            {
+                HeaderButton.IsChecked = true;
+            }
+            else if (dataGrid.SelectedItems.Count == 0)
+            {
+                HeaderButton.IsChecked = false;
+            }
+            else
+            {
+                HeaderButton.IsChecked = null;
             }
         }
 
@@ -281,11 +303,11 @@ namespace Forge.Forms.Collections
             return parent;
         }
 
-        private static void PreviewMouseDownHandler(object sender, MouseButtonEventArgs e)
+        private void PreviewMouseDownHandler(object sender, MouseButtonEventArgs e)
         {
             //TODO: Find a better way to do this, since some buttons might get caught in e.Handled=true and then not be executed.
 
-            if (e.LeftButton != MouseButtonState.Pressed)
+            if (e.RightButton == MouseButtonState.Pressed)
             {
                 return;
             }
@@ -299,13 +321,20 @@ namespace Forge.Forms.Collections
                 return;
             }
 
+            if (e.ClickCount > 1)
+            {
+                UpdateItemCommand.Execute(row.Item, dataGrid);
+                e.Handled = true;
+                return;
+            }
+
             row.IsSelected = !row.IsSelected;
             e.Handled = true;
         }
 
         private static void MouseEnterHandler(object sender, MouseEventArgs e)
         {
-            if (!(e.OriginalSource is DataGridRow row) || e.LeftButton != MouseButtonState.Pressed)
+            if (!(e.OriginalSource is DataGridRow row) || e.RightButton == MouseButtonState.Pressed)
             {
                 return;
             }
@@ -345,6 +374,11 @@ namespace Forge.Forms.Collections
 
         private void DataGridOnMouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
+            if (e.RightButton == MouseButtonState.Pressed)
+            {
+                return;
+            }
+
             if (e.MouseDevice.DirectlyOver is FrameworkElement frameworkElement &&
                 (frameworkElement.Parent is DataGridCell || frameworkElement is DataGridCell ||
                  FindVisualChild<DataGridCell>(frameworkElement) != null) && sender is DataGrid grid &&
@@ -804,6 +838,9 @@ namespace Forge.Forms.Collections
         private static readonly Dictionary<Type, Action<object, object>> AddItemCache =
             new Dictionary<Type, Action<object, object>>();
 
+        private static readonly Dictionary<Type, Action<object, object>> RemoveItemCache =
+            new Dictionary<Type, Action<object, object>>();
+
         private static void AddItemToCollection(Type itemType, object collection, object item)
         {
             if (!AddItemCache.TryGetValue(itemType, out var action))
@@ -831,13 +868,27 @@ namespace Forge.Forms.Collections
 
         private static void RemoveItemFromCollection(Type itemType, object collection, object item)
         {
-            var collectionType = collection.GetType();
-            var removeFromCollection = collectionType.GetMethod("Remove");
-
-            if (removeFromCollection != null)
+            if (!RemoveItemCache.TryGetValue(itemType, out var action))
             {
-                removeFromCollection.Invoke(collection, new[] { item });
+                var collectionType = typeof(ICollection<>).MakeGenericType(itemType);
+                var removeMethod = collectionType.GetMethod("Remove") ??
+                                   throw new InvalidOperationException("This should not happen.");
+                var collectionParam = Expression.Parameter(typeof(object), "collection");
+                var itemParam = Expression.Parameter(typeof(object), "item");
+                var lambda = Expression.Lambda<Action<object, object>>(
+                    Expression.Call(
+                        Expression.Convert(collectionParam, collectionType),
+                        removeMethod,
+                        Expression.Convert(itemParam, itemType)),
+                    collectionParam,
+                    itemParam
+                );
+
+                action = lambda.Compile();
+                RemoveItemCache[itemType] = action;
             }
+
+            action(collection, item);
         }
 
         #endregion

@@ -56,6 +56,7 @@
     <Compile Include="Interfaces\RemoveActionContext.cs" />
     <Compile Include="Interfaces\UpdateActionContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RelayCommand.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Forge.Forms\Forge.Forms.csproj">
