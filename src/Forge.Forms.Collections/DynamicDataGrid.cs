@@ -414,12 +414,39 @@ namespace Forge.Forms.Collections
             ProtectedColumns = dataGrid?.Columns.ToList();
         }
 
-        private void DataGridOnMouseDoubleClick(object sender, MouseButtonEventArgs mouseButtonEventArgs)
+        private static IEnumerable<T> FindVisualChildren<T>(DependencyObject depObj)
+            where T : DependencyObject
         {
-            if (dataGrid.SelectedItems.Count == 1)
+            if (depObj == null) yield break;
+
+            for (var i = 0; i < VisualTreeHelper.GetChildrenCount(depObj); i++)
             {
-                UpdateItemCommand.Execute(dataGrid.SelectedItem, dataGrid);
+                var child = VisualTreeHelper.GetChild(depObj, i);
+                if (child is T variable)
+                {
+                    yield return variable;
+                }
+
+                foreach (var childOfChild in FindVisualChildren<T>(child))
+                {
+                    yield return childOfChild;
+                }
             }
+        }
+
+        private static TChildItem FindVisualChild<TChildItem>(DependencyObject obj)
+            where TChildItem : DependencyObject
+        {
+            return FindVisualChildren<TChildItem>(obj).FirstOrDefault();
+        }
+
+        private void DataGridOnMouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            if (e.MouseDevice.DirectlyOver is FrameworkElement frameworkElement &&
+                (frameworkElement.Parent is DataGridCell || frameworkElement is DataGridCell ||
+                 FindVisualChild<DataGridCell>(frameworkElement) != null) && sender is DataGrid grid &&
+                grid.SelectedItems.Count == 1)
+                UpdateItemCommand.Execute(dataGrid.SelectedItem, dataGrid);
         }
 
         private void OnItemsSource(object collection)
