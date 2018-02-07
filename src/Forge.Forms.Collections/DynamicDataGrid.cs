@@ -9,6 +9,7 @@ using System.Reflection;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
+using System.Windows.Media;
 using Forge.Forms.Annotations;
 using Forge.Forms.Collections.Interfaces;
 using Forge.Forms.DynamicExpressions;
