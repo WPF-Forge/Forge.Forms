@@ -14,6 +14,7 @@ using Forge.Forms.Collections.Interfaces;
 using Forge.Forms.DynamicExpressions;
 using Forge.Forms.FormBuilding;
 using Forge.Forms.FormBuilding.Defaults;
+using Forge.Forms.Validation;
 using Humanizer;
 using MaterialDesignThemes.Wpf;
 using Expression = System.Linq.Expressions.Expression;

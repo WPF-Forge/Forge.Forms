@@ -20,6 +20,7 @@
                     Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Accent/MaterialDesignColor.Pink.xaml" />
 
                 <ResourceDictionary Source="pack://application:,,,/Forge.Forms;component/Themes/Material.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Forge.Forms.Collections;component/Themes/Generic.xaml" />
 
                 <ResourceDictionary Source="pack://application:,,,/Dragablz;component/Themes/MaterialDesign.xaml" />
 

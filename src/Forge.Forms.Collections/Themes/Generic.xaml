@@ -4,11 +4,16 @@
     xmlns:collections="clr-namespace:Forge.Forms.Collections"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes">
 
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary
+            Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.DataGrid.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
     <ControlTemplate x:Key="DynamicDataGridTemplate" TargetType="{x:Type collections:DynamicDataGrid}">
         <Grid>
             <DataGrid
                 Name="PART_DataGrid" AutoGenerateColumns="False"
-                CanUserAddRows="False"
+                CanUserAddRows="False" IsReadOnly="True"
                 Style="{DynamicResource CustomDataGrid}"
                 CellStyle="{DynamicResource CustomDataGridLeftPadding}"
                 ItemsSource="{TemplateBinding ItemsSource}">
