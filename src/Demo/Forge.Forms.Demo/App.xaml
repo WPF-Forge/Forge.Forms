@@ -125,7 +125,6 @@
                    BasedOn="{StaticResource MaterialDesignDataGrid}"
                    TargetType="{x:Type DataGrid}">
                 <Setter Property="ColumnWidth" Value="*" />
-                <Setter Property="IsReadOnly" Value="True" />
                 <Setter Property="ScrollViewer.CanContentScroll" Value="False" />
                 <Setter Property="SelectionMode" Value="Single" />
                 <Setter Property="AutoGenerateColumns" Value="False" />

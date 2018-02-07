@@ -8,7 +8,7 @@
         <Grid>
             <DataGrid
                 Name="PART_DataGrid" AutoGenerateColumns="False"
-                CanUserAddRows="False" IsReadOnly="True"
+                CanUserAddRows="False"
                 Style="{DynamicResource CustomDataGrid}"
                 CellStyle="{DynamicResource CustomDataGridLeftPadding}"
                 ItemsSource="{TemplateBinding ItemsSource}">

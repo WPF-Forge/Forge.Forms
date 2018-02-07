@@ -347,11 +347,17 @@ namespace Forge.Forms.Collections
                         if (propertyInfo.GetCustomAttribute<FieldIgnoreAttribute>() != null)
                             continue;
 
-                        dataGrid.Columns.Insert(0, new DataGridTextColumn
+                        var dataGridTextColumn = new MaterialDataGridTextColumn
                         {
                             Header = propertyInfo.Name.Humanize(),
-                            Binding = new Binding(propertyInfo.Name)
-                        });
+                            Binding = new Binding(propertyInfo.Name),
+                            MaxLength = 255
+                        };
+
+                        if (TryFindResource("MaterialDesignDataGridTextColumnPopupEditingStyle") is Style editingElementStyle)
+                            dataGridTextColumn.EditingElementStyle = editingElementStyle;
+
+                        dataGrid.Columns.Insert(0, dataGridTextColumn);
                     }
                 }
             }
