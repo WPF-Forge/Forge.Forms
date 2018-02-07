@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Runtime.CompilerServices;
 using Forge.Forms.Annotations;
 using Forge.Forms.Collections;
@@ -88,6 +89,8 @@ namespace Forge.Forms.Demo.Routes
         private string firstName;
         private string lastName;
 
+        [StringLength(15)]
+        [Value(Must.BeGreaterThan, 5)]
         public string FirstName
         {
             get => firstName;

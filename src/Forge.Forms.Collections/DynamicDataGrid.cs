@@ -331,43 +331,76 @@ namespace Forge.Forms.Collections
 
         private Type ItemType
         {
-            get { return itemType; }
+            get => itemType;
             set
             {
+                if (itemType == value)
+                    return;
+
                 itemType = value;
-                if (dataGrid != null && itemType != null)
+
+                if (dataGrid == null || itemType == null) return;
+
+                foreach (var dataGridColumn in dataGrid.Columns.Except(ProtectedColumns))
                 {
-                    foreach (var dataGridColumn in dataGrid.Columns.Except(ProtectedColumns))
-                    {
-                        dataGrid.Columns.Remove(dataGridColumn);
-                    }
+                    dataGrid.Columns.Remove(dataGridColumn);
+                }
 
-                    foreach (var propertyInfo in ItemType.GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                        .Reverse())
-                    {
-                        if (propertyInfo.GetCustomAttribute<FieldIgnoreAttribute>() != null)
-                            continue;
-
-                        var dataGridTextColumn = new MaterialDataGridTextColumn
-                        {
-                            Header = propertyInfo.Name.Humanize(),
-                            Binding = new Binding(propertyInfo.Name)
-                            {
-                                Mode = propertyInfo.CanRead && propertyInfo.CanWrite
-                                    ? BindingMode.TwoWay
-                                    : BindingMode.Default,
-                                UpdateSourceTrigger = UpdateSourceTrigger.LostFocus
-                            },
-                            MaxLength = propertyInfo.GetCustomAttribute<StringLengthAttribute>()?.MaximumLength ?? 0
-                        };
-
-                        if (TryFindResource("MaterialDesignDataGridTextColumnPopupEditingStyle") is Style editingElementStyle)
-                            dataGridTextColumn.EditingElementStyle = editingElementStyle;
-
-                        dataGrid.Columns.Insert(0, dataGridTextColumn);
-                    }
+                foreach (var propertyInfo in ItemType.GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                    .Reverse())
+                {
+                    CreateColumn(propertyInfo);
                 }
             }
+        }
+
+        private void CreateColumn(PropertyInfo propertyInfo)
+        {
+            if (propertyInfo.GetCustomAttribute<FieldIgnoreAttribute>() != null)
+                return;
+
+            if (FormBuilder is FormBuilder builder)
+            {
+                var formDefinition = builder.GetDefinition(itemType);
+                var formElementContainers = formDefinition.FormRows.SelectMany(i => i.Elements)
+                    .SelectMany(i => i.Elements).OfType<DataFormField>().Where(i => i.Key == propertyInfo.Name)
+                    .ToList();
+                var validations = formElementContainers.SelectMany(i => i.Validators)
+                    .Select(i => i.GetValidator(null, new ValidationPipe())).OfType<ValidationRule>().ToList();
+
+                var dataGridTextColumn = new MaterialDataGridTextColumn
+                {
+                    Header = propertyInfo.Name.Humanize(),
+                    Binding = CreateBinding(propertyInfo, validations),
+                    EditingElementStyle = TryFindResource("MaterialDesignDataGridTextColumnPopupEditingStyle") as Style,
+                    MaxLength = propertyInfo.GetCustomAttribute<StringLengthAttribute>()?.MaximumLength ?? 0
+                };
+
+                dataGrid.Columns.Insert(0, dataGridTextColumn);
+            }
+        }
+
+        private static Binding CreateBinding(PropertyInfo propertyInfo, IEnumerable<ValidationRule> validations)
+        {
+            var bindingBase = new Binding(propertyInfo.Name)
+            {
+                Mode = propertyInfo.CanRead && propertyInfo.CanWrite
+                    ? BindingMode.TwoWay
+                    : BindingMode.Default,
+                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
+                ValidatesOnDataErrors = true,
+                NotifyOnValidationError = true,
+                NotifyOnSourceUpdated = true,
+                NotifyOnTargetUpdated = true,
+                ValidatesOnNotifyDataErrors = true
+            };
+
+            foreach (var fieldValidator in validations)
+            {
+                bindingBase.ValidationRules.Add(fieldValidator);
+            }
+
+            return bindingBase;
         }
 
         private bool canMutate;
@@ -376,7 +409,16 @@ namespace Forge.Forms.Collections
         public override void OnApplyTemplate()
         {
             dataGrid = Template.FindName("PART_DataGrid", this) as DataGrid;
+            dataGrid.MouseDoubleClick += DataGridOnMouseDoubleClick;
             ProtectedColumns = dataGrid?.Columns.ToList();
+        }
+
+        private void DataGridOnMouseDoubleClick(object sender, MouseButtonEventArgs mouseButtonEventArgs)
+        {
+            if (dataGrid.SelectedItems.Count == 1)
+            {
+                UpdateItemCommand.Execute(dataGrid.SelectedItem, dataGrid);
+            }
         }
 
         private void OnItemsSource(object collection)
