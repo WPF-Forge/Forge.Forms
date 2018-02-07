@@ -345,8 +345,6 @@ namespace Forge.Forms.Collections
         public static readonly List<IRemoveActionInterceptor> RemoveInterceptorChain =
             new List<IRemoveActionInterceptor>();
 
-        public Dictionary<object, bool> Selected { get; } = new Dictionary<object, bool>();
-
         static DynamicDataGrid()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(DynamicDataGrid),
@@ -372,8 +370,6 @@ namespace Forge.Forms.Collections
             get => itemType;
             set
             {
-                Selected.Clear();
-
                 if (itemType == value)
                     return;
 
@@ -393,14 +389,25 @@ namespace Forge.Forms.Collections
                 }
 
                 var rowCheckBox = new FrameworkElementFactory(typeof(CheckBox));
+                rowCheckBox.SetBinding(ToggleButton.IsCheckedProperty, new Binding
+                {
+                    Path = new PropertyPath("IsSelected"),
+                    RelativeSource =
+                        new RelativeSource(RelativeSourceMode.FindAncestor) {AncestorType = typeof(DataGridRow)},
+                    Mode = BindingMode.TwoWay
+                });
+
                 var headerCheckBox = new FrameworkElementFactory(typeof(CheckBox));
                 headerCheckBox.SetValue(ButtonBase.CommandProperty, new RelayCommand(_ =>
                 {
                     IsSelectAll = !IsSelectAll;
 
-                    foreach (var top in ItemsSource)
+                    foreach (var item in ItemsSource)
                     {
-                        AddOrInvert(top, IsSelectAll);
+                        if (dataGrid.ItemContainerGenerator.ContainerFromItem(item) is DataGridRow row)
+                        {
+                            row.IsSelected = IsSelectAll;
+                        }
                     }
                 }));
 
@@ -409,28 +416,6 @@ namespace Forge.Forms.Collections
                     CellTemplate = new DataTemplate {VisualTree = rowCheckBox},
                     HeaderTemplate = new DataTemplate {VisualTree = headerCheckBox}
                 });
-            }
-        }
-
-        private void AddOrInvert(object key)
-        {
-            AddOrInvert(key, true, !Selected.ContainsKey(key) || !Selected[key]);
-        }
-
-        private void AddOrInvert(object key, bool defaultValue)
-        {
-            AddOrInvert(key, defaultValue, defaultValue);
-        }
-
-        private void AddOrInvert(object key, bool defaultValue, bool toSet)
-        {
-            if (!Selected.ContainsKey(key))
-            {
-                Selected.Add(key, defaultValue);
-            }
-            else
-            {
-                Selected[key] = toSet;
             }
         }
 
@@ -489,8 +474,50 @@ namespace Forge.Forms.Collections
         public override void OnApplyTemplate()
         {
             dataGrid = Template.FindName("PART_DataGrid", this) as DataGrid;
-            dataGrid.MouseDoubleClick += DataGridOnMouseDoubleClick;
-            ProtectedColumns = dataGrid?.Columns.ToList();
+            if (dataGrid != null)
+            {
+                dataGrid.MouseDoubleClick += DataGridOnMouseDoubleClick;
+                dataGrid.PreviewMouseDown += PreviewMouseDownHandler;
+                dataGrid.MouseEnter += MouseEnterHandler;
+                ProtectedColumns = dataGrid?.Columns.ToList();
+            }
+        }
+
+        private static DependencyObject GetVisualParentByType(DependencyObject startObject, Type type)
+        {
+            var parent = startObject;
+            while (parent != null)
+            {
+                if (type.IsInstanceOfType(parent))
+                    break;
+                parent = VisualTreeHelper.GetParent(parent);
+            }
+
+            return parent;
+        }
+
+        private static void PreviewMouseDownHandler(object sender, MouseButtonEventArgs e)
+        {
+            //TODO: Find a better way to do this, since some buttons might get caught in e.Handled=true and then not be executed.
+
+            if (e.LeftButton != MouseButtonState.Pressed) return;
+            
+            var button = GetVisualParentByType(
+                (FrameworkElement) e.OriginalSource, typeof(PopupBox));
+
+            if (button != null || !(GetVisualParentByType(
+                    (FrameworkElement) e.OriginalSource, typeof(DataGridRow)) is DataGridRow row)) return;
+
+            row.IsSelected = !row.IsSelected;
+            e.Handled = true;
+        }
+
+        private static void MouseEnterHandler(object sender, MouseEventArgs e)
+        {
+            if (!(e.OriginalSource is DataGridRow row) || e.LeftButton != MouseButtonState.Pressed) return;
+            
+            row.IsSelected = !row.IsSelected;
+            e.Handled = true;
         }
 
         private static IEnumerable<T> FindVisualChildren<T>(DependencyObject depObj)
@@ -716,8 +743,6 @@ namespace Forge.Forms.Collections
                     {
                         RemoveItemFromCollection(ItemType, collection, model);
                     }
-
-                    Selected.Remove(model);
                 }
             }
             catch

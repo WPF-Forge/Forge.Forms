@@ -18,12 +18,12 @@
             <materialDesign:ColorZone Mode="Standard" Padding="20" Grid.Row="0">
                 <Grid>
                     <TextBlock Style="{DynamicResource MaterialDesignHeadlineTextBlock}" Text="Title" />
-                    
                 </Grid>
             </materialDesign:ColorZone>
             <DataGrid Grid.Row="1"
                       Name="PART_DataGrid" AutoGenerateColumns="False"
-                      CanUserAddRows="False" IsReadOnly="True"
+                      CanUserAddRows="False"
+                      SelectionMode="Extended"
                       Style="{DynamicResource CustomDataGrid}"
                       CellStyle="{DynamicResource CustomDataGridLeftPadding}"
                       ItemsSource="{TemplateBinding ItemsSource}">
