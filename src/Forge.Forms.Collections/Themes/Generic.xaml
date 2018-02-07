@@ -11,12 +11,22 @@
 
     <ControlTemplate x:Key="DynamicDataGridTemplate" TargetType="{x:Type collections:DynamicDataGrid}">
         <Grid>
-            <DataGrid
-                Name="PART_DataGrid" AutoGenerateColumns="False"
-                CanUserAddRows="False" IsReadOnly="True"
-                Style="{DynamicResource CustomDataGrid}"
-                CellStyle="{DynamicResource CustomDataGridLeftPadding}"
-                ItemsSource="{TemplateBinding ItemsSource}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <materialDesign:ColorZone Mode="Standard" Padding="20" Grid.Row="0">
+                <Grid>
+                    <TextBlock Style="{DynamicResource MaterialDesignHeadlineTextBlock}" Text="Title" />
+                    
+                </Grid>
+            </materialDesign:ColorZone>
+            <DataGrid Grid.Row="1"
+                      Name="PART_DataGrid" AutoGenerateColumns="False"
+                      CanUserAddRows="False" IsReadOnly="True"
+                      Style="{DynamicResource CustomDataGrid}"
+                      CellStyle="{DynamicResource CustomDataGridLeftPadding}"
+                      ItemsSource="{TemplateBinding ItemsSource}">
                 <DataGrid.Columns>
                     <DataGridTemplateColumn Width="*">
                         <DataGridTemplateColumn.CellTemplate>
@@ -70,8 +80,7 @@
                     </DataGridTemplateColumn>
                 </DataGrid.Columns>
             </DataGrid>
-
-            <Button VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,10,10"
+            <Button Grid.Row="1" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,10,10"
                     Command="{x:Static collections:DynamicDataGrid.CreateItemCommand}"
                     Style="{DynamicResource MaterialDesignFloatingActionButton}"
                     Content="{materialDesign:PackIcon Plus}" />
