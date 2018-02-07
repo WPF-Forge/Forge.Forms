@@ -7,6 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -22,6 +23,34 @@ using Expression = System.Linq.Expressions.Expression;
 
 namespace Forge.Forms.Collections
 {
+    public class RelayCommand : ICommand
+    {
+        private Action<object> execute;
+        private Func<object, bool> canExecute;
+
+        public event EventHandler CanExecuteChanged
+        {
+            add { CommandManager.RequerySuggested += value; }
+            remove { CommandManager.RequerySuggested -= value; }
+        }
+
+        public RelayCommand(Action<object> execute, Func<object, bool> canExecute = null)
+        {
+            this.execute = execute;
+            this.canExecute = canExecute;
+        }
+
+        public bool CanExecute(object parameter)
+        {
+            return this.canExecute == null || this.canExecute(parameter);
+        }
+
+        public void Execute(object parameter)
+        {
+            this.execute(parameter);
+        }
+    }
+
     [TemplatePart(Name = "PART_DataGrid", Type = typeof(DataGrid))]
     public class DynamicDataGrid : Control
     {
@@ -309,8 +338,14 @@ namespace Forge.Forms.Collections
         public static readonly RoutedCommand RemoveItemCommand = new RoutedCommand();
 
         public static readonly List<IAddActionInterceptor> AddInterceptorChain = new List<IAddActionInterceptor>();
-        public static readonly List<IUpdateActionInterceptor> UpdateInterceptorChain = new List<IUpdateActionInterceptor>();
-        public static readonly List<IRemoveActionInterceptor> RemoveInterceptorChain = new List<IRemoveActionInterceptor>();
+
+        public static readonly List<IUpdateActionInterceptor> UpdateInterceptorChain =
+            new List<IUpdateActionInterceptor>();
+
+        public static readonly List<IRemoveActionInterceptor> RemoveInterceptorChain =
+            new List<IRemoveActionInterceptor>();
+
+        public Dictionary<object, bool> Selected { get; } = new Dictionary<object, bool>();
 
         static DynamicDataGrid()
         {
@@ -326,8 +361,9 @@ namespace Forge.Forms.Collections
             Loaded += (s, e) => OnItemsSource(ItemsSource);
         }
 
-        private DataGrid dataGrid;
+        private bool IsSelectAll { get; set; }
 
+        private DataGrid dataGrid;
 
         private List<DataGridColumn> ProtectedColumns { get; set; }
 
@@ -336,6 +372,8 @@ namespace Forge.Forms.Collections
             get => itemType;
             set
             {
+                Selected.Clear();
+
                 if (itemType == value)
                     return;
 
@@ -343,7 +381,7 @@ namespace Forge.Forms.Collections
 
                 if (dataGrid == null || itemType == null) return;
 
-                foreach (var dataGridColumn in dataGrid.Columns.Except(ProtectedColumns))
+                foreach (var dataGridColumn in dataGrid.Columns.Except(ProtectedColumns).ToList())
                 {
                     dataGrid.Columns.Remove(dataGridColumn);
                 }
@@ -353,6 +391,46 @@ namespace Forge.Forms.Collections
                 {
                     CreateColumn(propertyInfo);
                 }
+
+                var rowCheckBox = new FrameworkElementFactory(typeof(CheckBox));
+                var headerCheckBox = new FrameworkElementFactory(typeof(CheckBox));
+                headerCheckBox.SetValue(ButtonBase.CommandProperty, new RelayCommand(_ =>
+                {
+                    IsSelectAll = !IsSelectAll;
+
+                    foreach (var top in ItemsSource)
+                    {
+                        AddOrInvert(top, IsSelectAll);
+                    }
+                }));
+
+                dataGrid.Columns.Insert(0, new DataGridTemplateColumn
+                {
+                    CellTemplate = new DataTemplate {VisualTree = rowCheckBox},
+                    HeaderTemplate = new DataTemplate {VisualTree = headerCheckBox}
+                });
+            }
+        }
+
+        private void AddOrInvert(object key)
+        {
+            AddOrInvert(key, true, !Selected.ContainsKey(key) || !Selected[key]);
+        }
+
+        private void AddOrInvert(object key, bool defaultValue)
+        {
+            AddOrInvert(key, defaultValue, defaultValue);
+        }
+
+        private void AddOrInvert(object key, bool defaultValue, bool toSet)
+        {
+            if (!Selected.ContainsKey(key))
+            {
+                Selected.Add(key, defaultValue);
+            }
+            else
+            {
+                Selected[key] = toSet;
             }
         }
 
@@ -558,13 +636,14 @@ namespace Forge.Forms.Collections
 
             var oldModel = GetOldModel(definition);
             IUpdateActionContext context = new UpdateActionContext(oldModel, definition.Model);
-     
+
             foreach (var globalInterceptor in UpdateInterceptorChain)
             {
                 context = globalInterceptor.Intercept(context);
                 if (context == null)
                 {
-                    throw new InvalidOperationException($"{globalInterceptor.GetType().Name} are not allowed to return null.");
+                    throw new InvalidOperationException(
+                        $"{globalInterceptor.GetType().Name} are not allowed to return null.");
                 }
             }
 
@@ -621,7 +700,7 @@ namespace Forge.Forms.Collections
                     var collection = ItemsSource;
 
                     IRemoveActionContext context = new RemoveActionContext(result.Model);
-                    
+
                     foreach (var globalInterceptor in RemoveInterceptorChain)
                     {
                         globalInterceptor.Intercept(context);
@@ -637,11 +716,13 @@ namespace Forge.Forms.Collections
                     {
                         RemoveItemFromCollection(ItemType, collection, model);
                     }
+
+                    Selected.Remove(model);
                 }
             }
             catch
             {
-                return;
+                // ignored
             }
         }
 
