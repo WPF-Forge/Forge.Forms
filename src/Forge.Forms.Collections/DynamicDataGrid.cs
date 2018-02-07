@@ -16,7 +16,6 @@ using Forge.Forms.Collections.Interfaces;
 using Forge.Forms.DynamicExpressions;
 using Forge.Forms.FormBuilding;
 using Forge.Forms.FormBuilding.Defaults;
-using Forge.Forms.Validation;
 using Humanizer;
 using MaterialDesignThemes.Wpf;
 using Expression = System.Linq.Expressions.Expression;
@@ -424,48 +423,26 @@ namespace Forge.Forms.Collections
             if (propertyInfo.GetCustomAttribute<FieldIgnoreAttribute>() != null)
                 return;
 
-            if (FormBuilder is FormBuilder builder)
+            var dataGridTextColumn = new MaterialDataGridTextColumn
             {
-                var formDefinition = builder.GetDefinition(itemType);
-                var formElementContainers = formDefinition.FormRows.SelectMany(i => i.Elements)
-                    .SelectMany(i => i.Elements).OfType<DataFormField>().Where(i => i.Key == propertyInfo.Name)
-                    .ToList();
-                var validations = formElementContainers.SelectMany(i => i.Validators)
-                    .Select(i => i.GetValidator(null, new ValidationPipe())).OfType<ValidationRule>().ToList();
+                Header = propertyInfo.Name.Humanize(),
+                Binding = CreateBinding(propertyInfo),
+                EditingElementStyle = TryFindResource("MaterialDesignDataGridTextColumnPopupEditingStyle") as Style,
+                MaxLength = propertyInfo.GetCustomAttribute<StringLengthAttribute>()?.MaximumLength ?? 0
+            };
 
-                var dataGridTextColumn = new MaterialDataGridTextColumn
-                {
-                    Header = propertyInfo.Name.Humanize(),
-                    Binding = CreateBinding(propertyInfo, validations),
-                    EditingElementStyle = TryFindResource("MaterialDesignDataGridTextColumnPopupEditingStyle") as Style,
-                    MaxLength = propertyInfo.GetCustomAttribute<StringLengthAttribute>()?.MaximumLength ?? 0
-                };
-
-                dataGrid.Columns.Insert(0, dataGridTextColumn);
-            }
+            dataGrid.Columns.Insert(0, dataGridTextColumn);
         }
 
-        private static Binding CreateBinding(PropertyInfo propertyInfo, IEnumerable<ValidationRule> validations)
+        private static Binding CreateBinding(PropertyInfo propertyInfo)
         {
-            var bindingBase = new Binding(propertyInfo.Name)
+            return new Binding(propertyInfo.Name)
             {
                 Mode = propertyInfo.CanRead && propertyInfo.CanWrite
                     ? BindingMode.TwoWay
                     : BindingMode.Default,
-                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
-                ValidatesOnDataErrors = true,
-                NotifyOnValidationError = true,
-                NotifyOnSourceUpdated = true,
-                NotifyOnTargetUpdated = true,
-                ValidatesOnNotifyDataErrors = true
+                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
             };
-
-            foreach (var fieldValidator in validations)
-            {
-                bindingBase.ValidationRules.Add(fieldValidator);
-            }
-
-            return bindingBase;
         }
 
         private bool canMutate;
@@ -501,7 +478,7 @@ namespace Forge.Forms.Collections
             //TODO: Find a better way to do this, since some buttons might get caught in e.Handled=true and then not be executed.
 
             if (e.LeftButton != MouseButtonState.Pressed) return;
-            
+
             var button = GetVisualParentByType(
                 (FrameworkElement) e.OriginalSource, typeof(PopupBox));
 
@@ -515,7 +492,7 @@ namespace Forge.Forms.Collections
         private static void MouseEnterHandler(object sender, MouseEventArgs e)
         {
             if (!(e.OriginalSource is DataGridRow row) || e.LeftButton != MouseButtonState.Pressed) return;
-            
+
             row.IsSelected = !row.IsSelected;
             e.Handled = true;
         }
