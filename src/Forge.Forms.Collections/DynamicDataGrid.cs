@@ -307,9 +307,9 @@ namespace Forge.Forms.Collections
         public static readonly RoutedCommand UpdateItemCommand = new RoutedCommand();
         public static readonly RoutedCommand RemoveItemCommand = new RoutedCommand();
 
-        public static List<IAddActionInterceptor> AddInterceptorChain = new List<IAddActionInterceptor>();
-        public static List<IUpdateActionInterceptor> UpdateInterceptorChain = new List<IUpdateActionInterceptor>();
-        public static List<IRemoveActionInterceptor> RemoveInterceptorChain = new List<IRemoveActionInterceptor>();
+        public static readonly List<IAddActionInterceptor> AddInterceptorChain = new List<IAddActionInterceptor>();
+        public static readonly List<IUpdateActionInterceptor> UpdateInterceptorChain = new List<IUpdateActionInterceptor>();
+        public static readonly List<IRemoveActionInterceptor> RemoveInterceptorChain = new List<IRemoveActionInterceptor>();
 
         static DynamicDataGrid()
         {
