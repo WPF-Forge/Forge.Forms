@@ -1,11 +1,11 @@
 ﻿using System;
-using System.Windows;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Data;
@@ -22,51 +22,15 @@ using Expression = System.Linq.Expressions.Expression;
 
 namespace Forge.Forms.Collections
 {
-    public class RelayCommand : ICommand
-    {
-        private Action<object> execute;
-        private Func<object, bool> canExecute;
-
-        public event EventHandler CanExecuteChanged
-        {
-            add { CommandManager.RequerySuggested += value; }
-            remove { CommandManager.RequerySuggested -= value; }
-        }
-
-        public RelayCommand(Action<object> execute, Func<object, bool> canExecute = null)
-        {
-            this.execute = execute;
-            this.canExecute = canExecute;
-        }
-
-        public bool CanExecute(object parameter)
-        {
-            return this.canExecute == null || this.canExecute(parameter);
-        }
-
-        public void Execute(object parameter)
-        {
-            this.execute(parameter);
-        }
-    }
-
     [TemplatePart(Name = "PART_DataGrid", Type = typeof(DataGrid))]
     public class DynamicDataGrid : Control
     {
-        #region Dependency properties
-
         public static readonly DependencyProperty CreateDialogPositiveContentProperty =
             DependencyProperty.Register(
                 nameof(CreateDialogPositiveContent),
                 typeof(string),
                 typeof(DynamicDataGrid),
                 new FrameworkPropertyMetadata("OK"));
-
-        public string CreateDialogPositiveContent
-        {
-            get => (string) GetValue(CreateDialogPositiveContentProperty);
-            set => SetValue(CreateDialogPositiveContentProperty, value);
-        }
 
         public static readonly DependencyProperty CreateDialogPositiveIconProperty =
             DependencyProperty.Register(
@@ -75,23 +39,11 @@ namespace Forge.Forms.Collections
                 typeof(DynamicDataGrid),
                 new FrameworkPropertyMetadata(PackIconKind.Check));
 
-        public PackIconKind? CreateDialogPositiveIcon
-        {
-            get => (PackIconKind) GetValue(CreateDialogPositiveIconProperty);
-            set => SetValue(CreateDialogPositiveIconProperty, value);
-        }
-
         public static readonly DependencyProperty CreateDialogNegativeContentProperty = DependencyProperty.Register(
             nameof(CreateDialogNegativeContent),
             typeof(string),
             typeof(DynamicDataGrid),
             new FrameworkPropertyMetadata("CANCEL"));
-
-        public string CreateDialogNegativeContent
-        {
-            get => (string) GetValue(CreateDialogNegativeContentProperty);
-            set => SetValue(CreateDialogNegativeContentProperty, value);
-        }
 
         public static readonly DependencyProperty CreateDialogNegativeIconProperty =
             DependencyProperty.Register(
@@ -100,23 +52,11 @@ namespace Forge.Forms.Collections
                 typeof(DynamicDataGrid),
                 new FrameworkPropertyMetadata(PackIconKind.Close));
 
-        public PackIconKind? CreateDialogNegativeIcon
-        {
-            get => (PackIconKind) GetValue(CreateDialogNegativeIconProperty);
-            set => SetValue(CreateDialogNegativeIconProperty, value);
-        }
-
         public static readonly DependencyProperty UpdateDialogPositiveContentProperty = DependencyProperty.Register(
             nameof(UpdateDialogPositiveContent),
             typeof(string),
             typeof(DynamicDataGrid),
             new FrameworkPropertyMetadata("OK"));
-
-        public string UpdateDialogPositiveContent
-        {
-            get => (string) GetValue(UpdateDialogPositiveContentProperty);
-            set => SetValue(UpdateDialogPositiveContentProperty, value);
-        }
 
         public static readonly DependencyProperty UpdateDialogPositiveIconProperty =
             DependencyProperty.Register(
@@ -125,23 +65,11 @@ namespace Forge.Forms.Collections
                 typeof(DynamicDataGrid),
                 new FrameworkPropertyMetadata(PackIconKind.Check));
 
-        public PackIconKind? UpdateDialogPositiveIcon
-        {
-            get => (PackIconKind) GetValue(UpdateDialogPositiveIconProperty);
-            set => SetValue(UpdateDialogPositiveIconProperty, value);
-        }
-
         public static readonly DependencyProperty UpdateDialogNegativeContentProperty = DependencyProperty.Register(
             nameof(UpdateDialogNegativeContent),
             typeof(string),
             typeof(DynamicDataGrid),
             new FrameworkPropertyMetadata("CANCEL"));
-
-        public string UpdateDialogNegativeContent
-        {
-            get => (string) GetValue(UpdateDialogNegativeContentProperty);
-            set => SetValue(UpdateDialogNegativeContentProperty, value);
-        }
 
         public static readonly DependencyProperty UpdateDialogNegativeIconProperty =
             DependencyProperty.Register(
@@ -150,23 +78,11 @@ namespace Forge.Forms.Collections
                 typeof(DynamicDataGrid),
                 new FrameworkPropertyMetadata(PackIconKind.Close));
 
-        public PackIconKind? UpdateDialogNegativeIcon
-        {
-            get => (PackIconKind) GetValue(UpdateDialogNegativeIconProperty);
-            set => SetValue(UpdateDialogNegativeIconProperty, value);
-        }
-
         public static readonly DependencyProperty RemoveDialogTitleContentProperty = DependencyProperty.Register(
             nameof(RemoveDialogTitleContent),
             typeof(string),
             typeof(DynamicDataGrid),
             new FrameworkPropertyMetadata());
-
-        public string RemoveDialogTitleContent
-        {
-            get => (string) GetValue(RemoveDialogTitleContentProperty);
-            set => SetValue(RemoveDialogTitleContentProperty, value);
-        }
 
         public static readonly DependencyProperty RemoveDialogTextContentProperty = DependencyProperty.Register(
             nameof(RemoveDialogTextContent),
@@ -174,23 +90,11 @@ namespace Forge.Forms.Collections
             typeof(DynamicDataGrid),
             new FrameworkPropertyMetadata("Remove item?"));
 
-        public string RemoveDialogTextContent
-        {
-            get => (string) GetValue(RemoveDialogTextContentProperty);
-            set => SetValue(RemoveDialogTextContentProperty, value);
-        }
-
         public static readonly DependencyProperty RemoveDialogPositiveContentProperty = DependencyProperty.Register(
             nameof(RemoveDialogPositiveContent),
             typeof(string),
             typeof(DynamicDataGrid),
             new FrameworkPropertyMetadata("REMOVE"));
-
-        public string RemoveDialogPositiveContent
-        {
-            get => (string) GetValue(RemoveDialogPositiveContentProperty);
-            set => SetValue(RemoveDialogPositiveContentProperty, value);
-        }
 
         public static readonly DependencyProperty RemoveDialogPositiveIconProperty =
             DependencyProperty.Register(
@@ -199,23 +103,11 @@ namespace Forge.Forms.Collections
                 typeof(DynamicDataGrid),
                 new FrameworkPropertyMetadata(PackIconKind.Delete));
 
-        public PackIconKind? RemoveDialogPositiveIcon
-        {
-            get => (PackIconKind) GetValue(RemoveDialogPositiveIconProperty);
-            set => SetValue(RemoveDialogPositiveIconProperty, value);
-        }
-
         public static readonly DependencyProperty RemoveDialogNegativeContentProperty = DependencyProperty.Register(
             nameof(RemoveDialogNegativeContent),
             typeof(string),
             typeof(DynamicDataGrid),
             new FrameworkPropertyMetadata("CANCEL"));
-
-        public string RemoveDialogNegativeContent
-        {
-            get => (string) GetValue(RemoveDialogNegativeContentProperty);
-            set => SetValue(RemoveDialogNegativeContentProperty, value);
-        }
 
         public static readonly DependencyProperty RemoveDialogNegativeIconProperty =
             DependencyProperty.Register(
@@ -224,12 +116,6 @@ namespace Forge.Forms.Collections
                 typeof(DynamicDataGrid),
                 new FrameworkPropertyMetadata(PackIconKind.Close));
 
-        public PackIconKind? RemoveDialogNegativeIcon
-        {
-            get => (PackIconKind) GetValue(RemoveDialogNegativeIconProperty);
-            set => SetValue(RemoveDialogNegativeIconProperty, value);
-        }
-
         public static readonly DependencyProperty ItemsSourceProperty =
             DependencyProperty.Register(
                 nameof(ItemsSource),
@@ -237,100 +123,12 @@ namespace Forge.Forms.Collections
                 typeof(DynamicDataGrid),
                 new FrameworkPropertyMetadata());
 
-        public IEnumerable ItemsSource
-        {
-            get => (IEnumerable) GetValue(ItemsSourceProperty);
-            set => SetValue(ItemsSourceProperty, value);
-        }
-
         public static readonly DependencyProperty DialogOptionsProperty =
             DependencyProperty.Register(
                 nameof(DialogOptions),
                 typeof(DialogOptions),
                 typeof(DynamicDataGrid),
                 new FrameworkPropertyMetadata(DialogOptions.Default, ItemsSourceChanged));
-
-        private static void ItemsSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            ((DynamicDataGrid) d).OnItemsSource(e.NewValue);
-        }
-
-        public DialogOptions DialogOptions
-        {
-            get => (DialogOptions) GetValue(DialogOptionsProperty);
-            set => SetValue(DialogOptionsProperty, value);
-        }
-
-        public static readonly DependencyProperty FormBuilderProperty =
-            DependencyProperty.Register(
-                nameof(FormBuilder),
-                typeof(IFormBuilder),
-                typeof(DynamicDataGrid),
-                new FrameworkPropertyMetadata(FormBuilding.FormBuilder.Default));
-
-        public IFormBuilder FormBuilder
-        {
-            get => (IFormBuilder) GetValue(FormBuilderProperty);
-            set => SetValue(FormBuilderProperty, value);
-        }
-
-        public static readonly DependencyProperty TargetDialogIdentifierProperty =
-            DependencyProperty.Register(
-                nameof(TargetDialogIdentifier),
-                typeof(object),
-                typeof(DynamicDataGrid),
-                new FrameworkPropertyMetadata());
-
-        public object TargetDialogIdentifier
-        {
-            get => GetValue(TargetDialogIdentifierProperty);
-            set => SetValue(TargetDialogIdentifierProperty, value);
-        }
-
-        #endregion
-
-        #region Collection helpers
-
-        private static readonly Dictionary<Type, Action<object, object>> AddItemCache =
-            new Dictionary<Type, Action<object, object>>();
-
-        private static void AddItemToCollection(Type itemType, object collection, object item)
-        {
-            if (!AddItemCache.TryGetValue(itemType, out var action))
-            {
-                var collectionType = typeof(ICollection<>).MakeGenericType(itemType);
-                var addMethod = collectionType.GetMethod("Add") ??
-                                throw new InvalidOperationException("This should not happen.");
-                var collectionParam = Expression.Parameter(typeof(object), "collection");
-                var itemParam = Expression.Parameter(typeof(object), "item");
-                var lambda = Expression.Lambda<Action<object, object>>(
-                    Expression.Call(
-                        Expression.Convert(collectionParam, collectionType),
-                        addMethod,
-                        Expression.Convert(itemParam, itemType)),
-                    collectionParam,
-                    itemParam
-                );
-
-                action = lambda.Compile();
-                AddItemCache[itemType] = action;
-            }
-
-            action(collection, item);
-        }
-
-        private static void RemoveItemFromCollection(Type itemType, object collection, object item)
-        {
-            var collectionType = collection.GetType();
-            var removeFromCollection = collectionType.GetMethod("Remove");
-
-            if (removeFromCollection != null)
-            {
-                removeFromCollection.Invoke(collection, new[] {item});
-            }
-        }
-
-        #endregion
 
         public static readonly RoutedCommand CreateItemCommand = new RoutedCommand();
         public static readonly RoutedCommand UpdateItemCommand = new RoutedCommand();
@@ -343,6 +141,11 @@ namespace Forge.Forms.Collections
 
         public static readonly List<IRemoveActionInterceptor> RemoveInterceptorChain =
             new List<IRemoveActionInterceptor>();
+
+        private bool canMutate;
+
+        private DataGrid dataGrid;
+        private Type itemType;
 
         static DynamicDataGrid()
         {
@@ -360,8 +163,6 @@ namespace Forge.Forms.Collections
 
         private bool IsSelectAll { get; set; }
 
-        private DataGrid dataGrid;
-
         private List<DataGridColumn> ProtectedColumns { get; set; }
 
         private Type ItemType
@@ -370,11 +171,16 @@ namespace Forge.Forms.Collections
             set
             {
                 if (itemType == value)
+                {
                     return;
+                }
 
                 itemType = value;
 
-                if (dataGrid == null || itemType == null) return;
+                if (dataGrid == null || itemType == null)
+                {
+                    return;
+                }
 
                 foreach (var dataGridColumn in dataGrid.Columns.Except(ProtectedColumns).ToList())
                 {
@@ -392,7 +198,7 @@ namespace Forge.Forms.Collections
                 {
                     Path = new PropertyPath("IsSelected"),
                     RelativeSource =
-                        new RelativeSource(RelativeSourceMode.FindAncestor) {AncestorType = typeof(DataGridRow)},
+                        new RelativeSource(RelativeSourceMode.FindAncestor) { AncestorType = typeof(DataGridRow) },
                     Mode = BindingMode.TwoWay
                 });
 
@@ -412,8 +218,8 @@ namespace Forge.Forms.Collections
 
                 dataGrid.Columns.Insert(0, new DataGridTemplateColumn
                 {
-                    CellTemplate = new DataTemplate {VisualTree = rowCheckBox},
-                    HeaderTemplate = new DataTemplate {VisualTree = headerCheckBox}
+                    CellTemplate = new DataTemplate { VisualTree = rowCheckBox },
+                    HeaderTemplate = new DataTemplate { VisualTree = headerCheckBox }
                 });
             }
         }
@@ -421,7 +227,9 @@ namespace Forge.Forms.Collections
         private void CreateColumn(PropertyInfo propertyInfo)
         {
             if (propertyInfo.GetCustomAttribute<FieldIgnoreAttribute>() != null)
+            {
                 return;
+            }
 
             var dataGridTextColumn = new MaterialDataGridTextColumn
             {
@@ -445,9 +253,6 @@ namespace Forge.Forms.Collections
             };
         }
 
-        private bool canMutate;
-        private Type itemType;
-
         public override void OnApplyTemplate()
         {
             dataGrid = Template.FindName("PART_DataGrid", this) as DataGrid;
@@ -466,7 +271,10 @@ namespace Forge.Forms.Collections
             while (parent != null)
             {
                 if (type.IsInstanceOfType(parent))
+                {
                     break;
+                }
+
                 parent = VisualTreeHelper.GetParent(parent);
             }
 
@@ -477,13 +285,19 @@ namespace Forge.Forms.Collections
         {
             //TODO: Find a better way to do this, since some buttons might get caught in e.Handled=true and then not be executed.
 
-            if (e.LeftButton != MouseButtonState.Pressed) return;
+            if (e.LeftButton != MouseButtonState.Pressed)
+            {
+                return;
+            }
 
             var button = GetVisualParentByType(
-                (FrameworkElement) e.OriginalSource, typeof(PopupBox));
+                (FrameworkElement)e.OriginalSource, typeof(PopupBox));
 
             if (button != null || !(GetVisualParentByType(
-                    (FrameworkElement) e.OriginalSource, typeof(DataGridRow)) is DataGridRow row)) return;
+                    (FrameworkElement)e.OriginalSource, typeof(DataGridRow)) is DataGridRow row))
+            {
+                return;
+            }
 
             row.IsSelected = !row.IsSelected;
             e.Handled = true;
@@ -491,7 +305,10 @@ namespace Forge.Forms.Collections
 
         private static void MouseEnterHandler(object sender, MouseEventArgs e)
         {
-            if (!(e.OriginalSource is DataGridRow row) || e.LeftButton != MouseButtonState.Pressed) return;
+            if (!(e.OriginalSource is DataGridRow row) || e.LeftButton != MouseButtonState.Pressed)
+            {
+                return;
+            }
 
             row.IsSelected = !row.IsSelected;
             e.Handled = true;
@@ -500,7 +317,10 @@ namespace Forge.Forms.Collections
         private static IEnumerable<T> FindVisualChildren<T>(DependencyObject depObj)
             where T : DependencyObject
         {
-            if (depObj == null) yield break;
+            if (depObj == null)
+            {
+                yield break;
+            }
 
             for (var i = 0; i < VisualTreeHelper.GetChildrenCount(depObj); i++)
             {
@@ -529,7 +349,9 @@ namespace Forge.Forms.Collections
                 (frameworkElement.Parent is DataGridCell || frameworkElement is DataGridCell ||
                  FindVisualChild<DataGridCell>(frameworkElement) != null) && sender is DataGrid grid &&
                 grid.SelectedItems.Count == 1)
+            {
                 UpdateItemCommand.Execute(dataGrid.SelectedItem, dataGrid);
+            }
         }
 
         private void OnItemsSource(object collection)
@@ -625,7 +447,7 @@ namespace Forge.Forms.Collections
             {
                 result = await Show
                     .Dialog(TargetDialogIdentifier, DataContext, DialogOptions)
-                    .For((IFormDefinition) definition);
+                    .For((IFormDefinition)definition);
             }
             catch
             {
@@ -830,6 +652,195 @@ namespace Forge.Forms.Collections
                 formDefinition,
                 formDefinition.FormRows.Concat(rows ?? new FormRow[0]).ToList().AsReadOnly());
         }
+
+        #region Dependency properties
+
+        public string CreateDialogPositiveContent
+        {
+            get => (string)GetValue(CreateDialogPositiveContentProperty);
+            set => SetValue(CreateDialogPositiveContentProperty, value);
+        }
+
+
+        public PackIconKind? CreateDialogPositiveIcon
+        {
+            get => (PackIconKind)GetValue(CreateDialogPositiveIconProperty);
+            set => SetValue(CreateDialogPositiveIconProperty, value);
+        }
+
+
+        public string CreateDialogNegativeContent
+        {
+            get => (string)GetValue(CreateDialogNegativeContentProperty);
+            set => SetValue(CreateDialogNegativeContentProperty, value);
+        }
+
+
+        public PackIconKind? CreateDialogNegativeIcon
+        {
+            get => (PackIconKind)GetValue(CreateDialogNegativeIconProperty);
+            set => SetValue(CreateDialogNegativeIconProperty, value);
+        }
+
+
+        public string UpdateDialogPositiveContent
+        {
+            get => (string)GetValue(UpdateDialogPositiveContentProperty);
+            set => SetValue(UpdateDialogPositiveContentProperty, value);
+        }
+
+
+        public PackIconKind? UpdateDialogPositiveIcon
+        {
+            get => (PackIconKind)GetValue(UpdateDialogPositiveIconProperty);
+            set => SetValue(UpdateDialogPositiveIconProperty, value);
+        }
+
+
+        public string UpdateDialogNegativeContent
+        {
+            get => (string)GetValue(UpdateDialogNegativeContentProperty);
+            set => SetValue(UpdateDialogNegativeContentProperty, value);
+        }
+
+
+        public PackIconKind? UpdateDialogNegativeIcon
+        {
+            get => (PackIconKind)GetValue(UpdateDialogNegativeIconProperty);
+            set => SetValue(UpdateDialogNegativeIconProperty, value);
+        }
+
+
+        public string RemoveDialogTitleContent
+        {
+            get => (string)GetValue(RemoveDialogTitleContentProperty);
+            set => SetValue(RemoveDialogTitleContentProperty, value);
+        }
+
+
+        public string RemoveDialogTextContent
+        {
+            get => (string)GetValue(RemoveDialogTextContentProperty);
+            set => SetValue(RemoveDialogTextContentProperty, value);
+        }
+
+
+        public string RemoveDialogPositiveContent
+        {
+            get => (string)GetValue(RemoveDialogPositiveContentProperty);
+            set => SetValue(RemoveDialogPositiveContentProperty, value);
+        }
+
+
+        public PackIconKind? RemoveDialogPositiveIcon
+        {
+            get => (PackIconKind)GetValue(RemoveDialogPositiveIconProperty);
+            set => SetValue(RemoveDialogPositiveIconProperty, value);
+        }
+
+
+        public string RemoveDialogNegativeContent
+        {
+            get => (string)GetValue(RemoveDialogNegativeContentProperty);
+            set => SetValue(RemoveDialogNegativeContentProperty, value);
+        }
+
+
+        public PackIconKind? RemoveDialogNegativeIcon
+        {
+            get => (PackIconKind)GetValue(RemoveDialogNegativeIconProperty);
+            set => SetValue(RemoveDialogNegativeIconProperty, value);
+        }
+
+
+        public IEnumerable ItemsSource
+        {
+            get => (IEnumerable)GetValue(ItemsSourceProperty);
+            set => SetValue(ItemsSourceProperty, value);
+        }
+
+
+        private static void ItemsSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            ((DynamicDataGrid)d).OnItemsSource(e.NewValue);
+        }
+
+        public DialogOptions DialogOptions
+        {
+            get => (DialogOptions)GetValue(DialogOptionsProperty);
+            set => SetValue(DialogOptionsProperty, value);
+        }
+
+        public static readonly DependencyProperty FormBuilderProperty =
+            DependencyProperty.Register(
+                nameof(FormBuilder),
+                typeof(IFormBuilder),
+                typeof(DynamicDataGrid),
+                new FrameworkPropertyMetadata(FormBuilding.FormBuilder.Default));
+
+        public IFormBuilder FormBuilder
+        {
+            get => (IFormBuilder)GetValue(FormBuilderProperty);
+            set => SetValue(FormBuilderProperty, value);
+        }
+
+        public static readonly DependencyProperty TargetDialogIdentifierProperty =
+            DependencyProperty.Register(
+                nameof(TargetDialogIdentifier),
+                typeof(object),
+                typeof(DynamicDataGrid),
+                new FrameworkPropertyMetadata());
+
+        public object TargetDialogIdentifier
+        {
+            get => GetValue(TargetDialogIdentifierProperty);
+            set => SetValue(TargetDialogIdentifierProperty, value);
+        }
+
+        #endregion
+
+        #region Collection helpers
+
+        private static readonly Dictionary<Type, Action<object, object>> AddItemCache =
+            new Dictionary<Type, Action<object, object>>();
+
+        private static void AddItemToCollection(Type itemType, object collection, object item)
+        {
+            if (!AddItemCache.TryGetValue(itemType, out var action))
+            {
+                var collectionType = typeof(ICollection<>).MakeGenericType(itemType);
+                var addMethod = collectionType.GetMethod("Add") ??
+                                throw new InvalidOperationException("This should not happen.");
+                var collectionParam = Expression.Parameter(typeof(object), "collection");
+                var itemParam = Expression.Parameter(typeof(object), "item");
+                var lambda = Expression.Lambda<Action<object, object>>(
+                    Expression.Call(
+                        Expression.Convert(collectionParam, collectionType),
+                        addMethod,
+                        Expression.Convert(itemParam, itemType)),
+                    collectionParam,
+                    itemParam
+                );
+
+                action = lambda.Compile();
+                AddItemCache[itemType] = action;
+            }
+
+            action(collection, item);
+        }
+
+        private static void RemoveItemFromCollection(Type itemType, object collection, object item)
+        {
+            var collectionType = collection.GetType();
+            var removeFromCollection = collectionType.GetMethod("Remove");
+
+            if (removeFromCollection != null)
+            {
+                removeFromCollection.Invoke(collection, new[] { item });
+            }
+        }
+
+        #endregion
     }
 
     internal class ActionInterceptor : IActionInterceptor
@@ -886,7 +897,7 @@ namespace Forge.Forms.Collections
             Snapshot = new Snapshot(model, new HashSet<string>(formRows
                 .SelectMany(r => r.Elements.SelectMany(e => e.Elements))
                 .Where(e => e is DataFormField)
-                .Select(f => ((DataFormField) f).Key)));
+                .Select(f => ((DataFormField)f).Key)));
         }
 
         public object Model { get; }

@@ -5,6 +5,5 @@ namespace Forge.Forms.Collections.Annotations
     [AttributeUsage(AttributeTargets.Property)]
     public class CrudAttribute : Attribute
     {
-                
     }
 }
