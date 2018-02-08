@@ -7,8 +7,6 @@ using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -138,33 +136,12 @@ namespace Forge.Forms.Collections
             DependencyProperty.Register("MoveNextCommand", typeof(ICommand), typeof(DynamicDataGrid),
                 new PropertyMetadata());
 
-        public ICommand MoveNextCommand
-        {
-            get => (ICommand)GetValue(MoveNextCommandProperty);
-            set => SetValue(MoveNextCommandProperty, value);
-        }
-
         /// <summary>
         /// Identifies the MovePrevious dependency property.
         /// </summary>
         public static DependencyProperty MoveBackCommandProperty =
             DependencyProperty.Register("MoveBackCommand", typeof(ICommand), typeof(DynamicDataGrid),
                 new PropertyMetadata());
-
-        public ICommand MoveBackCommand
-        {
-            get => (ICommand)GetValue(MoveBackCommandProperty);
-            set => SetValue(MoveBackCommandProperty, value);
-        }
-
-        private static void PropertyChangedCallback(DependencyObject dependencyObject,
-            DependencyPropertyChangedEventArgs dependencyPropertyChangedEventArgs)
-        {
-            if (dependencyObject is DynamicDataGrid grid)
-            {
-                grid.OnPropertyChanged(nameof(grid.PaginatedItemsSource));
-            }
-        }
 
         public static readonly DependencyProperty DialogOptionsProperty =
             DependencyProperty.Register(
@@ -195,6 +172,27 @@ namespace Forge.Forms.Collections
         public static readonly List<IRemoveActionInterceptor> RemoveInterceptorChain =
             new List<IRemoveActionInterceptor>();
 
+        public static readonly DependencyProperty RowsPerPageTextProperty =
+            DependencyProperty.Register("RowsPerPageText", typeof(string), typeof(DynamicDataGrid),
+                new PropertyMetadata("Rows per page"));
+
+        /// <summary>
+        /// Identifies the CurrentPage dependency property.
+        /// </summary>
+        public static DependencyProperty CurrentPageProperty =
+            DependencyProperty.Register("CurrentPage", typeof(int), typeof(DynamicDataGrid), new PropertyMetadata(1)
+            {
+                PropertyChangedCallback = PropertyChangedCallback
+            });
+
+        public static readonly DependencyProperty IsDeleteButtonVisibleProperty =
+            DependencyProperty.Register("IsDeleteButtonVisible", typeof(bool), typeof(DynamicDataGrid),
+                new PropertyMetadata(false));
+
+        public static readonly DependencyProperty IsFilterButtonVisibleProperty =
+            DependencyProperty.Register("IsFilterButtonVisible", typeof(bool), typeof(DynamicDataGrid),
+                new PropertyMetadata(true));
+
         private bool canMutate;
         private Type itemType;
 
@@ -212,6 +210,18 @@ namespace Forge.Forms.Collections
             Loaded += (s, e) => OnItemsSource(ItemsSource);
         }
 
+        public ICommand MoveNextCommand
+        {
+            get => (ICommand)GetValue(MoveNextCommandProperty);
+            set => SetValue(MoveNextCommandProperty, value);
+        }
+
+        public ICommand MoveBackCommand
+        {
+            get => (ICommand)GetValue(MoveBackCommandProperty);
+            set => SetValue(MoveBackCommandProperty, value);
+        }
+
         private DataGrid DataGrid { get; set; }
 
 
@@ -227,61 +237,14 @@ namespace Forge.Forms.Collections
             set => SetValue(RowsPerPageTextProperty, value);
         }
 
-        public static readonly DependencyProperty RowsPerPageTextProperty =
-            DependencyProperty.Register("RowsPerPageText", typeof(string), typeof(DynamicDataGrid),
-                new PropertyMetadata("Rows per page"));
-
         public int TotalItems => GetIEnumerableCount(ItemsSource) ?? 0;
 
         public int MaxPages => (int)Math.Ceiling((double)TotalItems / ItemsPerPage);
-
-        /// <summary>
-        /// Identifies the CurrentPage dependency property.
-        /// </summary>
-        public static DependencyProperty CurrentPageProperty =
-            DependencyProperty.Register("CurrentPage", typeof(int), typeof(DynamicDataGrid), new PropertyMetadata(1)
-            {
-                PropertyChangedCallback = PropertyChangedCallback
-            });
 
         public int CurrentPage
         {
             get => (int)GetValue(CurrentPageProperty);
             set => SetValue(CurrentPageProperty, value);
-        }
-
-        public static void DynamicUsing(object resource, Action action)
-        {
-            try
-            {
-                action();
-            }
-            finally
-            {
-                if (resource is IDisposable d)
-                    d.Dispose();
-            }
-        }
-
-        public int? GetIEnumerableCount(IEnumerable enumerable)
-        {
-            switch (enumerable)
-            {
-                case null:
-                    return null;
-                case ICollection col:
-                    return col.Count;
-            }
-
-            int c = 0;
-            var e = enumerable.GetEnumerator();
-            DynamicUsing(e, () =>
-            {
-                while (e.MoveNext())
-                    c++;
-            });
-
-            return c;
         }
 
         public bool HasCheckboxes
@@ -302,20 +265,12 @@ namespace Forge.Forms.Collections
             private set => SetValue(IsDeleteButtonVisibleProperty, value);
         }
 
-        public static readonly DependencyProperty IsDeleteButtonVisibleProperty =
-            DependencyProperty.Register("IsDeleteButtonVisible", typeof(bool), typeof(DynamicDataGrid),
-                new PropertyMetadata(false));
-
 
         public bool IsFilterButtonVisible
         {
             get => (bool)GetValue(IsFilterButtonVisibleProperty);
             private set => SetValue(IsFilterButtonVisibleProperty, value);
         }
-
-        public static readonly DependencyProperty IsFilterButtonVisibleProperty =
-            DependencyProperty.Register("IsFilterButtonVisible", typeof(bool), typeof(DynamicDataGrid),
-                new PropertyMetadata(true));
 
 
         private bool IsSelectAll { get; set; }
@@ -394,6 +349,55 @@ namespace Forge.Forms.Collections
         public int ItemsPerPage { get; set; } = 10;
 
         private ComboBox PerPageComboBox { get; set; }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private static void PropertyChangedCallback(DependencyObject dependencyObject,
+            DependencyPropertyChangedEventArgs dependencyPropertyChangedEventArgs)
+        {
+            if (dependencyObject is DynamicDataGrid grid)
+            {
+                grid.OnPropertyChanged(nameof(grid.PaginatedItemsSource));
+            }
+        }
+
+        public static void DynamicUsing(object resource, Action action)
+        {
+            try
+            {
+                action();
+            }
+            finally
+            {
+                if (resource is IDisposable d)
+                {
+                    d.Dispose();
+                }
+            }
+        }
+
+        public int? GetIEnumerableCount(IEnumerable enumerable)
+        {
+            switch (enumerable)
+            {
+                case null:
+                    return null;
+                case ICollection col:
+                    return col.Count;
+            }
+
+            var c = 0;
+            var e = enumerable.GetEnumerator();
+            DynamicUsing(e, () =>
+            {
+                while (e.MoveNext())
+                {
+                    c++;
+                }
+            });
+
+            return c;
+        }
 
         private void CreateColumn(PropertyInfo propertyInfo)
         {
@@ -969,6 +973,11 @@ namespace Forge.Forms.Collections
                 formDefinition.FormRows.Concat(rows ?? new FormRow[0]).ToList().AsReadOnly());
         }
 
+        internal void OnPropertyChanged(string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
         #region Dependency properties
 
         public string CreateDialogPositiveContent
@@ -1177,13 +1186,6 @@ namespace Forge.Forms.Collections
         }
 
         #endregion
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        internal void OnPropertyChanged(string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
     }
 
     internal class ActionInterceptor : IActionInterceptor

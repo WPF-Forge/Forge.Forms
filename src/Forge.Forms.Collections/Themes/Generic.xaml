@@ -44,7 +44,6 @@
 
                             <materialDesign:PopupBox x:Name="PopupBox" HorizontalAlignment="Right"
                                                      PlacementMode="BottomAndAlignLeftEdges"
-                                                 
                                                      materialDesign:RippleAssist.RippleSizeMultiplier="0.6"
                                                      materialDesign:RippleAssist.IsCentered="True"
                                                      StaysOpen="False">
