@@ -1,51 +1,52 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Media;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Windows.Input;
-using System.Windows.Controls.Primitives;
 
 namespace FancyGrid
 {
+    /// <inheritdoc />
     /// <summary>
     /// A grid that makes inline filtering possible.
     /// </summary>
-    public class FilteringDataGrid : System.Windows.Controls.DataGrid
+    public class FilteringDataGrid : DataGrid
     {
         /// <summary>
         /// This dictionary will have a list of all applied filters
         /// </summary>
-        private Dictionary<string, string> columnFilters;
+        private readonly Dictionary<string, string> columnFilters;
 
         /// <summary>
         /// This dictionary will map a column to the filter behavior
         /// </summary>
-        private Dictionary<string, Func<object, string, bool>> columnFilterModes;
+        private readonly Dictionary<string, Func<object, string, bool>> columnFilterModes;
 
         /// <summary>
         /// Cache with properties for better performance
         /// </summary>
-        private Dictionary<string, PropertyInfo> propertyCache;
+        private readonly Dictionary<string, PropertyInfo> propertyCache;
 
         /// <summary>
         /// Case sensitive filtering
         /// </summary>
         public static DependencyProperty IsFilteringCaseSensitiveProperty =
-             DependencyProperty.Register("IsFilteringCaseSensitive", typeof(bool), typeof(FilteringDataGrid), new PropertyMetadata(true));
+            DependencyProperty.Register("IsFilteringCaseSensitive", typeof(bool), typeof(FilteringDataGrid),
+                new PropertyMetadata(true));
 
         /// <summary>
         /// Case sensitive filtering
         /// </summary>
         public bool IsFilteringCaseSensitive
         {
-            get { return (bool)(GetValue(IsFilteringCaseSensitiveProperty)); }
-            set { SetValue(IsFilteringCaseSensitiveProperty, value); }
+            get => (bool)(GetValue(IsFilteringCaseSensitiveProperty));
+            set => SetValue(IsFilteringCaseSensitiveProperty, value);
         }
 
 
@@ -60,34 +61,33 @@ namespace FancyGrid
             propertyCache = new Dictionary<string, PropertyInfo>();
 
             // Enable Filtering
-            AddHandler(TextBox.TextChangedEvent, new TextChangedEventHandler(OnTextChanged), true);
+            AddHandler(TextBoxBase.TextChangedEvent, new TextChangedEventHandler(OnTextChanged), true);
 
             // Enable Multisort
             Sorting += FilteringDataGrid_Sorting;
 
             // Clear the cache if we bind a new collection
-            DataContextChanged += new DependencyPropertyChangedEventHandler(FilteringDataGrid_DataContextChanged);
+            DataContextChanged += FilteringDataGrid_DataContextChanged;
 
             //Set up context menus
             ContextMenuOpening += FilteringDataGrid_ContextMenuOpening;
-            
-             AutoGeneratingColumn+=FilteringDataGrid_AutoGeneratingColumn;
 
-
+            AutoGeneratingColumn += FilteringDataGrid_AutoGeneratingColumn;
         }
-        
-             private void FilteringDataGrid_AutoGeneratingColumn(object sender, DataGridAutoGeneratingColumnEventArgs e)
+
+        private void FilteringDataGrid_AutoGeneratingColumn(object sender, DataGridAutoGeneratingColumnEventArgs e)
         {
             if (!e.Column.CanUserSort)
             {
-                Type type=e.PropertyType;
-                if (type.IsGenericType&&type.IsValueType&&typeof(IComparable).IsAssignableFrom(type.GetGenericArguments()[0]))
+                var type = e.PropertyType;
+                if (type.IsGenericType && type.IsValueType &&
+                    typeof(IComparable).IsAssignableFrom(type.GetGenericArguments()[0]))
                 {
                     // allow nullable primitives to be sorted
-                    e.Column.CanUserSort=true;
+                    e.Column.CanUserSort = true;
                 }
             }
-        } 
+        }
 
 
         void FilteringDataGrid_ContextMenuOpening(object sender, ContextMenuEventArgs e)
@@ -98,52 +98,72 @@ namespace FancyGrid
             if (ContextMenu == null)
                 ContextMenu = new ContextMenu();
             ContextMenu.Items.Clear();
-            ContextMenu.Items.Add(new MenuItem() { Header = "Include items like this " + CurrentCell.Item, Command = new FunctionRunnerCommand(FilterToSelected) });
-            ContextMenu.Items.Add(new MenuItem() { Header = "Exclude items like this  " + CurrentCell.Item, Command = new FunctionRunnerCommand(FilterToNotSelected) });
-            ContextMenu.Items.Add(new MenuItem() { Header = "Clear all filters", Command = new FunctionRunnerCommand(ClearFilters) });
+            ContextMenu.Items.Add(new MenuItem
+            {
+                Header = "Include items like this " + CurrentCell.Item,
+                Command = new FunctionRunnerCommand(FilterToSelected)
+            });
+            ContextMenu.Items.Add(new MenuItem
+            {
+                Header = "Exclude items like this  " + CurrentCell.Item,
+                Command = new FunctionRunnerCommand(FilterToNotSelected)
+            });
+            ContextMenu.Items.Add(new MenuItem
+            {
+                Header = "Clear all filters",
+                Command = new FunctionRunnerCommand(ClearFilters)
+            });
             ContextMenu.Items.Add(new Separator());
             if (ExtraContextMenuItems != null)
                 foreach (var item in ExtraContextMenuItems)
                     ContextMenu.Items.Add(ExtraContextMenuItems);
-
         }
 
         private void FilterToSelected(object p)
         {
-            var tbs = Helpers.AllChildren<TextBox>(this);
+            var tbs = this.AllChildren<TextBox>();
             TextBox tb = null;
             foreach (var item in tbs)
             {
-                DataGridColumnHeader header = TryFindParent<DataGridColumnHeader>(item);
+                var header = TryFindParent<DataGridColumnHeader>(item);
                 if (header.Column != null && header.Column == CurrentColumn)
                 {
                     tb = item;
                     break;
                 }
             }
-            var text = (CurrentColumn.GetCellContent(CurrentCell.Item) as TextBlock).Text; //Kludge
-            tb.Text = text;
+
+            if (tb != null)
+            {
+                tb.Text = (CurrentColumn.GetCellContent(CurrentCell.Item) as TextBlock)?.Text ??
+                          throw new InvalidOperationException();
+            }
         }
+
         private void FilterToNotSelected(object p)
         {
-            var tbs = Helpers.AllChildren<TextBox>(this);
+            var tbs = this.AllChildren<TextBox>();
             TextBox tb = null;
             foreach (var item in tbs)
             {
-                DataGridColumnHeader header = TryFindParent<DataGridColumnHeader>(item);
+                var header = TryFindParent<DataGridColumnHeader>(item);
                 if (header.Column != null && header.Column == CurrentColumn)
                 {
                     tb = item;
                     break;
                 }
             }
-            var text = (CurrentColumn.GetCellContent(CurrentCell.Item) as TextBlock).Text; //Kludge
-            tb.Text = "!" + text;
+
+            var text = (CurrentColumn.GetCellContent(CurrentCell.Item) as TextBlock)?.Text; //Kludge
+            if (tb != null)
+            {
+                tb.Text = "!" + text;
+            }
         }
 
         void ClearFilters(object p)
         {
-            foreach (var item in Helpers.AllChildren<TextBox>(this))
+            foreach (var item in this.AllChildren<TextBox>())
                 item.Clear();
 
             columnFilters.Clear();
@@ -152,13 +172,12 @@ namespace FancyGrid
         }
 
 
-        void FilteringDataGrid_Sorting(object sender, System.Windows.Controls.DataGridSortingEventArgs e)
+        void FilteringDataGrid_Sorting(object sender, DataGridSortingEventArgs e)
         {
             var view = CollectionViewSource.GetDefaultView(Items);
 
             foreach (var column in Columns)
             {
-
                 var sd = Helpers.FindSortDescription(view.SortDescriptions, column.SortMemberPath);
                 if (sd.HasValue)
                     column.SortDirection = sd.Value.Direction;
@@ -166,13 +185,14 @@ namespace FancyGrid
 
             if (e.Column.SortDirection.HasValue)
             {
-
-                view.SortDescriptions.Remove(view.SortDescriptions.FirstOrDefault(sd => sd.PropertyName == e.Column.Header.ToString()));
+                view.SortDescriptions.Remove(
+                    view.SortDescriptions.FirstOrDefault(sd => sd.PropertyName == e.Column.Header.ToString()));
                 switch (e.Column.SortDirection.Value)
                 {
                     case ListSortDirection.Ascending:
                         e.Column.SortDirection = ListSortDirection.Descending;
-                        view.SortDescriptions.Add(new SortDescription(e.Column.Header.ToString(), ListSortDirection.Descending));
+                        view.SortDescriptions.Add(new SortDescription(e.Column.Header.ToString(),
+                            ListSortDirection.Descending));
                         break;
                     case ListSortDirection.Descending:
                         e.Column.SortDirection = null;
@@ -186,7 +206,9 @@ namespace FancyGrid
                 e.Column.SortDirection = ListSortDirection.Ascending;
                 view.SortDescriptions.Add(new SortDescription(e.Column.Header.ToString(), ListSortDirection.Ascending));
             }
-            e.Handled = true; ;
+
+            e.Handled = true;
+            ;
         }
 
         private void FilteringDataGrid_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -197,10 +219,10 @@ namespace FancyGrid
         private void OnTextChanged(object sender, TextChangedEventArgs e)
         {
             // Get the textbox
-            TextBox filterTextBox = e.OriginalSource as TextBox;
+            var filterTextBox = e.OriginalSource as TextBox;
 
             // Get the header of the textbox
-            DataGridColumnHeader header = TryFindParent<DataGridColumnHeader>(filterTextBox);
+            var header = TryFindParent<DataGridColumnHeader>(filterTextBox);
             if (header != null)
             {
                 UpdateFilter(filterTextBox, header);
@@ -208,11 +230,11 @@ namespace FancyGrid
             }
         }
 
-        private void UpdateFilter(TextBox textBox, DataGridColumnHeader header)
+        private void UpdateFilter(TextBox textBox, FrameworkElement header)
         {
             // Try to get the property bound to the column.
             // This should be stored as datacontext.
-            string columnBinding = header.DataContext != null ? header.DataContext.ToString() : "";
+            var columnBinding = header.DataContext?.ToString() ?? "";
 
             if (!String.IsNullOrEmpty(columnBinding))
             {
@@ -235,27 +257,24 @@ namespace FancyGrid
                 else
                     columnFilterModes[columnBinding] = fm_Contains;
 
-                var actualFilter = filter.TrimStart('<', '>', '~', '=', '!');
-                columnFilters[columnBinding] = actualFilter;
+                columnFilters[columnBinding] = filter.TrimStart('<', '>', '~', '=', '!');
             }
         }
-
 
 
         private void ApplyFilters()
         {
             // Get the view
-            ICollectionView view = CollectionViewSource.GetDefaultView(ItemsSource);
+            var view = CollectionViewSource.GetDefaultView(ItemsSource);
             view.Filter = Filter;
         }
 
         private bool Filter(object item)
         {
-
             // Loop filters
-            foreach (KeyValuePair<string, string> filter in columnFilters)
+            foreach (var filter in columnFilters)
             {
-                object property = GetPropertyValue(item, Regex.Replace(filter.Key, @"\s+", ""));
+                var property = GetPropertyValue(item, Regex.Replace(filter.Key, @"\s+", ""));
                 if (property != null && !string.IsNullOrEmpty(filter.Value))
                 {
                     if (columnFilterModes.ContainsKey(filter.Key))
@@ -275,7 +294,7 @@ namespace FancyGrid
 
         private bool fm_blank(object item, string filter)
         {
-            return item == null || string.IsNullOrWhiteSpace(item.ToString());
+            return string.IsNullOrWhiteSpace(item?.ToString());
         }
 
         private bool fm_notblank(object item, string filter)
@@ -287,24 +306,23 @@ namespace FancyGrid
         {
             if (IsFilteringCaseSensitive)
                 return item.ToString().Contains(filter);
-            else
-                return item.ToString().ToLower().Contains(filter.ToLower());
+            return item.ToString().IndexOf(filter, StringComparison.OrdinalIgnoreCase) >= 0;
         }
 
         private bool fm_Startswith(object item, string filter)
         {
-            var compareMode = IsFilteringCaseSensitive ? StringComparison.CurrentCulture : StringComparison.CurrentCultureIgnoreCase;
+            var compareMode = IsFilteringCaseSensitive
+                ? StringComparison.CurrentCulture
+                : StringComparison.CurrentCultureIgnoreCase;
 
             return item.ToString().StartsWith(filter, compareMode);
         }
 
         private bool fm_Lessthan(object item, string filter)
         {
-            double a, b;
-            if (double.TryParse(filter, out b) && double.TryParse(item.ToString(), out a))
+            if (double.TryParse(filter, out var b) && double.TryParse(item.ToString(), out var a))
                 return a < b;
-            else
-                return false;
+            return false;
         }
 
         private bool fm_GreaterThanEqual(object item, string filter)
@@ -314,7 +332,9 @@ namespace FancyGrid
 
         private bool fm_Endswith(object item, string filter)
         {
-            var compareMode = IsFilteringCaseSensitive ? StringComparison.CurrentCulture : StringComparison.CurrentCultureIgnoreCase;
+            var compareMode = IsFilteringCaseSensitive
+                ? StringComparison.CurrentCulture
+                : StringComparison.CurrentCultureIgnoreCase;
             return item.ToString().EndsWith(filter, compareMode);
         }
 
@@ -326,6 +346,7 @@ namespace FancyGrid
                 a = a.ToLower();
                 filter = filter.ToLower();
             }
+
             return a == filter;
         }
 
@@ -338,6 +359,7 @@ namespace FancyGrid
         {
             return !fm_Contains(item, filter);
         }
+
         #endregion
 
         /// <summary>
@@ -352,12 +374,13 @@ namespace FancyGrid
             object value = null;
 
             // Get property  from cache
-            PropertyInfo pi = null;
+            PropertyInfo pi;
             if (propertyCache.ContainsKey(property))
                 pi = propertyCache[property];
             else
             {
-                pi = item.GetType().GetProperty(property, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
+                pi = item.GetType().GetProperty(property,
+                    BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
                 propertyCache.Add(property, pi);
             }
 
@@ -376,25 +399,24 @@ namespace FancyGrid
         /// <param name="child">A direct or indirect child of the queried item.</param>
         /// <returns>The first parent item that matches the submitted
         /// type parameter. If not matching item can be found, a null reference is being returned.</returns>
-        public static T TryFindParent<T>(DependencyObject child)
-          where T : DependencyObject
+        public static T TryFindParent<T>(DependencyObject child) where T : DependencyObject
         {
-            //get parent item
-            DependencyObject parentObject = GetParentObject(child);
-
-            //we've reached the end of the tree
-            if (parentObject == null) return null;
-
-            //check if the parent matches the type we're looking for
-            T parent = parentObject as T;
-            if (parent != null)
+            while (true)
             {
-                return parent;
-            }
-            else
-            {
+                //get parent item
+                var parentObject = GetParentObject(child);
+
+                //we've reached the end of the tree
+                if (parentObject == null) return null;
+
+                //check if the parent matches the type we're looking for
+                if (parentObject is T parent)
+                {
+                    return parent;
+                }
+
                 //use recursion to proceed with next level
-                return TryFindParent<T>(parentObject);
+                child = parentObject;
             }
         }
 
@@ -409,15 +431,13 @@ namespace FancyGrid
         public static DependencyObject GetParentObject(DependencyObject child)
         {
             if (child == null) return null;
-            ContentElement contentElement = child as ContentElement;
 
-            if (contentElement != null)
+            if (child is ContentElement contentElement)
             {
-                DependencyObject parent = ContentOperations.GetParent(contentElement);
+                var parent = ContentOperations.GetParent(contentElement);
                 if (parent != null) return parent;
 
-                FrameworkContentElement fce = contentElement as FrameworkContentElement;
-                return fce != null ? fce.Parent : null;
+                return contentElement is FrameworkContentElement fce ? fce.Parent : null;
             }
 
             // If it's not a ContentElement, rely on VisualTreeHelper

@@ -32,7 +32,7 @@
                                     </MultiBinding>
                                 </ContentPresenter.Content>
                             </ContentPresenter>
-                            <TextBox Margin="-5,5,-5,0" x:Name="filterTextBox"  VerticalAlignment="Stretch" 
+                            <TextBox Margin="-5,5,-5,0" Style="{DynamicResource MaterialDesignTextBox}" x:Name="filterTextBox"  VerticalAlignment="Stretch" 
                                      HorizontalAlignment="Stretch" OpacityMask="Black"  Text="" TextWrapping="Wrap"  
                                      Grid.Row="1" MinHeight="25" Background="Cornsilk">
                             </TextBox>
