@@ -71,9 +71,18 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Fody">
+      <Version>2.3.25</Version>
+    </PackageReference>
     <PackageReference Include="MaterialDesignThemes">
       <Version>2.3.1.953</Version>
     </PackageReference>
+    <PackageReference Include="PropertyChanged.Fody">
+      <Version>2.2.5</Version>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="FodyWeavers.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

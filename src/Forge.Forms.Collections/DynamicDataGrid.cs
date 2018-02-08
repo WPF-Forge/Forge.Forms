@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -19,12 +20,13 @@ using Forge.Forms.FormBuilding;
 using Forge.Forms.FormBuilding.Defaults;
 using Humanizer;
 using MaterialDesignThemes.Wpf;
+using PropertyChanged;
 using Expression = System.Linq.Expressions.Expression;
 
 namespace Forge.Forms.Collections
 {
     [TemplatePart(Name = "PART_DataGrid", Type = typeof(DataGrid))]
-    public class DynamicDataGrid : Control
+    public class DynamicDataGrid : Control, INotifyPropertyChanged
     {
         public static readonly DependencyProperty CreateDialogPositiveContentProperty =
             DependencyProperty.Register(
@@ -122,7 +124,45 @@ namespace Forge.Forms.Collections
                 nameof(ItemsSource),
                 typeof(IEnumerable),
                 typeof(DynamicDataGrid),
-                new FrameworkPropertyMetadata());
+                new FrameworkPropertyMetadata
+                {
+                    PropertyChangedCallback = PropertyChangedCallback
+                });
+
+        /// <summary>
+        /// Identifies the NextPage dependency property.
+        /// </summary>
+        public static DependencyProperty MoveNextCommandProperty =
+            DependencyProperty.Register("MoveNextCommand", typeof(ICommand), typeof(DynamicDataGrid),
+                new PropertyMetadata());
+
+        public ICommand MoveNextCommand
+        {
+            get => (ICommand)GetValue(MoveNextCommandProperty);
+            set => SetValue(MoveNextCommandProperty, value);
+        }
+
+        /// <summary>
+        /// Identifies the MovePrevious dependency property.
+        /// </summary>
+        public static DependencyProperty MoveBackCommandProperty =
+            DependencyProperty.Register("MoveBackCommand", typeof(ICommand), typeof(DynamicDataGrid),
+                new PropertyMetadata());
+
+        public ICommand MoveBackCommand
+        {
+            get => (ICommand)GetValue(MoveBackCommandProperty);
+            set => SetValue(MoveBackCommandProperty, value);
+        }
+
+        private static void PropertyChangedCallback(DependencyObject dependencyObject,
+            DependencyPropertyChangedEventArgs dependencyPropertyChangedEventArgs)
+        {
+            if (dependencyObject is DynamicDataGrid grid)
+            {
+                grid.OnPropertyChanged(nameof(grid.PaginatedItemsSource));
+            }
+        }
 
         public static readonly DependencyProperty DialogOptionsProperty =
             DependencyProperty.Register(
@@ -154,8 +194,6 @@ namespace Forge.Forms.Collections
             new List<IRemoveActionInterceptor>();
 
         private bool canMutate;
-
-        private DataGrid dataGrid;
         private Type itemType;
 
         static DynamicDataGrid()
@@ -172,6 +210,8 @@ namespace Forge.Forms.Collections
             Loaded += (s, e) => OnItemsSource(ItemsSource);
         }
 
+        private DataGrid DataGrid { get; set; }
+
 
         public string Title
         {
@@ -179,6 +219,34 @@ namespace Forge.Forms.Collections
             set => SetValue(TitleProperty, value);
         }
 
+        public string RowsPerPageText
+        {
+            get => (string)GetValue(RowsPerPageTextProperty);
+            set => SetValue(RowsPerPageTextProperty, value);
+        }
+
+        public static readonly DependencyProperty RowsPerPageTextProperty =
+            DependencyProperty.Register("RowsPerPageText", typeof(string), typeof(DynamicDataGrid),
+                new PropertyMetadata("Rows per page"));
+
+        public int TotalItems => ItemsSource?.OfType<object>()?.Count() ?? 0;
+
+        public int MaxPages => (int)Math.Ceiling((double)TotalItems / ItemsPerPage);
+
+        /// <summary>
+        /// Identifies the CurrentPage dependency property.
+        /// </summary>
+        public static DependencyProperty CurrentPageProperty =
+            DependencyProperty.Register("CurrentPage", typeof(int), typeof(DynamicDataGrid), new PropertyMetadata(1)
+            {
+                PropertyChangedCallback = PropertyChangedCallback
+            });
+
+        public int CurrentPage
+        {
+            get => (int)GetValue(CurrentPageProperty);
+            set => SetValue(CurrentPageProperty, value);
+        }
 
         public bool HasCheckboxes
         {
@@ -191,9 +259,28 @@ namespace Forge.Forms.Collections
             Margin = new Thickness(8, 0, 0, 0)
         };
 
-        private Button DeleteButton { get; set; }
 
-        private Button FilterButton { get; set; }
+        public bool IsDeleteButtonVisible
+        {
+            get => (bool)GetValue(IsDeleteButtonVisibleProperty);
+            private set => SetValue(IsDeleteButtonVisibleProperty, value);
+        }
+
+        public static readonly DependencyProperty IsDeleteButtonVisibleProperty =
+            DependencyProperty.Register("IsDeleteButtonVisible", typeof(bool), typeof(DynamicDataGrid),
+                new PropertyMetadata(false));
+
+
+        public bool IsFilterButtonVisible
+        {
+            get => (bool)GetValue(IsFilterButtonVisibleProperty);
+            private set => SetValue(IsFilterButtonVisibleProperty, value);
+        }
+
+        public static readonly DependencyProperty IsFilterButtonVisibleProperty =
+            DependencyProperty.Register("IsFilterButtonVisible", typeof(bool), typeof(DynamicDataGrid),
+                new PropertyMetadata(true));
+
 
         private bool IsSelectAll { get; set; }
 
@@ -209,14 +296,14 @@ namespace Forge.Forms.Collections
 
                 itemType = value;
 
-                if (dataGrid == null || itemType == null)
+                if (DataGrid == null || itemType == null)
                 {
                     return;
                 }
 
-                foreach (var dataGridColumn in dataGrid.Columns.Except(ProtectedColumns).ToList())
+                foreach (var dataGridColumn in DataGrid.Columns.Except(ProtectedColumns).ToList())
                 {
-                    dataGrid.Columns.Remove(dataGridColumn);
+                    DataGrid.Columns.Remove(dataGridColumn);
                 }
 
                 foreach (var propertyInfo in ItemType.GetProperties(BindingFlags.Public | BindingFlags.Instance)
@@ -242,18 +329,18 @@ namespace Forge.Forms.Collections
 
                     if (IsSelectAll)
                     {
-                        dataGrid.SelectAll();
+                        DataGrid.SelectAll();
                     }
                     else
                     {
-                        dataGrid.UnselectAll();
+                        DataGrid.UnselectAll();
                     }
                 });
 
 
                 if (HasCheckboxes)
                 {
-                    dataGrid.Columns.Insert(0, new DataGridTemplateColumn
+                    DataGrid.Columns.Insert(0, new DataGridTemplateColumn
                     {
                         CellTemplate = new DataTemplate { VisualTree = rowCheckBox },
                         Header = HeaderButton,
@@ -266,6 +353,11 @@ namespace Forge.Forms.Collections
         }
 
         private List<DataGridColumn> ProtectedColumns { get; set; }
+
+        [AlsoNotifyFor(nameof(MaxPages))]
+        public int ItemsPerPage { get; set; }
+
+        private ComboBox PerPageComboBox { get; set; }
 
         private void CreateColumn(PropertyInfo propertyInfo)
         {
@@ -282,7 +374,7 @@ namespace Forge.Forms.Collections
                 MaxLength = propertyInfo.GetCustomAttribute<StringLengthAttribute>()?.MaximumLength ?? 0
             };
 
-            dataGrid.Columns.Insert(0, dataGridTextColumn);
+            DataGrid.Columns.Insert(0, dataGridTextColumn);
         }
 
         private static Binding CreateBinding(PropertyInfo propertyInfo)
@@ -298,50 +390,74 @@ namespace Forge.Forms.Collections
 
         public override void OnApplyTemplate()
         {
-            DeleteButton = Template.FindName("PART_DeleteButton", this) as Button;
-            FilterButton = Template.FindName("PART_FilterButton", this) as Button;
+            PerPageComboBox = Template.FindName("PART_PerPage", this) as ComboBox;
+            DataGrid = Template.FindName("PART_DataGrid", this) as DataGrid;
 
-            if (DeleteButton != null)
+            MoveNextCommand = new RelayCommand(x => CurrentPage++, o => CurrentPage < MaxPages);
+
+            MoveBackCommand = new RelayCommand(x => CurrentPage--, o => CurrentPage > 1);
+
+            if (DataGrid != null)
             {
-                DeleteButton.Visibility = Visibility.Collapsed;
-                DeleteButton.Click += (sender, args) =>
-                {
-                    RemoveItemCommand.Execute(dataGrid.SelectedItems, dataGrid);
-                };
+                ((INotifyCollectionChanged)DataGrid.Items).CollectionChanged += OnCollectionChanged;
             }
 
-            dataGrid = Template.FindName("PART_DataGrid", this) as DataGrid;
-            titleTextBlock = Template.FindName("PART_Title", this) as TextBlock;
+            SetupPerPageCombobox();
+            SetupDataGrid();
+        }
 
-            titleTextBlock?.SetBinding(TextBlock.TextProperty, new Binding
-            {
-                Source = this,
-                Path = new PropertyPath(nameof(Title))
-            });
+        private void OnCollectionChanged(object o, NotifyCollectionChangedEventArgs notifyCollectionChangedEventArgs)
+        {
+            OnPropertyChanged(nameof(MaxPages));
+            OnPropertyChanged(nameof(TotalItems));
+        }
 
-            if (dataGrid != null)
+        private void SetupDataGrid()
+        {
+            if (DataGrid != null)
             {
-                ProtectedColumns = dataGrid.Columns.ToList();
-                dataGrid.MouseDoubleClick += DataGridOnMouseDoubleClick;
+                ProtectedColumns = DataGrid.Columns.ToList();
+                DataGrid.MouseDoubleClick += DataGridOnMouseDoubleClick;
 
                 if (!HasCheckboxes)
                 {
                     return;
                 }
 
-                dataGrid.PreviewMouseDown += PreviewMouseDownHandler;
-                dataGrid.MouseEnter += MouseEnterHandler;
-                dataGrid.SelectionChanged += DataGridOnSelectionChanged;
+                DataGrid.PreviewMouseDown += PreviewMouseDownHandler;
+                DataGrid.MouseEnter += MouseEnterHandler;
+                DataGrid.SelectionChanged += DataGridOnSelectionChanged;
+            }
+        }
+
+        private void SetupPerPageCombobox()
+        {
+            for (var i = 10; i < 100; i += 5)
+            {
+                PerPageComboBox?.Items.Add(i);
+            }
+
+            if (PerPageComboBox != null)
+            {
+                PerPageComboBox.SelectedIndex = 0;
+            }
+
+            if (PerPageComboBox != null)
+            {
+                PerPageComboBox.SelectionChanged += (sender, args) =>
+                    ItemsPerPage = PerPageComboBox?.SelectedItem is int i ? i : 0;
+
+                ItemsPerPage = PerPageComboBox?.SelectedItem is int i2 ? i2 : 0;
             }
         }
 
         private void DataGridOnSelectionChanged(object sender, SelectionChangedEventArgs selectionChangedEventArgs)
         {
-            if (dataGrid.SelectedItems.Count == dataGrid.Items.Count)
+            if (DataGrid.SelectedItems.Count == DataGrid.Items.Count)
             {
                 HeaderButton.IsChecked = true;
             }
-            else if (dataGrid.SelectedItems.Count == 0)
+            else if (DataGrid.SelectedItems.Count == 0)
             {
                 HeaderButton.IsChecked = false;
             }
@@ -350,12 +466,8 @@ namespace Forge.Forms.Collections
                 HeaderButton.IsChecked = null;
             }
 
-            if (DeleteButton != null && FilterButton != null)
-            {
-                DeleteButton.Visibility =
-                    dataGrid.SelectedItems.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
-                FilterButton.Visibility = dataGrid.SelectedItems.Count > 0 ? Visibility.Collapsed : Visibility.Visible;
-            }
+            IsDeleteButtonVisible = DataGrid.SelectedItems.Count > 0;
+            IsFilterButtonVisible = !(DataGrid.SelectedItems.Count > 0);
         }
 
         private static DependencyObject GetVisualParentByType(DependencyObject startObject, Type type)
@@ -396,7 +508,7 @@ namespace Forge.Forms.Collections
             }
 
             if (button != null && button.GetType() == typeof(CheckBox) && button.IsMouseOver &&
-                Equals(cell?.Column, dataGrid.Columns.First()))
+                Equals(cell?.Column, DataGrid.Columns.First()))
             {
                 row.IsSelected = !row.IsSelected;
             }
@@ -406,7 +518,7 @@ namespace Forge.Forms.Collections
             }
             else if (e.ClickCount > 1)
             {
-                UpdateItemCommand.Execute(row.Item, dataGrid);
+                UpdateItemCommand.Execute(row.Item, DataGrid);
                 e.Handled = true;
                 return;
             }
@@ -468,7 +580,7 @@ namespace Forge.Forms.Collections
             if (cell != null && sender is DataGrid grid &&
                 grid.SelectedItems.Count == 1)
             {
-                UpdateItemCommand.Execute(dataGrid.SelectedItem, dataGrid);
+                UpdateItemCommand.Execute(DataGrid.SelectedItem, DataGrid);
             }
         }
 
@@ -498,6 +610,7 @@ namespace Forge.Forms.Collections
             var collectionType = interfaces[0];
             ItemType = collectionType.GetGenericArguments()[0];
             canMutate = ItemType.GetConstructor(Type.EmptyTypes) != null;
+            OnPropertyChanged(nameof(PaginatedItemsSource));
         }
 
         private async void ExecuteCreateItem(object sender, ExecutedRoutedEventArgs e)
@@ -528,11 +641,12 @@ namespace Forge.Forms.Collections
                     context = globalInterceptor.Intercept(context);
                     if (context == null)
                     {
+                        OnPropertyChanged(nameof(PaginatedItemsSource));
                         return;
                     }
                 }
 
-                if (!(collection is INotifyCollectionChanged) && dataGrid != null)
+                if (!(collection is INotifyCollectionChanged) && DataGrid != null)
                 {
                     ItemsSource = null;
                     AddItemToCollection(ItemType, collection, context.NewModel);
@@ -542,6 +656,8 @@ namespace Forge.Forms.Collections
                 {
                     AddItemToCollection(ItemType, collection, context.NewModel);
                 }
+
+                OnPropertyChanged(nameof(PaginatedItemsSource));
             }
         }
 
@@ -677,7 +793,7 @@ namespace Forge.Forms.Collections
                         DoInterceptions(context);
                     }
 
-                    if (!(collection is INotifyCollectionChanged) && dataGrid != null)
+                    if (!(collection is INotifyCollectionChanged) && DataGrid != null)
                     {
                         ItemsSource = null;
                         RemoveItems(model, collection);
@@ -922,6 +1038,10 @@ namespace Forge.Forms.Collections
             set => SetValue(ItemsSourceProperty, value);
         }
 
+        [AlsoNotifyFor(nameof(TotalItems))]
+        public IEnumerable PaginatedItemsSource =>
+            ItemsSource.OfType<object>().Skip((CurrentPage - 1) * ItemsPerPage).Take(ItemsPerPage);
+
 
         private static void ItemsSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -969,8 +1089,6 @@ namespace Forge.Forms.Collections
 
         private static readonly Dictionary<Type, Action<object, object>> RemoveItemCache =
             new Dictionary<Type, Action<object, object>>();
-
-        private TextBlock titleTextBlock;
 
         private static void AddItemToCollection(Type itemType, object collection, object item)
         {
@@ -1023,6 +1141,13 @@ namespace Forge.Forms.Collections
         }
 
         #endregion
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        internal void OnPropertyChanged(string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 
     internal class ActionInterceptor : IActionInterceptor
