@@ -17,7 +17,7 @@
             </Grid.RowDefinitions>
             <materialDesign:ColorZone Mode="Standard" Padding="20" Grid.Row="0">
                 <Grid>
-                    <TextBlock Style="{DynamicResource MaterialDesignHeadlineTextBlock}" Text="Title" />
+                    <TextBlock Style="{DynamicResource MaterialDesignHeadlineTextBlock}"  Name="PART_Title" />
                 </Grid>
             </materialDesign:ColorZone>
             <DataGrid Grid.Row="1"

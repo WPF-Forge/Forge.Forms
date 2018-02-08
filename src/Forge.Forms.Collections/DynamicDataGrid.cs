@@ -130,6 +130,18 @@ namespace Forge.Forms.Collections
                 typeof(DynamicDataGrid),
                 new FrameworkPropertyMetadata(DialogOptions.Default, ItemsSourceChanged));
 
+
+        public string Title
+        {
+            get { return (string)GetValue(TitleProperty); }
+            set { SetValue(TitleProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for Title.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty TitleProperty =
+            DependencyProperty.Register("Title", typeof(string), typeof(DynamicDataGrid),
+                new PropertyMetadata(""));
+
         // Using a DependencyProperty as the backing store for HasCheckboxes.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty HasCheckboxesProperty =
             DependencyProperty.Register("HasCheckboxes", typeof(bool), typeof(DynamicDataGrid),
@@ -280,6 +292,13 @@ namespace Forge.Forms.Collections
         public override void OnApplyTemplate()
         {
             dataGrid = Template.FindName("PART_DataGrid", this) as DataGrid;
+            titleTextBlock = Template.FindName("PART_Title", this) as TextBlock;
+
+            titleTextBlock?.SetBinding(TextBlock.TextProperty, new Binding
+            {
+                Source = this,
+                Path = new PropertyPath(nameof(Title))
+            });
 
             if (dataGrid != null)
             {
@@ -880,6 +899,8 @@ namespace Forge.Forms.Collections
 
         private static readonly Dictionary<Type, Action<object, object>> RemoveItemCache =
             new Dictionary<Type, Action<object, object>>();
+
+        private TextBlock titleTextBlock;
 
         private static void AddItemToCollection(Type itemType, object collection, object item)
         {
