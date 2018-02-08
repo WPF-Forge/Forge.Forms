@@ -4,11 +4,14 @@
     xmlns:collections="clr-namespace:Forge.Forms.Collections"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d">
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:fancyGrid="clr-namespace:FancyGrid;assembly=FancyGrid"
+    mc:Ignorable="d">
 
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary
             Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.DataGrid.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/FancyGrid;component/Themes/Generic.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 
     <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
@@ -77,7 +80,7 @@
                     </Grid>
                 </materialDesign:ColorZone>
 
-                <DataGrid Grid.Row="1"
+                <fancyGrid:FilteringDataGrid  Grid.Row="1"
                           Name="PART_DataGrid" AutoGenerateColumns="False"
                           CanUserAddRows="False"
                           SelectionMode="Extended"
@@ -85,7 +88,7 @@
                           Style="{DynamicResource CustomDataGrid}"
                           CellStyle="{DynamicResource CustomDataGridLeftPadding}"
                           ItemsSource="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=PaginatedItemsSource}">
-                    <DataGrid.Columns>
+                    <fancyGrid:FilteringDataGrid.Columns>
                         <DataGridTemplateColumn Width="*">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
@@ -137,8 +140,8 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                    </DataGrid.Columns>
-                </DataGrid>
+                    </fancyGrid:FilteringDataGrid.Columns>
+                </fancyGrid:FilteringDataGrid>
 
                 <materialDesign:ColorZone Margin="24,0,14,0" Mode="Standard" Padding="20" Grid.Row="2">
                     <Grid>

@@ -59,6 +59,10 @@
     <Compile Include="RelayCommand.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\FancyGrid\FancyGrid.csproj">
+      <Project>{a8a07443-f073-4af0-96dc-ff981489654a}</Project>
+      <Name>FancyGrid</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Forge.Forms\Forge.Forms.csproj">
       <Project>{4E0C323D-5AFC-4105-815F-587346AA5321}</Project>
       <Name>Forge.Forms</Name>

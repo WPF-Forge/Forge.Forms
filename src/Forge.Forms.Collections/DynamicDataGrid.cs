@@ -13,6 +13,7 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
+using FancyGrid;
 using Forge.Forms.Annotations;
 using Forge.Forms.Collections.Interfaces;
 using Forge.Forms.DynamicExpressions;
@@ -222,7 +223,7 @@ namespace Forge.Forms.Collections
             set => SetValue(MoveBackCommandProperty, value);
         }
 
-        private DataGrid DataGrid { get; set; }
+        private FilteringDataGrid DataGrid { get; set; }
 
 
         public string Title
@@ -431,7 +432,7 @@ namespace Forge.Forms.Collections
         public override void OnApplyTemplate()
         {
             PerPageComboBox = Template.FindName("PART_PerPage", this) as ComboBox;
-            DataGrid = Template.FindName("PART_DataGrid", this) as DataGrid;
+            DataGrid = Template.FindName("PART_DataGrid", this) as FilteringDataGrid;
 
             MoveNextCommand = new RelayCommand(x => CurrentPage++, o => CurrentPage < MaxPages);
 
@@ -1084,8 +1085,8 @@ namespace Forge.Forms.Collections
             set => SetValue(ItemsSourceProperty, value);
         }
 
-        public IEnumerable PaginatedItemsSource =>
-            ItemsSource.Cast<object>().Skip((CurrentPage - 1) * ItemsPerPage).Take(ItemsPerPage);
+        public List<object> PaginatedItemsSource =>
+            ItemsSource.Cast<object>().Skip((CurrentPage - 1) * ItemsPerPage).Take(ItemsPerPage).ToList();
 
 
         private static void ItemsSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
