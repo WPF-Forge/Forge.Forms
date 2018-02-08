@@ -24,6 +24,7 @@
                       Name="PART_DataGrid" AutoGenerateColumns="False"
                       CanUserAddRows="False"
                       SelectionMode="Extended"
+                      IsReadOnly="True"
                       Style="{DynamicResource CustomDataGrid}"
                       CellStyle="{DynamicResource CustomDataGridLeftPadding}"
                       ItemsSource="{TemplateBinding ItemsSource}">
