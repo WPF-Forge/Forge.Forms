@@ -7,6 +7,8 @@ using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -229,7 +231,7 @@ namespace Forge.Forms.Collections
             DependencyProperty.Register("RowsPerPageText", typeof(string), typeof(DynamicDataGrid),
                 new PropertyMetadata("Rows per page"));
 
-        public int TotalItems => ItemsSource?.OfType<object>()?.Count() ?? 0;
+        public int TotalItems => GetIEnumerableCount(ItemsSource) ?? 0;
 
         public int MaxPages => (int)Math.Ceiling((double)TotalItems / ItemsPerPage);
 
@@ -246,6 +248,40 @@ namespace Forge.Forms.Collections
         {
             get => (int)GetValue(CurrentPageProperty);
             set => SetValue(CurrentPageProperty, value);
+        }
+
+        public static void DynamicUsing(object resource, Action action)
+        {
+            try
+            {
+                action();
+            }
+            finally
+            {
+                if (resource is IDisposable d)
+                    d.Dispose();
+            }
+        }
+
+        public int? GetIEnumerableCount(IEnumerable enumerable)
+        {
+            switch (enumerable)
+            {
+                case null:
+                    return null;
+                case ICollection col:
+                    return col.Count;
+            }
+
+            int c = 0;
+            var e = enumerable.GetEnumerator();
+            DynamicUsing(e, () =>
+            {
+                while (e.MoveNext())
+                    c++;
+            });
+
+            return c;
         }
 
         public bool HasCheckboxes
@@ -355,7 +391,7 @@ namespace Forge.Forms.Collections
         private List<DataGridColumn> ProtectedColumns { get; set; }
 
         [AlsoNotifyFor(nameof(MaxPages))]
-        public int ItemsPerPage { get; set; }
+        public int ItemsPerPage { get; set; } = 10;
 
         private ComboBox PerPageComboBox { get; set; }
 
@@ -781,7 +817,7 @@ namespace Forge.Forms.Collections
 
                     if (model is IEnumerable modelEnum)
                     {
-                        foreach (var item in modelEnum.OfType<object>().ToList())
+                        foreach (var item in modelEnum.Cast<object>().ToList())
                         {
                             IRemoveActionContext context = new RemoveActionContext(item);
                             DoInterceptions(context);
@@ -815,7 +851,7 @@ namespace Forge.Forms.Collections
         {
             if (model is IEnumerable modelEnum)
             {
-                foreach (var item in modelEnum.OfType<object>().ToList())
+                foreach (var item in modelEnum.Cast<object>().ToList())
                 {
                     RemoveItemFromCollection(ItemType, collection, item);
                 }
@@ -1040,7 +1076,7 @@ namespace Forge.Forms.Collections
 
         [AlsoNotifyFor(nameof(TotalItems))]
         public IEnumerable PaginatedItemsSource =>
-            ItemsSource.OfType<object>().Skip((CurrentPage - 1) * ItemsPerPage).Take(ItemsPerPage);
+            ItemsSource.Cast<object>().Skip((CurrentPage - 1) * ItemsPerPage).Take(ItemsPerPage);
 
 
         private static void ItemsSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
