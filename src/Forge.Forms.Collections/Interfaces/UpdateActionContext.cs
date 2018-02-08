@@ -3,16 +3,16 @@
     public class UpdateActionContext : IUpdateActionContext
     {
         /// <inheritdoc />
-        public UpdateActionContext(object oldModel, object newModel)
-        {
-            OldModel = oldModel;
-            NewModel = newModel;
-        }
+        public object NewModel { get; }
 
         /// <inheritdoc />
         public object OldModel { get; }
 
         /// <inheritdoc />
-        public object NewModel { get; }
+        public UpdateActionContext(object oldModel, object newModel)
+        {
+            OldModel = oldModel;
+            NewModel = newModel;
+        }
     }
 }

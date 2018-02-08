@@ -152,23 +152,7 @@ namespace Forge.Forms.Collections
             Margin = new Thickness(8, 0, 0, 0)
         };
 
-        static DynamicDataGrid()
-        {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(DynamicDataGrid),
-                new FrameworkPropertyMetadata(typeof(DynamicDataGrid)));
-        }
-
-        public DynamicDataGrid()
-        {
-            CommandBindings.Add(new CommandBinding(CreateItemCommand, ExecuteCreateItem, CanExecuteCreateItem));
-            CommandBindings.Add(new CommandBinding(UpdateItemCommand, ExecuteUpdateItem, CanExecuteUpdateItem));
-            CommandBindings.Add(new CommandBinding(RemoveItemCommand, ExecuteRemoveItem, CanExecuteRemoveItem));
-            Loaded += (s, e) => OnItemsSource(ItemsSource);
-        }
-
         private bool IsSelectAll { get; set; }
-
-        private List<DataGridColumn> ProtectedColumns { get; set; }
 
         private Type ItemType
         {
@@ -199,6 +183,8 @@ namespace Forge.Forms.Collections
                 }
 
                 var rowCheckBox = new FrameworkElementFactory(typeof(CheckBox));
+                rowCheckBox.SetValue(MaxWidthProperty, 18.0);
+                rowCheckBox.SetValue(HorizontalAlignmentProperty, HorizontalAlignment.Left);
                 rowCheckBox.SetBinding(ToggleButton.IsCheckedProperty, new Binding
                 {
                     Path = new PropertyPath("IsSelected"),
@@ -227,6 +213,22 @@ namespace Forge.Forms.Collections
                     Header = HeaderButton
                 });
             }
+        }
+
+        private List<DataGridColumn> ProtectedColumns { get; set; }
+
+        static DynamicDataGrid()
+        {
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(DynamicDataGrid),
+                new FrameworkPropertyMetadata(typeof(DynamicDataGrid)));
+        }
+
+        public DynamicDataGrid()
+        {
+            CommandBindings.Add(new CommandBinding(CreateItemCommand, ExecuteCreateItem, CanExecuteCreateItem));
+            CommandBindings.Add(new CommandBinding(UpdateItemCommand, ExecuteUpdateItem, CanExecuteUpdateItem));
+            CommandBindings.Add(new CommandBinding(RemoveItemCommand, ExecuteRemoveItem, CanExecuteRemoveItem));
+            Loaded += (s, e) => OnItemsSource(ItemsSource);
         }
 
         private void CreateColumn(PropertyInfo propertyInfo)
@@ -312,11 +314,24 @@ namespace Forge.Forms.Collections
                 return;
             }
 
-            var button = GetVisualParentByType(
-                (FrameworkElement)e.OriginalSource, typeof(PopupBox));
+            var cell = GetVisualParentByType(
+                (FrameworkElement)e.OriginalSource, typeof(DataGridCell)) as DataGridCell;
 
-            if (button != null || !(GetVisualParentByType(
-                    (FrameworkElement)e.OriginalSource, typeof(DataGridRow)) is DataGridRow row))
+            var button = GetVisualParentByType(
+                (FrameworkElement)e.OriginalSource, typeof(ButtonBase)) as ButtonBase;
+
+            if (!(GetVisualParentByType(
+                (FrameworkElement)e.OriginalSource, typeof(DataGridRow)) is DataGridRow row))
+            {
+                return;
+            }
+
+            if (button != null && button.GetType() == typeof(CheckBox) && button.IsMouseOver &&
+                Equals(cell?.Column, dataGrid.Columns.First()))
+            {
+                row.IsSelected = !row.IsSelected;
+            }
+            else if (button != null)
             {
                 return;
             }
@@ -328,7 +343,7 @@ namespace Forge.Forms.Collections
                 return;
             }
 
-            row.IsSelected = !row.IsSelected;
+
             e.Handled = true;
         }
 
@@ -898,14 +913,14 @@ namespace Forge.Forms.Collections
     {
         private readonly Func<IActionContext, IActionContext> onAction;
 
-        public ActionInterceptor(Func<IActionContext, IActionContext> onAction)
-        {
-            this.onAction = onAction ?? throw new ArgumentNullException(nameof(onAction));
-        }
-
         public IActionContext InterceptAction(IActionContext actionContext)
         {
             return onAction(actionContext);
+        }
+
+        public ActionInterceptor(Func<IActionContext, IActionContext> onAction)
+        {
+            this.onAction = onAction ?? throw new ArgumentNullException(nameof(onAction));
         }
     }
 
@@ -913,10 +928,9 @@ namespace Forge.Forms.Collections
     {
         private readonly IFormDefinition inner;
 
-        public FormDefinitionWrapper(IFormDefinition inner, IReadOnlyList<FormRow> formRows)
+        public object CreateInstance(IResourceContext context)
         {
-            this.inner = inner;
-            FormRows = formRows;
+            return inner.CreateInstance(context);
         }
 
         public IReadOnlyList<FormRow> FormRows { get; }
@@ -927,15 +941,33 @@ namespace Forge.Forms.Collections
 
         public IDictionary<string, IValueProvider> Resources => inner.Resources;
 
-        public object CreateInstance(IResourceContext context)
+        public FormDefinitionWrapper(IFormDefinition inner, IReadOnlyList<FormRow> formRows)
         {
-            return inner.CreateInstance(context);
+            this.inner = inner;
+            FormRows = formRows;
         }
     }
 
     internal class UpdateFormDefinition : IFormDefinition
     {
         private readonly IFormDefinition inner;
+
+        public object CreateInstance(IResourceContext context)
+        {
+            return Model;
+        }
+
+        public IReadOnlyList<FormRow> FormRows { get; }
+
+        public double[] Grid => inner.Grid;
+
+        public Type ModelType => inner.ModelType;
+
+        public IDictionary<string, IValueProvider> Resources => inner.Resources;
+
+        public object Model { get; }
+
+        public Snapshot Snapshot { get; }
 
         public UpdateFormDefinition(
             IFormDefinition inner,
@@ -949,23 +981,6 @@ namespace Forge.Forms.Collections
                 .SelectMany(r => r.Elements.SelectMany(e => e.Elements))
                 .Where(e => e is DataFormField)
                 .Select(f => ((DataFormField)f).Key)));
-        }
-
-        public object Model { get; }
-
-        public Snapshot Snapshot { get; }
-
-        public IReadOnlyList<FormRow> FormRows { get; }
-
-        public double[] Grid => inner.Grid;
-
-        public Type ModelType => inner.ModelType;
-
-        public IDictionary<string, IValueProvider> Resources => inner.Resources;
-
-        public object CreateInstance(IResourceContext context)
-        {
-            return Model;
         }
     }
 }

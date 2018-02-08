@@ -2,7 +2,7 @@
 {
     public interface IUpdateActionContext
     {
-        object OldModel { get; }
         object NewModel { get; }
+        object OldModel { get; }
     }
 }
