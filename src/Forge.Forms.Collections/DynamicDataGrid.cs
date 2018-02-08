@@ -378,8 +378,7 @@ namespace Forge.Forms.Collections
             {
                 return;
             }
-
-            if (e.ClickCount > 1)
+            else if (e.ClickCount > 1)
             {
                 UpdateItemCommand.Execute(row.Item, dataGrid);
                 e.Handled = true;
