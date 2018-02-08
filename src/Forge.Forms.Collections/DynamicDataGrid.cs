@@ -646,7 +646,6 @@ namespace Forge.Forms.Collections
             var collectionType = interfaces[0];
             ItemType = collectionType.GetGenericArguments()[0];
             canMutate = ItemType.GetConstructor(Type.EmptyTypes) != null;
-            OnPropertyChanged(nameof(PaginatedItemsSource));
         }
 
         private async void ExecuteCreateItem(object sender, ExecutedRoutedEventArgs e)
@@ -839,6 +838,8 @@ namespace Forge.Forms.Collections
                     {
                         RemoveItems(model, collection);
                     }
+
+                    OnPropertyChanged(nameof(PaginatedItemsSource));
                 }
             }
             catch
@@ -1074,7 +1075,6 @@ namespace Forge.Forms.Collections
             set => SetValue(ItemsSourceProperty, value);
         }
 
-        [AlsoNotifyFor(nameof(TotalItems))]
         public IEnumerable PaginatedItemsSource =>
             ItemsSource.Cast<object>().Skip((CurrentPage - 1) * ItemsPerPage).Take(ItemsPerPage);
 

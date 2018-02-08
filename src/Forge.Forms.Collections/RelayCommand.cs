@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace Forge.Forms.Collections
@@ -27,7 +28,7 @@ namespace Forge.Forms.Collections
 
         public void Execute(object parameter)
         {
-            execute(parameter);
+            execute.Invoke(parameter);
         }
     }
 }
