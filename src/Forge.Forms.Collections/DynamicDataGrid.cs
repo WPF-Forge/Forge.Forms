@@ -394,9 +394,10 @@ namespace Forge.Forms.Collections
                 return;
             }
 
-            if (e.MouseDevice.DirectlyOver is FrameworkElement frameworkElement &&
-                (frameworkElement.Parent is DataGridCell || frameworkElement is DataGridCell ||
-                 FindVisualChild<DataGridCell>(frameworkElement) != null) && sender is DataGrid grid &&
+            var cell = (DataGridCell)GetVisualParentByType(
+                (FrameworkElement)e.OriginalSource, typeof(DataGridCell));
+
+            if (cell != null && sender is DataGrid grid &&
                 grid.SelectedItems.Count == 1)
             {
                 UpdateItemCommand.Execute(dataGrid.SelectedItem, dataGrid);
