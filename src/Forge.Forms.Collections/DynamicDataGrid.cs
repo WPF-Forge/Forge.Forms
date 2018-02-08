@@ -291,6 +291,18 @@ namespace Forge.Forms.Collections
 
         public override void OnApplyTemplate()
         {
+            DeleteButton = Template.FindName("PART_DeleteButton", this) as Button;
+            FilterButton = Template.FindName("PART_FilterButton", this) as Button;
+
+            if (DeleteButton != null)
+            {
+                DeleteButton.Visibility = Visibility.Collapsed;
+                DeleteButton.Click += (sender, args) =>
+                {
+                    RemoveItemCommand.Execute(dataGrid.SelectedItems, dataGrid);
+                };
+            }
+
             dataGrid = Template.FindName("PART_DataGrid", this) as DataGrid;
             titleTextBlock = Template.FindName("PART_Title", this) as TextBlock;
 
@@ -329,6 +341,13 @@ namespace Forge.Forms.Collections
             else
             {
                 HeaderButton.IsChecked = null;
+            }
+
+            if (DeleteButton != null && FilterButton != null)
+            {
+                DeleteButton.Visibility =
+                    dataGrid.SelectedItems.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
+                FilterButton.Visibility = dataGrid.SelectedItems.Count > 0 ? Visibility.Collapsed : Visibility.Visible;
             }
         }
 
@@ -590,12 +609,32 @@ namespace Forge.Forms.Collections
             e.CanExecute = canMutate && e.Parameter != null && ItemType.IsInstanceOfType(e.Parameter);
         }
 
+        [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
         private async void ExecuteRemoveItem(object sender, ExecutedRoutedEventArgs e)
         {
-            var model = e.Parameter;
-            if (!canMutate || model == null || !ItemType.IsInstanceOfType(model))
+            void DoInterceptions(IRemoveActionContext context)
             {
-                return;
+                try
+                {
+                    foreach (var globalInterceptor in RemoveInterceptorChain)
+                    {
+                        globalInterceptor.Intercept(context);
+                    }
+                }
+                catch
+                {
+                    //supress
+                }
+            }
+
+            var model = e.Parameter;
+            if (!canMutate || model == null || !ItemType.IsInstanceOfType(e.Parameter))
+            {
+                if (!(e.Parameter is IEnumerable enumerable &&
+                      enumerable.Cast<object>().First().GetType() == ItemType))
+                {
+                    return;
+                }
             }
 
             try
@@ -617,22 +656,29 @@ namespace Forge.Forms.Collections
                 {
                     var collection = ItemsSource;
 
-                    IRemoveActionContext context = new RemoveActionContext(result.Model);
-
-                    foreach (var globalInterceptor in RemoveInterceptorChain)
+                    if (model is IEnumerable modelEnum)
                     {
-                        globalInterceptor.Intercept(context);
+                        foreach (var item in modelEnum.OfType<object>().ToList())
+                        {
+                            IRemoveActionContext context = new RemoveActionContext(item);
+                            DoInterceptions(context);
+                        }
+                    }
+                    else
+                    {
+                        IRemoveActionContext context = new RemoveActionContext(model);
+                        DoInterceptions(context);
                     }
 
                     if (!(collection is INotifyCollectionChanged) && dataGrid != null)
                     {
                         ItemsSource = null;
-                        RemoveItemFromCollection(ItemType, collection, model);
+                        RemoveItems(model, collection);
                         ItemsSource = collection;
                     }
                     else
                     {
-                        RemoveItemFromCollection(ItemType, collection, model);
+                        RemoveItems(model, collection);
                     }
                 }
             }
@@ -642,9 +688,27 @@ namespace Forge.Forms.Collections
             }
         }
 
+        private void RemoveItems(object model, IEnumerable collection)
+        {
+            if (model is IEnumerable modelEnum)
+            {
+                foreach (var item in modelEnum.OfType<object>().ToList())
+                {
+                    RemoveItemFromCollection(ItemType, collection, item);
+                }
+            }
+            else
+            {
+                RemoveItemFromCollection(ItemType, collection, model);
+            }
+        }
+
         private void CanExecuteRemoveItem(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = canMutate && e.Parameter != null && ItemType.IsInstanceOfType(e.Parameter);
+            e.CanExecute = canMutate && e.Parameter != null &&
+                           (ItemType.IsInstanceOfType(e.Parameter) || e.Parameter is IEnumerable enumerable &&
+                            enumerable.Cast<object>().Any() &&
+                            enumerable.Cast<object>().First().GetType() == ItemType);
         }
 
         private IFormDefinition GetCreateDefinition()
@@ -926,7 +990,7 @@ namespace Forge.Forms.Collections
             action(collection, item);
         }
 
-        private static void RemoveItemFromCollection(Type itemType, object collection, object item)
+        private void RemoveItemFromCollection(Type itemType, object collection, object item)
         {
             if (!RemoveItemCache.TryGetValue(itemType, out var action))
             {
