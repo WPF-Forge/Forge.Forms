@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using System.Windows;
@@ -130,13 +131,6 @@ namespace Forge.Forms.Collections
                 typeof(DynamicDataGrid),
                 new FrameworkPropertyMetadata(DialogOptions.Default, ItemsSourceChanged));
 
-
-        public string Title
-        {
-            get { return (string)GetValue(TitleProperty); }
-            set { SetValue(TitleProperty, value); }
-        }
-
         // Using a DependencyProperty as the backing store for Title.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty TitleProperty =
             DependencyProperty.Register("Title", typeof(string), typeof(DynamicDataGrid),
@@ -179,6 +173,13 @@ namespace Forge.Forms.Collections
         }
 
 
+        public string Title
+        {
+            get => (string)GetValue(TitleProperty);
+            set => SetValue(TitleProperty, value);
+        }
+
+
         public bool HasCheckboxes
         {
             get => (bool)GetValue(HasCheckboxesProperty);
@@ -189,6 +190,10 @@ namespace Forge.Forms.Collections
         {
             Margin = new Thickness(8, 0, 0, 0)
         };
+
+        private Button DeleteButton { get; set; }
+
+        private Button FilterButton { get; set; }
 
         private bool IsSelectAll { get; set; }
 
@@ -220,11 +225,6 @@ namespace Forge.Forms.Collections
                     CreateColumn(propertyInfo);
                 }
 
-                if (!HasCheckboxes)
-                {
-                    return;
-                }
-
                 var rowCheckBox = new FrameworkElementFactory(typeof(CheckBox));
                 rowCheckBox.SetValue(MaxWidthProperty, 18.0);
                 rowCheckBox.SetValue(HorizontalAlignmentProperty, HorizontalAlignment.Left);
@@ -250,11 +250,18 @@ namespace Forge.Forms.Collections
                     }
                 });
 
-                dataGrid.Columns.Insert(0, new DataGridTemplateColumn
+
+                if (HasCheckboxes)
                 {
-                    CellTemplate = new DataTemplate { VisualTree = rowCheckBox },
-                    Header = HeaderButton
-                });
+                    dataGrid.Columns.Insert(0, new DataGridTemplateColumn
+                    {
+                        CellTemplate = new DataTemplate { VisualTree = rowCheckBox },
+                        Header = HeaderButton,
+                        MaxWidth = 48,
+                        CanUserResize = false,
+                        CanUserReorder = false
+                    });
+                }
             }
         }
 

@@ -10,90 +10,111 @@
     </ResourceDictionary.MergedDictionaries>
 
     <ControlTemplate x:Key="DynamicDataGridTemplate" TargetType="{x:Type collections:DynamicDataGrid}">
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-            <materialDesign:ColorZone Mode="Standard" Padding="20" Grid.Row="0">
-                <Grid>
-                    <TextBlock Style="{DynamicResource MaterialDesignHeadlineTextBlock}"  Name="PART_Title" />
-                </Grid>
-            </materialDesign:ColorZone>
-            <DataGrid Grid.Row="1"
-                      Name="PART_DataGrid" AutoGenerateColumns="False"
-                      CanUserAddRows="False"
-                      SelectionMode="Extended"
-                      IsReadOnly="True"
-                      Style="{DynamicResource CustomDataGrid}"
-                      CellStyle="{DynamicResource CustomDataGridLeftPadding}"
-                      ItemsSource="{TemplateBinding ItemsSource}">
-                <DataGrid.Columns>
-                    <DataGridTemplateColumn Width="*">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <materialDesign:PopupBox x:Name="PopupBox" HorizontalAlignment="Right"
-                                                         PlacementMode="LeftAndAlignTopEdges"
-                                                         StaysOpen="False">
-                                    <materialDesign:PopupBox.ToggleContent>
-                                        <materialDesign:PackIcon Width="22"
-                                                                 Height="22"
-                                                                 Margin="8,12"
-                                                                 Foreground="{DynamicResource MaterialDesignBody}"
-                                                                 Kind="DotsVertical" />
-                                    </materialDesign:PopupBox.ToggleContent>
-                                    <StackPanel TextElement.FontSize="15"
-                                                TextElement.Foreground="{DynamicResource MaterialDesignBody}">
-                                        <Button VerticalContentAlignment="Center"
-                                                Command="{x:Static collections:DynamicDataGrid.UpdateItemCommand}"
-                                                CommandParameter="{Binding}"
-                                                Padding="0">
-                                            <StackPanel Margin="16,0,48,0" Orientation="Horizontal">
-                                                <materialDesign:PackIcon Width="24"
-                                                                         Height="24"
-                                                                         VerticalAlignment="Center"
-                                                                         Foreground="{DynamicResource MaterialDesignBodyLight}"
-                                                                         Kind="Pencil" />
-                                                <TextBlock Margin="24,0,0,0"
-                                                           VerticalAlignment="Center"
-                                                           Text="Edit" />
-                                            </StackPanel>
-                                        </Button>
-                                        <Button VerticalContentAlignment="Center"
-                                                Command="{x:Static collections:DynamicDataGrid.RemoveItemCommand}"
-                                                CommandParameter="{Binding}"
-                                                Padding="0">
-                                            <StackPanel Margin="16,0,48,0" Orientation="Horizontal">
-                                                <materialDesign:PackIcon Width="24"
-                                                                         Height="24"
-                                                                         VerticalAlignment="Center"
-                                                                         Foreground="{DynamicResource MaterialDesignBodyLight}"
-                                                                         Kind="Delete" />
-                                                <TextBlock Margin="24,0,0,0"
-                                                           VerticalAlignment="Center"
-                                                           Text="Delete" />
-                                            </StackPanel>
-                                        </Button>
-                                    </StackPanel>
-                                </materialDesign:PopupBox>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                </DataGrid.Columns>
-            </DataGrid>
-            <Button Grid.Row="2" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,10,10"
-                    Command="{x:Static collections:DynamicDataGrid.CreateItemCommand}"
-                    Style="{DynamicResource MaterialDesignFloatingActionButton}"
-                    Content="{materialDesign:PackIcon Plus}" />
+        <materialDesign:Card VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
 
-            <materialDesign:ColorZone Mode="Standard" Padding="20" Grid.Row="2">
-                <Grid>
-                    <TextBlock Style="{DynamicResource MaterialDesignHeadlineTextBlock}" Text="Bottom" />
-                </Grid>
-            </materialDesign:ColorZone>
+                <materialDesign:ColorZone Margin="24,0,14,0" Mode="Standard" Padding="20" Grid.Row="0">
+                    <Grid>
+                        <TextBlock Style="{DynamicResource MaterialDesignHeadlineTextBlock}" Name="PART_Title" />
+                        <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                            <Button materialDesign:RippleAssist.RippleSizeMultiplier="0.6"
+                                    materialDesign:RippleAssist.IsCentered="True" Margin="0,0,24,0"
+                                    Name="PART_DeleteButton" Style="{DynamicResource MaterialDesignToolButton}">
+                                <materialDesign:PackIcon Kind="Delete" Height="24" Width="24" />
+                            </Button>
+                            <Button materialDesign:RippleAssist.RippleSizeMultiplier="0.6"
+                                    materialDesign:RippleAssist.IsCentered="True" Margin="0,0,24,0"
+                                    Name="PART_FilterButton" Style="{DynamicResource MaterialDesignToolButton}">
+                                <materialDesign:PackIcon Kind="FilterVariant" Height="24" Width="24" />
+                            </Button>
+                            <Button materialDesign:RippleAssist.RippleSizeMultiplier="0.6"
+                                    materialDesign:RippleAssist.IsCentered="True"
+                                    Style="{DynamicResource MaterialDesignToolButton}">
+                                <materialDesign:PackIcon Kind="DotsVertical" Height="24" Width="24" />
+                            </Button>
+                        </StackPanel>
+                    </Grid>
+                </materialDesign:ColorZone>
 
-        </Grid>
+                <DataGrid Grid.Row="1"
+                          Name="PART_DataGrid" AutoGenerateColumns="False"
+                          CanUserAddRows="False"
+                          SelectionMode="Extended"
+                          IsReadOnly="True"
+                          Style="{DynamicResource CustomDataGrid}"
+                          CellStyle="{DynamicResource CustomDataGridLeftPadding}"
+                          ItemsSource="{TemplateBinding ItemsSource}">
+                    <DataGrid.Columns>
+                        <DataGridTemplateColumn Width="*">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <materialDesign:PopupBox x:Name="PopupBox" HorizontalAlignment="Right"
+                                                             PlacementMode="LeftAndAlignTopEdges"
+                                                             Margin="0,0,24,0"
+                                                             StaysOpen="False">
+                                        <materialDesign:PopupBox.ToggleContent>
+                                            <materialDesign:PackIcon Width="22"
+                                                                     Height="22"
+                                                                     Margin="8,12"
+                                                                     Foreground="{DynamicResource MaterialDesignBody}"
+                                                                     Kind="DotsVertical" />
+                                        </materialDesign:PopupBox.ToggleContent>
+                                        <StackPanel TextElement.FontSize="15"
+                                                    TextElement.Foreground="{DynamicResource MaterialDesignBody}">
+                                            <Button VerticalContentAlignment="Center"
+                                                    Command="{x:Static collections:DynamicDataGrid.UpdateItemCommand}"
+                                                    CommandParameter="{Binding}"
+                                                    Padding="0">
+                                                <StackPanel Margin="16,0,48,0" Orientation="Horizontal">
+                                                    <materialDesign:PackIcon Width="24"
+                                                                             Height="24"
+                                                                             VerticalAlignment="Center"
+                                                                             Foreground="{DynamicResource MaterialDesignBodyLight}"
+                                                                             Kind="Pencil" />
+                                                    <TextBlock Margin="24,0,0,0"
+                                                               VerticalAlignment="Center"
+                                                               Text="Edit" />
+                                                </StackPanel>
+                                            </Button>
+                                            <Button VerticalContentAlignment="Center"
+                                                    Command="{x:Static collections:DynamicDataGrid.RemoveItemCommand}"
+                                                    CommandParameter="{Binding}"
+                                                    Padding="0">
+                                                <StackPanel Margin="16,0,48,0" Orientation="Horizontal">
+                                                    <materialDesign:PackIcon Width="24"
+                                                                             Height="24"
+                                                                             VerticalAlignment="Center"
+                                                                             Foreground="{DynamicResource MaterialDesignBodyLight}"
+                                                                             Kind="Delete" />
+                                                    <TextBlock Margin="24,0,0,0"
+                                                               VerticalAlignment="Center"
+                                                               Text="Delete" />
+                                                </StackPanel>
+                                            </Button>
+                                        </StackPanel>
+                                    </materialDesign:PopupBox>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+
+                <materialDesign:ColorZone Margin="24,0,14,0" Mode="Standard" Padding="20" Grid.Row="2">
+                    <Grid />
+                </materialDesign:ColorZone>
+
+                <Button VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,10,10"
+                        Command="{x:Static collections:DynamicDataGrid.CreateItemCommand}"
+                        Style="{DynamicResource MaterialDesignFloatingActionButton}" Grid.Row="2">
+                    <materialDesign:PackIcon Kind="Plus" Height="24" Width="24" />
+                </Button>
+            </Grid>
+        </materialDesign:Card>
     </ControlTemplate>
 
     <Style TargetType="{x:Type collections:DynamicDataGrid}">
