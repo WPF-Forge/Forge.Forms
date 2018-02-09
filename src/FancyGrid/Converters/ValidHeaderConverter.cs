@@ -34,7 +34,7 @@ namespace FancyGrid.Converters
                             }
                         });
 
-                    return Visibility.Visible;
+                    return dGrid.CanFilter ? Visibility.Visible : Visibility.Collapsed;
                 }
             }
             return Visibility.Collapsed;

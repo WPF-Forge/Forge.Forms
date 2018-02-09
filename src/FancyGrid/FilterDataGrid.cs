@@ -20,7 +20,7 @@ namespace FancyGrid
     {
         public static readonly DependencyProperty CanFilterProperty =
             DependencyProperty.Register("CanFilter", typeof(bool), typeof(FilteringDataGrid),
-                new PropertyMetadata(false, (o, args) => { }));
+                new PropertyMetadata(false));
 
 
         /// <summary>
