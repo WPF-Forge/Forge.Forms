@@ -32,20 +32,21 @@
                         <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
                             <Button materialDesign:RippleAssist.RippleSizeMultiplier="0.6"
                                     materialDesign:RippleAssist.IsCentered="True" Margin="0,0,24,0"
+                                    Command="{TemplateBinding ToggleFilterCommand}"
+                                    Style="{DynamicResource MaterialDesignToolButton}">
+                                <materialDesign:PackIcon Kind="FilterVariant" Height="24" Width="24" />
+                            </Button>
+
+                            
+                            <Button materialDesign:RippleAssist.RippleSizeMultiplier="0.6"
+                                    materialDesign:RippleAssist.IsCentered="True" Margin="0,0,24,0"
                                     Command="{x:Static collections:DynamicDataGrid.RemoveItemCommand}"
                                     CommandParameter="{Binding ElementName=PART_DataGrid, Path=SelectedItems}"
                                     Visibility="{TemplateBinding IsDeleteButtonVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
                                     Style="{DynamicResource MaterialDesignToolButton}">
                                 <materialDesign:PackIcon Kind="Delete" Height="24" Width="24" />
                             </Button>
-                            <Button materialDesign:RippleAssist.RippleSizeMultiplier="0.6"
-                                    materialDesign:RippleAssist.IsCentered="True" Margin="0,0,24,0"
-                                    Command="{TemplateBinding ToggleFilterCommand}"
-                                    Visibility="{TemplateBinding IsFilterButtonVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
-                                    Style="{DynamicResource MaterialDesignToolButton}">
-                                <materialDesign:PackIcon Kind="FilterVariant" Height="24" Width="24" />
-                            </Button>
-
+                      
                             <materialDesign:PopupBox x:Name="PopupBox" HorizontalAlignment="Right"
                                                      PlacementMode="BottomAndAlignLeftEdges"
                                                      materialDesign:RippleAssist.RippleSizeMultiplier="0.6"
