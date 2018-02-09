@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -10,6 +12,8 @@ namespace FancyGrid.Converters
 {
     public class ValidHeaderConverter : IValueConverter
     {
+        private static List<DataGridColumnHeader> PropertyDescriptors { get; set; } = new List<DataGridColumnHeader>();
+
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value is DataGridColumnHeader header)
@@ -23,16 +27,21 @@ namespace FancyGrid.Converters
                         return Visibility.Collapsed;
                     }
 
-                    DependencyPropertyDescriptor
-                        .FromProperty(FilteringDataGrid.CanFilterProperty, typeof(FilteringDataGrid))
-                        .AddValueChanged(dGrid, (s, e) =>
-                        {
-                            if (header.Template.FindName("filterTextBox", header) is TextBox filterTextBox)
+                    if (!PropertyDescriptors.Contains(header))
+                    {
+                        DependencyPropertyDescriptor
+                            .FromProperty(FilteringDataGrid.CanFilterProperty, typeof(FilteringDataGrid))
+                            .AddValueChanged(dGrid, (s, e) =>
                             {
-                                filterTextBox.Text = "";
-                                filterTextBox.Visibility = dGrid.CanFilter ? Visibility.Visible : Visibility.Collapsed;
-                            }
-                        });
+                                if (header.Template.FindName("filterTextBox", header) is TextBox filterTextBox)
+                                {
+                                    filterTextBox.Text = "";
+                                    filterTextBox.Visibility =
+                                        dGrid.CanFilter ? Visibility.Visible : Visibility.Collapsed;
+                                }
+                            });
+                        PropertyDescriptors.Add(header);
+                    }
 
                     return dGrid.CanFilter ? Visibility.Visible : Visibility.Collapsed;
                 }
