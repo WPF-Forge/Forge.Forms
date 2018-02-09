@@ -30,6 +30,45 @@ namespace Forge.Forms.Collections
     [TemplatePart(Name = "PART_DataGrid", Type = typeof(DataGrid))]
     public class DynamicDataGrid : Control, INotifyPropertyChanged
     {
+        /// <summary>
+        /// Identifies the CanUserAdd dependency property.
+        /// </summary>
+
+        public static DependencyProperty CanUserAddProperty =
+            DependencyProperty.Register("CanUserAdd", typeof(bool), typeof(DynamicDataGrid), new PropertyMetadata(true));
+
+        public bool CanUserAdd
+        {
+            get => (bool) GetValue(CanUserAddProperty);
+            set => SetValue(CanUserAddProperty, value);
+        }
+
+        /// <summary>
+        /// Identifies the CanUserEdit dependency property.
+        /// </summary>
+
+        public static DependencyProperty CanUserEditProperty =
+            DependencyProperty.Register("CanUserEdit", typeof(bool), typeof(DynamicDataGrid), new PropertyMetadata(true));
+
+        public bool CanUserEdit
+        {
+            get => (bool) GetValue(CanUserEditProperty);
+            set => SetValue(CanUserEditProperty, value);
+        }
+
+        /// <summary>
+        /// Identifies the CanUserRemove dependency property.
+        /// </summary>
+
+        public static DependencyProperty CanUserRemoveProperty =
+            DependencyProperty.Register("CanUserRemove", typeof(bool), typeof(DynamicDataGrid), new PropertyMetadata(true));
+
+        public bool CanUserRemove
+        {
+            get => (bool) GetValue(CanUserRemoveProperty);
+            set => SetValue(CanUserRemoveProperty, value);
+        }
+        
         public static readonly DependencyProperty ToggleFilterCommandProperty =
             DependencyProperty.Register("ToggleFilterCommand", typeof(ICommand), typeof(DynamicDataGrid),
                 new PropertyMetadata());
@@ -837,7 +876,7 @@ namespace Forge.Forms.Collections
 
         private void CanExecuteCreateItem(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = canMutate;
+            e.CanExecute = CanUserAdd && canMutate;
         }
 
         private async void ExecuteUpdateItem(object sender, ExecutedRoutedEventArgs e)
@@ -905,7 +944,7 @@ namespace Forge.Forms.Collections
 
         private void CanExecuteUpdateItem(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = canMutate && e.Parameter != null && ItemType.IsInstanceOfType(e.Parameter);
+            e.CanExecute = CanUserEdit && canMutate && e.Parameter != null && ItemType.IsInstanceOfType(e.Parameter);
         }
 
         [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
@@ -1008,7 +1047,7 @@ namespace Forge.Forms.Collections
 
         private void CanExecuteRemoveItem(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = canMutate && e.Parameter != null &&
+            e.CanExecute = CanUserRemove && canMutate && e.Parameter != null &&
                            (ItemType.IsInstanceOfType(e.Parameter) || e.Parameter is IEnumerable enumerable &&
                             enumerable.Cast<object>().Any() &&
                             enumerable.Cast<object>().First().GetType() == ItemType);
