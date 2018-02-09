@@ -100,7 +100,7 @@ namespace Forge.Forms.Demo.Routes
         private Profession profession = new Profession();
 
         [StringLength(15)]
-        [Value(Must.BeGreaterThan, 5)]
+        [Value(Must.NotBeEmpty)]
         public string FirstName
         {
             get => firstName;
@@ -122,6 +122,8 @@ namespace Forge.Forms.Demo.Routes
         }
 
         [SelectFrom("{ContextBinding Items}", DisplayPath = nameof(FirstName))]
+        [Value(Must.NotBeEqualTo, "{Binding}", Message = "You can't be your own parent!")]
+        [Value(Must.NotBeEmpty)]
         public Person Parent
         {
             get => parent;
