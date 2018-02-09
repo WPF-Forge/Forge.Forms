@@ -29,6 +29,16 @@ namespace Forge.Forms.Collections
     [TemplatePart(Name = "PART_DataGrid", Type = typeof(DataGrid))]
     public class DynamicDataGrid : Control, INotifyPropertyChanged
     {
+        public static readonly DependencyProperty ToggleFilterCommandProperty =
+            DependencyProperty.Register("ToggleFilterCommand", typeof(ICommand), typeof(DynamicDataGrid),
+                new PropertyMetadata());
+
+        // Using a DependencyProperty as the backing store for IsFilteringEnabled.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty IsFilteringEnabledProperty =
+            DependencyProperty.Register("IsFilteringEnabled", typeof(bool), typeof(DynamicDataGrid),
+                new PropertyMetadata(true));
+
+
         public static readonly DependencyProperty CreateDialogPositiveContentProperty =
             DependencyProperty.Register(
                 nameof(CreateDialogPositiveContent),
@@ -197,56 +207,15 @@ namespace Forge.Forms.Collections
         private bool canMutate;
         private Type itemType;
 
-        static DynamicDataGrid()
-        {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(DynamicDataGrid),
-                new FrameworkPropertyMetadata(typeof(DynamicDataGrid)));
-        }
-
-        public DynamicDataGrid()
-        {
-            CommandBindings.Add(new CommandBinding(CreateItemCommand, ExecuteCreateItem, CanExecuteCreateItem));
-            CommandBindings.Add(new CommandBinding(UpdateItemCommand, ExecuteUpdateItem, CanExecuteUpdateItem));
-            CommandBindings.Add(new CommandBinding(RemoveItemCommand, ExecuteRemoveItem, CanExecuteRemoveItem));
-            Loaded += (s, e) => OnItemsSource(ItemsSource);
-        }
-
-        public ICommand MoveNextCommand
-        {
-            get => (ICommand)GetValue(MoveNextCommandProperty);
-            set => SetValue(MoveNextCommandProperty, value);
-        }
-
-        public ICommand MoveBackCommand
-        {
-            get => (ICommand)GetValue(MoveBackCommandProperty);
-            set => SetValue(MoveBackCommandProperty, value);
-        }
-
-        private FilteringDataGrid DataGrid { get; set; }
-
-
-        public string Title
-        {
-            get => (string)GetValue(TitleProperty);
-            set => SetValue(TitleProperty, value);
-        }
-
-        public string RowsPerPageText
-        {
-            get => (string)GetValue(RowsPerPageTextProperty);
-            set => SetValue(RowsPerPageTextProperty, value);
-        }
-
-        public int TotalItems => GetIEnumerableCount(ItemsSource) ?? 0;
-
-        public int MaxPages => (int)Math.Ceiling((double)TotalItems / ItemsPerPage);
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public int CurrentPage
         {
             get => (int)GetValue(CurrentPageProperty);
             set => SetValue(CurrentPageProperty, value);
         }
+
+        private FilteringDataGrid DataGrid { get; set; }
 
         public bool HasCheckboxes
         {
@@ -274,7 +243,17 @@ namespace Forge.Forms.Collections
         }
 
 
+        public bool IsFilteringEnabled
+        {
+            get => (bool)GetValue(IsFilteringEnabledProperty);
+            set => SetValue(IsFilteringEnabledProperty, value);
+        }
+
+
         private bool IsSelectAll { get; set; }
+
+        [AlsoNotifyFor(nameof(MaxPages))]
+        public int ItemsPerPage { get; set; } = 10;
 
         private Type ItemType
         {
@@ -344,14 +323,63 @@ namespace Forge.Forms.Collections
             }
         }
 
-        private List<DataGridColumn> ProtectedColumns { get; set; }
+        public int MaxPages => (int)Math.Ceiling((double)TotalItems / ItemsPerPage);
 
-        [AlsoNotifyFor(nameof(MaxPages))]
-        public int ItemsPerPage { get; set; } = 10;
+        public ICommand MoveBackCommand
+        {
+            get => (ICommand)GetValue(MoveBackCommandProperty);
+            set => SetValue(MoveBackCommandProperty, value);
+        }
+
+        public ICommand MoveNextCommand
+        {
+            get => (ICommand)GetValue(MoveNextCommandProperty);
+            set => SetValue(MoveNextCommandProperty, value);
+        }
 
         private ComboBox PerPageComboBox { get; set; }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        private List<DataGridColumn> ProtectedColumns { get; set; }
+
+        public string RowsPerPageText
+        {
+            get => (string)GetValue(RowsPerPageTextProperty);
+            set => SetValue(RowsPerPageTextProperty, value);
+        }
+
+
+        public string Title
+        {
+            get => (string)GetValue(TitleProperty);
+            set => SetValue(TitleProperty, value);
+        }
+
+        public ICommand ToggleFilterCommand
+        {
+            get => (ICommand)GetValue(ToggleFilterCommandProperty);
+            set => SetValue(ToggleFilterCommandProperty, value);
+        }
+
+        public int TotalItems => GetIEnumerableCount(ItemsSource) ?? 0;
+
+        static DynamicDataGrid()
+        {
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(DynamicDataGrid),
+                new FrameworkPropertyMetadata(typeof(DynamicDataGrid)));
+        }
+
+        public DynamicDataGrid()
+        {
+            CommandBindings.Add(new CommandBinding(CreateItemCommand, ExecuteCreateItem, CanExecuteCreateItem));
+            CommandBindings.Add(new CommandBinding(UpdateItemCommand, ExecuteUpdateItem, CanExecuteUpdateItem));
+            CommandBindings.Add(new CommandBinding(RemoveItemCommand, ExecuteRemoveItem, CanExecuteRemoveItem));
+
+            MoveNextCommand = new RelayCommand(x => CurrentPage++, o => CurrentPage < MaxPages);
+            MoveBackCommand = new RelayCommand(x => CurrentPage--, o => CurrentPage > 1);
+            ToggleFilterCommand = new RelayCommand(x => IsFilteringEnabled = !IsFilteringEnabled);
+
+            Loaded += (s, e) => OnItemsSource(ItemsSource);
+        }
 
         private static void PropertyChangedCallback(DependencyObject dependencyObject,
             DependencyPropertyChangedEventArgs dependencyPropertyChangedEventArgs)
@@ -433,10 +461,6 @@ namespace Forge.Forms.Collections
         {
             PerPageComboBox = Template.FindName("PART_PerPage", this) as ComboBox;
             DataGrid = Template.FindName("PART_DataGrid", this) as FilteringDataGrid;
-
-            MoveNextCommand = new RelayCommand(x => CurrentPage++, o => CurrentPage < MaxPages);
-
-            MoveBackCommand = new RelayCommand(x => CurrentPage--, o => CurrentPage > 1);
 
             if (DataGrid != null)
             {
@@ -1193,26 +1217,20 @@ namespace Forge.Forms.Collections
     {
         private readonly Func<IActionContext, IActionContext> onAction;
 
-        public ActionInterceptor(Func<IActionContext, IActionContext> onAction)
-        {
-            this.onAction = onAction ?? throw new ArgumentNullException(nameof(onAction));
-        }
-
         public IActionContext InterceptAction(IActionContext actionContext)
         {
             return onAction(actionContext);
+        }
+
+        public ActionInterceptor(Func<IActionContext, IActionContext> onAction)
+        {
+            this.onAction = onAction ?? throw new ArgumentNullException(nameof(onAction));
         }
     }
 
     internal class FormDefinitionWrapper : IFormDefinition
     {
         private readonly IFormDefinition inner;
-
-        public FormDefinitionWrapper(IFormDefinition inner, IReadOnlyList<FormRow> formRows)
-        {
-            this.inner = inner;
-            FormRows = formRows;
-        }
 
         public object CreateInstance(IResourceContext context)
         {
@@ -1226,11 +1244,34 @@ namespace Forge.Forms.Collections
         public Type ModelType => inner.ModelType;
 
         public IDictionary<string, IValueProvider> Resources => inner.Resources;
+
+        public FormDefinitionWrapper(IFormDefinition inner, IReadOnlyList<FormRow> formRows)
+        {
+            this.inner = inner;
+            FormRows = formRows;
+        }
     }
 
     internal class UpdateFormDefinition : IFormDefinition
     {
         private readonly IFormDefinition inner;
+
+        public object CreateInstance(IResourceContext context)
+        {
+            return Model;
+        }
+
+        public IReadOnlyList<FormRow> FormRows { get; }
+
+        public double[] Grid => inner.Grid;
+
+        public Type ModelType => inner.ModelType;
+
+        public IDictionary<string, IValueProvider> Resources => inner.Resources;
+
+        public object Model { get; }
+
+        public Snapshot Snapshot { get; }
 
         public UpdateFormDefinition(
             IFormDefinition inner,
@@ -1245,22 +1286,5 @@ namespace Forge.Forms.Collections
                 .Where(e => e is DataFormField)
                 .Select(f => ((DataFormField)f).Key)));
         }
-
-        public object Model { get; }
-
-        public Snapshot Snapshot { get; }
-
-        public object CreateInstance(IResourceContext context)
-        {
-            return Model;
-        }
-
-        public IReadOnlyList<FormRow> FormRows { get; }
-
-        public double[] Grid => inner.Grid;
-
-        public Type ModelType => inner.ModelType;
-
-        public IDictionary<string, IValueProvider> Resources => inner.Resources;
     }
 }

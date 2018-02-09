@@ -11,7 +11,7 @@
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary
             Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.DataGrid.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/FancyGrid;component/Themes/Generic.xaml"/>
+        <ResourceDictionary Source="pack://application:,,,/FancyGrid;component/Themes/Generic.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
     <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
@@ -40,6 +40,7 @@
                             </Button>
                             <Button materialDesign:RippleAssist.RippleSizeMultiplier="0.6"
                                     materialDesign:RippleAssist.IsCentered="True" Margin="0,0,24,0"
+                                    Command="{TemplateBinding ToggleFilterCommand}"
                                     Visibility="{TemplateBinding IsFilterButtonVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
                                     Style="{DynamicResource MaterialDesignToolButton}">
                                 <materialDesign:PackIcon Kind="FilterVariant" Height="24" Width="24" />
@@ -80,14 +81,15 @@
                     </Grid>
                 </materialDesign:ColorZone>
 
-                <fancyGrid:FilteringDataGrid  Grid.Row="1"
-                          Name="PART_DataGrid" AutoGenerateColumns="False"
-                          CanUserAddRows="False"
-                          SelectionMode="Extended"
-                          IsReadOnly="True"
-                          Style="{DynamicResource CustomDataGrid}"
-                          CellStyle="{DynamicResource CustomDataGridLeftPadding}"
-                          ItemsSource="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=PaginatedItemsSource}">
+                <fancyGrid:FilteringDataGrid Grid.Row="1"
+                                             Name="PART_DataGrid" AutoGenerateColumns="False"
+                                             CanUserAddRows="False"
+                                             SelectionMode="Extended"
+                                             IsReadOnly="True"
+                                             CanFilter="{Binding IsFilteringEnabled, RelativeSource={RelativeSource TemplatedParent}}"
+                                             Style="{DynamicResource CustomDataGrid}"
+                                             CellStyle="{DynamicResource CustomDataGridLeftPadding}"
+                                             ItemsSource="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=PaginatedItemsSource}">
                     <fancyGrid:FilteringDataGrid.Columns>
                         <DataGridTemplateColumn Width="*">
                             <DataGridTemplateColumn.CellTemplate>

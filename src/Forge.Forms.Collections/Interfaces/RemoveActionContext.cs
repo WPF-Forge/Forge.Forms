@@ -3,12 +3,12 @@
     public class RemoveActionContext : IRemoveActionContext
     {
         /// <inheritdoc />
+        public object OldModel { get; }
+
+        /// <inheritdoc />
         public RemoveActionContext(object oldModel)
         {
             OldModel = oldModel;
         }
-
-        /// <inheritdoc />
-        public object OldModel { get; }
     }
 }
