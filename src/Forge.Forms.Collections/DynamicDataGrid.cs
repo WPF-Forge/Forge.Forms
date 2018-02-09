@@ -141,7 +141,7 @@ namespace Forge.Forms.Collections
             nameof(RemoveDialogTextContent),
             typeof(string),
             typeof(DynamicDataGrid),
-            new FrameworkPropertyMetadata("Remove item?"));
+            new FrameworkPropertyMetadata("Remove item(s)?"));
 
         public static readonly DependencyProperty RemoveDialogPositiveContentProperty = DependencyProperty.Register(
             nameof(RemoveDialogPositiveContent),
@@ -1127,6 +1127,7 @@ namespace Forge.Forms.Collections
                 Content = new LiteralValue(UpdateDialogPositiveContent),
                 Icon = new LiteralValue(UpdateDialogPositiveIcon),
                 ClosesDialog = LiteralValue.True,
+                Validates = LiteralValue.True,
                 IsDefault = LiteralValue.True
             };
         }
