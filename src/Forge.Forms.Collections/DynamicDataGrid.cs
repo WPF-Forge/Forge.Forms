@@ -333,7 +333,7 @@ namespace Forge.Forms.Collections
                     DataGrid.Columns.Remove(dataGridColumn);
                 }
 
-                foreach (var propertyInfo in ItemType.GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                foreach (var propertyInfo in ItemType.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly)
                     .Reverse())
                 {
                     CreateColumn(propertyInfo);
