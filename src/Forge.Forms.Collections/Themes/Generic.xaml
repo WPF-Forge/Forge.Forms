@@ -85,6 +85,7 @@
                                              Name="PART_DataGrid" AutoGenerateColumns="False"
                                              CanUserAddRows="False"
                                              SelectionMode="Extended"
+                                             IsFilteringCaseSensitive="{TemplateBinding IsFilteringCaseSensitive}"
                                              IsReadOnly="True"
                                              CanFilter="{Binding IsFilteringEnabled, RelativeSource={RelativeSource TemplatedParent}}"
                                              Style="{DynamicResource CustomDataGrid}"

@@ -1,6 +1,8 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.CompilerServices;
 using Forge.Forms.Annotations;
 using Forge.Forms.Collections;
@@ -11,7 +13,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Forge.Forms.Demo.Routes
 {
-    class CrudExample : DbContext
+    public class CrudExample : DbContext
     {
         public DbSet<Person> Persons { get; set; }
 
@@ -50,7 +52,6 @@ namespace Forge.Forms.Demo.Routes
 
         public void Intercept(IRemoveActionContext modelContext)
         {
-
             if (modelContext.OldModel is Person person)
             {
                 Context.Remove(person);
@@ -61,6 +62,7 @@ namespace Forge.Forms.Demo.Routes
 
     public class CrudRoute : Route
     {
+        public CrudExample DbContext { get; }
         public ObservableCollection<Person> Items { get; }
 
         public CrudRoute()
@@ -68,17 +70,23 @@ namespace Forge.Forms.Demo.Routes
             RouteConfig.Title = "Crud examples";
             RouteConfig.Icon = PackIconKind.Table;
 
-            var context = new CrudExample();
-            context.Database.EnsureCreated();
+            DbContext = new CrudExample();
+            DbContext.Database.EnsureCreated();
 
-            context.Persons.Load();
-            Items = context.Persons.Local.ToObservableCollection();
+            DbContext.Persons.Load();
+            Items = DbContext.Persons.Local.ToObservableCollection();
 
-            var interceptor = new CrudInterceptor(context);
+            var interceptor = new CrudInterceptor(DbContext);
             DynamicDataGrid.AddInterceptorChain.Add(interceptor);
             DynamicDataGrid.UpdateInterceptorChain.Add(interceptor);
             DynamicDataGrid.RemoveInterceptorChain.Add(interceptor);
         }
+    }
+
+    [DisplayName(nameof(Profession.Name))]
+    public class Profession
+    {      
+        public string Name { get; set; }
     }
 
     public class Person : INotifyPropertyChanged
@@ -88,6 +96,8 @@ namespace Forge.Forms.Demo.Routes
 
         private string firstName;
         private string lastName;
+        private Person parent;
+        private Profession profession = new Profession();
 
         [StringLength(15)]
         [Value(Must.BeGreaterThan, 5)]
@@ -107,6 +117,37 @@ namespace Forge.Forms.Demo.Routes
             set
             {
                 lastName = value;
+                OnPropertyChanged();
+            }
+        }
+
+        [SelectFrom("{ContextBinding Items}", DisplayPath = nameof(FirstName))]
+        public Person Parent
+        {
+            get => parent;
+            set
+            {
+                parent = value;
+                OnPropertyChanged();
+            }
+        }
+
+        [NotMapped]
+        [FieldIgnore]
+        public List<Profession> PossibleProfessions { get; } = new List<Profession>
+        {
+            new Profession{Name = "Medic"},
+            new Profession{Name = "Engineer"}
+        };
+
+        [NotMapped]
+        [SelectFrom("{Binding PossibleProfessions}", DisplayPath = "Name")]
+        public Profession Profession
+        {
+            get => profession;
+            set
+            {
+                profession = value;
                 OnPropertyChanged();
             }
         }
