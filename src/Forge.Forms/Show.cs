@@ -164,6 +164,7 @@ namespace Forge.Forms
                     lastActionParameter = e.ActionContext.ActionParameter;
                 };
 
+                wrapper.Form.Environment.Add(options.EnvironmentFlags);
                 await DialogHost.Show(wrapper, dialogIdentifier);
                 return new DialogResult(wrapper.Form.Value, lastAction, lastActionParameter);
             }

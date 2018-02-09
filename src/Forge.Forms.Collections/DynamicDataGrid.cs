@@ -777,7 +777,9 @@ namespace Forge.Forms.Collections
             var definition = GetCreateDefinition();
             try
             {
+                DialogOptions.EnvironmentFlags.Add("create");
                 result = await Show.Dialog(TargetDialogIdentifier, DataContext, DialogOptions).For(definition);
+                DialogOptions.EnvironmentFlags.Remove("create");
             }
             catch
             {
@@ -832,9 +834,11 @@ namespace Forge.Forms.Collections
             var definition = GetUpdateDefinition(model);
             try
             {
+                DialogOptions.EnvironmentFlags.Add("update");
                 result = await Show
                     .Dialog(TargetDialogIdentifier, DataContext, DialogOptions)
                     .For((IFormDefinition)definition);
+                DialogOptions.EnvironmentFlags.Remove("update");
             }
             catch
             {
@@ -915,6 +919,7 @@ namespace Forge.Forms.Collections
 
             try
             {
+                DialogOptions.EnvironmentFlags.Add("delete");
                 var result = await Show
                     .Dialog(TargetDialogIdentifier, DataContext, DialogOptions)
                     .For(new Confirmation(
@@ -927,6 +932,7 @@ namespace Forge.Forms.Collections
                         PositiveActionIcon = RemoveDialogPositiveIcon,
                         NegativeActionIcon = RemoveDialogNegativeIcon
                     });
+                DialogOptions.EnvironmentFlags.Remove("delete");
 
                 if (result.Action is "positive")
                 {
