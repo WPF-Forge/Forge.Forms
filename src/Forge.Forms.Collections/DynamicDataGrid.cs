@@ -521,7 +521,7 @@ namespace Forge.Forms.Collections
 
                 var dataGridTextColumn = new MaterialDataGridTextColumn
                 {
-                    Header = propertyInfo.Name.Humanize(),
+                    Header = propertyInfo.GetCustomAttribute<FieldAttribute>() is FieldAttribute attr ? attr.Name : propertyInfo.Name.Humanize(),
                     Binding = CreateBinding(propertyInfo, path),
                     EditingElementStyle = TryFindResource("MaterialDesignDataGridTextColumnPopupEditingStyle") as Style,
                     MaxLength = propertyInfo.GetCustomAttribute<StringLengthAttribute>()?.MaximumLength ?? 0
