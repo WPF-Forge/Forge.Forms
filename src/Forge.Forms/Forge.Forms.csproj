@@ -81,14 +81,17 @@
     <Compile Include="Controls\DynamicFormWrapper.xaml.cs">
       <DependentUpon>DynamicFormWrapper.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Internal\FormEnvironment.cs" />
     <Compile Include="DynamicExpressions\BooleanExpressions\BooleanExpression.cs" />
     <Compile Include="DynamicExpressions\BooleanExpressions\BooleanMultiConverter.cs" />
     <Compile Include="DynamicExpressions\BooleanExpressions\Token.cs" />
+    <Compile Include="DynamicExpressions\EnvironmentBinding.cs" />
     <Compile Include="DynamicExpressions\FileBinding.cs" />
     <Compile Include="DynamicExpressions\FileWatcher.cs" />
     <Compile Include="DynamicExpressions\MultiValueBinding.cs" />
     <Compile Include="Extensions\PropertyInfoExtensions.cs" />
     <Compile Include="Extensions\PropertyWrapper.cs" />
+    <Compile Include="FormBuilding\IEnvironment.cs" />
     <Compile Include="IModelInterceptor.cs" />
     <Compile Include="Snapshot.cs" />
     <Compile Include="WindowOptions.cs" />

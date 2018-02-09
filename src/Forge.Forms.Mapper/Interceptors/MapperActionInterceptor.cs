@@ -20,8 +20,10 @@ namespace Forge.Forms.Mapper.Interceptors
 
             var interceptAction = new ActionContext(
                 actionContext.Model.CopyTo(actionContext.Model.GetType().GetMapper()?.BaseType ??
-                                           actionContext.Model.GetType()), actionContext.Context, actionContext.Action,
-                actionContext.ActionParameter);
+                                           actionContext.Model.GetType()),
+                actionContext.Context, actionContext.Action,
+                actionContext.ActionParameter,
+                actionContext.ResourceContext);
 
             var mapper = interceptAction.Model.GetType().GetMapper();
             if (mapper is MaterialMapper materialMapper)

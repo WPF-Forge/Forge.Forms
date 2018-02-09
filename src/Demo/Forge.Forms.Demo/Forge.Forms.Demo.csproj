@@ -169,6 +169,7 @@
   <ItemGroup>
     <Compile Include="Models\BooleanLogic.cs" />
     <Compile Include="Models\Dialogs.cs" />
+    <Compile Include="Models\EnvManager.cs" />
     <Compile Include="Models\FoodSelection.cs" />
     <Compile Include="Models\Home\Introduction.cs" />
     <Compile Include="Models\ExamplePresenter.cs" />
