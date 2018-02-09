@@ -474,7 +474,7 @@ namespace Forge.Forms.Collections
 
         private void CreateColumn(PropertyInfo propertyInfo)
         {
-            if (propertyInfo.GetCustomAttribute<FieldIgnoreAttribute>() != null)
+            if (propertyInfo.GetCustomAttribute<FieldIgnoreAttribute>() != null || propertyInfo.GetCustomAttribute<CrudIgnoreAttribute>() != null)
             {
                 return;
             }
