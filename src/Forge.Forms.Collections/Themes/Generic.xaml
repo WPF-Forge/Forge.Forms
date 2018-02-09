@@ -25,7 +25,7 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <materialDesign:ColorZone Margin="24,0,14,0" Mode="Standard" Padding="20" Grid.Row="0">
+                <Border Margin="24,0,14,0" Padding="20" Grid.Row="0">
                     <Grid>
                         <TextBlock Style="{DynamicResource MaterialDesignHeadlineTextBlock}"
                                    Text="{TemplateBinding Title}" />
@@ -79,7 +79,7 @@
 
                         </StackPanel>
                     </Grid>
-                </materialDesign:ColorZone>
+                </Border>
 
                 <fancyGrid:FilteringDataGrid Grid.Row="1"
                                              Name="PART_DataGrid" AutoGenerateColumns="False"
@@ -90,6 +90,7 @@
                                              ClearFiltersInternalMessage="{Binding ClearFiltersMessage, RelativeSource={RelativeSource TemplatedParent}}"
                                              IsFilteringCaseInternalSensitive="{Binding IsFilteringCaseSensitive}"
                                              IsReadOnly="True"
+                                             Background="{Binding RelativeSource={RelativeSource AncestorType=materialDesign:Card, Mode=FindAncestor}, Path=Background}"
                                              CanFilter="{Binding IsFilteringEnabled, RelativeSource={RelativeSource TemplatedParent}}"
                                              Style="{DynamicResource CustomDataGrid}"
                                              CellStyle="{DynamicResource CustomDataGridLeftPadding}"
@@ -149,7 +150,7 @@
                     </fancyGrid:FilteringDataGrid.Columns>
                 </fancyGrid:FilteringDataGrid>
 
-                <materialDesign:ColorZone Margin="24,0,14,0" Mode="Standard" Padding="20" Grid.Row="2">
+                <Border Margin="24,0,14,0" Padding="20" Grid.Row="2">
                     <Grid>
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom">
                             <TextBlock Style="{DynamicResource MaterialDesignCaptionTextBlock}"
@@ -184,7 +185,7 @@
                             </Button>
                         </StackPanel>
                     </Grid>
-                </materialDesign:ColorZone>
+                </Border>
             </Grid>
         </materialDesign:Card>
     </ControlTemplate>
