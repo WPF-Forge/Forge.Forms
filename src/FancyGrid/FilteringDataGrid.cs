@@ -17,6 +17,9 @@ namespace FancyGrid
     /// </summary>
     public class FilteringDataGrid : DataGrid
     {
+        /// <summary>
+        /// The can filter property
+        /// </summary>
         public static readonly DependencyProperty CanFilterProperty =
             DependencyProperty.Register("CanFilter", typeof(bool), typeof(FilteringDataGrid),
                 new PropertyMetadata(false));
@@ -25,29 +28,29 @@ namespace FancyGrid
         /// <summary>
         /// Case sensitive filtering
         /// </summary>
-        public static DependencyProperty IsFilteringCaseSensitiveProperty =
-            DependencyProperty.Register("IsFilteringCaseSensitive", typeof(bool), typeof(FilteringDataGrid),
+        public static DependencyProperty IsFilteringCaseInternalSensitiveProperty =
+            DependencyProperty.Register("IsFilteringCaseInternalSensitive", typeof(bool), typeof(FilteringDataGrid),
                 new PropertyMetadata(true));
 
         /// <summary>
         /// Identifies the ClearFiltersMessage dependency property.
         /// </summary>
-        public static DependencyProperty ClearFiltersMessageProperty =
-            DependencyProperty.Register("ClearFiltersMessage", typeof(string), typeof(FilteringDataGrid),
+        public static DependencyProperty ClearFiltersInternalMessageProperty =
+            DependencyProperty.Register("ClearFiltersInternalMessage", typeof(string), typeof(FilteringDataGrid),
                 new PropertyMetadata("Clear all filters"));
 
         /// <summary>
         /// Identifies the IncludeItemsMessage dependency property.
         /// </summary>
-        public static DependencyProperty IncludeItemsMessageProperty =
-            DependencyProperty.Register("IncludeItemsMessage", typeof(string), typeof(FilteringDataGrid),
+        public static DependencyProperty IncludeItemsInternalMessageProperty =
+            DependencyProperty.Register("IncludeItemsInternalMessage", typeof(string), typeof(FilteringDataGrid),
                 new PropertyMetadata("Include items like this"));
 
         /// <summary>
         /// Identifies the ExcludeItemsMessage dependency property.
         /// </summary>
-        public static DependencyProperty ExcludeItemsMessageProperty =
-            DependencyProperty.Register("ExcludeItemsMessage", typeof(string), typeof(FilteringDataGrid),
+        public static DependencyProperty ExcludeItemsInternalMessageProperty =
+            DependencyProperty.Register("ExcludeItemsInternalMessage", typeof(string), typeof(FilteringDataGrid),
                 new PropertyMetadata("Exclude items like this"));
 
         /// <summary>
@@ -97,28 +100,46 @@ namespace FancyGrid
         /// <summary>
         /// Case sensitive filtering
         /// </summary>
-        public bool IsFilteringCaseSensitive
+        public bool IsFilteringCaseInternalSensitive
         {
-            get => (bool)GetValue(IsFilteringCaseSensitiveProperty);
-            set => SetValue(IsFilteringCaseSensitiveProperty, value);
+            get => (bool)GetValue(IsFilteringCaseInternalSensitiveProperty);
+            set => SetValue(IsFilteringCaseInternalSensitiveProperty, value);
         }
 
-        public string ClearFiltersMessage
+        /// <summary>
+        /// Gets or sets the clear filters internal message.
+        /// </summary>
+        /// <value>
+        /// The clear filters internal message.
+        /// </value>
+        public string ClearFiltersInternalMessage
         {
-            get => (string)GetValue(ClearFiltersMessageProperty);
-            set => SetValue(ClearFiltersMessageProperty, value);
+            get => (string)GetValue(ClearFiltersInternalMessageProperty);
+            set => SetValue(ClearFiltersInternalMessageProperty, value);
         }
 
-        public string IncludeItemsMessage
+        /// <summary>
+        /// Gets or sets the include items internal message.
+        /// </summary>
+        /// <value>
+        /// The include items internal message.
+        /// </value>
+        public string IncludeItemsInternalMessage
         {
-            get => (string)GetValue(IncludeItemsMessageProperty);
-            set => SetValue(IncludeItemsMessageProperty, value);
+            get => (string)GetValue(IncludeItemsInternalMessageProperty);
+            set => SetValue(IncludeItemsInternalMessageProperty, value);
         }
 
-        public string ExcludeItemsMessage
+        /// <summary>
+        /// Gets or sets the exclude items internal message.
+        /// </summary>
+        /// <value>
+        /// The exclude items internal message.
+        /// </value>
+        public string ExcludeItemsInternalMessage
         {
-            get => (string)GetValue(ExcludeItemsMessageProperty);
-            set => SetValue(ExcludeItemsMessageProperty, value);
+            get => (string)GetValue(ExcludeItemsInternalMessageProperty);
+            set => SetValue(ExcludeItemsInternalMessageProperty, value);
         }
 
         private void FilteringDataGrid_AutoGeneratingColumn(object sender, DataGridAutoGeneratingColumnEventArgs e)
@@ -160,20 +181,20 @@ namespace FancyGrid
             ContextMenu.Items.Add(new MenuItem
             {
                 Header =
-                    $"{IncludeItemsMessage} {GetCellValue(cellInfo, cell)}",
+                    $"{IncludeItemsInternalMessage} {GetCellValue(cellInfo, cell)}",
                 Command = new FunctionRunnerCommand(FilterToSelected)
             });
 
             ContextMenu?.Items.Add(new MenuItem
             {
                 Header =
-                    $"{ExcludeItemsMessage} {GetCellValue(cellInfo, cell)}",
+                    $"{ExcludeItemsInternalMessage} {GetCellValue(cellInfo, cell)}",
                 Command = new FunctionRunnerCommand(FilterToNotSelected)
             });
 
             ContextMenu?.Items.Add(new MenuItem
             {
-                Header = ClearFiltersMessage,
+                Header = ClearFiltersInternalMessage,
                 Command = new FunctionRunnerCommand(ClearFilters)
             });
 
@@ -481,7 +502,7 @@ namespace FancyGrid
 
         private bool fm_Contains(object item, string filter)
         {
-            if (IsFilteringCaseSensitive)
+            if (IsFilteringCaseInternalSensitive)
             {
                 return item.ToString().Contains(filter);
             }
@@ -491,7 +512,7 @@ namespace FancyGrid
 
         private bool fm_Startswith(object item, string filter)
         {
-            var compareMode = IsFilteringCaseSensitive
+            var compareMode = IsFilteringCaseInternalSensitive
                 ? StringComparison.CurrentCulture
                 : StringComparison.CurrentCultureIgnoreCase;
 
@@ -515,7 +536,7 @@ namespace FancyGrid
 
         private bool fm_Endswith(object item, string filter)
         {
-            var compareMode = IsFilteringCaseSensitive
+            var compareMode = IsFilteringCaseInternalSensitive
                 ? StringComparison.CurrentCulture
                 : StringComparison.CurrentCultureIgnoreCase;
             return item.ToString().EndsWith(filter, compareMode);
@@ -524,7 +545,7 @@ namespace FancyGrid
         private bool fm_is(object item, string filter)
         {
             var a = item.ToString();
-            if (IsFilteringCaseSensitive)
+            if (IsFilteringCaseInternalSensitive)
             {
                 a = a.ToLower();
                 filter = filter.ToLower();
