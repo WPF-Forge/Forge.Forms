@@ -758,6 +758,11 @@ namespace Forge.Forms.Collections
                     t.IsGenericType &&
                     t.GetGenericTypeDefinition() == typeof(ICollection<>))
                 .ToList();
+            
+            if (collection is INotifyCollectionChanged collectionChanged)
+            {
+                collectionChanged.CollectionChanged += (sender, args) => OnPropertyChanged(nameof(PaginatedItemsSource));
+            }
 
             if (interfaces.Count > 1 || interfaces.Count == 0)
             {
