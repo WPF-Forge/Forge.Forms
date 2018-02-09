@@ -107,8 +107,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Converters\HeaderFilterConverter.cs" />
-    <Compile Include="FilterDataGrid.cs" />
-    <Compile Include="Order.cs" />
+    <Compile Include="FilteringDataGrid.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
