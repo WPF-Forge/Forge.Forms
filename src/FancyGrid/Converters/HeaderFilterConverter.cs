@@ -17,6 +17,7 @@ namespace FancyGrid.Converters
     /// </summary>
     public class HeaderFilterConverter : IMultiValueConverter
     {
+        /// <inheritdoc />
         /// <summary>
         /// Create a nice looking header
         /// </summary>
@@ -28,36 +29,35 @@ namespace FancyGrid.Converters
         public object Convert(object[] values, Type targetType, object parameter,
             CultureInfo culture)
         {
-            // Get values
             var filter = values[0] as string;
             var headerText = values[1] as string;
-            var filtertype = "";
+            string filtertype;
 
-            if (filter.StartsWith("<"))
+            if (filter != null && filter.StartsWith("<"))
             {
                 filtertype = "Less Than";
             }
-            else if (filter.StartsWith(">"))
+            else if (filter != null && filter.StartsWith(">"))
             {
                 filtertype = "Greater Than";
             }
-            else if (filter.StartsWith("="))
+            else if (filter != null && filter.StartsWith("="))
             {
                 filtertype = "Exactly";
             }
-            else if (filter.StartsWith("!"))
+            else if (filter != null && filter.StartsWith("!"))
             {
                 filtertype = "Not";
             }
-            else if (filter.StartsWith("~"))
+            else if (filter != null && filter.StartsWith("~"))
             {
                 filtertype = "Doesn't Contain";
             }
-            else if (filter.StartsWith(@""""))
+            else if (filter != null && filter.StartsWith(@""""))
             {
                 filtertype = "Blank";
             }
-            else if (filter.Equals("*"))
+            else if (filter != null && filter.Equals("*"))
             {
                 filtertype = "Any";
             }
@@ -67,7 +67,6 @@ namespace FancyGrid.Converters
             }
 
 
-            // Generate header text
             var text = "{0}{3}" + headerText + " {4}";
             if (!string.IsNullOrEmpty(filter))
             {
@@ -75,22 +74,17 @@ namespace FancyGrid.Converters
             }
             text += "{1}";
 
-            // Escape special XML characters like <>&'
             text = new XText(text).ToString();
 
-            // Format the text
             text = string.Format(text,
                 @"<TextBlock xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation'>",
                 "</TextBlock>", "<Run FontWeight='bold' Text='", "<Run Text='", @"'/>");
 
-            // Convert to stream
             var stream = new MemoryStream(Encoding.UTF8.GetBytes(text));
-
-            // Convert to object
-            var block = (TextBlock)XamlReader.Load(stream);
-            return block;
+            return (TextBlock)XamlReader.Load(stream);
         }
 
+        /// <inheritdoc />
         /// <summary>
         /// Not required
         /// </summary>
