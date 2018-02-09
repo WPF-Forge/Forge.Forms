@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Media;
 
@@ -16,6 +15,7 @@ namespace FancyGrid
             {
                 return null;
             }
+
             var output = new List<T>();
             var c = VisualTreeHelper.GetChildrenCount(ele);
             for (var i = 0; i < c; i++)
@@ -28,10 +28,12 @@ namespace FancyGrid
                         continue;
                     }
                 }
+
                 if (ch is T)
                 {
                     output.Add(ch as T);
                 }
+
                 if (!(ch is FrameworkElement))
                 {
                     continue;
@@ -39,6 +41,7 @@ namespace FancyGrid
 
                 output.AddRange((ch as FrameworkElement).AllChildren<T>(whereFunc));
             }
+
             return output;
         }
 
@@ -52,6 +55,7 @@ namespace FancyGrid
                     return sortDesc;
                 }
             }
+
             return null;
         }
     }

@@ -8,6 +8,12 @@ namespace Forge.Forms.Collections
         private readonly Func<object, bool> canExecute;
         private readonly Action<object> execute;
 
+        public RelayCommand(Action<object> execute, Func<object, bool> canExecute = null)
+        {
+            this.execute = execute;
+            this.canExecute = canExecute;
+        }
+
         public event EventHandler CanExecuteChanged
         {
             add => CommandManager.RequerySuggested += value;
@@ -22,12 +28,6 @@ namespace Forge.Forms.Collections
         public void Execute(object parameter)
         {
             execute.Invoke(parameter);
-        }
-
-        public RelayCommand(Action<object> execute, Func<object, bool> canExecute = null)
-        {
-            this.execute = execute;
-            this.canExecute = canExecute;
         }
     }
 }

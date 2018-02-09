@@ -8,16 +8,16 @@ namespace Forge.Forms.Collections
 {
     public class GridField : DataFormField
     {
+        public GridField(string key, Type propertyType)
+            : base(key, propertyType)
+        {
+        }
+
         public IValueProvider AddItemCommand { get; set; }
 
         public IValueProvider EditItemCommand { get; set; }
 
         public IValueProvider RemoveItemCommand { get; set; }
-
-        public GridField(string key, Type propertyType)
-            : base(key, propertyType)
-        {
-        }
 
         // Other props will go here
 

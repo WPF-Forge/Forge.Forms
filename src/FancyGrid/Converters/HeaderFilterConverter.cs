@@ -72,6 +72,7 @@ namespace FancyGrid.Converters
             {
                 text += "({2}" + filtertype + "{4})";
             }
+
             text += "{1}";
 
             text = new XText(text).ToString();

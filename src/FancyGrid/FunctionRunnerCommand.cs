@@ -10,6 +10,15 @@ namespace FancyGrid
     {
         private readonly Action<object> _function;
 
+        /// <summary>
+        /// Convert the code to a command
+        /// </summary>
+        /// <param name="function">A method, function, or lambda to be treated as a command.</param>
+        public FunctionRunnerCommand(Action<object> function)
+        {
+            _function = function;
+        }
+
         public event EventHandler CanExecuteChanged;
 
         public bool CanExecute(object parameter)
@@ -20,15 +29,6 @@ namespace FancyGrid
         public void Execute(object parameter)
         {
             _function(parameter);
-        }
-
-        /// <summary>
-        /// Convert the code to a command
-        /// </summary>
-        /// <param name="function">A method, function, or lambda to be treated as a command.</param>
-        public FunctionRunnerCommand(Action<object> function)
-        {
-            _function = function;
         }
     }
 }

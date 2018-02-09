@@ -396,10 +396,10 @@ namespace FancyGrid
                         return fm_Contains(property, filter.Value);
                     }
                 }
-                else if(!string.IsNullOrEmpty(filter.Value))
+                else if (!string.IsNullOrEmpty(filter.Value))
                 {
                     return false;
-                }                  
+                }
             }
 
             return true;
@@ -507,7 +507,9 @@ namespace FancyGrid
         private bool fm_Contains(object item, string filter)
         {
             if (string.IsNullOrEmpty(item.ToString()))
+            {
                 return false;
+            }
 
             if (IsFilteringCaseInternalSensitive)
             {
