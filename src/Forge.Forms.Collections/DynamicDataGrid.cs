@@ -1102,6 +1102,7 @@ namespace Forge.Forms.Collections
                 Content = new LiteralValue(CreateDialogPositiveContent),
                 Icon = new LiteralValue(CreateDialogPositiveIcon),
                 ClosesDialog = LiteralValue.True,
+                Validates = LiteralValue.True,
                 IsDefault = LiteralValue.True
             };
         }
