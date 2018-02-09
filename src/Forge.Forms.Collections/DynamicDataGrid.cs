@@ -36,7 +36,7 @@ namespace Forge.Forms.Collections
         // Using a DependencyProperty as the backing store for IsFilteringEnabled.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty IsFilteringEnabledProperty =
             DependencyProperty.Register("IsFilteringEnabled", typeof(bool), typeof(DynamicDataGrid),
-                new PropertyMetadata(true));
+                new PropertyMetadata(false));
 
 
         public static readonly DependencyProperty CreateDialogPositiveContentProperty =
