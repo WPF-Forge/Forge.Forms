@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
-using System.Text;
 using System.Windows.Input;
 
 namespace FancyGrid
@@ -11,6 +8,20 @@ namespace FancyGrid
     /// </summary>
     public class FunctionRunnerCommand : ICommand
     {
+        private readonly Action<object> _function;
+
+        public event EventHandler CanExecuteChanged;
+
+        public bool CanExecute(object parameter)
+        {
+            return true;
+        }
+
+        public void Execute(object parameter)
+        {
+            _function(parameter);
+        }
+
         /// <summary>
         /// Convert the code to a command
         /// </summary>
@@ -19,19 +30,5 @@ namespace FancyGrid
         {
             _function = function;
         }
-
-        public bool CanExecute(object parameter)
-        {
-            return true;
-        }
-
-        public event EventHandler CanExecuteChanged;
-
-        public void Execute(object parameter)
-        {
-            _function(parameter);
-        }
-
-        private Action<object> _function;
     }
 }

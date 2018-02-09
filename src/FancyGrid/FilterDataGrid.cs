@@ -18,20 +18,10 @@ namespace FancyGrid
     /// </summary>
     public class FilteringDataGrid : DataGrid
     {
-        /// <summary>
-        /// This dictionary will have a list of all applied filters
-        /// </summary>
-        private readonly Dictionary<string, string> columnFilters;
+        public static readonly DependencyProperty CanFilterProperty =
+            DependencyProperty.Register("CanFilter", typeof(bool), typeof(FilteringDataGrid),
+                new PropertyMetadata(false, (o, args) => { }));
 
-        /// <summary>
-        /// This dictionary will map a column to the filter behavior
-        /// </summary>
-        private readonly Dictionary<string, Func<object, string, bool>> columnFilterModes;
-
-        /// <summary>
-        /// Cache with properties for better performance
-        /// </summary>
-        private readonly Dictionary<string, PropertyInfo> propertyCache;
 
         /// <summary>
         /// Case sensitive filtering
@@ -41,11 +31,34 @@ namespace FancyGrid
                 new PropertyMetadata(true));
 
         /// <summary>
+        /// This dictionary will map a column to the filter behavior
+        /// </summary>
+        private readonly Dictionary<string, Func<object, string, bool>> columnFilterModes;
+
+        /// <summary>
+        /// This dictionary will have a list of all applied filters
+        /// </summary>
+        private readonly Dictionary<string, string> columnFilters;
+
+        /// <summary>
+        /// Cache with properties for better performance
+        /// </summary>
+        private readonly Dictionary<string, PropertyInfo> propertyCache;
+
+        public bool CanFilter
+        {
+            get => (bool)GetValue(CanFilterProperty);
+            set => SetValue(CanFilterProperty, value);
+        }
+
+        public IEnumerable<MenuItem> ExtraContextMenuItems { get; set; }
+
+        /// <summary>
         /// Case sensitive filtering
         /// </summary>
         public bool IsFilteringCaseSensitive
         {
-            get => (bool)(GetValue(IsFilteringCaseSensitiveProperty));
+            get => (bool)GetValue(IsFilteringCaseSensitiveProperty);
             set => SetValue(IsFilteringCaseSensitiveProperty, value);
         }
 
@@ -90,13 +103,17 @@ namespace FancyGrid
         }
 
 
-        void FilteringDataGrid_ContextMenuOpening(object sender, ContextMenuEventArgs e)
+        private void FilteringDataGrid_ContextMenuOpening(object sender, ContextMenuEventArgs e)
         {
             if (sender != this)
+            {
                 return;
+            }
 
             if (ContextMenu == null)
+            {
                 ContextMenu = new ContextMenu();
+            }
             ContextMenu.Items.Clear();
             ContextMenu.Items.Add(new MenuItem
             {
@@ -115,8 +132,12 @@ namespace FancyGrid
             });
             ContextMenu.Items.Add(new Separator());
             if (ExtraContextMenuItems != null)
+            {
                 foreach (var item in ExtraContextMenuItems)
+                {
                     ContextMenu.Items.Add(ExtraContextMenuItems);
+                }
+            }
         }
 
         private void FilterToSelected(object p)
@@ -161,10 +182,12 @@ namespace FancyGrid
             }
         }
 
-        void ClearFilters(object p)
+        private void ClearFilters(object p)
         {
             foreach (var item in this.AllChildren<TextBox>())
+            {
                 item.Clear();
+            }
 
             columnFilters.Clear();
             columnFilterModes.Clear();
@@ -172,7 +195,7 @@ namespace FancyGrid
         }
 
 
-        void FilteringDataGrid_Sorting(object sender, DataGridSortingEventArgs e)
+        private void FilteringDataGrid_Sorting(object sender, DataGridSortingEventArgs e)
         {
             var view = CollectionViewSource.GetDefaultView(Items);
 
@@ -180,7 +203,9 @@ namespace FancyGrid
             {
                 var sd = Helpers.FindSortDescription(view.SortDescriptions, column.SortMemberPath);
                 if (sd.HasValue)
+                {
                     column.SortDirection = sd.Value.Direction;
+                }
             }
 
             if (e.Column.SortDirection.HasValue)
@@ -236,26 +261,42 @@ namespace FancyGrid
             // This should be stored as datacontext.
             var columnBinding = header.DataContext?.ToString() ?? "";
 
-            if (!String.IsNullOrEmpty(columnBinding))
+            if (!string.IsNullOrEmpty(columnBinding))
             {
                 var filter = textBox.Text;
 
                 if (filter.StartsWith("="))
+                {
                     columnFilterModes[columnBinding] = fm_is;
+                }
                 else if (filter.StartsWith("!"))
+                {
                     columnFilterModes[columnBinding] = fm_isNot;
+                }
                 else if (filter.StartsWith("~"))
+                {
                     columnFilterModes[columnBinding] = fm_doesNotContain;
+                }
                 else if (filter.StartsWith("<"))
+                {
                     columnFilterModes[columnBinding] = fm_Lessthan;
+                }
                 else if (filter.StartsWith(">"))
+                {
                     columnFilterModes[columnBinding] = fm_GreaterThanEqual;
+                }
                 else if (filter == "\"\"")
+                {
                     columnFilterModes[columnBinding] = fm_blank;
+                }
                 else if (filter == @"*")
+                {
                     columnFilterModes[columnBinding] = fm_notblank;
+                }
                 else
+                {
                     columnFilterModes[columnBinding] = fm_Contains;
+                }
 
                 columnFilters[columnBinding] = filter.TrimStart('<', '>', '~', '=', '!');
             }
@@ -280,14 +321,115 @@ namespace FancyGrid
                     if (columnFilterModes.ContainsKey(filter.Key))
                     {
                         if (!columnFilterModes[filter.Key](property, filter.Value))
+                        {
                             return false;
+                        }
                     }
                     else
+                    {
                         return fm_Contains(property, filter.Value);
+                    }
                 }
             }
 
             return true;
+        }
+
+        /// <summary>
+        /// Get the value of a property
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="property"></param>
+        /// <returns></returns>
+        private object GetPropertyValue(object item, string property)
+        {
+            // No value
+            object value = null;
+
+            // Get property  from cache
+            PropertyInfo pi;
+            if (propertyCache.ContainsKey(property))
+            {
+                pi = propertyCache[property];
+            }
+            else
+            {
+                pi = item.GetType().GetProperty(property,
+                    BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
+                propertyCache.Add(property, pi);
+            }
+
+            // If we have a valid property, get the value
+            if (pi != null)
+            {
+                value = pi.GetValue(item, null);
+            }
+
+            // Done
+            return value;
+        }
+
+        /// <summary>
+        /// Finds a parent of a given item on the visual tree.
+        /// </summary>
+        /// <typeparam name="T">The type of the queried item.</typeparam>
+        /// <param name="child">A direct or indirect child of the queried item.</param>
+        /// <returns>
+        /// The first parent item that matches the submitted
+        /// type parameter. If not matching item can be found, a null reference is being returned.
+        /// </returns>
+        public static T TryFindParent<T>(DependencyObject child) where T : DependencyObject
+        {
+            while (true)
+            {
+                //get parent item
+                var parentObject = GetParentObject(child);
+
+                //we've reached the end of the tree
+                if (parentObject == null)
+                {
+                    return null;
+                }
+
+                //check if the parent matches the type we're looking for
+                if (parentObject is T parent)
+                {
+                    return parent;
+                }
+
+                //use recursion to proceed with next level
+                child = parentObject;
+            }
+        }
+
+        /// <summary>
+        /// This method is an alternative to WPF's
+        /// <see cref="VisualTreeHelper.GetParent" /> method, which also
+        /// supports content elements. Do note, that for content element,
+        /// this method falls back to the logical tree of the element.
+        /// </summary>
+        /// <param name="child">The item to be processed.</param>
+        /// <returns>The submitted item's parent, if available. Otherwise null.</returns>
+        public static DependencyObject GetParentObject(DependencyObject child)
+        {
+            if (child == null)
+            {
+                return null;
+            }
+
+            if (child is ContentElement contentElement)
+            {
+                var parent = ContentOperations.GetParent(contentElement);
+                if (parent != null)
+                {
+                    return parent;
+                }
+
+                return contentElement is FrameworkContentElement fce ? fce.Parent : null;
+            }
+
+            // If it's not a ContentElement, rely on VisualTreeHelper
+            return VisualTreeHelper.GetParent(child);
         }
 
         #region FilterMethods
@@ -305,7 +447,9 @@ namespace FancyGrid
         private bool fm_Contains(object item, string filter)
         {
             if (IsFilteringCaseSensitive)
+            {
                 return item.ToString().Contains(filter);
+            }
             return item.ToString().IndexOf(filter, StringComparison.OrdinalIgnoreCase) >= 0;
         }
 
@@ -321,7 +465,9 @@ namespace FancyGrid
         private bool fm_Lessthan(object item, string filter)
         {
             if (double.TryParse(filter, out var b) && double.TryParse(item.ToString(), out var a))
+            {
                 return a < b;
+            }
             return false;
         }
 
@@ -361,89 +507,5 @@ namespace FancyGrid
         }
 
         #endregion
-
-        /// <summary>
-        /// Get the value of a property
-        /// </summary>
-        /// <param name="item"></param>
-        /// <param name="property"></param>
-        /// <returns></returns>
-        private object GetPropertyValue(object item, string property)
-        {
-            // No value
-            object value = null;
-
-            // Get property  from cache
-            PropertyInfo pi;
-            if (propertyCache.ContainsKey(property))
-                pi = propertyCache[property];
-            else
-            {
-                pi = item.GetType().GetProperty(property,
-                    BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
-                propertyCache.Add(property, pi);
-            }
-
-            // If we have a valid property, get the value
-            if (pi != null)
-                value = pi.GetValue(item, null);
-
-            // Done
-            return value;
-        }
-
-        /// <summary>
-        /// Finds a parent of a given item on the visual tree.
-        /// </summary>
-        /// <typeparam name="T">The type of the queried item.</typeparam>
-        /// <param name="child">A direct or indirect child of the queried item.</param>
-        /// <returns>The first parent item that matches the submitted
-        /// type parameter. If not matching item can be found, a null reference is being returned.</returns>
-        public static T TryFindParent<T>(DependencyObject child) where T : DependencyObject
-        {
-            while (true)
-            {
-                //get parent item
-                var parentObject = GetParentObject(child);
-
-                //we've reached the end of the tree
-                if (parentObject == null) return null;
-
-                //check if the parent matches the type we're looking for
-                if (parentObject is T parent)
-                {
-                    return parent;
-                }
-
-                //use recursion to proceed with next level
-                child = parentObject;
-            }
-        }
-
-        /// <summary>
-        /// This method is an alternative to WPF's
-        /// <see cref="VisualTreeHelper.GetParent"/> method, which also
-        /// supports content elements. Do note, that for content element,
-        /// this method falls back to the logical tree of the element.
-        /// </summary>
-        /// <param name="child">The item to be processed.</param>
-        /// <returns>The submitted item's parent, if available. Otherwise null.</returns>
-        public static DependencyObject GetParentObject(DependencyObject child)
-        {
-            if (child == null) return null;
-
-            if (child is ContentElement contentElement)
-            {
-                var parent = ContentOperations.GetParent(contentElement);
-                if (parent != null) return parent;
-
-                return contentElement is FrameworkContentElement fce ? fce.Parent : null;
-            }
-
-            // If it's not a ContentElement, rely on VisualTreeHelper
-            return VisualTreeHelper.GetParent(child);
-        }
-
-        public IEnumerable<MenuItem> ExtraContextMenuItems { get; set; }
     }
 }

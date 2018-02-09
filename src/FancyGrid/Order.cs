@@ -1,36 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 
 namespace FancyGrid
 {
-
     public class TestRow : INotifyPropertyChanged
     {
+        private double d;
         private string name;
-        public string String
-        {
-            get
-            {
-                return name;
-            }
-            set
-            {
-                name = value;
-                NotifyPropertyChanged("String");
-            }
-        }
 
         private int orderCount;
 
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public double Double
+        {
+            get => d;
+            set
+            {
+                d = value;
+                NotifyPropertyChanged("Double");
+            }
+        }
+
         public int Int
         {
-            get
-            {
-                return orderCount;
-            }
+            get => orderCount;
             set
             {
                 orderCount = value;
@@ -38,34 +32,27 @@ namespace FancyGrid
             }
         }
 
-        private double d;
-
-        public double Double
+        public string String
         {
-            get { return d; }
-            set { d = value; NotifyPropertyChanged("Double"); }
+            get => name;
+            set
+            {
+                name = value;
+                NotifyPropertyChanged("String");
+            }
         }
 
-
-
-        public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
         /// Raise the PropertyChanged event
         /// </summary>
         /// <param name="propertyName">The name of the property that has changed</param>
-        private void NotifyPropertyChanged(String propertyName)
+        private void NotifyPropertyChanged(string propertyName)
         {
             if (PropertyChanged != null)
             {
-                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
             }
-        }
-
-
-        public TestRow()
-        {
-
         }
     }
 }
