@@ -63,17 +63,15 @@ namespace FancyGrid
         }
 
 
+        /// <inheritdoc />
         /// <summary>
         /// Register for all text changed events
         /// </summary>
         public FilteringDataGrid()
         {
-            // Initialize lists
             columnFilters = new Dictionary<string, string>();
             columnFilterModes = new Dictionary<string, Func<object, string, bool>>();
             propertyCache = new Dictionary<string, PropertyInfo>();
-
-            // Enable Filtering
             AddHandler(TextBoxBase.TextChangedEvent, new TextChangedEventHandler(OnTextChanged), true);
 
             // Enable Multisort
@@ -105,7 +103,7 @@ namespace FancyGrid
 
         private void FilteringDataGrid_ContextMenuOpening(object sender, ContextMenuEventArgs e)
         {
-            if (sender != this)
+            if (!Equals(sender, this))
             {
                 return;
             }
@@ -120,22 +118,22 @@ namespace FancyGrid
                 Header = "Include items like this " + CurrentCell.Item,
                 Command = new FunctionRunnerCommand(FilterToSelected)
             });
-            ContextMenu.Items.Add(new MenuItem
+            ContextMenu?.Items.Add(new MenuItem
             {
                 Header = "Exclude items like this  " + CurrentCell.Item,
                 Command = new FunctionRunnerCommand(FilterToNotSelected)
             });
-            ContextMenu.Items.Add(new MenuItem
+            ContextMenu?.Items.Add(new MenuItem
             {
                 Header = "Clear all filters",
                 Command = new FunctionRunnerCommand(ClearFilters)
             });
-            ContextMenu.Items.Add(new Separator());
+            ContextMenu?.Items.Add(new Separator());
             if (ExtraContextMenuItems != null)
             {
                 foreach (var item in ExtraContextMenuItems)
                 {
-                    ContextMenu.Items.Add(ExtraContextMenuItems);
+                    ContextMenu?.Items.Add(ExtraContextMenuItems);
                 }
             }
         }
@@ -147,7 +145,7 @@ namespace FancyGrid
             foreach (var item in tbs)
             {
                 var header = TryFindParent<DataGridColumnHeader>(item);
-                if (header.Column != null && header.Column == CurrentColumn)
+                if (header.Column != null && Equals(header.Column, CurrentColumn))
                 {
                     tb = item;
                     break;
@@ -168,7 +166,7 @@ namespace FancyGrid
             foreach (var item in tbs)
             {
                 var header = TryFindParent<DataGridColumnHeader>(item);
-                if (header.Column != null && header.Column == CurrentColumn)
+                if (header.Column != null && Equals(header.Column, CurrentColumn))
                 {
                     tb = item;
                     break;
@@ -211,13 +209,14 @@ namespace FancyGrid
             if (e.Column.SortDirection.HasValue)
             {
                 view.SortDescriptions.Remove(
-                    view.SortDescriptions.FirstOrDefault(sd => sd.PropertyName == e.Column.Header.ToString()));
+                    view.SortDescriptions.FirstOrDefault(sd =>
+                        string.Equals(sd.PropertyName, e.Column.SortMemberPath, StringComparison.Ordinal)));
+                
                 switch (e.Column.SortDirection.Value)
                 {
                     case ListSortDirection.Ascending:
                         e.Column.SortDirection = ListSortDirection.Descending;
-                        view.SortDescriptions.Add(new SortDescription(e.Column.Header.ToString(),
-                            ListSortDirection.Descending));
+                        view.SortDescriptions.Add(new SortDescription(e.Column.SortMemberPath, ListSortDirection.Descending));
                         break;
                     case ListSortDirection.Descending:
                         e.Column.SortDirection = null;
@@ -229,11 +228,10 @@ namespace FancyGrid
             else
             {
                 e.Column.SortDirection = ListSortDirection.Ascending;
-                view.SortDescriptions.Add(new SortDescription(e.Column.Header.ToString(), ListSortDirection.Ascending));
+                view.SortDescriptions.Add(new SortDescription(e.Column.SortMemberPath, ListSortDirection.Ascending));
             }
 
             e.Handled = true;
-            ;
         }
 
         private void FilteringDataGrid_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Media;
 
@@ -46,7 +47,7 @@ namespace FancyGrid
         {
             foreach (var sortDesc in sortDescriptions)
             {
-                if (string.CompareOrdinal(sortDesc.PropertyName, sortPropertyName) == 0)
+                if (string.Equals(sortDesc.PropertyName, sortPropertyName, StringComparison.Ordinal))
                 {
                     return sortDesc;
                 }
