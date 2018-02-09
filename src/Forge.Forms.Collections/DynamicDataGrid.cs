@@ -638,7 +638,10 @@ namespace Forge.Forms.Collections
 
         private void SetupPerPageCombobox()
         {
-            for (var i = 10; i < 100; i += 5)
+            if (PerPageComboBox.Items.Count > 0)
+                return;
+            
+            for (var i = 10; i < 30; i += 5)
             {
                 PerPageComboBox?.Items.Add(i);
             }
