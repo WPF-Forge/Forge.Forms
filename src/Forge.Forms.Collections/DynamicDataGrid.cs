@@ -15,6 +15,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using FancyGrid;
 using Forge.Forms.Annotations;
+using Forge.Forms.Collections.Annotations;
 using Forge.Forms.Collections.Interfaces;
 using Forge.Forms.DynamicExpressions;
 using Forge.Forms.FormBuilding;
@@ -269,6 +270,9 @@ namespace Forge.Forms.Collections
             get => (int)GetValue(CurrentPageProperty);
             set => SetValue(CurrentPageProperty, value);
         }
+
+        public int CurrentMaxItem => CurrentPage * ItemsPerPage;
+        public int CurrentMinItem => CurrentMaxItem - ItemsPerPage + 1;
 
         private FilteringDataGrid DataGrid { get; set; }
 

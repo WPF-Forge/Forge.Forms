@@ -164,8 +164,8 @@
                                        d:DataContext="{d:DesignInstance collections:DynamicDataGrid}">
                                 <TextBlock.Text>
                                     <MultiBinding StringFormat="{}{0}-{1} of {2}">
-                                        <Binding Path="CurrentPage" RelativeSource="{RelativeSource TemplatedParent}" />
-                                        <Binding Path="MaxPages" RelativeSource="{RelativeSource TemplatedParent}" />
+                                        <Binding Path="CurrentMinItem" RelativeSource="{RelativeSource TemplatedParent}" />
+                                        <Binding Path="CurrentMaxItem" RelativeSource="{RelativeSource TemplatedParent}" />
                                         <Binding Path="TotalItems" RelativeSource="{RelativeSource TemplatedParent}" />
                                     </MultiBinding>
                                 </TextBlock.Text>
