@@ -248,7 +248,7 @@ namespace FancyGrid
                 }
             }
 
-            var text = (CurrentColumn.GetCellContent(CurrentCell.Item) as TextBlock)?.Text; 
+            var text = (CurrentColumn.GetCellContent(CurrentCell.Item) as TextBlock)?.Text;
             if (tb != null)
             {
                 tb.Text = "!" + text;
@@ -396,6 +396,10 @@ namespace FancyGrid
                         return fm_Contains(property, filter.Value);
                     }
                 }
+                else if(!string.IsNullOrEmpty(filter.Value))
+                {
+                    return false;
+                }                  
             }
 
             return true;
@@ -502,12 +506,20 @@ namespace FancyGrid
 
         private bool fm_Contains(object item, string filter)
         {
+            if (string.IsNullOrEmpty(item.ToString()))
+                return false;
+
             if (IsFilteringCaseInternalSensitive)
             {
-                return item.ToString().Contains(filter);
+                var fmContains = item.ToString().Contains(filter);
+                return fmContains;
             }
 
-            return item.ToString().IndexOf(filter, StringComparison.OrdinalIgnoreCase) >= 0;
+            var contains = item.ToString().IndexOf(filter,
+                               IsFilteringCaseInternalSensitive
+                                   ? StringComparison.OrdinalIgnoreCase
+                                   : StringComparison.Ordinal) >= 0;
+            return contains;
         }
 
         private bool fm_Startswith(object item, string filter)
