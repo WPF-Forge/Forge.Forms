@@ -310,8 +310,8 @@ namespace Forge.Forms.Collections
             set => SetValue(CurrentPageProperty, value);
         }
 
-        public int CurrentMaxItem => CurrentPage * ItemsPerPage;
-        public int CurrentMinItem => CurrentMaxItem - ItemsPerPage + 1;
+        public int CurrentMaxItem => Math.Min(TotalItems, CurrentPage * ItemsPerPage);
+        public int CurrentMinItem => Math.Min(TotalItems, (CurrentPage - 1) * ItemsPerPage + 1);
 
         private FilteringDataGrid DataGrid { get; set; }
 
@@ -603,6 +603,8 @@ namespace Forge.Forms.Collections
         {
             OnPropertyChanged(nameof(MaxPages));
             OnPropertyChanged(nameof(TotalItems));
+            OnPropertyChanged(nameof(CurrentMaxItem));
+            OnPropertyChanged(nameof(CurrentMinItem));
             UpdateSelection();
         }
 
