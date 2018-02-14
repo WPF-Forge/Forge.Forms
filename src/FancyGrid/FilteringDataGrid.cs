@@ -162,14 +162,21 @@ namespace FancyGrid
                 return;
             }
 
-            var cell = TryFindParent<DataGridCell>((DependencyObject)e.OriginalSource);
             var row = TryFindParent<DataGridRow>((DependencyObject)e.OriginalSource);
-            var cellInfo = new DataGridCellInfo(cell);
 
             if (row == null)
             {
                 return;
             }
+
+            var cell = TryFindParent<DataGridCell>((DependencyObject)e.OriginalSource);
+
+            if (cell == null)
+            {
+                return;
+            }
+
+            var cellInfo = new DataGridCellInfo(cell);
 
             if (ContextMenu == null)
             {
