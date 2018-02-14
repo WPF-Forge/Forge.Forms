@@ -313,7 +313,10 @@ namespace FancyGrid
             }
 
             e.Handled = true;
+            OnAfterSorting();
         }
+
+        public event EventHandler AfterSorting;
 
         private void FilteringDataGrid_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
@@ -497,6 +500,11 @@ namespace FancyGrid
             }
 
             return VisualTreeHelper.GetParent(child);
+        }
+
+        protected virtual void OnAfterSorting()
+        {
+            AfterSorting?.Invoke(this, EventArgs.Empty);
         }
 
         #region FilterMethods
