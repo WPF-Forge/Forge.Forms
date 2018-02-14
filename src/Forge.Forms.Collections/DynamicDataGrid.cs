@@ -246,6 +246,8 @@ namespace Forge.Forms.Collections
         private List<SortDescription> mSortDescriptions =
             new List<SortDescription>();
 
+        private int itemsPerPage = 10;
+
         static DynamicDataGrid()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(DynamicDataGrid),
@@ -349,7 +351,16 @@ namespace Forge.Forms.Collections
         private bool IsSelectAll { get; set; }
 
         [AlsoNotifyFor(nameof(MaxPages))]
-        public int ItemsPerPage { get; set; } = 10;
+        public int ItemsPerPage
+        {
+            get { return itemsPerPage; }
+            set
+            {
+                itemsPerPage = value;
+                var itemsSource = BindingOperations.GetMultiBindingExpression(DataGrid, ItemsControl.ItemsSourceProperty);
+                itemsSource?.UpdateTarget();
+            }
+        }
 
         private Type ItemType
         {
