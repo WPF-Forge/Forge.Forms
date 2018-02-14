@@ -848,6 +848,15 @@ namespace Forge.Forms.Collections
 
             ViewSource.Source = collection;
 
+            if (collection is INotifyCollectionChanged collectionChanged)
+            {
+                collectionChanged.CollectionChanged += (sender, args) =>
+                {
+                    ViewSource.Source = null;
+                    ViewSource.Source = collection;
+                };
+            }
+
             if (interfaces.Count > 1 || interfaces.Count == 0)
             {
                 canMutate = false;
