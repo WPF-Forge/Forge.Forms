@@ -6,6 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:fancyGrid="clr-namespace:FancyGrid;assembly=FancyGrid"
+    xmlns:converters="clr-namespace:Forge.Forms.Collections.Converters"
     mc:Ignorable="d">
 
     <ResourceDictionary.MergedDictionaries>
@@ -15,6 +16,7 @@
     </ResourceDictionary.MergedDictionaries>
 
     <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    <converters:PagingConverter x:Key="LimitItemsConverter" />
 
     <ControlTemplate x:Key="DynamicDataGridTemplate" TargetType="{x:Type collections:DynamicDataGrid}">
         <materialDesign:Card VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
@@ -37,7 +39,6 @@
                                 <materialDesign:PackIcon Kind="FilterVariant" Height="24" Width="24" />
                             </Button>
 
-                            
                             <Button materialDesign:RippleAssist.RippleSizeMultiplier="0.6"
                                     materialDesign:RippleAssist.IsCentered="True" Margin="0,0,24,0"
                                     Command="{x:Static collections:DynamicDataGrid.RemoveItemCommand}"
@@ -46,7 +47,7 @@
                                     Style="{DynamicResource MaterialDesignToolButton}">
                                 <materialDesign:PackIcon Kind="Delete" Height="24" Width="24" />
                             </Button>
-                      
+
                             <materialDesign:PopupBox x:Name="PopupBox" HorizontalAlignment="Right"
                                                      PlacementMode="BottomAndAlignLeftEdges"
                                                      materialDesign:RippleAssist.RippleSizeMultiplier="0.6"
@@ -77,7 +78,6 @@
                                     </Button>
                                 </StackPanel>
                             </materialDesign:PopupBox>
-
                         </StackPanel>
                     </Grid>
                 </Border>
@@ -94,8 +94,14 @@
                                              Background="{Binding RelativeSource={RelativeSource AncestorType=materialDesign:Card, Mode=FindAncestor}, Path=Background}"
                                              CanFilter="{Binding IsFilteringEnabled, RelativeSource={RelativeSource TemplatedParent}}"
                                              Style="{DynamicResource CustomDataGrid}"
-                                             CellStyle="{DynamicResource CustomDataGridLeftPadding}"
-                                             ItemsSource="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=PaginatedItemsSource}">
+                                             CellStyle="{DynamicResource CustomDataGridLeftPadding}">
+                    <DataGrid.ItemsSource>
+                        <MultiBinding Converter="{StaticResource LimitItemsConverter}">
+                            <Binding Path="ViewSource.View" Mode="TwoWay"
+                                     RelativeSource="{RelativeSource TemplatedParent}" />
+                            <Binding Path="." Mode="TwoWay" RelativeSource="{RelativeSource TemplatedParent}" />
+                        </MultiBinding>
+                    </DataGrid.ItemsSource>
                     <fancyGrid:FilteringDataGrid.Columns>
                         <DataGridTemplateColumn Width="*">
                             <DataGridTemplateColumn.CellTemplate>

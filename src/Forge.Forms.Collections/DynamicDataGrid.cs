@@ -33,42 +33,24 @@ namespace Forge.Forms.Collections
         /// <summary>
         /// Identifies the CanUserAdd dependency property.
         /// </summary>
-
         public static DependencyProperty CanUserAddProperty =
-            DependencyProperty.Register("CanUserAdd", typeof(bool), typeof(DynamicDataGrid), new PropertyMetadata(true));
-
-        public bool CanUserAdd
-        {
-            get => (bool) GetValue(CanUserAddProperty);
-            set => SetValue(CanUserAddProperty, value);
-        }
+            DependencyProperty.Register("CanUserAdd", typeof(bool), typeof(DynamicDataGrid),
+                new PropertyMetadata(true));
 
         /// <summary>
         /// Identifies the CanUserEdit dependency property.
         /// </summary>
-
         public static DependencyProperty CanUserEditProperty =
-            DependencyProperty.Register("CanUserEdit", typeof(bool), typeof(DynamicDataGrid), new PropertyMetadata(true));
-
-        public bool CanUserEdit
-        {
-            get => (bool) GetValue(CanUserEditProperty);
-            set => SetValue(CanUserEditProperty, value);
-        }
+            DependencyProperty.Register("CanUserEdit", typeof(bool), typeof(DynamicDataGrid),
+                new PropertyMetadata(true));
 
         /// <summary>
         /// Identifies the CanUserRemove dependency property.
         /// </summary>
-
         public static DependencyProperty CanUserRemoveProperty =
-            DependencyProperty.Register("CanUserRemove", typeof(bool), typeof(DynamicDataGrid), new PropertyMetadata(true));
+            DependencyProperty.Register("CanUserRemove", typeof(bool), typeof(DynamicDataGrid),
+                new PropertyMetadata(true));
 
-        public bool CanUserRemove
-        {
-            get => (bool) GetValue(CanUserRemoveProperty);
-            set => SetValue(CanUserRemoveProperty, value);
-        }
-        
         public static readonly DependencyProperty ToggleFilterCommandProperty =
             DependencyProperty.Register("ToggleFilterCommand", typeof(ICommand), typeof(DynamicDataGrid),
                 new PropertyMetadata());
@@ -173,11 +155,7 @@ namespace Forge.Forms.Collections
             DependencyProperty.Register(
                 nameof(ItemsSource),
                 typeof(IEnumerable),
-                typeof(DynamicDataGrid),
-                new FrameworkPropertyMetadata
-                {
-                    PropertyChangedCallback = PropertyChangedCallback
-                });
+                typeof(DynamicDataGrid));
 
         /// <summary>
         /// Identifies the NextPage dependency property.
@@ -251,10 +229,8 @@ namespace Forge.Forms.Collections
         /// Identifies the CurrentPage dependency property.
         /// </summary>
         public static DependencyProperty CurrentPageProperty =
-            DependencyProperty.Register("CurrentPage", typeof(int), typeof(DynamicDataGrid), new PropertyMetadata(1)
-            {
-                PropertyChangedCallback = PropertyChangedCallback
-            });
+            DependencyProperty.Register("CurrentPage", typeof(int), typeof(DynamicDataGrid), new PropertyMetadata(1,
+                OnCurrentPageChanged));
 
         public static readonly DependencyProperty IsDeleteButtonVisibleProperty =
             DependencyProperty.Register("IsDeleteButtonVisible", typeof(bool), typeof(DynamicDataGrid),
@@ -266,6 +242,9 @@ namespace Forge.Forms.Collections
 
         private bool canMutate;
         private Type itemType;
+
+        private List<SortDescription> mSortDescriptions =
+            new List<SortDescription>();
 
         static DynamicDataGrid()
         {
@@ -284,6 +263,24 @@ namespace Forge.Forms.Collections
             ToggleFilterCommand = new RelayCommand(x => IsFilteringEnabled = !IsFilteringEnabled);
 
             Loaded += (s, e) => OnItemsSource(ItemsSource);
+        }
+
+        public bool CanUserAdd
+        {
+            get => (bool)GetValue(CanUserAddProperty);
+            set => SetValue(CanUserAddProperty, value);
+        }
+
+        public bool CanUserEdit
+        {
+            get => (bool)GetValue(CanUserEditProperty);
+            set => SetValue(CanUserEditProperty, value);
+        }
+
+        public bool CanUserRemove
+        {
+            get => (bool)GetValue(CanUserRemoveProperty);
+            set => SetValue(CanUserRemoveProperty, value);
         }
 
         public string ClearFiltersMessage
@@ -313,7 +310,7 @@ namespace Forge.Forms.Collections
         public int CurrentMaxItem => Math.Min(TotalItems, CurrentPage * ItemsPerPage);
         public int CurrentMinItem => Math.Min(TotalItems, (CurrentPage - 1) * ItemsPerPage + 1);
 
-        private FilteringDataGrid DataGrid { get; set; }
+        internal FilteringDataGrid DataGrid { get; set; }
 
         public bool HasCheckboxes
         {
@@ -428,6 +425,14 @@ namespace Forge.Forms.Collections
 
         public event PropertyChangedEventHandler PropertyChanged;
 
+        private static void OnCurrentPageChanged(DependencyObject x, DependencyPropertyChangedEventArgs y)
+        {
+            if (x is DynamicDataGrid grid)
+            {
+                grid.DataGridOnSorting(null, null);
+            }
+        }
+
         private void CreateCheckboxColumn()
         {
             var rowCheckBox = new FrameworkElementFactory(typeof(CheckBox));
@@ -458,15 +463,6 @@ namespace Forge.Forms.Collections
                     CanUserResize = false,
                     CanUserReorder = false
                 });
-            }
-        }
-
-        private static void PropertyChangedCallback(DependencyObject dependencyObject,
-            DependencyPropertyChangedEventArgs dependencyPropertyChangedEventArgs)
-        {
-            if (dependencyObject is DynamicDataGrid grid)
-            {
-                grid.OnPropertyChanged(nameof(grid.PaginatedItemsSource));
             }
         }
 
@@ -593,10 +589,46 @@ namespace Forge.Forms.Collections
             if (DataGrid != null)
             {
                 ((INotifyCollectionChanged)DataGrid.Items).CollectionChanged += OnCollectionChanged;
+                DataGrid.AfterSorting += DataGridOnSorting;
             }
 
             SetupPerPageCombobox();
             SetupDataGrid();
+        }
+
+        private void DataGridOnSorting(object sender, EventArgs eventArgs)
+        {
+            UpdateSorting();
+
+            var itemsBinding = BindingOperations.GetMultiBindingExpression(DataGrid, ItemsControl.ItemsSourceProperty);
+            itemsBinding?.UpdateTarget();
+
+            UpdateView();
+        }
+
+        private ICollectionView UpdateView()
+        {
+            var view = CollectionViewSource.GetDefaultView(ItemsSource);
+            view.SortDescriptions.Clear();
+
+            foreach (var sortDescription in mSortDescriptions)
+            {
+                view.SortDescriptions.Add(sortDescription);
+                var column = DataGrid.Columns.FirstOrDefault(c => c.SortMemberPath == sortDescription.PropertyName);
+                if (column != null)
+                {
+                    column.SortDirection = sortDescription.Direction;
+                }
+            }
+
+            mSortDescriptions.Clear();
+            return view;
+        }
+
+        private void UpdateSorting()
+        {
+            var view = CollectionViewSource.GetDefaultView(DataGrid.ItemsSource);
+            mSortDescriptions = new List<SortDescription>(view.SortDescriptions);
         }
 
         private void OnCollectionChanged(object o, NotifyCollectionChangedEventArgs notifyCollectionChangedEventArgs)
@@ -641,8 +673,10 @@ namespace Forge.Forms.Collections
         private void SetupPerPageCombobox()
         {
             if (PerPageComboBox.Items.Count > 0)
+            {
                 return;
-            
+            }
+
             for (var i = 10; i < 30; i += 5)
             {
                 PerPageComboBox?.Items.Add(i);
@@ -812,11 +846,7 @@ namespace Forge.Forms.Collections
                     t.GetGenericTypeDefinition() == typeof(ICollection<>))
                 .ToList();
 
-            if (collection is INotifyCollectionChanged collectionChanged)
-            {
-                collectionChanged.CollectionChanged +=
-                    (sender, args) => OnPropertyChanged(nameof(PaginatedItemsSource));
-            }
+            ViewSource.Source = collection;
 
             if (interfaces.Count > 1 || interfaces.Count == 0)
             {
@@ -859,7 +889,6 @@ namespace Forge.Forms.Collections
                     context = globalInterceptor.Intercept(context);
                     if (context == null)
                     {
-                        OnPropertyChanged(nameof(PaginatedItemsSource));
                         return;
                     }
                 }
@@ -874,8 +903,6 @@ namespace Forge.Forms.Collections
                 {
                     AddItemToCollection(ItemType, collection, context.NewModel);
                 }
-
-                OnPropertyChanged(nameof(PaginatedItemsSource));
             }
         }
 
@@ -1025,8 +1052,6 @@ namespace Forge.Forms.Collections
                     {
                         RemoveItems(model, collection);
                     }
-
-                    OnPropertyChanged(nameof(PaginatedItemsSource));
                 }
             }
             catch
@@ -1281,9 +1306,7 @@ namespace Forge.Forms.Collections
             set => SetValue(ItemsSourceProperty, value);
         }
 
-        public IEnumerable PaginatedItemsSource =>
-            ItemsSource.Cast<object>().Skip((CurrentPage - 1) * ItemsPerPage).Take(ItemsPerPage);
-
+        public CollectionViewSource ViewSource { get; set; } = new CollectionViewSource();
 
         private static void ItemsSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {

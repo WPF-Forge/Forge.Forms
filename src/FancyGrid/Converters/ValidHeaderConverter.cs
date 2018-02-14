@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
-using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -12,7 +11,7 @@ namespace FancyGrid.Converters
 {
     public class ValidHeaderConverter : IValueConverter
     {
-        private static List<DataGridColumnHeader> PropertyDescriptors { get; set; } = new List<DataGridColumnHeader>();
+        private static List<DataGridColumnHeader> PropertyDescriptors { get; } = new List<DataGridColumnHeader>();
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
