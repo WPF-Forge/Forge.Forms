@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="Annotations\CrudAttribute.cs" />
     <Compile Include="Annotations\CrudIgnoreAttribute.cs" />
+    <Compile Include="Converters\PagingConverter.cs" />
     <Compile Include="DynamicDataGrid.cs" />
     <Compile Include="GridField.cs" />
     <Compile Include="Interfaces\AddActionContext.cs" />
