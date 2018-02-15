@@ -827,7 +827,7 @@ namespace Forge.Forms.Collections
                     {
                         ItemsPerPage = PerPageComboBox?.SelectedItem is int i ? i : 0;
                         IsSelectAll = false;
-                        CurrentPage = Math.Min(CurrentPage, MaxPages);
+                        HandleCurrentPageOnMaxPagesChange();
                         BindingOperations.GetMultiBindingExpression(DataGrid, ItemsControl.ItemsSourceProperty)
                             ?.UpdateTarget();
                     };
@@ -1166,6 +1166,11 @@ namespace Forge.Forms.Collections
                 RemoveItemFromCollection(ItemType, collection, model);
             }
 
+            HandleCurrentPageOnMaxPagesChange();
+        }
+
+        private void HandleCurrentPageOnMaxPagesChange()
+        {
             CurrentPage = Math.Min(MaxPages, CurrentPage);
         }
 
