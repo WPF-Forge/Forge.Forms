@@ -167,10 +167,31 @@ namespace Forge.Forms.Collections
                 typeof(DynamicDataGrid));
 
         /// <summary>
+        /// Identifies the FirstPage dependency property.
+        /// </summary>
+        public static DependencyProperty MoveFirstCommandProperty =
+            DependencyProperty.Register("MoveFirstCommand", typeof(ICommand), typeof(DynamicDataGrid),
+                new PropertyMetadata());
+
+        /// <summary>
+        /// Identifies the LastPage dependency property.
+        /// </summary>
+        public static DependencyProperty MoveLastCommandProperty =
+            DependencyProperty.Register("MoveLastCommand", typeof(ICommand), typeof(DynamicDataGrid),
+                new PropertyMetadata());
+
+        /// <summary>
         /// Identifies the NextPage dependency property.
         /// </summary>
         public static DependencyProperty MoveNextCommandProperty =
             DependencyProperty.Register("MoveNextCommand", typeof(ICommand), typeof(DynamicDataGrid),
+                new PropertyMetadata());
+
+        /// <summary>
+        /// Identifies the NextPage dependency property.
+        /// </summary>
+        public static DependencyProperty MoveToPageCommandProperty =
+            DependencyProperty.Register("MoveToPageCommand", typeof(ICommand), typeof(DynamicDataGrid),
                 new PropertyMetadata());
 
         /// <summary>
@@ -271,6 +292,10 @@ namespace Forge.Forms.Collections
 
             MoveNextCommand = new RelayCommand(x => CurrentPage++, o => CurrentPage < MaxPages);
             MoveBackCommand = new RelayCommand(x => CurrentPage--, o => CurrentPage > 1);
+            MoveLastCommand = new RelayCommand(x => CurrentPage = MaxPages, o => CurrentPage < MaxPages);
+            MoveFirstCommand = new RelayCommand(x => CurrentPage = 1, o => CurrentPage > 1);
+            MoveToPageCommand = new RelayCommand(
+                x => CurrentPage = int.Parse((string)x), o => int.TryParse((string)o, out var val) && val != CurrentPage);
             ToggleFilterCommand = new RelayCommand(x => IsFilteringEnabled = !IsFilteringEnabled);
             CheckboxColumnCommand = new RelayCommand(sender =>
             {
@@ -345,14 +370,19 @@ namespace Forge.Forms.Collections
             set => SetValue(ExcludeItemsMessageProperty, value);
         }
 
+        [AlsoNotifyFor(nameof(PaginationPageNumbers))]
         public int CurrentPage
         {
             get => (int)GetValue(CurrentPageProperty);
-            set => SetValue(CurrentPageProperty, value);
+            set
+            {
+                IsSelectAll = false;
+                SetValue(CurrentPageProperty, value);
+            }
         }
 
         public int CurrentMaxItem => Math.Min(TotalItems, CurrentPage * ItemsPerPage);
-        public int CurrentMinItem => Math.Min(TotalItems, (CurrentPage - 1) * ItemsPerPage + 1);
+        public int CurrentMinItem => Math.Min(TotalItems, CurrentMaxItem - ItemsOnPage + 1);
 
         internal FilteringDataGrid DataGrid { get; set; }
 
@@ -388,22 +418,13 @@ namespace Forge.Forms.Collections
             get => (bool)GetValue(IsFilteringEnabledProperty);
             set => SetValue(IsFilteringEnabledProperty, value);
         }
-
-
+        
         private bool IsSelectAll { get; set; }
 
+        private int SelectedItemsCount => DataGrid?.SelectedItems.Count ?? 0;
+
         [AlsoNotifyFor(nameof(MaxPages))]
-        public int ItemsPerPage
-        {
-            get => itemsPerPage;
-            set
-            {
-                itemsPerPage = value;
-                var itemsSource =
-                    BindingOperations.GetMultiBindingExpression(DataGrid, ItemsControl.ItemsSourceProperty);
-                itemsSource?.UpdateTarget();
-            }
-        }
+        public int ItemsPerPage { get; set; } = 10;
 
         private Type ItemType
         {
@@ -438,7 +459,7 @@ namespace Forge.Forms.Collections
             }
         }
 
-        public int MaxPages => (int)Math.Ceiling((double)TotalItems / ItemsPerPage);
+        public int MaxPages => Math.Max((int)Math.Ceiling((double)TotalItems / ItemsPerPage), 1);
 
         public ICommand MoveBackCommand
         {
@@ -450,6 +471,24 @@ namespace Forge.Forms.Collections
         {
             get => (ICommand)GetValue(MoveNextCommandProperty);
             set => SetValue(MoveNextCommandProperty, value);
+        }
+
+        public ICommand MoveLastCommand
+        {
+            get => (ICommand)GetValue(MoveLastCommandProperty);
+            set => SetValue(MoveLastCommandProperty, value);
+        }
+
+        public ICommand MoveFirstCommand
+        {
+            get => (ICommand)GetValue(MoveFirstCommandProperty);
+            set => SetValue(MoveFirstCommandProperty, value);
+        }
+
+        public ICommand MoveToPageCommand
+        {
+            get => (ICommand)GetValue(MoveToPageCommandProperty);
+            set => SetValue(MoveToPageCommandProperty, value);
         }
 
         private ComboBox PerPageComboBox { get; set; }
@@ -475,6 +514,8 @@ namespace Forge.Forms.Collections
         }
 
         public int TotalItems => GetIEnumerableCount(ItemsSource) ?? 0;
+        
+        public int ItemsOnPage => Math.Min(ItemsPerPage, TotalItems - ((CurrentPage - 1 )* ItemsPerPage));
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -557,7 +598,6 @@ namespace Forge.Forms.Collections
                     CheckboxColumnCommand.Execute(dataGridRow);
                 }
             });
-
 
             if (HasCheckboxes)
             {
@@ -743,6 +783,7 @@ namespace Forge.Forms.Collections
             OnPropertyChanged(nameof(TotalItems));
             OnPropertyChanged(nameof(CurrentMaxItem));
             OnPropertyChanged(nameof(CurrentMinItem));
+            OnPropertyChanged(nameof(PaginationPageNumbers));
         }
 
         private void SetupDataGrid()
@@ -768,7 +809,9 @@ namespace Forge.Forms.Collections
                 return;
             }
 
-            for (var i = 10; i < 30; i += 5)
+            PerPageComboBox?.Items.Add(1);
+
+            for (var i = 5; i < 30; i += 5)
             {
                 PerPageComboBox?.Items.Add(i);
             }
@@ -781,7 +824,13 @@ namespace Forge.Forms.Collections
             if (PerPageComboBox != null)
             {
                 PerPageComboBox.SelectionChanged += (sender, args) =>
-                    ItemsPerPage = PerPageComboBox?.SelectedItem is int i ? i : 0;
+                    {
+                        ItemsPerPage = PerPageComboBox?.SelectedItem is int i ? i : 0;
+                        IsSelectAll = false;
+                        CurrentPage = Math.Min(CurrentPage, MaxPages);
+                        BindingOperations.GetMultiBindingExpression(DataGrid, ItemsControl.ItemsSourceProperty)
+                            ?.UpdateTarget();
+                    };
 
                 ItemsPerPage = PerPageComboBox?.SelectedItem is int i2 ? i2 : 0;
             }
@@ -1092,6 +1141,9 @@ namespace Forge.Forms.Collections
                     {
                         RemoveItems(model, collection);
                     }
+
+                    IsSelectAll = IsSelectAll && SelectedItemsCount > 0;
+                    HeaderButton.IsChecked = IsSelectAll;
                 }
             }
             catch
@@ -1113,6 +1165,8 @@ namespace Forge.Forms.Collections
             {
                 RemoveItemFromCollection(ItemType, collection, model);
             }
+
+            CurrentPage = Math.Min(MaxPages, CurrentPage);
         }
 
         private void CanExecuteRemoveItem(object sender, CanExecuteRoutedEventArgs e)
@@ -1347,6 +1401,59 @@ namespace Forge.Forms.Collections
         }
 
         public CollectionViewSource ViewSource { get; set; } = new CollectionViewSource();
+
+        public IEnumerable<string> PaginationPageNumbers
+        {
+            get
+            {
+                const int EitherSide = 1;
+                var range = new List<int>();
+                var l = 0;
+
+                range.Add(1);
+
+                if (MaxPages < 1 + EitherSide)
+                {
+                    yield return range.First().ToString();
+                }
+                else if (MaxPages <= 5)
+                {
+                    foreach (var i in Enumerable.Range(1, MaxPages))
+                    {
+                        yield return i.ToString();
+                    }
+                }
+                else
+                {
+                    for (var i = CurrentPage - EitherSide; i <= CurrentPage + EitherSide; i++)
+                    {
+                        if (i < MaxPages && i > 1)
+                        {
+                            range.Add(i);
+                        }
+                    }
+
+                    range.Add(MaxPages);
+
+                    foreach (var i in range)
+                    {
+                        if (l != default(int))
+                        {
+                            if (i - l == 2)
+                            {
+                                yield return (l + 1).ToString();
+                            }
+                            else if (i - l != 1)
+                            {
+                                yield return "...";
+                            }
+                        }
+                        yield return i.ToString();
+                        l = i;
+                    }
+                }
+            }
+        }
 
         private static void ItemsSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {

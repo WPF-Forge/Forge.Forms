@@ -2,11 +2,12 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:collections="clr-namespace:Forge.Forms.Collections"
-    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:fancyGrid="clr-namespace:FancyGrid;assembly=FancyGrid"
     xmlns:converters="clr-namespace:Forge.Forms.Collections.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:dynamicExpressions="clr-namespace:Forge.Forms.DynamicExpressions;assembly=Forge.Forms"
+    xmlns:fancyGrid="clr-namespace:FancyGrid;assembly=FancyGrid"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
     <ResourceDictionary.MergedDictionaries>
@@ -246,17 +247,69 @@
                                 </TextBlock.Text>
 
                             </TextBlock>
-                            <Button Style="{DynamicResource MaterialDesignToolButton}" Margin="0,0,24,0"
-                                    Command="{TemplateBinding MoveBackCommand}"
-                                    materialDesign:RippleAssist.RippleSizeMultiplier="0.6"
-                                    materialDesign:RippleAssist.IsCentered="True">
-                                <materialDesign:PackIcon Kind="ChevronLeft" Height="24" Width="24" />
+                            <Button
+                                materialDesign:RippleAssist.IsCentered="True"
+                                materialDesign:RippleAssist.RippleSizeMultiplier="0.6"
+                                Command="{TemplateBinding MoveFirstCommand}"
+                                Style="{DynamicResource MaterialDesignToolButton}">
+                                <materialDesign:PackIcon Width="24" Height="24" Kind="PageFirst" />
                             </Button>
-                            <Button Style="{DynamicResource MaterialDesignToolButton}"
-                                    Command="{TemplateBinding MoveNextCommand}"
-                                    materialDesign:RippleAssist.RippleSizeMultiplier="0.6"
-                                    materialDesign:RippleAssist.IsCentered="True">
-                                <materialDesign:PackIcon Kind="ChevronRight" Height="24" Width="24" />
+                            <Button
+                                Margin="0,0,24,0"
+                                materialDesign:RippleAssist.IsCentered="True"
+                                materialDesign:RippleAssist.RippleSizeMultiplier="0.6"
+                                Command="{TemplateBinding MoveBackCommand}"
+                                Style="{DynamicResource MaterialDesignToolButton}">
+                                <materialDesign:PackIcon Width="24" Height="24" Kind="ChevronLeft" />
+                            </Button>
+                            <ItemsControl Name="PageNumbers" ItemsSource="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=PaginationPageNumbers}">
+                                <ItemsControl.Resources>
+                                    <dynamicExpressions:BindingProxy x:Key="Proxy" Value="{Binding RelativeSource={RelativeSource TemplatedParent}}" />
+                                </ItemsControl.Resources>
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Horizontal" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Button
+                                            Height="24"
+                                            MinWidth="24"
+                                            VerticalAlignment="Center"
+                                            materialDesign:RippleAssist.IsCentered="True"
+                                            materialDesign:RippleAssist.RippleSizeMultiplier="0.6"
+                                            Command="{Binding Value.MoveToPageCommand, Source={StaticResource Proxy}}"
+                                            CommandParameter="{Binding}"
+                                            Content="{Binding}"
+                                            FontSize="14">
+                                            <Button.Style>
+                                                <Style BasedOn="{StaticResource MaterialDesignToolButton}" TargetType="Button">
+                                                    <Style.Triggers>
+                                                        <Trigger Property="IsEnabled" Value="false">
+                                                            <Setter Property="Opacity" Value="0.75" />
+                                                        </Trigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Button.Style>
+                                        </Button>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                            <Button
+                                Margin="24,0,0,0"
+                                materialDesign:RippleAssist.IsCentered="True"
+                                materialDesign:RippleAssist.RippleSizeMultiplier="0.6"
+                                Command="{TemplateBinding MoveNextCommand}"
+                                Style="{DynamicResource MaterialDesignToolButton}">
+                                <materialDesign:PackIcon Width="24" Height="24" Kind="ChevronRight" />
+                            </Button>
+                            <Button
+                                materialDesign:RippleAssist.IsCentered="True"
+                                materialDesign:RippleAssist.RippleSizeMultiplier="0.6"
+                                Command="{TemplateBinding MoveLastCommand}"
+                                Style="{DynamicResource MaterialDesignToolButton}">
+                                <materialDesign:PackIcon Width="24" Height="24" Kind="PageLast" />
                             </Button>
                         </StackPanel>
                     </Grid>
