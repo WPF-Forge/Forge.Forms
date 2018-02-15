@@ -49,6 +49,8 @@
     <Compile Include="Converters\HeaderStyleVisibilityConverter.cs" />
     <Compile Include="Converters\PagingConverter.cs" />
     <Compile Include="DynamicDataGrid.cs" />
+    <Compile Include="Enums\DynamicDataGridHeaderState.cs" />
+    <Compile Include="Enums\DynamicDataGridHeaderStyle.cs" />
     <Compile Include="Extensions\UiHelpers.cs" />
     <Compile Include="GridField.cs" />
     <Compile Include="Interfaces\AddActionContext.cs" />
