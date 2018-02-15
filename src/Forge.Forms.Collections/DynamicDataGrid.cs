@@ -33,6 +33,13 @@ namespace Forge.Forms.Collections
     public class DynamicDataGrid : Control, INotifyPropertyChanged
     {
         /// <summary>
+        /// Identifies the HeaderStyle dependency property.
+        /// </summary>
+        public static DependencyProperty HeaderStyleProperty =
+            DependencyProperty.Register("HeaderStyle", typeof(DynamicDataGridHeaderStyle), typeof(DynamicDataGrid),
+                new PropertyMetadata());
+
+        /// <summary>
         /// Identifies the CanUserAdd dependency property.
         /// </summary>
         public static DependencyProperty CanUserAddProperty =
@@ -67,7 +74,7 @@ namespace Forge.Forms.Collections
                 nameof(CreateDialogPositiveContent),
                 typeof(string),
                 typeof(DynamicDataGrid),
-                new FrameworkPropertyMetadata("OK"));
+                new FrameworkPropertyMetadata("ADD"));
 
         public static readonly DependencyProperty CreateDialogPositiveIconProperty =
             DependencyProperty.Register(
@@ -265,30 +272,41 @@ namespace Forge.Forms.Collections
             MoveNextCommand = new RelayCommand(x => CurrentPage++, o => CurrentPage < MaxPages);
             MoveBackCommand = new RelayCommand(x => CurrentPage--, o => CurrentPage > 1);
             ToggleFilterCommand = new RelayCommand(x => IsFilteringEnabled = !IsFilteringEnabled);
-
-            Loaded += (s, e) => OnItemsSource(ItemsSource);
             CheckboxColumnCommand = new RelayCommand(sender =>
             {
                 if (sender is DataGridRow row)
                 {
                     CheckedConverter.SetChecked(this, row.Item, !CheckedConverter.IsChecked(this, row.Item));
-                    BindingOperations.GetMultiBindingExpression(row.TryFindChild<CheckBox>(), ToggleButton.IsCheckedProperty)?.UpdateTarget();
+                    BindingOperations
+                        .GetMultiBindingExpression(row.TryFindChild<CheckBox>(), ToggleButton.IsCheckedProperty)
+                        ?.UpdateTarget();
                 }
             });
+
+            PropertyChanged += OnPropertyChanged;
+
+            Loaded += (s, e) => OnItemsSource(ItemsSource);
+        }
+
+        public DynamicDataGridHeaderStyle HeaderStyle
+        {
+            get => (DynamicDataGridHeaderStyle)GetValue(HeaderStyleProperty);
+            set => SetValue(HeaderStyleProperty, value);
         }
 
         public IEnumerable<object> DatagridSelectedItems
         {
             get
             {
-                var rows = DataGrid.GetRows();
-                return (from row in rows where CheckedConverter.IsChecked(this, row.Item) select row.Item).ToList();
+                return DataGrid.GetRows()
+                    .Where(row => CheckedConverter.IsChecked(this, row.Item))
+                    .Select(row => row.Item).ToList();
             }
         }
 
-        public IEnumerable<object> SelectedItems
+        public IList<object> SelectedItems
         {
-            get { return CheckedConverter.GetItems(this).Where(i => i.Value).Select(i => i.Key); }
+            get { return CheckedConverter.GetItems(this).Where(i => i.Value).Select(i => i.Key).ToList(); }
         }
 
         public bool CanUserAdd
@@ -458,6 +476,17 @@ namespace Forge.Forms.Collections
 
         public int TotalItems => GetIEnumerableCount(ItemsSource) ?? 0;
 
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private void OnPropertyChanged(object sender1, PropertyChangedEventArgs propertyChangedEventArgs)
+        {
+            if (propertyChangedEventArgs.PropertyName == nameof(SelectedItems))
+            {
+                IsDeleteButtonVisible = SelectedItems.Any() && HeaderStyle != DynamicDataGridHeaderStyle.Alternative;
+                IsFilterButtonVisible = !SelectedItems.Any();
+            }
+        }
+
         internal void UpdateHeaderButton()
         {
             var items = DatagridSelectedItems.ToList();
@@ -474,8 +503,6 @@ namespace Forge.Forms.Collections
                 HeaderButton.IsChecked = false;
             }
         }
-
-        public event PropertyChangedEventHandler PropertyChanged;
 
         private static void OnCurrentPageChanged(DependencyObject x, DependencyPropertyChangedEventArgs y)
         {
@@ -731,7 +758,6 @@ namespace Forge.Forms.Collections
                 }
 
                 DataGrid.MouseEnter += MouseEnterHandler;
-                DataGrid.SelectionChanged += DataGridOnSelectionChanged;
             }
         }
 
@@ -759,12 +785,6 @@ namespace Forge.Forms.Collections
 
                 ItemsPerPage = PerPageComboBox?.SelectedItem is int i2 ? i2 : 0;
             }
-        }
-
-        private void DataGridOnSelectionChanged(object sender, SelectionChangedEventArgs selectionChangedEventArgs)
-        {
-            IsDeleteButtonVisible = DataGrid.SelectedItems.Count > 0;
-            IsFilterButtonVisible = !(DataGrid.SelectedItems.Count > 0);
         }
 
         private static DependencyObject GetVisualParentByType(DependencyObject startObject, Type type)
@@ -1424,84 +1444,10 @@ namespace Forge.Forms.Collections
                 RemoveItemCache[itemType] = action;
             }
 
+            CheckedConverter.Remove(this, item);
             action(collection, item);
         }
 
         #endregion
-    }
-
-    internal class ActionInterceptor : IActionInterceptor
-    {
-        private readonly Func<IActionContext, IActionContext> onAction;
-
-        public ActionInterceptor(Func<IActionContext, IActionContext> onAction)
-        {
-            this.onAction = onAction ?? throw new ArgumentNullException(nameof(onAction));
-        }
-
-        public IActionContext InterceptAction(IActionContext actionContext)
-        {
-            return onAction(actionContext);
-        }
-    }
-
-    internal class FormDefinitionWrapper : IFormDefinition
-    {
-        private readonly IFormDefinition inner;
-
-        public FormDefinitionWrapper(IFormDefinition inner, IReadOnlyList<FormRow> formRows)
-        {
-            this.inner = inner;
-            FormRows = formRows;
-        }
-
-        public IReadOnlyList<FormRow> FormRows { get; }
-
-        public double[] Grid => inner.Grid;
-
-        public Type ModelType => inner.ModelType;
-
-        public IDictionary<string, IValueProvider> Resources => inner.Resources;
-
-        public object CreateInstance(IResourceContext context)
-        {
-            return inner.CreateInstance(context);
-        }
-    }
-
-    internal class UpdateFormDefinition : IFormDefinition
-    {
-        private readonly IFormDefinition inner;
-
-        public UpdateFormDefinition(
-            IFormDefinition inner,
-            object model,
-            IReadOnlyList<FormRow> formRows)
-        {
-            this.inner = inner;
-            FormRows = formRows;
-            Model = model;
-            Snapshot = new Snapshot(model, new HashSet<string>(formRows
-                .SelectMany(r => r.Elements.SelectMany(e => e.Elements))
-                .Where(e => e is DataFormField)
-                .Select(f => ((DataFormField)f).Key)));
-        }
-
-        public object Model { get; }
-
-        public Snapshot Snapshot { get; }
-
-        public IReadOnlyList<FormRow> FormRows { get; }
-
-        public double[] Grid => inner.Grid;
-
-        public Type ModelType => inner.ModelType;
-
-        public IDictionary<string, IValueProvider> Resources => inner.Resources;
-
-        public object CreateInstance(IResourceContext context)
-        {
-            return Model;
-        }
     }
 }

@@ -14,6 +14,7 @@
             HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch"
             Margin="14"
+            HeaderStyle="Alternative"
             ItemsSource="{Binding Items}" />
     </Grid>
 </UserControl>
