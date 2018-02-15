@@ -16,6 +16,8 @@ using System.Windows.Media;
 using FancyGrid;
 using Forge.Forms.Annotations;
 using Forge.Forms.Collections.Annotations;
+using Forge.Forms.Collections.Converters;
+using Forge.Forms.Collections.Extensions;
 using Forge.Forms.Collections.Interfaces;
 using Forge.Forms.DynamicExpressions;
 using Forge.Forms.FormBuilding;
@@ -241,12 +243,12 @@ namespace Forge.Forms.Collections
                 new PropertyMetadata(true));
 
         private bool canMutate;
+
+        private int itemsPerPage = 10;
         private Type itemType;
 
         private List<SortDescription> mSortDescriptions =
             new List<SortDescription>();
-
-        private int itemsPerPage = 10;
 
         static DynamicDataGrid()
         {
@@ -265,6 +267,28 @@ namespace Forge.Forms.Collections
             ToggleFilterCommand = new RelayCommand(x => IsFilteringEnabled = !IsFilteringEnabled);
 
             Loaded += (s, e) => OnItemsSource(ItemsSource);
+            CheckboxColumnCommand = new RelayCommand(sender =>
+            {
+                if (sender is DataGridRow row)
+                {
+                    CheckedConverter.SetChecked(this, row.Item, !CheckedConverter.IsChecked(this, row.Item));
+                    BindingOperations.GetMultiBindingExpression(row.TryFindChild<CheckBox>(), ToggleButton.IsCheckedProperty)?.UpdateTarget();
+                }
+            });
+        }
+
+        public IEnumerable<object> DatagridSelectedItems
+        {
+            get
+            {
+                var rows = DataGrid.GetRows();
+                return (from row in rows where CheckedConverter.IsChecked(this, row.Item) select row.Item).ToList();
+            }
+        }
+
+        public IEnumerable<object> SelectedItems
+        {
+            get { return CheckedConverter.GetItems(this).Where(i => i.Value).Select(i => i.Key); }
         }
 
         public bool CanUserAdd
@@ -353,11 +377,12 @@ namespace Forge.Forms.Collections
         [AlsoNotifyFor(nameof(MaxPages))]
         public int ItemsPerPage
         {
-            get { return itemsPerPage; }
+            get => itemsPerPage;
             set
             {
                 itemsPerPage = value;
-                var itemsSource = BindingOperations.GetMultiBindingExpression(DataGrid, ItemsControl.ItemsSourceProperty);
+                var itemsSource =
+                    BindingOperations.GetMultiBindingExpression(DataGrid, ItemsControl.ItemsSourceProperty);
                 itemsSource?.UpdateTarget();
             }
         }
@@ -419,7 +444,6 @@ namespace Forge.Forms.Collections
             set => SetValue(RowsPerPageTextProperty, value);
         }
 
-
         public string Title
         {
             get => (string)GetValue(TitleProperty);
@@ -433,6 +457,23 @@ namespace Forge.Forms.Collections
         }
 
         public int TotalItems => GetIEnumerableCount(ItemsSource) ?? 0;
+
+        internal void UpdateHeaderButton()
+        {
+            var items = DatagridSelectedItems.ToList();
+            if (items.Count > 0 && items.Count < DataGrid.Items.Count)
+            {
+                HeaderButton.IsChecked = null;
+            }
+            else if (items.Count == DataGrid.Items.Count)
+            {
+                HeaderButton.IsChecked = true;
+            }
+            else if (items.Count == 0)
+            {
+                HeaderButton.IsChecked = false;
+            }
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -449,18 +490,45 @@ namespace Forge.Forms.Collections
             var rowCheckBox = new FrameworkElementFactory(typeof(CheckBox));
             rowCheckBox.SetValue(MaxWidthProperty, 18.0);
             rowCheckBox.SetValue(HorizontalAlignmentProperty, HorizontalAlignment.Left);
-            rowCheckBox.SetBinding(ToggleButton.IsCheckedProperty, new Binding
+            rowCheckBox.SetBinding(ToggleButton.IsCheckedProperty, new MultiBinding
             {
-                Path = new PropertyPath("IsSelected"),
-                RelativeSource =
-                    new RelativeSource(RelativeSourceMode.FindAncestor) { AncestorType = typeof(DataGridRow) },
-                Mode = BindingMode.TwoWay
+                Converter = new CheckedConverter(),
+                Bindings =
+                {
+                    new Binding
+                    {
+                        Path = new PropertyPath("."),
+                        RelativeSource =
+                            new RelativeSource(RelativeSourceMode.Self)
+                    },
+                    new Binding
+                    {
+                        Path = new PropertyPath("."),
+                        RelativeSource =
+                            new RelativeSource(RelativeSourceMode.FindAncestor) { AncestorType = typeof(DataGridRow) }
+                    }
+                },
+                ConverterParameter = this
             });
+            rowCheckBox.SetBinding(ButtonBase.CommandParameterProperty, new Binding
+            {
+                RelativeSource = new RelativeSource(RelativeSourceMode.FindAncestor)
+                {
+                    AncestorType = typeof(DataGridRow)
+                }
+            });
+
+            rowCheckBox.SetValue(ButtonBase.CommandProperty, CheckboxColumnCommand);
 
             HeaderButton.Command = new RelayCommand(_ =>
             {
                 IsSelectAll = !IsSelectAll;
-                UpdateSelection();
+
+                foreach (var dataGridRow in DataGrid.GetRows())
+                {
+                    CheckedConverter.SetChecked(this, dataGridRow.Item, !IsSelectAll);
+                    CheckboxColumnCommand.Execute(dataGridRow);
+                }
             });
 
 
@@ -648,19 +716,6 @@ namespace Forge.Forms.Collections
             OnPropertyChanged(nameof(TotalItems));
             OnPropertyChanged(nameof(CurrentMaxItem));
             OnPropertyChanged(nameof(CurrentMinItem));
-            UpdateSelection();
-        }
-
-        private void UpdateSelection()
-        {
-            if (IsSelectAll)
-            {
-                DataGrid.SelectAll();
-            }
-            else
-            {
-                DataGrid.UnselectAll();
-            }
         }
 
         private void SetupDataGrid()
@@ -675,7 +730,6 @@ namespace Forge.Forms.Collections
                     return;
                 }
 
-                DataGrid.PreviewMouseDown += PreviewMouseDownHandler;
                 DataGrid.MouseEnter += MouseEnterHandler;
                 DataGrid.SelectionChanged += DataGridOnSelectionChanged;
             }
@@ -709,19 +763,6 @@ namespace Forge.Forms.Collections
 
         private void DataGridOnSelectionChanged(object sender, SelectionChangedEventArgs selectionChangedEventArgs)
         {
-            if (DataGrid.SelectedItems.Count == DataGrid.Items.Count)
-            {
-                HeaderButton.IsChecked = true;
-            }
-            else if (DataGrid.SelectedItems.Count == 0)
-            {
-                HeaderButton.IsChecked = false;
-            }
-            else
-            {
-                HeaderButton.IsChecked = null;
-            }
-
             IsDeleteButtonVisible = DataGrid.SelectedItems.Count > 0;
             IsFilterButtonVisible = !(DataGrid.SelectedItems.Count > 0);
         }
@@ -740,47 +781,6 @@ namespace Forge.Forms.Collections
             }
 
             return parent;
-        }
-
-        private void PreviewMouseDownHandler(object sender, MouseButtonEventArgs e)
-        {
-            //TODO: Find a better way to do this, since some buttons might get caught in e.Handled=true and then not be executed.
-
-            if (e.RightButton == MouseButtonState.Pressed)
-            {
-                return;
-            }
-
-            var cell = GetVisualParentByType(
-                (FrameworkElement)e.OriginalSource, typeof(DataGridCell)) as DataGridCell;
-
-            var button = GetVisualParentByType(
-                (FrameworkElement)e.OriginalSource, typeof(ButtonBase)) as ButtonBase;
-
-            if (!(GetVisualParentByType(
-                (FrameworkElement)e.OriginalSource, typeof(DataGridRow)) is DataGridRow row))
-            {
-                return;
-            }
-
-            if (button != null && button.GetType() == typeof(CheckBox) && button.IsMouseOver &&
-                Equals(cell?.Column, DataGrid.Columns.First()))
-            {
-                row.IsSelected = !row.IsSelected;
-            }
-            else if (button != null)
-            {
-                return;
-            }
-            else if (e.ClickCount > 1)
-            {
-                UpdateItemCommand.Execute(row.Item, DataGrid);
-                e.Handled = true;
-                return;
-            }
-
-
-            e.Handled = true;
         }
 
         private static void MouseEnterHandler(object sender, MouseEventArgs e)
@@ -1375,6 +1375,8 @@ namespace Forge.Forms.Collections
         private static readonly Dictionary<Type, Action<object, object>> RemoveItemCache =
             new Dictionary<Type, Action<object, object>>();
 
+        private RelayCommand CheckboxColumnCommand { get; }
+
         private static void AddItemToCollection(Type itemType, object collection, object item)
         {
             if (!AddItemCache.TryGetValue(itemType, out var action))
@@ -1453,11 +1455,6 @@ namespace Forge.Forms.Collections
             FormRows = formRows;
         }
 
-        public object CreateInstance(IResourceContext context)
-        {
-            return inner.CreateInstance(context);
-        }
-
         public IReadOnlyList<FormRow> FormRows { get; }
 
         public double[] Grid => inner.Grid;
@@ -1465,6 +1462,11 @@ namespace Forge.Forms.Collections
         public Type ModelType => inner.ModelType;
 
         public IDictionary<string, IValueProvider> Resources => inner.Resources;
+
+        public object CreateInstance(IResourceContext context)
+        {
+            return inner.CreateInstance(context);
+        }
     }
 
     internal class UpdateFormDefinition : IFormDefinition
@@ -1489,11 +1491,6 @@ namespace Forge.Forms.Collections
 
         public Snapshot Snapshot { get; }
 
-        public object CreateInstance(IResourceContext context)
-        {
-            return Model;
-        }
-
         public IReadOnlyList<FormRow> FormRows { get; }
 
         public double[] Grid => inner.Grid;
@@ -1501,5 +1498,10 @@ namespace Forge.Forms.Collections
         public Type ModelType => inner.ModelType;
 
         public IDictionary<string, IValueProvider> Resources => inner.Resources;
+
+        public object CreateInstance(IResourceContext context)
+        {
+            return Model;
+        }
     }
 }
