@@ -20,7 +20,14 @@ namespace Forge.Forms.Collections.Converters
             return i[model];
         }
 
-        internal static bool SetChecked(DynamicDataGrid grid, object model, bool state)
+        internal static void Remove(DynamicDataGrid grid, object model)
+        {
+            var i = GetItems(grid);
+            i.Remove(model);
+            grid.OnPropertyChanged("SelectedItems");
+        }
+
+        internal static void SetChecked(DynamicDataGrid grid, object model, bool state)
         {
             var i = GetItems(grid);
             if (!i.ContainsKey(model))
@@ -28,7 +35,6 @@ namespace Forge.Forms.Collections.Converters
 
             i[model] = state;
             grid.OnPropertyChanged("SelectedItems");
-            return i[model];
         }
 
         internal static Dictionary<object, bool> GetItems(DynamicDataGrid grid)
