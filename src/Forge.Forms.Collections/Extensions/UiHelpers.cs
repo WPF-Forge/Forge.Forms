@@ -16,7 +16,6 @@
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 
-using System.Collections;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
@@ -26,7 +25,7 @@ using System.Windows.Media.Media3D;
 namespace Forge.Forms.Collections.Extensions
 {
     /// <summary>
-    /// Contains helper methods for UI. 
+    /// Contains helper methods for UI.
     /// </summary>
     public static class UiHelpers
     {
@@ -34,19 +33,31 @@ namespace Forge.Forms.Collections.Extensions
         /// Gets the parent. Which tree the parent is retrieved from depends on the parameters.
         /// </summary>
         /// <param name="child">The child to get parent for.</param>
-        /// <param name="searchCompleteVisualTree">If true the parent in the visual tree is returned, if false the parent may be retrieved from another tree depending on the child type.</param>
-        /// <returns>The parent element, and depending on the parameters its retrieved from either visual tree, logical tree or a tree not strictly speaking either the logical tree or the visual tree.</returns>
+        /// <param name="searchCompleteVisualTree">
+        /// If true the parent in the visual tree is returned, if false the parent may be
+        /// retrieved from another tree depending on the child type.
+        /// </param>
+        /// <returns>
+        /// The parent element, and depending on the parameters its retrieved from either visual tree, logical tree or a
+        /// tree not strictly speaking either the logical tree or the visual tree.
+        /// </returns>
         public static DependencyObject GetParentObject(this DependencyObject child, bool searchCompleteVisualTree)
         {
-            if (child == null) return null;
+            if (child == null)
+            {
+                return null;
+            }
 
             if (!searchCompleteVisualTree)
             {
                 var contentElement = child as ContentElement;
                 if (contentElement != null)
                 {
-                    DependencyObject parent = ContentOperations.GetParent(contentElement);
-                    if (parent != null) return parent;
+                    var parent = ContentOperations.GetParent(contentElement);
+                    if (parent != null)
+                    {
+                        return parent;
+                    }
 
                     var fce = contentElement as FrameworkContentElement;
                     return fce != null ? fce.Parent : null;
@@ -55,8 +66,11 @@ namespace Forge.Forms.Collections.Extensions
                 var frameworkElement = child as FrameworkElement;
                 if (frameworkElement != null)
                 {
-                    DependencyObject parent = frameworkElement.Parent;
-                    if (parent != null) return parent;
+                    var parent = frameworkElement.Parent;
+                    if (parent != null)
+                    {
+                        return parent;
+                    }
                 }
             }
 
@@ -67,18 +81,26 @@ namespace Forge.Forms.Collections.Extensions
         /// Gets first parent element of the specified type. Which tree the parent is retrieved from depends on the parameters.
         /// </summary>
         /// <param name="child">The child to get parent for.</param>
-        /// <param name="searchCompleteVisualTree">If true the parent in the visual tree is returned, if false the parent may be retrieved from another tree depending on the child type.</param>
+        /// <param name="searchCompleteVisualTree">
+        /// If true the parent in the visual tree is returned, if false the parent may be
+        /// retrieved from another tree depending on the child type.
+        /// </param>
         /// <returns>
-        /// The first parent element of the specified type, and depending on the parameters its retrieved from either visual tree, logical tree or a tree not strictly speaking either the logical tree or the visual tree.
+        /// The first parent element of the specified type, and depending on the parameters its retrieved from either visual tree,
+        /// logical tree or a tree not strictly speaking either the logical tree or the visual tree.
         /// null is returned if no parent of the specified type is found.
         /// </returns>
-        public static T TryFindParent<T>(this DependencyObject child, bool searchCompleteVisualTree = false) where T : DependencyObject
+        public static T TryFindParent<T>(this DependencyObject child, bool searchCompleteVisualTree = false)
+            where T : DependencyObject
         {
-            DependencyObject parentObject = GetParentObject(child, searchCompleteVisualTree);
+            var parentObject = GetParentObject(child, searchCompleteVisualTree);
 
-            if (parentObject == null) return null;
+            if (parentObject == null)
+            {
+                return null;
+            }
 
-            T parent = parentObject as T;
+            var parent = parentObject as T;
             if (parent != null)
             {
                 return parent;
@@ -91,23 +113,28 @@ namespace Forge.Forms.Collections.Extensions
         /// Returns the first child of the specified type found in the visual tree.
         /// </summary>
         /// <param name="parent">The parent element where the search is started.</param>
-        /// <returns>The first child of the specified type found in the visual tree, or null if no parent of the specified type is found.</returns>
+        /// <returns>
+        /// The first child of the specified type found in the visual tree, or null if no parent of the specified type is
+        /// found.
+        /// </returns>
         public static T TryFindChild<T>(this DependencyObject parent) where T : DependencyObject
         {
-            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(parent); i++)
+            for (var i = 0; i < VisualTreeHelper.GetChildrenCount(parent); i++)
             {
-                DependencyObject child = VisualTreeHelper.GetChild(parent, i);
+                var child = VisualTreeHelper.GetChild(parent, i);
 
                 if (child is T)
                 {
                     return (T)child;
                 }
+
                 child = TryFindChild<T>(child);
                 if (child != null)
                 {
                     return (T)child;
                 }
             }
+
             return null;
         }
 
@@ -119,7 +146,11 @@ namespace Forge.Forms.Collections.Extensions
         /// <returns>The first child that matches the specified type and child name, or null if no match is found.</returns>
         public static T TryFindChild<T>(this DependencyObject parent, string childName) where T : DependencyObject
         {
-            if (parent == null) return null;
+            if (parent == null)
+            {
+                return null;
+            }
+
             T foundChild = null;
             var childrenCount = VisualTreeHelper.GetChildrenCount(parent);
             for (var i = 0; i < childrenCount; i++)
@@ -130,7 +161,10 @@ namespace Forge.Forms.Collections.Extensions
                 if (childType == null)
                 {
                     foundChild = TryFindChild<T>(child, childName);
-                    if (foundChild != null) break;
+                    if (foundChild != null)
+                    {
+                        break;
+                    }
                 }
                 else if (!string.IsNullOrEmpty(childName))
                 {
@@ -147,6 +181,7 @@ namespace Forge.Forms.Collections.Extensions
                     break;
                 }
             }
+
             return foundChild;
         }
 
@@ -158,18 +193,25 @@ namespace Forge.Forms.Collections.Extensions
         public static IEnumerable<DataGridRow> GetRows(this DataGrid grid)
         {
             var itemsSource = grid.ItemsSource;
-            if (null == itemsSource) yield return null;
+            if (null == itemsSource)
+            {
+                yield return null;
+            }
+
             if (itemsSource != null)
             {
                 foreach (var item in itemsSource)
                 {
-                    if (grid.ItemContainerGenerator.ContainerFromItem(item) is DataGridRow row) yield return row;
+                    if (grid.ItemContainerGenerator.ContainerFromItem(item) is DataGridRow row)
+                    {
+                        yield return row;
+                    }
                 }
             }
         }
 
         /// <summary>
-        ///   Returns the first ancestor of specified type
+        /// Returns the first ancestor of specified type
         /// </summary>
         public static T FindAncestor<T>(DependencyObject current) where T : DependencyObject
         {
@@ -181,6 +223,7 @@ namespace Forge.Forms.Collections.Extensions
                 {
                     return (T)current;
                 }
+
                 current = GetVisualOrLogicalParent(current);
             }
 
@@ -193,6 +236,7 @@ namespace Forge.Forms.Collections.Extensions
             {
                 return VisualTreeHelper.GetParent(obj);
             }
+
             return LogicalTreeHelper.GetParent(obj);
         }
     }
