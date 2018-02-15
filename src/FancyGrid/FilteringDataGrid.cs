@@ -79,14 +79,10 @@ namespace FancyGrid
             columnFilterModes = new Dictionary<string, Func<object, string, bool>>();
             propertyCache = new Dictionary<string, PropertyInfo>();
             AddHandler(TextBoxBase.TextChangedEvent, new TextChangedEventHandler(OnTextChanged), true);
-
-            Sorting += FilteringDataGrid_Sorting;
-
+            AutoGenerateColumns = false;
             DataContextChanged += FilteringDataGrid_DataContextChanged;
 
             ContextMenuOpening += FilteringDataGrid_ContextMenuOpening;
-
-            AutoGeneratingColumn += FilteringDataGrid_AutoGeneratingColumn;
         }
 
         public bool CanFilter
@@ -140,19 +136,6 @@ namespace FancyGrid
         {
             get => (string)GetValue(ExcludeItemsInternalMessageProperty);
             set => SetValue(ExcludeItemsInternalMessageProperty, value);
-        }
-
-        private void FilteringDataGrid_AutoGeneratingColumn(object sender, DataGridAutoGeneratingColumnEventArgs e)
-        {
-            if (!e.Column.CanUserSort)
-            {
-                var type = e.PropertyType;
-                if (type.IsGenericType && type.IsValueType &&
-                    typeof(IComparable).IsAssignableFrom(type.GetGenericArguments()[0]))
-                {
-                    e.Column.CanUserSort = true;
-                }
-            }
         }
 
         private void FilteringDataGrid_ContextMenuOpening(object sender, ContextMenuEventArgs e)
@@ -272,48 +255,6 @@ namespace FancyGrid
             columnFilters.Clear();
             columnFilterModes.Clear();
             ApplyFilters();
-        }
-
-
-        private void FilteringDataGrid_Sorting(object sender, DataGridSortingEventArgs e)
-        {
-            var view = CollectionViewSource.GetDefaultView(Items);
-
-            foreach (var column in Columns)
-            {
-                var sd = Helpers.FindSortDescription(view.SortDescriptions, column.SortMemberPath);
-                if (sd.HasValue)
-                {
-                    column.SortDirection = sd.Value.Direction;
-                }
-            }
-
-            if (e.Column.SortDirection.HasValue)
-            {
-                view.SortDescriptions.Remove(
-                    view.SortDescriptions.FirstOrDefault(sd =>
-                        string.Equals(sd.PropertyName, e.Column.SortMemberPath, StringComparison.Ordinal)));
-
-                switch (e.Column.SortDirection.Value)
-                {
-                    case ListSortDirection.Ascending:
-                        e.Column.SortDirection = ListSortDirection.Descending;
-                        view.SortDescriptions.Add(new SortDescription(e.Column.SortMemberPath,
-                            ListSortDirection.Descending));
-                        break;
-                    case ListSortDirection.Descending:
-                        e.Column.SortDirection = null;
-                        break;
-                }
-            }
-            else
-            {
-                e.Column.SortDirection = ListSortDirection.Ascending;
-                view.SortDescriptions.Add(new SortDescription(e.Column.SortMemberPath, ListSortDirection.Ascending));
-            }
-
-            e.Handled = true;
-            OnAfterSorting();
         }
 
         public event EventHandler AfterSorting;
