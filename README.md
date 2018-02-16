@@ -34,6 +34,10 @@ public class Login {
 }
 ```
 
+it will look something like this:
+
+![](https://github.com/WPF-Forge/Forge.Forms/blob/master/images/login-1.png?raw=true)
+
 but currently it's not that great looking, but we can change that with some simple attributes:
 
 ```cs
@@ -45,6 +49,10 @@ public class Login {
     public string Password { get; set; }    
 }
 ```
+
+and it will be a little bit more pleasing to the eyes, something like this:
+
+![](https://github.com/WPF-Forge/Forge.Forms/blob/master/images/login-2.png?raw=true)
 
 Wait, but where are my buttons? Worry not my friend, Forge.Forms is here for the rescue!
 
@@ -59,7 +67,12 @@ public class Login {
 }
 ```
 
-now how do we handle it? Just implement the ```IActionHandler``` interface on you model and you're good to go.
+and your final product will end up like this:
+
+##### :tada: Tada
+![](https://github.com/WPF-Forge/Forge.Forms/blob/master/images/login-3.png?raw=true)
+
+Now how do we handle it? Just implement the ```IActionHandler``` interface on you model and you're good to go.
 
 ##### Displaying
 To display you have two options:
