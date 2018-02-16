@@ -1,16 +1,15 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:controls="clr-namespace:Forge.Forms.Controls"
-    xmlns:internal="clr-namespace:Forge.Forms.Controls.Internal"
+    xmlns:defaults="clr-namespace:Forge.Forms.FormBuilding.Defaults"
     xmlns:formBuilding="clr-namespace:Forge.Forms.FormBuilding"
-    xmlns:defaults="clr-namespace:Forge.Forms.FormBuilding.Defaults">
+    xmlns:internal="clr-namespace:Forge.Forms.Controls.Internal"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes">
 
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="pack://application:,,,/Forge.Forms;component/Themes/Material/IconStyles.xaml" />
-        <ResourceDictionary
-            Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.TextBox.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.TextBox.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
     <ControlTemplate x:Key="MaterialConvertedPresenterTemplate" TargetType="{x:Type defaults:ConvertedPresenter}">
@@ -34,6 +33,7 @@
                 Grid.Column="1"
                 Margin="0,-14,0,0"
                 VerticalAlignment="Center"
+                internal:FocusHelper.InitialFocus="{formBuilding:FormBinding InitialFocus}"
                 internal:SelectTextOnFocus.Active="{formBuilding:FormBinding SelectOnFocus}"
                 materialDesign:HintAssist.Hint="{formBuilding:FormBinding Name}"
                 IsReadOnly="{formBuilding:FormBinding IsReadOnly}"

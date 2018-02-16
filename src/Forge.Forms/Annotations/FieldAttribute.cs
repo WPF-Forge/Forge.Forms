@@ -53,12 +53,10 @@ namespace Forge.Forms.Annotations
         public object DefaultValue { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether this controls gets the [initial focus].
+        /// Gets or sets a value indicating whether this controls gets initial focus.
+        /// Accepts a boolean or a dynamic resource.
         /// </summary>
-        /// <value>
-        ///   <c>true</c> if [initial focus]; otherwise, <c>false</c>.
-        /// </value>
-        public bool InitialFocus { get; set; }
+        public object InitialFocus { get; set; }
 
         /// <summary>
         /// Determines the relative position of this field in the form.

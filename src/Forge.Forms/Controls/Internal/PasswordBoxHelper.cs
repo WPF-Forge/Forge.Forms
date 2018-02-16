@@ -5,7 +5,7 @@ using System.Windows.Data;
 
 namespace Forge.Forms.Controls.Internal
 {
-    //Source: https://antonymale.co.uk/binding-to-a-passwordbox-password-in-wpf.html
+    // Source: https://antonymale.co.uk/binding-to-a-passwordbox-password-in-wpf.html
     internal static class PasswordBoxHelper
     {
         private static readonly DependencyProperty PasswordInitializedProperty =

@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using Forge.Forms.Annotations;
+using System.Windows.Input;
 using Forge.Forms.Controls.Internal;
 using Forge.Forms.DynamicExpressions;
 using Forge.Forms.DynamicExpressions.ValueConverters;
@@ -389,45 +386,45 @@ namespace Forge.Forms.Controls
                 itemsGrid.Children.Add(content);
             }
 
-            PropertyInfo toFocusProperty = null;
+            //PropertyInfo toFocusProperty = null;
 
-            if (Model != null)
-            {
-                foreach (var propertyInfo in Model.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public))
-                {
-                    if (propertyInfo.GetCustomAttribute<FieldAttribute>() is FieldAttribute fieldAttribute &&
-                        fieldAttribute.InitialFocus)
-                    {
-                        if (toFocusProperty == null)
-                        {
-                            toFocusProperty = propertyInfo;
-                        }
-                        else
-                        {
-                            throw new Exception("One or more properties have InitialFocus set.");
-                        }
-                    }
-                }
+            //if (Model != null)
+            //{
+            //    foreach (var propertyInfo in Model.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public))
+            //    {
+            //        if (propertyInfo.GetCustomAttribute<FieldAttribute>() is FieldAttribute fieldAttribute &&
+            //            fieldAttribute.InitialFocus)
+            //        {
+            //            if (toFocusProperty == null)
+            //            {
+            //                toFocusProperty = propertyInfo;
+            //            }
+            //            else
+            //            {
+            //                throw new Exception("One or more properties have InitialFocus set.");
+            //            }
+            //        }
+            //    }
 
-                if (toFocusProperty != null)
-                {
-                    void RoutedEventHandler(object sender, RoutedEventArgs args)
-                    {
-                        var bindingExpression = ((FormResourceContext)ResourceContext).GetBindings()
-                            .Cast<BindingExpression>()
-                            .FirstOrDefault(i => i.ResolvedSourcePropertyName == toFocusProperty.Name);
+            //    if (toFocusProperty != null)
+            //    {
+            //        void RoutedEventHandler(object sender, RoutedEventArgs args)
+            //        {
+            //            var bindingExpression = ((FormResourceContext)ResourceContext).GetBindings()
+            //                .Cast<BindingExpression>()
+            //                .FirstOrDefault(i => i.ResolvedSourcePropertyName == toFocusProperty.Name);
 
-                        if (bindingExpression != null && bindingExpression.Target is FrameworkElement frameworkElement)
-                        {
-                            frameworkElement.Focus();
-                        }
+            //            if (bindingExpression != null && bindingExpression.Target is FrameworkElement frameworkElement)
+            //            {
+            //                frameworkElement.Focus();
+            //            }
 
-                        Loaded -= RoutedEventHandler;
-                    }
+            //            Loaded -= RoutedEventHandler;
+            //        }
 
-                    Loaded += RoutedEventHandler;
-                }
-            }
+            //        Loaded += RoutedEventHandler;
+            //    }
+            //}
         }
 
         private void ClearForm()
