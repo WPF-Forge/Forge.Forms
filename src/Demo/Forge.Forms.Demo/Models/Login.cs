@@ -28,7 +28,7 @@ namespace Forge.Forms.Demo.Models
         public string Username { get; set; }
 
         // Or be dynamically assigned...
-        [Field(Icon = "{Property PasswordIcon}")]
+        [Field(Icon = "{Property PasswordIcon}", InitialFocus = true)]
         [Password]
         public string Password { get; set; }
 
