@@ -10,6 +10,11 @@
         <collections:DynamicDataGrid
             Height="Auto"
             Width="Auto"
+            Title="People"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"
+            Margin="14"
+            HeaderStyle="Alternative"
             ItemsSource="{Binding Items}" />
     </Grid>
 </UserControl>

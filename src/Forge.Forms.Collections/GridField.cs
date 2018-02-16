@@ -27,7 +27,8 @@ namespace Forge.Forms.Collections
             Resources.Add(nameof(AddItemCommand), AddItemCommand ?? LiteralValue.Null);
         }
 
-        protected override IBindingProvider CreateBindingProvider(IResourceContext context, IDictionary<string, IValueProvider> formResources)
+        protected override IBindingProvider CreateBindingProvider(IResourceContext context,
+            IDictionary<string, IValueProvider> formResources)
         {
             return new GridPresenter(context, Resources, formResources);
         }
