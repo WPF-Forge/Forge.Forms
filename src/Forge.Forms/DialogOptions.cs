@@ -1,6 +1,8 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
+using Forge.Forms.FormBuilding;
 
 namespace Forge.Forms
 {
@@ -12,8 +14,9 @@ namespace Forge.Forms
         private Thickness padding = new Thickness(16d, 16d, 16d, 8d);
         private double textFontSize = 15d;
         private double titleFontSize = 20d;
-
         private double width = 350d;
+        private IFormBuilder formBuilder = FormBuilding.FormBuilder.Default;
+        private List<string> _environmentFlags = new List<string>();
 
         public DialogOptions()
             : this(Default)
@@ -33,6 +36,22 @@ namespace Forge.Forms
             titleFontSize = defaults.titleFontSize;
             headingFontSize = defaults.headingFontSize;
             textFontSize = defaults.textFontSize;
+            formBuilder = defaults.formBuilder;
+        }
+
+        public IFormBuilder FormBuilder
+        {
+            get => formBuilder;
+            set
+            {
+                if (value == formBuilder)
+                {
+                    return;
+                }
+
+                formBuilder = value;
+                OnPropertyChanged();
+            }
         }
 
         public double Width
@@ -65,6 +84,24 @@ namespace Forge.Forms
             }
         }
 
+
+        /// <summary>
+        /// Gets or sets the environment flags
+        /// </summary>
+        public List<string> EnvironmentFlags
+        {
+            get => _environmentFlags;
+            set
+            {
+                if (Equals(value, _environmentFlags))
+                {
+                    return;
+                }
+
+                _environmentFlags = value;
+                OnPropertyChanged();
+            }
+        }
 
         public Thickness Padding
         {

@@ -5,7 +5,7 @@ namespace Forge.Forms.Controls
     /// <summary>
     /// Interaction logic for FormWrapper.xaml
     /// </summary>
-    internal partial class DynamicFormWrapper : UserControl
+    public partial class DynamicFormWrapper : UserControl
     {
         public DynamicFormWrapper(object model, object context, DialogOptions options)
         {

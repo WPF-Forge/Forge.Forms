@@ -7,7 +7,7 @@ namespace Forge.Forms.FormBuilding
     {
         IReadOnlyList<FormRow> FormRows { get; }
 
-        double[] Grid { get; set; }
+        double[] Grid { get; }
 
         Type ModelType { get; }
 

@@ -1,10 +1,11 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+    xmlns:defaults="clr-namespace:Forge.Forms.FormBuilding.Defaults"
     xmlns:formBuilding="clr-namespace:Forge.Forms.FormBuilding"
-    xmlns:defaults="clr-namespace:Forge.Forms.FormBuilding.Defaults">
+    xmlns:internal="clr-namespace:Forge.Forms.Controls.Internal"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes">
 
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="pack://application:,,,/Forge.Forms;component/Themes/Metro/IconStyles.xaml" />
@@ -38,6 +39,7 @@
                 Margin="0"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
+                internal:FocusHelper.InitialFocus="{formBuilding:FormBinding InitialFocus}"
                 IsChecked="{formBuilding:FormBinding Value}"
                 Style="{StaticResource MahApps.Metro.Styles.ToggleSwitch.Win10}" />
         </Grid>

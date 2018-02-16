@@ -1,4 +1,6 @@
-﻿namespace Forge.Forms
+﻿using Forge.Forms.FormBuilding;
+
+namespace Forge.Forms
 {
     public interface IActionHandler
     {
@@ -19,16 +21,19 @@
         object Action { get; }
 
         object ActionParameter { get; }
+
+        IResourceContext ResourceContext { get; }
     }
 
     public class ActionContext : IActionContext
     {
-        public ActionContext(object model, object context, object action, object actionParameter)
+        public ActionContext(object model, object context, object action, object actionParameter, IResourceContext resourceContext)
         {
             Model = model;
             Context = context;
             Action = action;
             ActionParameter = actionParameter;
+            ResourceContext = resourceContext;
         }
 
         public object Model { get; }
@@ -38,5 +43,7 @@
         public object Action { get; }
 
         public object ActionParameter { get; }
+
+        public IResourceContext ResourceContext { get; }
     }
 }

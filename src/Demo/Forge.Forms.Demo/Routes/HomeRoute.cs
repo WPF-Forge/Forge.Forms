@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using Forge.Forms.Demo.Models.Home;
 using Material.Application.Infrastructure;
 using Material.Application.Routing;

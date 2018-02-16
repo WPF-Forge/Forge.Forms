@@ -23,9 +23,21 @@ namespace Forge.Forms.FormBuilding
         /// </summary>
         public IValueProvider IsVisible { get; set; }
 
+        /// <summary>
+        /// Gets or sets the bool resource that determines whether this element will receive initial focus.
+        /// </summary>
+        public IValueProvider InitialFocus { get; set; }
+
         protected internal virtual void Freeze()
         {
             Resources.Add(nameof(IsVisible), IsVisible ?? LiteralValue.True);
+            Resources.Add(nameof(InitialFocus), InitialFocus ?? LiteralValue.False);
+        }
+
+        public FormElement FreezeResources()
+        {
+            Freeze();
+            return this;
         }
 
         protected internal abstract IBindingProvider CreateBindingProvider(

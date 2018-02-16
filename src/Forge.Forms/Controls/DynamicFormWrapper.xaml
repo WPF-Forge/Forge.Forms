@@ -1,6 +1,5 @@
 ﻿<UserControl
     x:Class="Forge.Forms.Controls.DynamicFormWrapper"
-    x:ClassModifier="internal"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -15,6 +14,7 @@
         Height="{Binding Height}"
         Margin="{Binding Padding}"
         FontSize="{Binding TextFontSize}"
+        FormBuilder="{Binding FormBuilder}"
         local:TextProperties.HeadingFontSize="{Binding HeadingFontSize}"
         local:TextProperties.TextFontSize="{Binding TextFontSize}"
         local:TextProperties.TitleFontSize="{Binding TitleFontSize}" />

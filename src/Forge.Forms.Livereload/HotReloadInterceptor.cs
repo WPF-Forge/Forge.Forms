@@ -6,21 +6,15 @@ namespace Forge.Forms.Livereload
 {
     internal class HotReloadInterceptor : IModelInterceptor
     {
-        private static Dictionary<Type, Type> Replaces { get; set; }
+        private static Dictionary<Type, Type> Replaces { get; }
             = new Dictionary<Type, Type>();
-
-        public static void AddOrReplaceReplacement(Type type, Type targetType)
-        {
-            if (Replaces.ContainsKey(type))
-                Replaces[type] = targetType;
-            else
-                Replaces.Add(type, targetType);
-        }
 
         public IModelContext Intercept(IModelContext modelContext)
         {
             if (modelContext.NewModel == null)
+            {
                 return modelContext;
+            }
 
             if (Replaces.ContainsKey(modelContext.NewModel.GetType()))
             {
@@ -29,6 +23,18 @@ namespace Forge.Forms.Livereload
             }
 
             return modelContext;
+        }
+
+        public static void AddOrReplaceReplacement(Type type, Type targetType)
+        {
+            if (Replaces.ContainsKey(type))
+            {
+                Replaces[type] = targetType;
+            }
+            else
+            {
+                Replaces.Add(type, targetType);
+            }
         }
     }
 }

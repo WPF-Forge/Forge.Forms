@@ -21,7 +21,7 @@ namespace Forge.Forms.Demo.Routes
         {
             this.notificationService = notificationService;
             RouteConfig.Title = "CSharp Examples";
-            RouteConfig.Icon = PackIconKind.Xml;
+            RouteConfig.Icon = PackIconKind.CodeBraces;
             BuildDefinitionCommand = Command(BuildDefinition);
         }
 
@@ -129,11 +129,12 @@ namespace Forge.Forms.Demo.Models
                     if (CompiledDefinition == null)
                     {
                         CompiledDefinition =
-                            Activator.CreateInstance(HotReloadManager.CompileCode(CsharpString).First());
+                            Activator.CreateInstance(HotReloadManager.Instance.CompileCode(CsharpString).First());
                     }
                     else
                     {
-                        HotReloadManager.ApplyTypesToDynamicForms(HotReloadManager.CompileCode(CsharpString).ToList());
+                        HotReloadManager.ApplyTypesToDynamicForms(HotReloadManager.Instance
+                            .CompileCode(CsharpString).ToList());
                     }
                 }
                 catch (Exception ex)

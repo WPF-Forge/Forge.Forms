@@ -10,7 +10,6 @@
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colors.xaml" />
-
                 <ResourceDictionary
                     Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />
                 <ResourceDictionary
@@ -21,6 +20,7 @@
                     Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Accent/MaterialDesignColor.Pink.xaml" />
 
                 <ResourceDictionary Source="pack://application:,,,/Forge.Forms;component/Themes/Material.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Forge.Forms.Collections;component/Themes/Generic.xaml" />
 
                 <ResourceDictionary Source="pack://application:,,,/Dragablz;component/Themes/MaterialDesign.xaml" />
 
@@ -126,7 +126,6 @@
                    BasedOn="{StaticResource MaterialDesignDataGrid}"
                    TargetType="{x:Type DataGrid}">
                 <Setter Property="ColumnWidth" Value="*" />
-                <Setter Property="IsReadOnly" Value="True" />
                 <Setter Property="ScrollViewer.CanContentScroll" Value="False" />
                 <Setter Property="SelectionMode" Value="Single" />
                 <Setter Property="AutoGenerateColumns" Value="False" />

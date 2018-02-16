@@ -1,21 +1,19 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:annotations="clr-namespace:Forge.Forms.Annotations"
+    xmlns:defaults="clr-namespace:Forge.Forms.FormBuilding.Defaults"
     xmlns:formBuilding="clr-namespace:Forge.Forms.FormBuilding"
-    xmlns:defaults="clr-namespace:Forge.Forms.FormBuilding.Defaults">
+    xmlns:internal="clr-namespace:Forge.Forms.Controls.Internal"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes">
 
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="pack://application:,,,/Forge.Forms;component/Themes/Material/IconStyles.xaml" />
-        <ResourceDictionary
-            Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ComboBox.xaml" />
-        <ResourceDictionary
-            Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.RadioButton.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ComboBox.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.RadioButton.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
-    <ControlTemplate x:Key="MaterialComboBoxSelectionPresenterTemplate"
-                     TargetType="{x:Type defaults:SelectionPresenter}">
+    <ControlTemplate x:Key="MaterialComboBoxSelectionPresenterTemplate" TargetType="{x:Type defaults:SelectionPresenter}">
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
@@ -36,6 +34,7 @@
                 Grid.Column="1"
                 Margin="0,-14,0,0"
                 VerticalAlignment="Center"
+                internal:FocusHelper.InitialFocus="{formBuilding:FormBinding InitialFocus}"
                 materialDesign:ComboBoxAssist.ShowSelectedItem="True"
                 materialDesign:HintAssist.Hint="{formBuilding:FormBinding Name}"
                 DisplayMemberPath="{formBuilding:FormBinding DisplayPath}"
@@ -49,8 +48,7 @@
         </Grid>
     </ControlTemplate>
 
-    <ControlTemplate x:Key="MaterialEditableComboBoxSelectionPresenterTemplate"
-                     TargetType="{x:Type defaults:SelectionPresenter}">
+    <ControlTemplate x:Key="MaterialEditableComboBoxSelectionPresenterTemplate" TargetType="{x:Type defaults:SelectionPresenter}">
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
@@ -84,8 +82,7 @@
         </Grid>
     </ControlTemplate>
 
-    <ControlTemplate x:Key="MaterialRadioButtonsSelectionPresenterTemplate"
-                     TargetType="{x:Type defaults:SelectionPresenter}">
+    <ControlTemplate x:Key="MaterialRadioButtonsSelectionPresenterTemplate" TargetType="{x:Type defaults:SelectionPresenter}">
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
@@ -109,16 +106,13 @@
                     <Style TargetType="{x:Type materialDesign:PackIcon}">
                         <Setter Property="Foreground" Value="{DynamicResource MaterialDesignBodyLight}" />
                         <Style.Triggers>
-                            <DataTrigger Binding="{Binding IsMouseOver, ElementName=HintText, Mode=OneWay}"
-                                         Value="True">
+                            <DataTrigger Binding="{Binding IsMouseOver, ElementName=HintText, Mode=OneWay}" Value="True">
                                 <Setter Property="Foreground" Value="{DynamicResource PrimaryHueMidBrush}" />
                             </DataTrigger>
-                            <DataTrigger Binding="{Binding IsMouseOver, ElementName=ValueHolderControl, Mode=OneWay}"
-                                         Value="True">
+                            <DataTrigger Binding="{Binding IsMouseOver, ElementName=ValueHolderControl, Mode=OneWay}" Value="True">
                                 <Setter Property="Foreground" Value="{DynamicResource PrimaryHueMidBrush}" />
                             </DataTrigger>
-                            <DataTrigger Binding="{Binding IsFocused, ElementName=ValueHolderControl, Mode=OneWay}"
-                                         Value="True">
+                            <DataTrigger Binding="{Binding IsFocused, ElementName=ValueHolderControl, Mode=OneWay}" Value="True">
                                 <Setter Property="Foreground" Value="{DynamicResource PrimaryHueMidBrush}" />
                             </DataTrigger>
                         </Style.Triggers>
@@ -172,13 +166,11 @@
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="Template" Value="{StaticResource MaterialComboBoxSelectionPresenterTemplate}" />
         <Style.Triggers>
-            <DataTrigger Binding="{formBuilding:FormBinding SelectionType}"
-                         Value="{x:Static annotations:SelectionType.RadioButtons}">
+            <DataTrigger Binding="{formBuilding:FormBinding SelectionType}" Value="{x:Static annotations:SelectionType.RadioButtons}">
                 <Setter Property="Margin" Value="8" />
                 <Setter Property="Template" Value="{StaticResource MaterialRadioButtonsSelectionPresenterTemplate}" />
             </DataTrigger>
-            <DataTrigger Binding="{formBuilding:FormBinding SelectionType}"
-                         Value="{x:Static annotations:SelectionType.ComboBoxEditable}">
+            <DataTrigger Binding="{formBuilding:FormBinding SelectionType}" Value="{x:Static annotations:SelectionType.ComboBoxEditable}">
                 <Setter Property="Template" Value="{StaticResource MaterialEditableComboBoxSelectionPresenterTemplate}" />
             </DataTrigger>
         </Style.Triggers>

@@ -16,7 +16,7 @@ namespace Forge.Forms.FormBuilding.Defaults
         /// </summary>
         public static readonly List<IActionInterceptor> InterceptorChain = new List<IActionInterceptor>();
 
-        public IValueProvider ActionName { get; set; }
+        public IValueProvider Action { get; set; }
 
         public IValueProvider ActionParameter { get; set; }
 
@@ -41,7 +41,7 @@ namespace Forge.Forms.FormBuilding.Defaults
         protected internal override void Freeze()
         {
             base.Freeze();
-            Resources.Add(nameof(IsLoading), IsLoading ?? LiteralValue.True);
+            Resources.Add(nameof(IsLoading), IsLoading ?? LiteralValue.False);
             Resources.Add(nameof(IsPrimary), IsPrimary ?? LiteralValue.False);
             Resources.Add(nameof(IsDefault), IsDefault ?? LiteralValue.False);
             Resources.Add(nameof(IsCancel), IsCancel ?? LiteralValue.False);
@@ -52,8 +52,16 @@ namespace Forge.Forms.FormBuilding.Defaults
         {
             return new ActionPresenter(context, Resources, formResources)
             {
-                Command = new ActionElementCommand(context, ActionName, ActionParameter, IsEnabled, Validates,
-                    ClosesDialog, IsReset, ActionInterceptor),
+                Command = new ActionElementCommand(
+                    context,
+                    Action,
+                    ActionParameter,
+                    IsEnabled,
+                    Validates,
+                    ClosesDialog,
+                    IsReset,
+                    IsDefault,
+                    ActionInterceptor),
                 VerticalAlignment = VerticalAlignment.Center,
                 HorizontalAlignment =
                     LinePosition == Position.Left ? HorizontalAlignment.Left : HorizontalAlignment.Right
@@ -72,6 +80,7 @@ namespace Forge.Forms.FormBuilding.Defaults
         private readonly IResourceContext context;
         private readonly IBoolProxy resets;
         private readonly IBoolProxy validates;
+        private readonly IBoolProxy isDefault;
 
         public ActionElementCommand(IResourceContext context,
             IValueProvider action,
@@ -79,7 +88,8 @@ namespace Forge.Forms.FormBuilding.Defaults
             IValueProvider isEnabled,
             IValueProvider validates,
             IValueProvider closesDialog,
-            IValueProvider isReset,
+            IValueProvider resets,
+            IValueProvider isDefault,
             IValueProvider actionInterceptor)
         {
             this.context = context;
@@ -100,11 +110,19 @@ namespace Forge.Forms.FormBuilding.Defaults
                     break;
             }
 
-            this.validates = validates != null ? (IBoolProxy)validates.GetBoolValue(context) : new PlainBool(false);
+            this.validates = validates != null
+                ? (IBoolProxy)validates.GetBoolValue(context)
+                : new PlainBool(false);
             this.closesDialog = closesDialog != null
                 ? (IBoolProxy)closesDialog.GetBoolValue(context)
                 : new PlainBool(true);
-            resets = isReset != null ? (IBoolProxy)isReset.GetBoolValue(context) : new PlainBool(false);
+            this.resets = resets != null
+                ? (IBoolProxy)resets.GetBoolValue(context)
+                : new PlainBool(false);
+            this.isDefault = isDefault != null
+                ? (IBoolProxy)isDefault.GetBoolValue(context)
+                : new PlainBool(false);
+
             this.actionParameter = actionParameter?.GetBestMatchingProxy(context) ?? new PlainObject(null);
             this.actionInterceptor = (IProxy)actionInterceptor?.GetValue(context) ?? new PlainObject(null);
         }
@@ -126,7 +144,7 @@ namespace Forge.Forms.FormBuilding.Defaults
                     return;
                 }
             }
-            else if (ModelState.IsModel(model))
+            else if (isDefault.Value && ModelState.IsModel(model))
             {
                 foreach (var binding in context.GetBindings())
                 {
@@ -135,7 +153,11 @@ namespace Forge.Forms.FormBuilding.Defaults
             }
 
             var modelContext = context.GetContextInstance();
-            IActionContext actionContext = new ActionContext(model, modelContext, action.Value, actionParameter.Value);
+            IActionContext actionContext = new ActionContext(model, 
+                modelContext,
+                action.Value, 
+                actionParameter.Value,
+                context);
             foreach (var globalInterceptor in ActionElement.InterceptorChain)
             {
                 actionContext = globalInterceptor.InterceptAction(actionContext);
@@ -160,7 +182,7 @@ namespace Forge.Forms.FormBuilding.Defaults
 
             switch (action.Value)
             {
-                case string actionName:
+                case string _:
                     if (model is IActionHandler modelHandler)
                     {
                         modelHandler.HandleAction(actionContext);

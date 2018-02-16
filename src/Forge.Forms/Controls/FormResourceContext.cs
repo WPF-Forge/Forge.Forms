@@ -1,11 +1,13 @@
-﻿using System.Windows;
+﻿using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using System.Windows;
 using System.Windows.Data;
 using Forge.Forms.DynamicExpressions;
 using Forge.Forms.FormBuilding;
 
 namespace Forge.Forms.Controls
 {
-    internal class FormResourceContext : IFrameworkResourceContext
+    internal class FormResourceContext : IFrameworkResourceContext, INotifyPropertyChanged
     {
         public FormResourceContext(DynamicForm form)
             : this(form, null)
@@ -21,6 +23,8 @@ namespace Forge.Forms.Controls
         public DynamicForm Form { get; }
 
         public string BasePath { get; }
+
+        public IEnvironment Environment => Form.Environment;
 
         public object GetModelInstance()
         {
@@ -84,6 +88,14 @@ namespace Forge.Forms.Controls
         public void OnAction(IActionContext actionContext)
         {
             Form.RaiseOnAction(actionContext);
+        }
+
+        // Although never invoked, it may provide a performance benefit to include INPC.
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

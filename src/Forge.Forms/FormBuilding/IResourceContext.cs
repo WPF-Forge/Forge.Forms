@@ -9,6 +9,11 @@ namespace Forge.Forms.FormBuilding
     public interface IResourceContext
     {
         /// <summary>
+        /// Gets the <see cref="Environment"/> for current context.
+        /// </summary>
+        IEnvironment Environment { get; }
+
+        /// <summary>
         /// Gets current model instance.
         /// </summary>
         object GetModelInstance();

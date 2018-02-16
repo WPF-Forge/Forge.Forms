@@ -7,6 +7,7 @@ using System.Windows.Data;
 using System.Xml.Linq;
 using Forge.Forms.Annotations;
 using Forge.Forms.DynamicExpressions;
+using Forge.Forms.DynamicExpressions.BooleanExpressions;
 using Forge.Forms.Extensions;
 using Forge.Forms.Validation;
 using MaterialDesignThemes.Wpf;
@@ -42,7 +43,7 @@ namespace Forge.Forms.FormBuilding
 
             // First requirement is that properties and getters must be public.
             var properties = type
-                .GetHighestProperties()
+                .GetOutmostProperties()
                 .Where(p => p.PropertyInfo.CanRead && p.PropertyInfo.GetGetMethod(true).IsPublic)
                 .OrderBy(p => p.Token)
                 .Select(i => i.PropertyInfo);
@@ -102,6 +103,12 @@ namespace Forge.Forms.FormBuilding
                     case 1 when boundExpression.StringFormat == null:
                         return new CoercedValueProvider<T>(boundExpression.Resources[0], defaultValue);
                     default:
+                        if (typeof(T) == typeof(bool))
+                        {
+                            var ast = BooleanExpression.Parse(boundExpression.StringFormat);
+                            return new MultiValueBinding(boundExpression.Resources, new BooleanMultiConverter(ast));
+                        }
+
                         throw new ArgumentException(
                             $"The expression '{expression}' is not a valid resource because it does not define a single value source.",
                             nameof(value));

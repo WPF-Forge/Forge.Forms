@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Data;
@@ -507,6 +506,9 @@ namespace Forge.Forms.DynamicExpressions
                     break;
                 case "ContextProperty":
                     resource = new ContextPropertyBinding(key, true, converter);
+                    break;
+                case "Env":
+                    resource = new EnvironmentBinding(key, oneTimeBind, converter);
                     break;
                 case "FileBinding":
                     resource = new FileBinding(key, true, converter);

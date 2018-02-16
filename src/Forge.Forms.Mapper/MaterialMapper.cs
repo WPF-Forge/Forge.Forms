@@ -3,8 +3,9 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using Forge.Forms.Annotations;
-using Proxier.Extensions;
+using Forge.Forms.Extensions;
 using Proxier.Mappers;
+using Proxier.Extensions;
 using Proxier.Mappers.Maps;
 
 namespace Forge.Forms.Mapper
@@ -29,7 +30,7 @@ namespace Forge.Forms.Mapper
                 return base.TransfomSpawn(createInstance);
             }
 
-            var propertyInfos = Type.GetHighestProperties().Select(i => i.PropertyInfo);
+            var propertyInfos = Type.GetOutmostProperties().Select(i => i.PropertyInfo);
             var shouldHave = AttributeMappings.Select(i => i.PropertyInfo).Where(i => i != null).ToList();
             foreach (var prop in propertyInfos)
             {
@@ -47,7 +48,7 @@ namespace Forge.Forms.Mapper
                     AttributeMappings.Add(new AttributeMap(this)
                     {
                         Attributes = new Expression<Func<Attribute>>[]
-                            { () => new FieldAttribute { IsVisible = false } },
+                            {() => new FieldAttribute {IsVisible = false}},
                         PropertyInfo = prop
                     });
                 }
@@ -56,7 +57,7 @@ namespace Forge.Forms.Mapper
             return base.TransfomSpawn(createInstance);
         }
 
-        public virtual void HandleAction(object model, string action, object parameter)
+        public virtual void HandleAction(IActionContext context)
         {
         }
     }
@@ -117,13 +118,11 @@ namespace Forge.Forms.Mapper
         {
         }
 
-        /// <param name="model">The model.</param>
-        /// <param name="action">The action.</param>
-        /// <param name="parameter">The parameter.</param>
-        public override void HandleAction(object model, string action, object parameter)
+        public override void HandleAction(IActionContext context)
         {
-            Action((TSource)model.CopyTo(Activator.CreateInstance(BaseType.AddParameterlessConstructor())), action,
-                parameter);
+            if (context.Action is string action)
+                Action((TSource) context.Model.CopyTo(BaseType.AddParameterlessConstructor()), action,
+                    context.ActionParameter);
         }
     }
 }

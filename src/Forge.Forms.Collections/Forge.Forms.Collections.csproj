@@ -1,0 +1,108 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{B067F5CC-7FF4-44A6-B00E-F05238034A36}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Forge.Forms.Collections</RootNamespace>
+    <AssemblyName>Forge.Forms.Collections</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Annotations\CrudAttribute.cs" />
+    <Compile Include="Annotations\CrudIgnoreAttribute.cs" />
+    <Compile Include="Converters\CheckedConverter.cs" />
+    <Compile Include="Converters\HeaderStyleVisibilityConverter.cs" />
+    <Compile Include="Converters\PagingConverter.cs" />
+    <Compile Include="DynamicDataGrid.cs" />
+    <Compile Include="Enums\DynamicDataGridHeaderState.cs" />
+    <Compile Include="Enums\DynamicDataGridHeaderStyle.cs" />
+    <Compile Include="Extensions\UiHelpers.cs" />
+    <Compile Include="FormDefinitionWrapper.cs" />
+    <Compile Include="GridField.cs" />
+    <Compile Include="Interfaces\AddActionContext.cs" />
+    <Compile Include="Interfaces\IAddActionContext.cs" />
+    <Compile Include="Interfaces\IAddActionInterceptor.cs" />
+    <Compile Include="Interfaces\IRemoveActionContext.cs" />
+    <Compile Include="Interfaces\IRemoveActionInterceptor.cs" />
+    <Compile Include="Interfaces\IUpdateActionContext.cs" />
+    <Compile Include="Interfaces\IUpdateActionInterceptor.cs" />
+    <Compile Include="Interfaces\RemoveActionContext.cs" />
+    <Compile Include="Interfaces\UpdateActionContext.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RelayCommand.cs" />
+    <Compile Include="UpdateFormDefinition.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FancyGrid\FancyGrid.csproj">
+      <Project>{a8a07443-f073-4af0-96dc-ff981489654a}</Project>
+      <Name>FancyGrid</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Forge.Forms\Forge.Forms.csproj">
+      <Project>{4E0C323D-5AFC-4105-815F-587346AA5321}</Project>
+      <Name>Forge.Forms</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Themes\Generic.xaml">
+      <SubType>Designer</SubType>
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Fody">
+      <Version>2.3.25</Version>
+    </PackageReference>
+    <PackageReference Include="MaterialDesignThemes">
+      <Version>2.3.1.953</Version>
+    </PackageReference>
+    <PackageReference Include="PropertyChanged.Fody">
+      <Version>2.2.5</Version>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="FodyWeavers.xml" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+         Other similar extension points exist, see Microsoft.Common.targets.
+    <Target Name="BeforeBuild">
+    </Target>
+    <Target Name="AfterBuild">
+    </Target>
+    -->
+</Project>
