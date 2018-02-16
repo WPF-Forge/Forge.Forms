@@ -60,15 +60,24 @@ namespace Forge.Forms.Collections
             DependencyProperty.Register("CanUserRemove", typeof(bool), typeof(DynamicDataGrid),
                 new PropertyMetadata(true));
 
+        /// <summary>
+        /// The toggle filter command property
+        /// </summary>
         public static readonly DependencyProperty ToggleFilterCommandProperty =
             DependencyProperty.Register("ToggleFilterCommand", typeof(ICommand), typeof(DynamicDataGrid),
                 new PropertyMetadata());
 
+        /// <summary>
+        /// The is filtering enabled property
+        /// </summary>
         public static readonly DependencyProperty IsFilteringEnabledProperty =
             DependencyProperty.Register("IsFilteringEnabled", typeof(bool), typeof(DynamicDataGrid),
                 new PropertyMetadata(false));
 
 
+        /// <summary>
+        /// The create dialog positive content property
+        /// </summary>
         public static readonly DependencyProperty CreateDialogPositiveContentProperty =
             DependencyProperty.Register(
                 nameof(CreateDialogPositiveContent),
@@ -76,6 +85,9 @@ namespace Forge.Forms.Collections
                 typeof(DynamicDataGrid),
                 new FrameworkPropertyMetadata("ADD"));
 
+        /// <summary>
+        /// The create dialog positive icon property
+        /// </summary>
         public static readonly DependencyProperty CreateDialogPositiveIconProperty =
             DependencyProperty.Register(
                 nameof(CreateDialogPositiveIcon),
@@ -83,12 +95,18 @@ namespace Forge.Forms.Collections
                 typeof(DynamicDataGrid),
                 new FrameworkPropertyMetadata(PackIconKind.Check));
 
+        /// <summary>
+        /// The create dialog negative content property
+        /// </summary>
         public static readonly DependencyProperty CreateDialogNegativeContentProperty = DependencyProperty.Register(
             nameof(CreateDialogNegativeContent),
             typeof(string),
             typeof(DynamicDataGrid),
             new FrameworkPropertyMetadata("CANCEL"));
 
+        /// <summary>
+        /// The create dialog negative icon property
+        /// </summary>
         public static readonly DependencyProperty CreateDialogNegativeIconProperty =
             DependencyProperty.Register(
                 nameof(CreateDialogNegativeIcon),
@@ -96,12 +114,18 @@ namespace Forge.Forms.Collections
                 typeof(DynamicDataGrid),
                 new FrameworkPropertyMetadata(PackIconKind.Close));
 
+        /// <summary>
+        /// The update dialog positive content property
+        /// </summary>
         public static readonly DependencyProperty UpdateDialogPositiveContentProperty = DependencyProperty.Register(
             nameof(UpdateDialogPositiveContent),
             typeof(string),
             typeof(DynamicDataGrid),
             new FrameworkPropertyMetadata("OK"));
 
+        /// <summary>
+        /// The update dialog positive icon property
+        /// </summary>
         public static readonly DependencyProperty UpdateDialogPositiveIconProperty =
             DependencyProperty.Register(
                 nameof(UpdateDialogPositiveIcon),
@@ -109,12 +133,18 @@ namespace Forge.Forms.Collections
                 typeof(DynamicDataGrid),
                 new FrameworkPropertyMetadata(PackIconKind.Check));
 
+        /// <summary>
+        /// The update dialog negative content property
+        /// </summary>
         public static readonly DependencyProperty UpdateDialogNegativeContentProperty = DependencyProperty.Register(
             nameof(UpdateDialogNegativeContent),
             typeof(string),
             typeof(DynamicDataGrid),
             new FrameworkPropertyMetadata("CANCEL"));
 
+        /// <summary>
+        /// The update dialog negative icon property
+        /// </summary>
         public static readonly DependencyProperty UpdateDialogNegativeIconProperty =
             DependencyProperty.Register(
                 nameof(UpdateDialogNegativeIcon),
@@ -122,24 +152,36 @@ namespace Forge.Forms.Collections
                 typeof(DynamicDataGrid),
                 new FrameworkPropertyMetadata(PackIconKind.Close));
 
+        /// <summary>
+        /// The remove dialog title content property
+        /// </summary>
         public static readonly DependencyProperty RemoveDialogTitleContentProperty = DependencyProperty.Register(
             nameof(RemoveDialogTitleContent),
             typeof(string),
             typeof(DynamicDataGrid),
             new FrameworkPropertyMetadata());
 
+        /// <summary>
+        /// The remove dialog text content property
+        /// </summary>
         public static readonly DependencyProperty RemoveDialogTextContentProperty = DependencyProperty.Register(
             nameof(RemoveDialogTextContent),
             typeof(string),
             typeof(DynamicDataGrid),
             new FrameworkPropertyMetadata("Remove item(s)?"));
 
+        /// <summary>
+        /// The remove dialog positive content property
+        /// </summary>
         public static readonly DependencyProperty RemoveDialogPositiveContentProperty = DependencyProperty.Register(
             nameof(RemoveDialogPositiveContent),
             typeof(string),
             typeof(DynamicDataGrid),
             new FrameworkPropertyMetadata("REMOVE"));
 
+        /// <summary>
+        /// The remove dialog positive icon property
+        /// </summary>
         public static readonly DependencyProperty RemoveDialogPositiveIconProperty =
             DependencyProperty.Register(
                 nameof(RemoveDialogPositiveIcon),
@@ -147,12 +189,18 @@ namespace Forge.Forms.Collections
                 typeof(DynamicDataGrid),
                 new FrameworkPropertyMetadata(PackIconKind.Delete));
 
+        /// <summary>
+        /// The remove dialog negative content property
+        /// </summary>
         public static readonly DependencyProperty RemoveDialogNegativeContentProperty = DependencyProperty.Register(
             nameof(RemoveDialogNegativeContent),
             typeof(string),
             typeof(DynamicDataGrid),
             new FrameworkPropertyMetadata("CANCEL"));
 
+        /// <summary>
+        /// The remove dialog negative icon property
+        /// </summary>
         public static readonly DependencyProperty RemoveDialogNegativeIconProperty =
             DependencyProperty.Register(
                 nameof(RemoveDialogNegativeIcon),
@@ -160,6 +208,9 @@ namespace Forge.Forms.Collections
                 typeof(DynamicDataGrid),
                 new FrameworkPropertyMetadata(PackIconKind.Close));
 
+        /// <summary>
+        /// The items source property
+        /// </summary>
         public static readonly DependencyProperty ItemsSourceProperty =
             DependencyProperty.Register(
                 nameof(ItemsSource),
@@ -222,6 +273,9 @@ namespace Forge.Forms.Collections
             DependencyProperty.Register("MoveBackCommand", typeof(ICommand), typeof(DynamicDataGrid),
                 new PropertyMetadata());
 
+        /// <summary>
+        /// The dialog options property
+        /// </summary>
         public static readonly DependencyProperty DialogOptionsProperty =
             DependencyProperty.Register(
                 nameof(DialogOptions),
@@ -235,22 +289,34 @@ namespace Forge.Forms.Collections
                 new PropertyMetadata(""));
 
         // Using a DependencyProperty as the backing store for HasCheckboxes.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty HasCheckboxesProperty =
-            DependencyProperty.Register("HasCheckboxes", typeof(bool), typeof(DynamicDataGrid),
+        public static readonly DependencyProperty HasCheckboxesColumnProperty =
+            DependencyProperty.Register("HasCheckboxesColumn", typeof(bool), typeof(DynamicDataGrid),
                 new PropertyMetadata(true));
 
         public static readonly RoutedCommand CreateItemCommand = new RoutedCommand();
         public static readonly RoutedCommand UpdateItemCommand = new RoutedCommand();
         public static readonly RoutedCommand RemoveItemCommand = new RoutedCommand();
 
+        /// <summary>
+        /// The add interceptor chain
+        /// </summary>
         public static readonly List<IAddActionInterceptor> AddInterceptorChain = new List<IAddActionInterceptor>();
 
+        /// <summary>
+        /// The update interceptor chain
+        /// </summary>
         public static readonly List<IUpdateActionInterceptor> UpdateInterceptorChain =
             new List<IUpdateActionInterceptor>();
 
+        /// <summary>
+        /// The remove interceptor chain
+        /// </summary>
         public static readonly List<IRemoveActionInterceptor> RemoveInterceptorChain =
             new List<IRemoveActionInterceptor>();
 
+        /// <summary>
+        /// The rows per page text property
+        /// </summary>
         public static readonly DependencyProperty RowsPerPageTextProperty =
             DependencyProperty.Register("RowsPerPageText", typeof(string), typeof(DynamicDataGrid),
                 new PropertyMetadata("Rows per page"));
@@ -262,20 +328,24 @@ namespace Forge.Forms.Collections
             DependencyProperty.Register("CurrentPage", typeof(int), typeof(DynamicDataGrid), new PropertyMetadata(1,
                 OnCurrentPageChanged));
 
+        /// <summary>
+        /// The is delete button visible property
+        /// </summary>
         public static readonly DependencyProperty IsDeleteButtonVisibleProperty =
             DependencyProperty.Register("IsDeleteButtonVisible", typeof(bool), typeof(DynamicDataGrid),
                 new PropertyMetadata(false));
 
+        /// <summary>
+        /// The is filter button visible property
+        /// </summary>
         public static readonly DependencyProperty IsFilterButtonVisibleProperty =
             DependencyProperty.Register("IsFilterButtonVisible", typeof(bool), typeof(DynamicDataGrid),
                 new PropertyMetadata(true));
 
         private bool canMutate;
-
-        private int itemsPerPage = 10;
         private Type itemType;
 
-        private List<SortDescription> mSortDescriptions =
+        private List<SortDescription> CachedSortDescriptions =
             new List<SortDescription>();
 
         static DynamicDataGrid()
@@ -290,9 +360,9 @@ namespace Forge.Forms.Collections
             CommandBindings.Add(new CommandBinding(UpdateItemCommand, ExecuteUpdateItem, CanExecuteUpdateItem));
             CommandBindings.Add(new CommandBinding(RemoveItemCommand, ExecuteRemoveItem, CanExecuteRemoveItem));
 
-            MoveNextCommand = new RelayCommand(x => CurrentPage++, o => CurrentPage < MaxPages);
+            MoveNextCommand = new RelayCommand(x => CurrentPage++, o => CurrentPage < LastPage);
             MoveBackCommand = new RelayCommand(x => CurrentPage--, o => CurrentPage > 1);
-            MoveLastCommand = new RelayCommand(x => CurrentPage = MaxPages, o => CurrentPage < MaxPages);
+            MoveLastCommand = new RelayCommand(x => CurrentPage = LastPage, o => CurrentPage < LastPage);
             MoveFirstCommand = new RelayCommand(x => CurrentPage = 1, o => CurrentPage > 1);
             MoveToPageCommand = new RelayCommand(
                 x => CurrentPage = int.Parse((string)x), o => int.TryParse((string)o, out var val) && val != CurrentPage);
@@ -309,17 +379,22 @@ namespace Forge.Forms.Collections
             });
 
             PropertyChanged += OnPropertyChanged;
-
             Loaded += (s, e) => OnItemsSource(ItemsSource);
         }
 
+        /// <summary>
+        /// Gets or sets the header style.
+        /// </summary>
+        /// <value>
+        /// The header style.
+        /// </value>
         public DynamicDataGridHeaderStyle HeaderStyle
         {
             get => (DynamicDataGridHeaderStyle)GetValue(HeaderStyleProperty);
             set => SetValue(HeaderStyleProperty, value);
         }
 
-        public IEnumerable<object> DatagridSelectedItems
+        internal IEnumerable<object> DatagridSelectedItems
         {
             get
             {
@@ -329,67 +404,121 @@ namespace Forge.Forms.Collections
             }
         }
 
+        /// <summary>
+        /// Gets the selected items.
+        /// </summary>
+        /// <value>
+        /// The selected items.
+        /// </value>
         public IList<object> SelectedItems
         {
             get { return CheckedConverter.GetItems(this).Where(i => i.Value).Select(i => i.Key).ToList(); }
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether this the user can add new items.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance can add new items; otherwise, <c>false</c>.
+        /// </value>
         public bool CanUserAdd
         {
             get => (bool)GetValue(CanUserAddProperty);
             set => SetValue(CanUserAddProperty, value);
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance can add edit items.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance can add edit items; otherwise, <c>false</c>.
+        /// </value>
         public bool CanUserEdit
         {
             get => (bool)GetValue(CanUserEditProperty);
             set => SetValue(CanUserEditProperty, value);
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance can remove items.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance can remove items; otherwise, <c>false</c>.
+        /// </value>
         public bool CanUserRemove
         {
             get => (bool)GetValue(CanUserRemoveProperty);
             set => SetValue(CanUserRemoveProperty, value);
         }
 
+        /// <summary>
+        /// Gets or sets the clear filters message.
+        /// </summary>
+        /// <value>
+        /// The clear filters message.
+        /// </value>
         public string ClearFiltersMessage
         {
             get => (string)GetValue(ClearFiltersMessageProperty);
             set => SetValue(ClearFiltersMessageProperty, value);
         }
 
+        /// <summary>
+        /// Gets or sets the include items message.
+        /// </summary>
+        /// <value>
+        /// The include items message.
+        /// </value>
         public string IncludeItemsMessage
         {
             get => (string)GetValue(IncludeItemsMessageProperty);
             set => SetValue(IncludeItemsMessageProperty, value);
         }
 
+        /// <summary>
+        /// Gets or sets the exclude items message.
+        /// </summary>
+        /// <value>
+        /// The exclude items message.
+        /// </value>
         public string ExcludeItemsMessage
         {
             get => (string)GetValue(ExcludeItemsMessageProperty);
             set => SetValue(ExcludeItemsMessageProperty, value);
         }
 
+        /// <summary>
+        /// Gets the current page.
+        /// </summary>
+        /// <value>
+        /// The current page.
+        /// </value>
         [AlsoNotifyFor(nameof(PaginationPageNumbers))]
         public int CurrentPage
         {
             get => (int)GetValue(CurrentPageProperty);
-            set
+            private set
             {
                 IsSelectAll = false;
                 SetValue(CurrentPageProperty, value);
             }
         }
 
-        public int CurrentMaxItem => Math.Min(TotalItems, CurrentPage * ItemsPerPage);
-        public int CurrentMinItem => Math.Min(TotalItems, CurrentMaxItem - ItemsOnPage + 1);
+        private int CurrentMaxItem => Math.Min(TotalItems, CurrentPage * ItemsPerPage);
+        private int CurrentMinItem => Math.Min(TotalItems, CurrentMaxItem - ItemsOnPage + 1);
 
-        internal FilteringDataGrid DataGrid { get; set; }
+        private FilteringDataGrid DataGrid { get; set; }
 
-        public bool HasCheckboxes
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance has checkboxes column.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance has checkboxes column; otherwise, <c>false</c>.
+        /// </value>
+        private bool HasCheckboxesColumn
         {
-            get => (bool)GetValue(HasCheckboxesProperty);
-            set => SetValue(HasCheckboxesProperty, value);
+            get => (bool)GetValue(HasCheckboxesColumnProperty);
+            set => SetValue(HasCheckboxesColumnProperty, value);
         }
 
         private CheckBox HeaderButton { get; } = new CheckBox
@@ -399,6 +528,12 @@ namespace Forge.Forms.Collections
         };
 
 
+        /// <summary>
+        /// Gets a value indicating whether this instance's delete button visible.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance has delete button visible; otherwise, <c>false</c>.
+        /// </value>
         public bool IsDeleteButtonVisible
         {
             get => (bool)GetValue(IsDeleteButtonVisibleProperty);
@@ -406,6 +541,12 @@ namespace Forge.Forms.Collections
         }
 
 
+        /// <summary>
+        /// Gets a value indicating whether this instance's filter button visible.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance has filter button visible; otherwise, <c>false</c>.
+        /// </value>
         public bool IsFilterButtonVisible
         {
             get => (bool)GetValue(IsFilterButtonVisibleProperty);
@@ -413,6 +554,12 @@ namespace Forge.Forms.Collections
         }
 
 
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance has filtering enabled.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance has filtering enabled; otherwise, <c>false</c>.
+        /// </value>
         public bool IsFilteringEnabled
         {
             get => (bool)GetValue(IsFilteringEnabledProperty);
@@ -423,7 +570,13 @@ namespace Forge.Forms.Collections
 
         private int SelectedItemsCount => DataGrid?.SelectedItems.Count ?? 0;
 
-        [AlsoNotifyFor(nameof(MaxPages))]
+        /// <summary>
+        /// Gets or sets the items per page.
+        /// </summary>
+        /// <value>
+        /// The items per page.
+        /// </value>
+        [AlsoNotifyFor(nameof(LastPage))]
         public int ItemsPerPage { get; set; } = 10;
 
         private Type ItemType
@@ -459,32 +612,68 @@ namespace Forge.Forms.Collections
             }
         }
 
-        public int MaxPages => Math.Max((int)Math.Ceiling((double)TotalItems / ItemsPerPage), 1);
+        /// <summary>
+        /// Gets the last page.
+        /// </summary>
+        /// <value>
+        /// The last page.
+        /// </value>
+        public int LastPage => Math.Max((int)Math.Ceiling((double)TotalItems / ItemsPerPage), 1);
 
+        /// <summary>
+        /// Gets or sets the move back command.
+        /// </summary>
+        /// <value>
+        /// The move back command.
+        /// </value>
         public ICommand MoveBackCommand
         {
             get => (ICommand)GetValue(MoveBackCommandProperty);
             set => SetValue(MoveBackCommandProperty, value);
         }
 
+        /// <summary>
+        /// Gets or sets the move next command.
+        /// </summary>
+        /// <value>
+        /// The move next command.
+        /// </value>
         public ICommand MoveNextCommand
         {
             get => (ICommand)GetValue(MoveNextCommandProperty);
             set => SetValue(MoveNextCommandProperty, value);
         }
 
+        /// <summary>
+        /// Gets or sets the move last command.
+        /// </summary>
+        /// <value>
+        /// The move last command.
+        /// </value>
         public ICommand MoveLastCommand
         {
             get => (ICommand)GetValue(MoveLastCommandProperty);
             set => SetValue(MoveLastCommandProperty, value);
         }
 
+        /// <summary>
+        /// Gets or sets the move first command.
+        /// </summary>
+        /// <value>
+        /// The move first command.
+        /// </value>
         public ICommand MoveFirstCommand
         {
             get => (ICommand)GetValue(MoveFirstCommandProperty);
             set => SetValue(MoveFirstCommandProperty, value);
         }
 
+        /// <summary>
+        /// Gets or sets the move to page command.
+        /// </summary>
+        /// <value>
+        /// The move to page command.
+        /// </value>
         public ICommand MoveToPageCommand
         {
             get => (ICommand)GetValue(MoveToPageCommandProperty);
@@ -495,26 +684,56 @@ namespace Forge.Forms.Collections
 
         private List<DataGridColumn> ProtectedColumns { get; set; }
 
+        /// <summary>
+        /// Gets or sets the rows per page text.
+        /// </summary>
+        /// <value>
+        /// The rows per page text.
+        /// </value>
         public string RowsPerPageText
         {
             get => (string)GetValue(RowsPerPageTextProperty);
             set => SetValue(RowsPerPageTextProperty, value);
         }
 
+        /// <summary>
+        /// Gets or sets the title.
+        /// </summary>
+        /// <value>
+        /// The title.
+        /// </value>
         public string Title
         {
             get => (string)GetValue(TitleProperty);
             set => SetValue(TitleProperty, value);
         }
 
+        /// <summary>
+        /// Gets or sets the toggle filter command.
+        /// </summary>
+        /// <value>
+        /// The toggle filter command.
+        /// </value>
         public ICommand ToggleFilterCommand
         {
             get => (ICommand)GetValue(ToggleFilterCommandProperty);
             set => SetValue(ToggleFilterCommandProperty, value);
         }
 
+        /// <summary>
+        /// Gets the total items.
+        /// </summary>
+        /// <value>
+        /// The total items.
+        /// </value>
         public int TotalItems => GetIEnumerableCount(ItemsSource) ?? 0;
-        
+
+        /// <summary>
+        /// Gets the items on page.
+        /// </summary>
+        /// <value>
+        /// The items on page.
+        /// </value>
         public int ItemsOnPage => Math.Min(ItemsPerPage, TotalItems - ((CurrentPage - 1 )* ItemsPerPage));
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -599,7 +818,7 @@ namespace Forge.Forms.Collections
                 }
             });
 
-            if (HasCheckboxes)
+            if (HasCheckboxesColumn)
             {
                 DataGrid.Columns.Insert(0, new DataGridTemplateColumn
                 {
@@ -612,7 +831,7 @@ namespace Forge.Forms.Collections
             }
         }
 
-        public static void DynamicUsing(object resource, Action action)
+        private static void DynamicUsing(object resource, Action action)
         {
             try
             {
@@ -627,7 +846,7 @@ namespace Forge.Forms.Collections
             }
         }
 
-        public int? GetIEnumerableCount(IEnumerable enumerable)
+        private static int? GetIEnumerableCount(IEnumerable enumerable)
         {
             switch (enumerable)
             {
@@ -710,7 +929,7 @@ namespace Forge.Forms.Collections
 
                 DataGrid.Columns.Insert(0, dataGridTextColumn);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 // ignored
             }
@@ -757,7 +976,7 @@ namespace Forge.Forms.Collections
             var view = CollectionViewSource.GetDefaultView(ItemsSource);
             view.SortDescriptions.Clear();
 
-            foreach (var sortDescription in mSortDescriptions)
+            foreach (var sortDescription in CachedSortDescriptions)
             {
                 view.SortDescriptions.Add(sortDescription);
                 var column = DataGrid.Columns.FirstOrDefault(c => c.SortMemberPath == sortDescription.PropertyName);
@@ -767,19 +986,19 @@ namespace Forge.Forms.Collections
                 }
             }
 
-            mSortDescriptions.Clear();
+            CachedSortDescriptions.Clear();
             return view;
         }
 
         private void UpdateSorting()
         {
             var view = CollectionViewSource.GetDefaultView(DataGrid.ItemsSource);
-            mSortDescriptions = new List<SortDescription>(view.SortDescriptions);
+            CachedSortDescriptions = new List<SortDescription>(view.SortDescriptions);
         }
 
         private void OnCollectionChanged(object o, NotifyCollectionChangedEventArgs notifyCollectionChangedEventArgs)
         {
-            OnPropertyChanged(nameof(MaxPages));
+            OnPropertyChanged(nameof(LastPage));
             OnPropertyChanged(nameof(TotalItems));
             OnPropertyChanged(nameof(CurrentMaxItem));
             OnPropertyChanged(nameof(CurrentMinItem));
@@ -793,7 +1012,7 @@ namespace Forge.Forms.Collections
                 ProtectedColumns = DataGrid.Columns.ToList();
                 DataGrid.MouseDoubleClick += DataGridOnMouseDoubleClick;
 
-                if (!HasCheckboxes)
+                if (!HasCheckboxesColumn)
                 {
                     return;
                 }
@@ -1171,7 +1390,7 @@ namespace Forge.Forms.Collections
 
         private void HandleCurrentPageOnMaxPagesChange()
         {
-            CurrentPage = Math.Min(MaxPages, CurrentPage);
+            CurrentPage = Math.Min(LastPage, CurrentPage);
         }
 
         private void CanExecuteRemoveItem(object sender, CanExecuteRoutedEventArgs e)
@@ -1417,13 +1636,13 @@ namespace Forge.Forms.Collections
 
                 range.Add(1);
 
-                if (MaxPages < 1 + EitherSide)
+                if (LastPage < 1 + EitherSide)
                 {
                     yield return range.First().ToString();
                 }
-                else if (MaxPages <= 5)
+                else if (LastPage <= 5)
                 {
-                    foreach (var i in Enumerable.Range(1, MaxPages))
+                    foreach (var i in Enumerable.Range(1, LastPage))
                     {
                         yield return i.ToString();
                     }
@@ -1432,13 +1651,13 @@ namespace Forge.Forms.Collections
                 {
                     for (var i = CurrentPage - EitherSide; i <= CurrentPage + EitherSide; i++)
                     {
-                        if (i < MaxPages && i > 1)
+                        if (i < LastPage && i > 1)
                         {
                             range.Add(i);
                         }
                     }
 
-                    range.Add(MaxPages);
+                    range.Add(LastPage);
 
                     foreach (var i in range)
                     {
