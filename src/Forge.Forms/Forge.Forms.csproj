@@ -81,6 +81,7 @@
     <Compile Include="Controls\DynamicFormWrapper.xaml.cs">
       <DependentUpon>DynamicFormWrapper.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Internal\FocusHelper.cs" />
     <Compile Include="Controls\Internal\FormEnvironment.cs" />
     <Compile Include="DynamicExpressions\BooleanExpressions\BooleanExpression.cs" />
     <Compile Include="DynamicExpressions\BooleanExpressions\BooleanMultiConverter.cs" />

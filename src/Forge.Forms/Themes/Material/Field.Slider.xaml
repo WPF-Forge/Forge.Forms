@@ -1,14 +1,14 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:defaults="clr-namespace:Forge.Forms.FormBuilding.Defaults"
     xmlns:formBuilding="clr-namespace:Forge.Forms.FormBuilding"
-    xmlns:defaults="clr-namespace:Forge.Forms.FormBuilding.Defaults">
+    xmlns:internal="clr-namespace:Forge.Forms.Controls.Internal"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes">
 
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="pack://application:,,,/Forge.Forms;component/Themes/Material/IconStyles.xaml" />
-        <ResourceDictionary
-            Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Slider.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Slider.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
     <ControlTemplate x:Key="MaterialSliderPresenterTemplate" TargetType="{x:Type defaults:SliderPresenter}">
@@ -44,6 +44,7 @@
                 Grid.Column="1"
                 Margin="0,4,0,0"
                 VerticalAlignment="Center"
+                internal:FocusHelper.InitialFocus="{formBuilding:FormBinding InitialFocus}"
                 Maximum="{formBuilding:FormBinding Maximum}"
                 Minimum="{formBuilding:FormBinding Minimum}"
                 Style="{StaticResource MaterialDesignSlider}"
