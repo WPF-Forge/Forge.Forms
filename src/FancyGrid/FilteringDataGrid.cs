@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Media;
+using System.Windows.Threading;
 
 namespace FancyGrid
 {
@@ -322,15 +322,21 @@ namespace FancyGrid
             }
         }
 
+        private CancellationTokenSource FilterToken { get; set; }
 
         private void ApplyFilters()
         {
-            var view = CollectionViewSource.GetDefaultView(ItemsSource);
-            view.Filter = Filter;
+            FilterToken?.Cancel();
+            FilterToken = new CancellationTokenSource();
 
-            var expression = BindingOperations.GetMultiBindingExpression(this, ItemsSourceProperty);
-            expression?.UpdateSource();
-            expression?.UpdateTarget();
+            Dispatcher.Invoke(() =>
+            {
+                var view = CollectionViewSource.GetDefaultView(ItemsSource);
+                view.Filter = Filter;
+
+                var expression = BindingOperations.GetMultiBindingExpression(this, ItemsSourceProperty);
+                expression?.UpdateTarget();
+            }, DispatcherPriority.Normal, FilterToken.Token);
         }
 
         private bool Filter(object item)
