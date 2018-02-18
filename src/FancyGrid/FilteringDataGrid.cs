@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -326,6 +327,10 @@ namespace FancyGrid
         {
             var view = CollectionViewSource.GetDefaultView(ItemsSource);
             view.Filter = Filter;
+
+            var expression = BindingOperations.GetMultiBindingExpression(this, ItemsSourceProperty);
+            expression?.UpdateSource();
+            expression?.UpdateTarget();
         }
 
         private bool Filter(object item)
