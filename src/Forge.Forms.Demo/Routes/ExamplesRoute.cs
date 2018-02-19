@@ -67,8 +67,6 @@ namespace Forge.Forms.Demo.Routes
 
             yield return new ExamplePresenter(new Dialogs(), "Dialogs", large);
 
-            yield return new ExamplePresenter(new ScriptedCounter(), "Scripted Counter", small);
-
             yield return new ExamplePresenter(new BooleanLogic(), "Boolean Expressions", large);
 
             yield return new ExamplePresenter(new EnvManager(), "Environments", large);

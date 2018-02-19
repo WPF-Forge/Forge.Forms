@@ -175,6 +175,7 @@ ClientBin/
 *.publishsettings
 node_modules/
 orleans.codegen.cs
+*.bak
 
 # RIA/Silverlight projects
 Generated_Code/
