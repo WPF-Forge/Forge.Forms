@@ -16,11 +16,17 @@ namespace Forge.Forms.Collections.Converters
                 return value[0];
             }
 
-            if (value[1] is DynamicDataGrid dataGrid && dataGrid.ItemsSource != null)
+            if (value[0] is ListCollectionView view && value[1] is DynamicDataGrid dataGrid)
             {
-                var view = CollectionViewSource.GetDefaultView(dataGrid.ItemsSource);
+                var collectionView = CollectionViewSource.GetDefaultView(dataGrid.DataGrid.ItemsSource);
+
+                if (collectionView != null)
+                {
+                    view.Filter = collectionView.Filter;
+                }
+
                 return view.Cast<object>().Skip((dataGrid.CurrentPage - 1) * dataGrid.ItemsPerPage)
-                           .Take(dataGrid.ItemsPerPage) ?? DefaultReturn(value, dataGrid);
+                    .Take(dataGrid.ItemsPerPage);
             }
 
             return value[0];

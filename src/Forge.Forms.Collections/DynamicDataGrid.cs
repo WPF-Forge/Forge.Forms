@@ -507,7 +507,7 @@ namespace Forge.Forms.Collections
         private int CurrentMaxItem => Math.Min(TotalItems, CurrentPage * ItemsPerPage);
         private int CurrentMinItem => Math.Min(TotalItems, CurrentMaxItem - ItemsOnPage + 1);
 
-        private FilteringDataGrid DataGrid { get; set; }
+        internal FilteringDataGrid DataGrid { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether this instance has checkboxes column.
