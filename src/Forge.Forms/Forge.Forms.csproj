@@ -33,7 +33,7 @@
   <ItemGroup>
     <PackageReference Include="FastMember" Version="1.2.0" />
     <PackageReference Include="Humanizer.Core" Version="2.2.0" />
-    <PackageReference Include="MahApps.Metro" Version="1.6.0" />
+    <PackageReference Include="MahApps.Metro" Version="1.5.0" />
     <PackageReference Include="MaterialDesignThemes" Version="2.3.1.953" />
   </ItemGroup>
   <ItemGroup>
