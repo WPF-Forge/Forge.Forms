@@ -78,6 +78,6 @@ Now how do we handle it? Just implement the ```IActionHandler``` interface on yo
 To display you have two options:
 
 * You can add a ```<DynamicForm />``` to your view and set the ```Model``` dependency property to an instance of this class.
-* You can use the [our fluent API]()
+* You can use the [our fluent API](https://github.com/WPF-Forge/Forge.Forms/wiki/Forge.Forms#show)
 
 And you're done! For more in-depth analysis check [out the wiki](https://github.com/WPF-Forge/Forge.Forms/wiki).
