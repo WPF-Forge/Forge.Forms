@@ -504,8 +504,8 @@ namespace Forge.Forms.Collections
             }
         }
 
-        private int CurrentMaxItem => Math.Min(TotalItems, CurrentPage * ItemsPerPage);
-        private int CurrentMinItem => Math.Min(TotalItems, CurrentMaxItem - ItemsOnPage + 1);
+        public int CurrentMaxItem => Math.Min(TotalItems, CurrentPage * ItemsPerPage);
+        public int CurrentMinItem => Math.Min(TotalItems, CurrentMaxItem - ItemsOnPage + 1);
 
         private FilteringDataGrid DataGrid { get; set; }
 
@@ -577,7 +577,7 @@ namespace Forge.Forms.Collections
         /// The items per page.
         /// </value>
         [AlsoNotifyFor(nameof(LastPage))]
-        public int ItemsPerPage { get; set; } = 10;
+        public int ItemsPerPage { get; set; } = 15;
 
         private Type ItemType
         {
@@ -1037,21 +1037,13 @@ namespace Forge.Forms.Collections
 
             if (PerPageComboBox != null)
             {
-                PerPageComboBox.SelectedIndex = 0;
-            }
-
-            if (PerPageComboBox != null)
-            {
                 PerPageComboBox.SelectionChanged += (sender, args) =>
                     {
-                        ItemsPerPage = PerPageComboBox?.SelectedItem is int i ? i : 0;
                         IsSelectAll = false;
                         HandleCurrentPageOnMaxPagesChange();
                         BindingOperations.GetMultiBindingExpression(DataGrid, ItemsControl.ItemsSourceProperty)
                             ?.UpdateTarget();
                     };
-
-                ItemsPerPage = PerPageComboBox?.SelectedItem is int i2 ? i2 : 0;
             }
         }
 

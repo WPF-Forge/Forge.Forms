@@ -232,6 +232,7 @@
                                        Margin="0,0,40,0" />
                             <ComboBox Margin="0,0,32,0" BorderThickness="0" Name="PART_PerPage"
                                       materialDesign:ComboBoxAssist.ClassicMode="True"
+                                      SelectedItem="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=ItemsPerPage}"
                                       materialDesign:TextFieldAssist.DecorationVisibility="Collapsed" />
                             <TextBlock Style="{DynamicResource MaterialDesignCaptionTextBlock}"
                                        VerticalAlignment="Center" Margin="0,0,32,0"
@@ -262,9 +263,11 @@
                                 Style="{DynamicResource MaterialDesignToolButton}">
                                 <materialDesign:PackIcon Width="24" Height="24" Kind="ChevronLeft" />
                             </Button>
-                            <ItemsControl Name="PageNumbers" ItemsSource="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=PaginationPageNumbers}">
+                            <ItemsControl Name="PageNumbers"
+                                          ItemsSource="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=PaginationPageNumbers}">
                                 <ItemsControl.Resources>
-                                    <dynamicExpressions:BindingProxy x:Key="Proxy" Value="{Binding RelativeSource={RelativeSource TemplatedParent}}" />
+                                    <dynamicExpressions:BindingProxy x:Key="Proxy"
+                                                                     Value="{Binding RelativeSource={RelativeSource TemplatedParent}}" />
                                 </ItemsControl.Resources>
                                 <ItemsControl.ItemsPanel>
                                     <ItemsPanelTemplate>
@@ -284,7 +287,8 @@
                                             Content="{Binding}"
                                             FontSize="14">
                                             <Button.Style>
-                                                <Style BasedOn="{StaticResource MaterialDesignToolButton}" TargetType="Button">
+                                                <Style BasedOn="{StaticResource MaterialDesignToolButton}"
+                                                       TargetType="Button">
                                                     <Style.Triggers>
                                                         <Trigger Property="IsEnabled" Value="false">
                                                             <Setter Property="Opacity" Value="0.75" />
