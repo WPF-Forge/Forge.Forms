@@ -394,7 +394,7 @@ namespace Forge.Forms.Collections
             set => SetValue(HeaderStyleProperty, value);
         }
 
-        internal IEnumerable<object> DatagridSelectedItems
+        private IEnumerable<object> DatagridSelectedItems
         {
             get
             {
@@ -568,7 +568,7 @@ namespace Forge.Forms.Collections
         
         private bool IsSelectAll { get; set; }
 
-        private int SelectedItemsCount => DataGrid?.SelectedItems.Count ?? 0;
+        private int SelectedItemsCount => DatagridSelectedItems.Count();
 
         /// <summary>
         /// Gets or sets the items per page.
