@@ -6,20 +6,10 @@ using MaterialDesignThemes.Wpf;
 
 namespace Forge.Forms.Demo.Models
 {
-    public class LoginExtension : MaterialMapper<Login>
-    {
-        /// <inheritdoc />
-        public LoginExtension()
-        {
-            AddClassAttribute(() => new ActionAttribute("oka", "Hello world!", 0));
-        }
-    }
-
     [Title("Login to continue")]
     [Action("cancel", "CANCEL", IsCancel = true, ClosesDialog = true)]
     [Action("login", "LOG IN", IsLoading = "{Binding Loading}",
         IsDefault = true, ClosesDialog = true, Validates = true)]
-    [HotReload(true)]
     public class Login : IActionHandler
     {
         // Enums may be deserialized from strings.
