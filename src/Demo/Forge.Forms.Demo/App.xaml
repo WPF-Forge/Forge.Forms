@@ -21,6 +21,7 @@
 
                 <ResourceDictionary Source="pack://application:,,,/Forge.Forms;component/Themes/Material.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Forge.Forms.Collections;component/Themes/Generic.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Forge.Forms.Collections;component/Themes/Field.Crud.xaml" />
 
                 <ResourceDictionary Source="pack://application:,,,/Dragablz;component/Themes/MaterialDesign.xaml" />
 

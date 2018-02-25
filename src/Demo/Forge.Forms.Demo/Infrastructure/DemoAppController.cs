@@ -1,6 +1,8 @@
 ﻿using Forge.Forms.Collections;
+using Forge.Forms.Collections.Fields;
 using Forge.Forms.Demo.Models;
 using Forge.Forms.Demo.Routes;
+using Forge.Forms.FormBuilding;
 using Forge.Forms.Livereload;
 using Material.Application.Infrastructure;
 using Material.Application.Routing;
@@ -12,6 +14,7 @@ namespace Forge.Forms.Demo.Infrastructure
         protected override void OnInitializing()
         {     
             MaterialDesignHelper.ReplaceDefaultHintProxies();
+            FormBuilder.Default.PropertyBuilders.Add(new CrudFieldBuilder());
             HotReloadManager.Instance.WatchAllFiles = false;
             Proxier.Mappers.Maps.ProxierMapper.InitializeMapperClasses();
             var factory = Routes.RouteFactory;
