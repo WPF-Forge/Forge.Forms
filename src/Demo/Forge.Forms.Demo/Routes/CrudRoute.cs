@@ -34,28 +34,49 @@ namespace Forge.Forms.Demo.Routes
 
         public IAddActionContext Intercept(IAddActionContext modelContext)
         {
-            Context.Add((Person)modelContext.NewModel);
-            Context.SaveChanges();
-            return null;
+            try
+            {
+                Context.Add(modelContext.NewModel);
+                Context.SaveChanges();
+                return null;
+            }
+            catch
+            {
+                return modelContext;
+            }
         }
 
         public IUpdateActionContext Intercept(IUpdateActionContext modelContext)
         {
-            if (modelContext.NewModel is Person person)
+            try
             {
-                Context.Entry(person).State = EntityState.Modified;
-                Context.SaveChanges();
-            }
+                if (modelContext.NewModel is Person person)
+                {
+                    Context.Entry(person).State = EntityState.Modified;
+                    Context.SaveChanges();
+                }
 
-            return modelContext;
+                return modelContext;
+            }
+            catch
+            {
+                return modelContext;
+            }
         }
 
         public void Intercept(IRemoveActionContext modelContext)
         {
-            if (modelContext.OldModel is Person person)
+            try
             {
-                Context.Remove(person);
-                Context.SaveChanges();
+                if (modelContext.OldModel is Person person)
+                {
+                    Context.Remove(person);
+                    Context.SaveChanges();
+                }
+            }
+            catch
+            {
+                // ignored
             }
         }
     }
