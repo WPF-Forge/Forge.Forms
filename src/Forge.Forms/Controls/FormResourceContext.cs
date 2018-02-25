@@ -7,7 +7,7 @@ using Forge.Forms.FormBuilding;
 
 namespace Forge.Forms.Controls
 {
-    internal class FormResourceContext : IFrameworkResourceContext, INotifyPropertyChanged
+    internal class FormResourceContext : IFrameworkResourceContext, INotifyPropertyChanged, IFormResourceContext
     {
         public FormResourceContext(DynamicForm form)
             : this(form, null)
