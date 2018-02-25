@@ -1,0 +1,22 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:collections="clr-namespace:Forge.Forms.Collections"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:fields="clr-namespace:Forge.Forms.Collections.Fields"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:formBuilding="clr-namespace:Forge.Forms.FormBuilding;assembly=Forge.Forms"
+    mc:Ignorable="d">
+
+    <ControlTemplate x:Key="CrudPresenterTemplate" TargetType="{x:Type fields:CrudPresenter}">
+        <collections:DynamicDataGrid ItemsSource="{formBuilding:FormBinding Value}" />
+    </ControlTemplate>
+
+    <Style x:Key="MaterialDatePickerPresenterStyle" TargetType="{x:Type fields:CrudPresenter}">
+        <Setter Property="Margin" Value="8,16" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Template" Value="{StaticResource CrudPresenterTemplate}" />
+    </Style>
+
+</ResourceDictionary>
