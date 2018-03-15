@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Do you like code-first? Do you have a lot of forms? Then this library is for you! Forge.Forms make it easy to create code-first forms with some nice caveats!        
+Do you like code-first? Do you have a lot of forms? Then this library is for you! Forge.Forms makes it easy to create code-first forms with some nice features out of the box!        
 
 ## Code Samples
 
