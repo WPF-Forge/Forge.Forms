@@ -61,7 +61,6 @@ namespace Forge.Forms.Annotations
         /// <summary>
         /// Create a form element corresponding to this object.
         /// </summary>
-        /// <returns></returns>
         protected abstract FormElement CreateElement();
 
         internal FormElement GetElement()
@@ -73,6 +72,10 @@ namespace Forge.Forms.Annotations
             return element;
         }
 
+        /// <summary>
+        /// Initializes the element that is created by <see cref="CreateElement"/>.
+        /// </summary>
+        /// <param name="element">The element that was created.</param>
         protected virtual void InitializeElement(FormElement element)
         {
         }
