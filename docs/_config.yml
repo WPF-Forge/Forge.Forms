@@ -2,15 +2,16 @@ theme: jekyll-theme-cayman
 defaults:
   -
     scope:
-      path: "guides/"
+      path: "*/guides/"
     values:
-      guides:
-        -
-          path: "/guides/getting-started"
-          title: "Getting started"
-        -
-          path: "/guides/annotations"
-          title: "Annotations"
-        -
-          path: "/guides/dynamic-resources"
-          title: "Dynamic resources"
+      isguide: true
+guides:
+  -
+    path: "/guides/getting-started"
+    title: "Getting started"
+  -
+    path: "/guides/annotations"
+    title: "Annotations"
+  -
+    path: "/guides/dynamic-resources"
+    title: "Dynamic resources"
