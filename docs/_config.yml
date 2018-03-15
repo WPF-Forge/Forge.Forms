@@ -2,7 +2,8 @@ theme: jekyll-theme-cayman
 defaults:
   -
     scope:
-      path: "*/guides/*"
+      path: "guides"
+      type: "pages"
     values:
       isguide: true
 guides:

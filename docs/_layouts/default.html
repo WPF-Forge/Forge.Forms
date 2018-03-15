@@ -31,18 +31,11 @@
 
   <section class="main-content">
     {{ content }}
-    {%if page.isguide %}
-      <div>page.isguide</div>
-    {% endif %}
-    {%if isguide %}
-      <div>isguide</div>
-    {% endif %}
-    {{ page.url }}
     {% if page.isguide %}
       <ol>
         {% for item in site.guides %}
           <li>
-              {% assign relative = item.path | relative_url %}
+              {% assign path = item.path | append: ".html" %}
               {% if page.url == relative %}
                 {{ item.title }}
               {% else %}
