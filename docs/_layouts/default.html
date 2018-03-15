@@ -47,6 +47,10 @@
 
     {{ content }}
 
+    {% if page.isguide %}
+      <a href="#">Back to top</a>
+    {% endif %}
+
     <footer class="site-footer">
       {% if site.github.is_project_page %}
       <span class="site-footer-owner">
