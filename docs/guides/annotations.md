@@ -2,7 +2,7 @@
 
 Forms created from classes can be customized by decorating respective properties with custom annotations, which are located in `Forge.Forms.Annotations` namespace.
 
-**Note**: In the documentation below, the term `dynamic expression` or `dynamic resource` refers to binding expressions, which are explained in [[Dynamic Bindings|Dynamic Bindings]]
+**Note**: In the documentation below, the term `dynamic expression` or `dynamic resource` refers to binding expressions, which are explained in [Dynamic resources](dynamic-resources.md)
 
 ---
 
