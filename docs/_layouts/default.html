@@ -31,8 +31,13 @@
 
   <section class="main-content">
     {{ content }}
-    {{ page.isguide }}
-    {{ isguide }}
+    {%if page.isguide %}
+      <div>page.isguide</div>
+    {% endif %}
+    {%if isguide %}
+      <div>isguide</div>
+    {% endif %}
+    {{ page.url }}
     {% if page.isguide %}
       <ol>
         {% for item in site.guides %}
