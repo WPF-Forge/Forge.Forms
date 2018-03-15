@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace Forge.Forms.Base
+namespace Forge.Forms
 {
     public abstract class FormBase : IActionHandler, INotifyPropertyChanged
     {

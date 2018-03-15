@@ -1,6 +1,6 @@
 ﻿using MaterialDesignThemes.Wpf;
 
-namespace Forge.Forms.Base
+namespace Forge.Forms
 {
     public abstract class DialogBase : FormBase
     {
