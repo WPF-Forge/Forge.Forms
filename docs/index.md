@@ -2,4 +2,4 @@
 
 Welcome to Forge.Forms
 
-[Get ]
+[Getting started](guides/getting-started.md)
