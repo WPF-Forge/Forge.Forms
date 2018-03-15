@@ -5,9 +5,16 @@ using Forge.Forms.FormBuilding.Defaults;
 
 namespace Forge.Forms.Annotations
 {
+    /// <summary>
+    /// Adds a small distance between form rows.
+    /// </summary>
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Property, AllowMultiple = true)]
     public class BreakAttribute : FormContentAttribute
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BreakAttribute"/> class.
+        /// </summary>
+        /// <param name="position">Do not provide a value for this argument.</param>
         public BreakAttribute([CallerLineNumber] int position = 0) : base(position)
         {
         }

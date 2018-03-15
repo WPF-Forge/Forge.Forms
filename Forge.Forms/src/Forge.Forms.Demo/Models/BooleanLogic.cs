@@ -2,7 +2,6 @@
 using System.Runtime.CompilerServices;
 using System.Windows.Data;
 using Forge.Forms.Annotations;
-using Forge.Forms.Annotations.Display;
 
 namespace Forge.Forms.Demo.Models
 {
