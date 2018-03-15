@@ -71,7 +71,9 @@
     <Compile Include="Views\FormView.xaml.cs">
       <DependentUpon>FormView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\XmlExamplesView.xaml.cs" />
+    <Compile Include="Views\XmlExamplesView.xaml.cs">
+      <DependentUpon>XmlExamplesView.xaml</DependentUpon>
+	</Compile>
     <Page Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

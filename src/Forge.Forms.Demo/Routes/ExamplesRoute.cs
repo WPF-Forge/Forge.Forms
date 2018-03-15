@@ -69,7 +69,7 @@ namespace Forge.Forms.Demo.Routes
 
             yield return new ExamplePresenter(new BooleanLogic(), "Boolean Expressions", large);
 
-            yield return new ExamplePresenter(new Crud(), "CRUD", 2 * large);
+            //yield return new ExamplePresenter(new Crud(), "CRUD", 2 * large);
 
             yield return new ExamplePresenter(new EnvManager(), "Environments", large);
 
