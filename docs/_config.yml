@@ -4,7 +4,6 @@ defaults:
     scope:
       path: "guides/"
     values:
-      layout: "guides"
       guides:
         -
           path: "/guides/getting-started"
