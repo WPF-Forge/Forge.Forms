@@ -10,7 +10,11 @@
 </head>
 
 <body>
+  {% if page.isguide %}
+  <section class="page-header" style="padding: 8px">
+  {% else %}
   <section class="page-header">
+  {% endif %}
     <h1 class="project-name">
       <a href="{{ '/' | relative_url }}" style="color:inherit">
         {{ site.title | default: site.github.repository_name }}
