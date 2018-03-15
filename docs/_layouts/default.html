@@ -36,7 +36,7 @@
         {% for item in site.guides %}
           <li>
               {% assign path = item.path | append: ".html" %}
-              {% if page.url == relative %}
+              {% if page.url == path %}
                 {{ item.title }}
               {% else %}
                 <a href="{{ item.path | relative_url }}">{{ item.title }}</a>
