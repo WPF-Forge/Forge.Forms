@@ -45,15 +45,15 @@
     <Compile Include="ScriptInterceptor.cs" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="ClearScript.V8">
-      <Version>5.5.1</Version>
-    </PackageReference>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Forge.Forms\Forge.Forms.csproj">
+    <ProjectReference Include="..\..\..\Forge.Forms\src\Forge.Forms\Forge.Forms.csproj">
       <Project>{4e0c323d-5afc-4105-815f-587346aa5321}</Project>
       <Name>Forge.Forms</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="ClearScript.V8">
+      <Version>5.5.1</Version>
+    </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

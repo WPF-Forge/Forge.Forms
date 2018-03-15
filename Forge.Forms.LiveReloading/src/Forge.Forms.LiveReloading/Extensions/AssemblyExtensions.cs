@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Reflection;
 
-namespace Forge.Forms.Livereload.Extensions
+namespace Forge.Forms.LiveReloading.Extensions
 {
     internal static class AssemblyExtensions
     {

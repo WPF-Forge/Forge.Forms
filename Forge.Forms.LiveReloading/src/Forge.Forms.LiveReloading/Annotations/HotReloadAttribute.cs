@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 
-namespace Forge.Forms.Livereload.Annotations
+namespace Forge.Forms.LiveReloading.Annotations
 {
     [AttributeUsage(AttributeTargets.Class)]
     public class HotReloadAttribute : Attribute

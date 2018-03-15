@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Linq;
 
-namespace Forge.Forms.Livereload.Extensions
+namespace Forge.Forms.LiveReloading.Extensions
 {
     internal static class DirectoryExtensions
     {

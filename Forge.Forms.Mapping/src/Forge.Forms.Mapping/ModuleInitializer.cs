@@ -1,8 +1,8 @@
 ﻿using Forge.Forms.Controls;
 using Forge.Forms.FormBuilding.Defaults;
-using Forge.Forms.Mapper.Interceptors;
+using Forge.Forms.Mapping.Interceptors;
 
-namespace Forge.Forms.Mapper
+namespace Forge.Forms.Mapping
 {
     public static class ModuleInitializer
     {

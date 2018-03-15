@@ -7,8 +7,8 @@
     <ProjectGuid>{FC05C575-2B2F-439C-8D29-4971406957E1}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Forge.Forms.Mapper</RootNamespace>
-    <AssemblyName>Forge.Forms.Mapper</AssemblyName>
+    <RootNamespace>Forge.Forms.Mapping</RootNamespace>
+    <AssemblyName>Forge.Forms.Mapping</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -45,13 +45,13 @@
     <Compile Include="ModuleInitializer.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Forge.Forms\Forge.Forms.csproj">
+    <PackageReference Include="Proxier" Version="1.5.7" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Forge.Forms\src\Forge.Forms\Forge.Forms.csproj">
       <Project>{4e0c323d-5afc-4105-815f-587346aa5321}</Project>
       <Name>Forge.Forms</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Proxier" Version="1.5.7" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

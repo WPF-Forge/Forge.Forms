@@ -7,8 +7,8 @@
     <ProjectGuid>{8FC8CC52-9142-4DDA-83C4-1AD6356BBCB1}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Forge.Forms.Livereload</RootNamespace>
-    <AssemblyName>Forge.Forms.Livereload</AssemblyName>
+    <RootNamespace>Forge.Forms.LiveReloading</RootNamespace>
+    <AssemblyName>Forge.Forms.LiveReloading</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -56,7 +56,7 @@
     <PackageReference Include="Proxier" Version="1.5.7" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Forge.Forms\Forge.Forms.csproj">
+    <ProjectReference Include="..\..\..\Forge.Forms\src\Forge.Forms\Forge.Forms.csproj">
       <Project>{4e0c323d-5afc-4105-815f-587346aa5321}</Project>
       <Name>Forge.Forms</Name>
     </ProjectReference>

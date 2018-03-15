@@ -4,11 +4,11 @@ using System.Linq.Expressions;
 using System.Reflection;
 using Forge.Forms.Annotations;
 using Forge.Forms.Extensions;
-using Proxier.Mappers;
 using Proxier.Extensions;
+using Proxier.Mappers;
 using Proxier.Mappers.Maps;
 
-namespace Forge.Forms.Mapper
+namespace Forge.Forms.Mapping
 {
     public class MaterialMapper : AttributeMapper
     {

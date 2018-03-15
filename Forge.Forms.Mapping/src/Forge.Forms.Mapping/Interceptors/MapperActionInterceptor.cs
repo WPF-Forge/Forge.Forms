@@ -1,6 +1,6 @@
 ﻿using Proxier.Extensions;
 
-namespace Forge.Forms.Mapper.Interceptors
+namespace Forge.Forms.Mapping.Interceptors
 {
     /// <summary>
     /// Adds the default mapper action handler

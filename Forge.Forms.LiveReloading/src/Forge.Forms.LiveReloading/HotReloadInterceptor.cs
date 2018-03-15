@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Proxier.Extensions;
 
-namespace Forge.Forms.Livereload
+namespace Forge.Forms.LiveReloading
 {
     internal class HotReloadInterceptor : IModelInterceptor
     {

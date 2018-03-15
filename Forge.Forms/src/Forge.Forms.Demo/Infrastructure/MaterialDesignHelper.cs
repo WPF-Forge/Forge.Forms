@@ -22,13 +22,7 @@ namespace Forge.Forms.Demo.Infrastructure
         {
             private readonly TextBox textBox;
 
-            public object Content
-            {
-                get
-                {
-                    throw new NotImplementedException();
-                }
-            }
+            public object Content => throw new NotImplementedException();
 
             public bool IsLoaded => textBox.IsLoaded;
 
@@ -43,9 +37,7 @@ namespace Forge.Forms.Demo.Infrastructure
 
             public CustomTextBoxHintProxy(TextBox textBox)
             {
-                if (textBox == null) throw new ArgumentNullException(nameof(textBox));
-
-                this.textBox = textBox;
+                this.textBox = textBox ?? throw new ArgumentNullException(nameof(textBox));
                 this.textBox.TextChanged += TextBoxTextChanged;
                 this.textBox.IsKeyboardFocusedChanged += TextBoxFocusChanged;
                 this.textBox.Loaded += TextBoxLoaded;
@@ -87,13 +79,7 @@ namespace Forge.Forms.Demo.Infrastructure
             public bool IsEmpty() => passwordBox.SecurePassword?.Length == 0
                 && !passwordBox.IsKeyboardFocused;
 
-            public object Content
-            {
-                get
-                {
-                    throw new NotImplementedException();
-                }
-            }
+            public object Content => throw new NotImplementedException();
 
             public bool IsLoaded => passwordBox.IsLoaded;
 
@@ -105,9 +91,7 @@ namespace Forge.Forms.Demo.Infrastructure
 
             public CustomPasswordBoxHintProxy(PasswordBox passwordBox)
             {
-                if (passwordBox == null) throw new ArgumentNullException(nameof(passwordBox));
-
-                this.passwordBox = passwordBox;
+                this.passwordBox = passwordBox ?? throw new ArgumentNullException(nameof(passwordBox));
                 this.passwordBox.PasswordChanged += PasswordBoxPasswordChanged;
                 this.passwordBox.IsKeyboardFocusedChanged += PasswordBoxFocusChanged;
                 this.passwordBox.Loaded += PasswordBoxLoaded;

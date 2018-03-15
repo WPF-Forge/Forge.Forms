@@ -9,12 +9,12 @@ using System.Reflection;
 using System.Text;
 using System.Windows;
 using Forge.Forms.Controls;
-using Forge.Forms.Livereload.Annotations;
-using Forge.Forms.Livereload.Extensions;
+using Forge.Forms.LiveReloading.Annotations;
+using Forge.Forms.LiveReloading.Extensions;
 using Microsoft.CodeDom.Providers.DotNetCompilerPlatform;
 using Proxier.Extensions;
 
-namespace Forge.Forms.Livereload
+namespace Forge.Forms.LiveReloading
 {
     /// <summary>
     ///     Hot reload manager
