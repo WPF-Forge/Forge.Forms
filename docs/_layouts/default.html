@@ -30,7 +30,6 @@
   </section>
 
   <section class="main-content">
-    {{ content }}
     {% if page.isguide %}
       <ol>
         {% for item in site.guides %}
@@ -45,6 +44,8 @@
         {% endfor %}
       </ol>
     {% endif %}
+
+    {{ content }}
 
     <footer class="site-footer">
       {% if site.github.is_project_page %}
