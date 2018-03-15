@@ -12,7 +12,7 @@
         <collections:DynamicDataGrid ItemsSource="{formBuilding:FormBinding Value}" />
     </ControlTemplate>
 
-    <Style x:Key="MaterialDatePickerPresenterStyle" TargetType="{x:Type fields:CrudPresenter}">
+    <Style TargetType="{x:Type fields:CrudPresenter}">
         <Setter Property="Margin" Value="8,16" />
         <Setter Property="HorizontalAlignment" Value="Stretch" />
         <Setter Property="VerticalAlignment" Value="Center" />
