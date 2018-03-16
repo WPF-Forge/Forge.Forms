@@ -1124,6 +1124,8 @@ namespace Forge.Forms.Collections
         private void OnItemsSource(object collection)
         {
             ItemType = null;
+            ViewSource.Source = collection;
+
             if (collection == null)
             {
                 canMutate = false;
@@ -1137,17 +1139,6 @@ namespace Forge.Forms.Collections
                     t.IsGenericType &&
                     t.GetGenericTypeDefinition() == typeof(ICollection<>))
                 .ToList();
-
-            ViewSource.Source = collection;
-
-            if (collection is INotifyCollectionChanged collectionChanged)
-            {
-                collectionChanged.CollectionChanged += (sender, args) =>
-                {
-                    ViewSource.Source = null;
-                    ViewSource.Source = collection;
-                };
-            }
 
             if (interfaces.Count > 1 || interfaces.Count == 0)
             {
@@ -1613,8 +1604,12 @@ namespace Forge.Forms.Collections
 
         public IEnumerable ItemsSource
         {
-            get => (IEnumerable)GetValue(ItemsSourceProperty);
-            set => SetValue(ItemsSourceProperty, value);
+            get => (IEnumerable) GetValue(ItemsSourceProperty);
+            set
+            {
+                SetValue(ItemsSourceProperty, value);
+                if (ViewSource != null) ViewSource.Source = value;
+            }
         }
 
         public CollectionViewSource ViewSource { get; set; } = new CollectionViewSource();
