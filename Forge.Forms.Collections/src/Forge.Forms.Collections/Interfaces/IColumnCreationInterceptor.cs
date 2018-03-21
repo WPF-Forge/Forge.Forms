@@ -4,6 +4,6 @@ namespace Forge.Forms.Collections.Interfaces
 {
     public interface IColumnCreationInterceptor
     {
-        DataGridColumn Intercept(IColumnCreationInterceptorContext context);
+        IColumnCreationInterceptorContext Intercept(IColumnCreationInterceptorContext context);
     }
 }

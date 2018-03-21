@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+using System.Windows.Controls;
 
 namespace Forge.Forms.Collections.Interfaces
 {
@@ -8,5 +9,6 @@ namespace Forge.Forms.Collections.Interfaces
         PropertyInfo Property { get; }
         DynamicDataGrid Parent { get; }
         Type ObjectType { get; }
+        DataGridColumn Column { get; }
     }
 }
