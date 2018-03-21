@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Forge.Forms", "..\Forge.For
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FancyGrid", "src\FancyGrid\FancyGrid.csproj", "{A8A07443-F073-4AF0-96DC-FF981489654A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Forge.Forms.Collections.Demo", "Forge.Forms.Collections.Demo\Forge.Forms.Collections.Demo.csproj", "{BB6AA160-9A28-4F28-AFAA-D7CB6251252D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,6 +43,14 @@ Global
 		{A8A07443-F073-4AF0-96DC-FF981489654A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A8A07443-F073-4AF0-96DC-FF981489654A}.Release|x86.ActiveCfg = Release|x86
 		{A8A07443-F073-4AF0-96DC-FF981489654A}.Release|x86.Build.0 = Release|x86
+		{BB6AA160-9A28-4F28-AFAA-D7CB6251252D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB6AA160-9A28-4F28-AFAA-D7CB6251252D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB6AA160-9A28-4F28-AFAA-D7CB6251252D}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{BB6AA160-9A28-4F28-AFAA-D7CB6251252D}.Debug|x86.Build.0 = Debug|Any CPU
+		{BB6AA160-9A28-4F28-AFAA-D7CB6251252D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB6AA160-9A28-4F28-AFAA-D7CB6251252D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BB6AA160-9A28-4F28-AFAA-D7CB6251252D}.Release|x86.ActiveCfg = Release|Any CPU
+		{BB6AA160-9A28-4F28-AFAA-D7CB6251252D}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
