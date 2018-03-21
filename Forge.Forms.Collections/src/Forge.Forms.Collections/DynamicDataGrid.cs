@@ -365,7 +365,8 @@ namespace Forge.Forms.Collections
             MoveLastCommand = new RelayCommand(x => CurrentPage = LastPage, o => CurrentPage < LastPage);
             MoveFirstCommand = new RelayCommand(x => CurrentPage = 1, o => CurrentPage > 1);
             MoveToPageCommand = new RelayCommand(
-                x => CurrentPage = int.Parse((string)x), o => int.TryParse((string)o, out var val) && val != CurrentPage);
+                x => CurrentPage = int.Parse((string) x),
+                o => int.TryParse((string) o, out var val) && val != CurrentPage);
             ToggleFilterCommand = new RelayCommand(x => IsFilteringEnabled = !IsFilteringEnabled);
             CheckboxColumnCommand = new RelayCommand(sender =>
             {
@@ -390,7 +391,7 @@ namespace Forge.Forms.Collections
         /// </value>
         public DynamicDataGridHeaderStyle HeaderStyle
         {
-            get => (DynamicDataGridHeaderStyle)GetValue(HeaderStyleProperty);
+            get => (DynamicDataGridHeaderStyle) GetValue(HeaderStyleProperty);
             set => SetValue(HeaderStyleProperty, value);
         }
 
@@ -423,7 +424,7 @@ namespace Forge.Forms.Collections
         /// </value>
         public bool CanUserAdd
         {
-            get => (bool)GetValue(CanUserAddProperty);
+            get => (bool) GetValue(CanUserAddProperty);
             set => SetValue(CanUserAddProperty, value);
         }
 
@@ -435,7 +436,7 @@ namespace Forge.Forms.Collections
         /// </value>
         public bool CanUserEdit
         {
-            get => (bool)GetValue(CanUserEditProperty);
+            get => (bool) GetValue(CanUserEditProperty);
             set => SetValue(CanUserEditProperty, value);
         }
 
@@ -447,7 +448,7 @@ namespace Forge.Forms.Collections
         /// </value>
         public bool CanUserRemove
         {
-            get => (bool)GetValue(CanUserRemoveProperty);
+            get => (bool) GetValue(CanUserRemoveProperty);
             set => SetValue(CanUserRemoveProperty, value);
         }
 
@@ -459,7 +460,7 @@ namespace Forge.Forms.Collections
         /// </value>
         public string ClearFiltersMessage
         {
-            get => (string)GetValue(ClearFiltersMessageProperty);
+            get => (string) GetValue(ClearFiltersMessageProperty);
             set => SetValue(ClearFiltersMessageProperty, value);
         }
 
@@ -471,7 +472,7 @@ namespace Forge.Forms.Collections
         /// </value>
         public string IncludeItemsMessage
         {
-            get => (string)GetValue(IncludeItemsMessageProperty);
+            get => (string) GetValue(IncludeItemsMessageProperty);
             set => SetValue(IncludeItemsMessageProperty, value);
         }
 
@@ -483,7 +484,7 @@ namespace Forge.Forms.Collections
         /// </value>
         public string ExcludeItemsMessage
         {
-            get => (string)GetValue(ExcludeItemsMessageProperty);
+            get => (string) GetValue(ExcludeItemsMessageProperty);
             set => SetValue(ExcludeItemsMessageProperty, value);
         }
 
@@ -496,7 +497,7 @@ namespace Forge.Forms.Collections
         [AlsoNotifyFor(nameof(PaginationPageNumbers))]
         public int CurrentPage
         {
-            get => (int)GetValue(CurrentPageProperty);
+            get => (int) GetValue(CurrentPageProperty);
             private set
             {
                 IsSelectAll = false;
@@ -517,7 +518,7 @@ namespace Forge.Forms.Collections
         /// </value>
         private bool HasCheckboxesColumn
         {
-            get => (bool)GetValue(HasCheckboxesColumnProperty);
+            get => (bool) GetValue(HasCheckboxesColumnProperty);
             set => SetValue(HasCheckboxesColumnProperty, value);
         }
 
@@ -536,7 +537,7 @@ namespace Forge.Forms.Collections
         /// </value>
         public bool IsDeleteButtonVisible
         {
-            get => (bool)GetValue(IsDeleteButtonVisibleProperty);
+            get => (bool) GetValue(IsDeleteButtonVisibleProperty);
             private set => SetValue(IsDeleteButtonVisibleProperty, value);
         }
 
@@ -549,7 +550,7 @@ namespace Forge.Forms.Collections
         /// </value>
         public bool IsFilterButtonVisible
         {
-            get => (bool)GetValue(IsFilterButtonVisibleProperty);
+            get => (bool) GetValue(IsFilterButtonVisibleProperty);
             private set => SetValue(IsFilterButtonVisibleProperty, value);
         }
 
@@ -562,10 +563,10 @@ namespace Forge.Forms.Collections
         /// </value>
         public bool IsFilteringEnabled
         {
-            get => (bool)GetValue(IsFilteringEnabledProperty);
+            get => (bool) GetValue(IsFilteringEnabledProperty);
             set => SetValue(IsFilteringEnabledProperty, value);
         }
-        
+
         private bool IsSelectAll { get; set; }
 
         private int SelectedItemsCount => DatagridSelectedItems.Count();
@@ -603,6 +604,8 @@ namespace Forge.Forms.Collections
 
                 foreach (var propertyInfo in ItemType
                     .GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly)
+                    .Where(i => i.GetCustomAttribute<FieldIgnoreAttribute>() == null &&
+                                i.GetCustomAttribute<CrudIgnoreAttribute>() == null)
                     .Reverse())
                 {
                     CreateColumn(propertyInfo);
@@ -618,7 +621,7 @@ namespace Forge.Forms.Collections
         /// <value>
         /// The last page.
         /// </value>
-        public int LastPage => Math.Max((int)Math.Ceiling((double)TotalItems / ItemsPerPage), 1);
+        public int LastPage => Math.Max((int) Math.Ceiling((double) TotalItems / ItemsPerPage), 1);
 
         /// <summary>
         /// Gets or sets the move back command.
@@ -628,7 +631,7 @@ namespace Forge.Forms.Collections
         /// </value>
         public ICommand MoveBackCommand
         {
-            get => (ICommand)GetValue(MoveBackCommandProperty);
+            get => (ICommand) GetValue(MoveBackCommandProperty);
             set => SetValue(MoveBackCommandProperty, value);
         }
 
@@ -640,7 +643,7 @@ namespace Forge.Forms.Collections
         /// </value>
         public ICommand MoveNextCommand
         {
-            get => (ICommand)GetValue(MoveNextCommandProperty);
+            get => (ICommand) GetValue(MoveNextCommandProperty);
             set => SetValue(MoveNextCommandProperty, value);
         }
 
@@ -652,7 +655,7 @@ namespace Forge.Forms.Collections
         /// </value>
         public ICommand MoveLastCommand
         {
-            get => (ICommand)GetValue(MoveLastCommandProperty);
+            get => (ICommand) GetValue(MoveLastCommandProperty);
             set => SetValue(MoveLastCommandProperty, value);
         }
 
@@ -664,7 +667,7 @@ namespace Forge.Forms.Collections
         /// </value>
         public ICommand MoveFirstCommand
         {
-            get => (ICommand)GetValue(MoveFirstCommandProperty);
+            get => (ICommand) GetValue(MoveFirstCommandProperty);
             set => SetValue(MoveFirstCommandProperty, value);
         }
 
@@ -676,7 +679,7 @@ namespace Forge.Forms.Collections
         /// </value>
         public ICommand MoveToPageCommand
         {
-            get => (ICommand)GetValue(MoveToPageCommandProperty);
+            get => (ICommand) GetValue(MoveToPageCommandProperty);
             set => SetValue(MoveToPageCommandProperty, value);
         }
 
@@ -692,7 +695,7 @@ namespace Forge.Forms.Collections
         /// </value>
         public string RowsPerPageText
         {
-            get => (string)GetValue(RowsPerPageTextProperty);
+            get => (string) GetValue(RowsPerPageTextProperty);
             set => SetValue(RowsPerPageTextProperty, value);
         }
 
@@ -704,7 +707,7 @@ namespace Forge.Forms.Collections
         /// </value>
         public string Title
         {
-            get => (string)GetValue(TitleProperty);
+            get => (string) GetValue(TitleProperty);
             set => SetValue(TitleProperty, value);
         }
 
@@ -716,7 +719,7 @@ namespace Forge.Forms.Collections
         /// </value>
         public ICommand ToggleFilterCommand
         {
-            get => (ICommand)GetValue(ToggleFilterCommandProperty);
+            get => (ICommand) GetValue(ToggleFilterCommandProperty);
             set => SetValue(ToggleFilterCommandProperty, value);
         }
 
@@ -734,7 +737,7 @@ namespace Forge.Forms.Collections
         /// <value>
         /// The items on page.
         /// </value>
-        public int ItemsOnPage => Math.Min(ItemsPerPage, TotalItems - ((CurrentPage - 1 )* ItemsPerPage));
+        public int ItemsOnPage => Math.Min(ItemsPerPage, TotalItems - ((CurrentPage - 1) * ItemsPerPage));
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -792,7 +795,7 @@ namespace Forge.Forms.Collections
                     {
                         Path = new PropertyPath("."),
                         RelativeSource =
-                            new RelativeSource(RelativeSourceMode.FindAncestor) { AncestorType = typeof(DataGridRow) }
+                            new RelativeSource(RelativeSourceMode.FindAncestor) {AncestorType = typeof(DataGridRow)}
                     }
                 },
                 ConverterParameter = this
@@ -822,7 +825,7 @@ namespace Forge.Forms.Collections
             {
                 DataGrid.Columns.Insert(0, new DataGridTemplateColumn
                 {
-                    CellTemplate = new DataTemplate { VisualTree = rowCheckBox },
+                    CellTemplate = new DataTemplate {VisualTree = rowCheckBox},
                     Header = HeaderButton,
                     MaxWidth = 48,
                     CanUserResize = false,
@@ -869,82 +872,29 @@ namespace Forge.Forms.Collections
             return c;
         }
 
+        public IEnumerable<IColumnCreationInterceptor> ColumnCreationInterceptors { get; } =
+            new List<IColumnCreationInterceptor>
+            {
+                new DefaultColumnCreationInterceptor()
+            };
+
         private void CreateColumn(PropertyInfo propertyInfo)
         {
-            if (propertyInfo.GetCustomAttribute<FieldIgnoreAttribute>() != null ||
-                propertyInfo.GetCustomAttribute<CrudIgnoreAttribute>() != null)
+            DataGridColumn column = null;
+            foreach (var columnCreationInterceptor in ColumnCreationInterceptors)
             {
-                return;
-            }
-
-            try
-            {
-                var path = propertyInfo.Name;
-
-                if (propertyInfo.PropertyType.GetConstructor(Type.EmptyTypes) != null)
+                var dataGridColumn = columnCreationInterceptor.Intercept(
+                    new ColumnCreationInterceptorContext(propertyInfo, this, ItemType));
+                
+                if (dataGridColumn == null)
                 {
-                    var newItem = Activator.CreateInstance(propertyInfo.PropertyType);
-                    if (newItem.ToString() == propertyInfo.PropertyType.ToString())
-                    {
-                        if (propertyInfo.GetCustomAttribute<SelectFromAttribute>() is SelectFromAttribute
-                                selectFromAttribute && !string.IsNullOrEmpty(selectFromAttribute.DisplayPath))
-                        {
-                            path =
-                                $"{propertyInfo.Name}.{propertyInfo.PropertyType.GetProperty(selectFromAttribute.DisplayPath)?.Name}";
-                        }
-                        else if (propertyInfo.GetCustomAttribute<DisplayNameAttribute>() is DisplayNameAttribute
-                                     displayNameAttribute && !string.IsNullOrEmpty(displayNameAttribute.DisplayName))
-                        {
-                            path =
-                                $"{propertyInfo.Name}.{propertyInfo.PropertyType.GetProperty(displayNameAttribute.DisplayName)?.Name}";
-                        }
-                        else if (propertyInfo.PropertyType.GetCustomAttribute<DisplayNameAttribute>() is
-                                     DisplayNameAttribute
-                                     displayNameAttribute1 && !string.IsNullOrEmpty(displayNameAttribute1.DisplayName))
-                        {
-                            path =
-                                $"{propertyInfo.Name}.{propertyInfo.PropertyType.GetProperty(displayNameAttribute1.DisplayName)?.Name}";
-                        }
-                        else
-                        {
-                            return;
-                        }
-                    }
+                    break;
                 }
-                else if (propertyInfo.PropertyType.Namespace != null &&
-                         !propertyInfo.PropertyType.Namespace.StartsWith("System"))
-                {
-                    return;
-                }
-
-                var dataGridTextColumn = new MaterialDataGridTextColumn
-                {
-                    Header = propertyInfo.GetCustomAttribute<FieldAttribute>() is FieldAttribute attr &&
-                             !string.IsNullOrEmpty(attr.Name)
-                    ? attr.Name
-                    : propertyInfo.Name.Humanize(),
-                    Binding = CreateBinding(propertyInfo, path),
-                    EditingElementStyle = TryFindResource("MaterialDesignDataGridTextColumnPopupEditingStyle") as Style,
-                    MaxLength = propertyInfo.GetCustomAttribute<StringLengthAttribute>()?.MaximumLength ?? 0
-                };
-
-                DataGrid.Columns.Insert(0, dataGridTextColumn);
+                
+                column = dataGridColumn;
             }
-            catch (Exception)
-            {
-                // ignored
-            }
-        }
 
-        private static Binding CreateBinding(PropertyInfo propertyInfo, string path = null)
-        {
-            return new Binding(string.IsNullOrEmpty(path) ? propertyInfo.Name : path)
-            {
-                Mode = propertyInfo.CanRead && propertyInfo.CanWrite
-                    ? BindingMode.TwoWay
-                    : BindingMode.Default,
-                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
-            };
+            if (column != null) DataGrid.Columns.Insert(0, column);
         }
 
         public override void OnApplyTemplate()
@@ -954,7 +904,7 @@ namespace Forge.Forms.Collections
 
             if (DataGrid != null)
             {
-                ((INotifyCollectionChanged)DataGrid.Items).CollectionChanged += OnCollectionChanged;
+                ((INotifyCollectionChanged) DataGrid.Items).CollectionChanged += OnCollectionChanged;
                 DataGrid.AfterSorting += DataGridOnSorting;
             }
 
@@ -1039,12 +989,12 @@ namespace Forge.Forms.Collections
             if (PerPageComboBox != null)
             {
                 PerPageComboBox.SelectionChanged += (sender, args) =>
-                    {
-                        IsSelectAll = false;
-                        HandleCurrentPageOnMaxPagesChange();
-                        BindingOperations.GetMultiBindingExpression(DataGrid, ItemsControl.ItemsSourceProperty)
-                            ?.UpdateTarget();
-                    };
+                {
+                    IsSelectAll = false;
+                    HandleCurrentPageOnMaxPagesChange();
+                    BindingOperations.GetMultiBindingExpression(DataGrid, ItemsControl.ItemsSourceProperty)
+                        ?.UpdateTarget();
+                };
             }
         }
 
@@ -1111,8 +1061,8 @@ namespace Forge.Forms.Collections
                 return;
             }
 
-            var cell = (DataGridCell)GetVisualParentByType(
-                (FrameworkElement)e.OriginalSource, typeof(DataGridCell));
+            var cell = (DataGridCell) GetVisualParentByType(
+                (FrameworkElement) e.OriginalSource, typeof(DataGridCell));
 
             if (cell != null && sender is DataGrid grid &&
                 grid.SelectedItems.Count == 1)
@@ -1219,7 +1169,7 @@ namespace Forge.Forms.Collections
                 DialogOptions.EnvironmentFlags.Add("update");
                 result = await Show
                     .Dialog(TargetDialogIdentifier, DataContext, DialogOptions)
-                    .For((IFormDefinition)definition);
+                    .For((IFormDefinition) definition);
                 DialogOptions.EnvironmentFlags.Remove("update");
             }
             catch
@@ -1494,42 +1444,42 @@ namespace Forge.Forms.Collections
 
         public string CreateDialogPositiveContent
         {
-            get => (string)GetValue(CreateDialogPositiveContentProperty);
+            get => (string) GetValue(CreateDialogPositiveContentProperty);
             set => SetValue(CreateDialogPositiveContentProperty, value);
         }
 
 
         public PackIconKind? CreateDialogPositiveIcon
         {
-            get => (PackIconKind)GetValue(CreateDialogPositiveIconProperty);
+            get => (PackIconKind) GetValue(CreateDialogPositiveIconProperty);
             set => SetValue(CreateDialogPositiveIconProperty, value);
         }
 
 
         public string CreateDialogNegativeContent
         {
-            get => (string)GetValue(CreateDialogNegativeContentProperty);
+            get => (string) GetValue(CreateDialogNegativeContentProperty);
             set => SetValue(CreateDialogNegativeContentProperty, value);
         }
 
 
         public PackIconKind? CreateDialogNegativeIcon
         {
-            get => (PackIconKind)GetValue(CreateDialogNegativeIconProperty);
+            get => (PackIconKind) GetValue(CreateDialogNegativeIconProperty);
             set => SetValue(CreateDialogNegativeIconProperty, value);
         }
 
 
         public string UpdateDialogPositiveContent
         {
-            get => (string)GetValue(UpdateDialogPositiveContentProperty);
+            get => (string) GetValue(UpdateDialogPositiveContentProperty);
             set => SetValue(UpdateDialogPositiveContentProperty, value);
         }
 
 
         public PackIconKind? UpdateDialogPositiveIcon
         {
-            get => (PackIconKind)GetValue(UpdateDialogPositiveIconProperty);
+            get => (PackIconKind) GetValue(UpdateDialogPositiveIconProperty);
             set => SetValue(UpdateDialogPositiveIconProperty, value);
         }
 
@@ -1542,62 +1492,62 @@ namespace Forge.Forms.Collections
 
         public bool IsFilteringCaseSensitive
         {
-            get => (bool)GetValue(IsFilteringCaseSensitiveProperty);
+            get => (bool) GetValue(IsFilteringCaseSensitiveProperty);
             set => SetValue(IsFilteringCaseSensitiveProperty, value);
         }
 
         public string UpdateDialogNegativeContent
         {
-            get => (string)GetValue(UpdateDialogNegativeContentProperty);
+            get => (string) GetValue(UpdateDialogNegativeContentProperty);
             set => SetValue(UpdateDialogNegativeContentProperty, value);
         }
 
 
         public PackIconKind? UpdateDialogNegativeIcon
         {
-            get => (PackIconKind)GetValue(UpdateDialogNegativeIconProperty);
+            get => (PackIconKind) GetValue(UpdateDialogNegativeIconProperty);
             set => SetValue(UpdateDialogNegativeIconProperty, value);
         }
 
 
         public string RemoveDialogTitleContent
         {
-            get => (string)GetValue(RemoveDialogTitleContentProperty);
+            get => (string) GetValue(RemoveDialogTitleContentProperty);
             set => SetValue(RemoveDialogTitleContentProperty, value);
         }
 
 
         public string RemoveDialogTextContent
         {
-            get => (string)GetValue(RemoveDialogTextContentProperty);
+            get => (string) GetValue(RemoveDialogTextContentProperty);
             set => SetValue(RemoveDialogTextContentProperty, value);
         }
 
 
         public string RemoveDialogPositiveContent
         {
-            get => (string)GetValue(RemoveDialogPositiveContentProperty);
+            get => (string) GetValue(RemoveDialogPositiveContentProperty);
             set => SetValue(RemoveDialogPositiveContentProperty, value);
         }
 
 
         public PackIconKind? RemoveDialogPositiveIcon
         {
-            get => (PackIconKind)GetValue(RemoveDialogPositiveIconProperty);
+            get => (PackIconKind) GetValue(RemoveDialogPositiveIconProperty);
             set => SetValue(RemoveDialogPositiveIconProperty, value);
         }
 
 
         public string RemoveDialogNegativeContent
         {
-            get => (string)GetValue(RemoveDialogNegativeContentProperty);
+            get => (string) GetValue(RemoveDialogNegativeContentProperty);
             set => SetValue(RemoveDialogNegativeContentProperty, value);
         }
 
 
         public PackIconKind? RemoveDialogNegativeIcon
         {
-            get => (PackIconKind)GetValue(RemoveDialogNegativeIconProperty);
+            get => (PackIconKind) GetValue(RemoveDialogNegativeIconProperty);
             set => SetValue(RemoveDialogNegativeIconProperty, value);
         }
 
@@ -1660,6 +1610,7 @@ namespace Forge.Forms.Collections
                                 yield return "...";
                             }
                         }
+
                         yield return i.ToString();
                         l = i;
                     }
@@ -1669,12 +1620,12 @@ namespace Forge.Forms.Collections
 
         private static void ItemsSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            ((DynamicDataGrid)d).OnItemsSource(e.NewValue);
+            ((DynamicDataGrid) d).OnItemsSource(e.NewValue);
         }
 
         public DialogOptions DialogOptions
         {
-            get => (DialogOptions)GetValue(DialogOptionsProperty);
+            get => (DialogOptions) GetValue(DialogOptionsProperty);
             set => SetValue(DialogOptionsProperty, value);
         }
 
@@ -1687,7 +1638,7 @@ namespace Forge.Forms.Collections
 
         public IFormBuilder FormBuilder
         {
-            get => (IFormBuilder)GetValue(FormBuilderProperty);
+            get => (IFormBuilder) GetValue(FormBuilderProperty);
             set => SetValue(FormBuilderProperty, value);
         }
 
