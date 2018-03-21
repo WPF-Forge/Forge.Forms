@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
@@ -22,7 +21,6 @@ using Forge.Forms.Collections.Interfaces;
 using Forge.Forms.DynamicExpressions;
 using Forge.Forms.FormBuilding;
 using Forge.Forms.FormBuilding.Defaults;
-using Humanizer;
 using MaterialDesignThemes.Wpf;
 using PropertyChanged;
 using Expression = System.Linq.Expressions.Expression;
@@ -73,7 +71,6 @@ namespace Forge.Forms.Collections
         public static readonly DependencyProperty IsFilteringEnabledProperty =
             DependencyProperty.Register("IsFilteringEnabled", typeof(bool), typeof(DynamicDataGrid),
                 new PropertyMetadata(false));
-
 
         /// <summary>
         /// The create dialog positive content property
@@ -506,6 +503,7 @@ namespace Forge.Forms.Collections
         }
 
         public int CurrentMaxItem => Math.Min(TotalItems, CurrentPage * ItemsPerPage);
+
         public int CurrentMinItem => Math.Min(TotalItems, CurrentMaxItem - ItemsOnPage + 1);
 
         internal FilteringDataGrid DataGrid { get; set; }
@@ -528,7 +526,6 @@ namespace Forge.Forms.Collections
             VerticalAlignment = VerticalAlignment.Top
         };
 
-
         /// <summary>
         /// Gets a value indicating whether this instance's delete button visible.
         /// </summary>
@@ -541,7 +538,6 @@ namespace Forge.Forms.Collections
             private set => SetValue(IsDeleteButtonVisibleProperty, value);
         }
 
-
         /// <summary>
         /// Gets a value indicating whether this instance's filter button visible.
         /// </summary>
@@ -553,7 +549,6 @@ namespace Forge.Forms.Collections
             get => (bool) GetValue(IsFilterButtonVisibleProperty);
             private set => SetValue(IsFilterButtonVisibleProperty, value);
         }
-
 
         /// <summary>
         /// Gets or sets a value indicating whether this instance has filtering enabled.
@@ -592,27 +587,32 @@ namespace Forge.Forms.Collections
 
                 itemType = value;
 
-                if (DataGrid == null || itemType == null)
-                {
-                    return;
-                }
-
-                foreach (var dataGridColumn in DataGrid.Columns.Except(ProtectedColumns).ToList())
-                {
-                    DataGrid.Columns.Remove(dataGridColumn);
-                }
-
-                foreach (var propertyInfo in ItemType
-                    .GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly)
-                    .Where(i => i.GetCustomAttribute<FieldIgnoreAttribute>() == null &&
-                                i.GetCustomAttribute<CrudIgnoreAttribute>() == null)
-                    .Reverse())
-                {
-                    CreateColumn(propertyInfo);
-                }
-
-                CreateCheckboxColumn();
+                ReloadColumns();
             }
+        }
+
+        private void ReloadColumns()
+        {
+            if (DataGrid == null || itemType == null)
+            {
+                return;
+            }
+
+            foreach (var dataGridColumn in DataGrid.Columns.Except(ProtectedColumns).ToList())
+            {
+                DataGrid.Columns.Remove(dataGridColumn);
+            }
+
+            foreach (var propertyInfo in ItemType
+                .GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly)
+                .Where(i => i.GetCustomAttribute<FieldIgnoreAttribute>() == null &&
+                            i.GetCustomAttribute<CrudIgnoreAttribute>() == null)
+                .Reverse())
+            {
+                CreateColumn(propertyInfo);
+            }
+
+            CreateCheckboxColumn();
         }
 
         /// <summary>
@@ -872,29 +872,42 @@ namespace Forge.Forms.Collections
             return c;
         }
 
-        public IEnumerable<IColumnCreationInterceptor> ColumnCreationInterceptors { get; } =
+        private List<IColumnCreationInterceptor> ColumnCreationInterceptors { get; } =
             new List<IColumnCreationInterceptor>
             {
                 new DefaultColumnCreationInterceptor()
             };
 
+        public void AddInterceptor(IColumnCreationInterceptor interceptor)
+        {
+            ColumnCreationInterceptors.Insert(0, interceptor);
+            ReloadColumns();
+        }
+
+        public void RemoveInterceptor(IColumnCreationInterceptor interceptor)
+        {
+            ColumnCreationInterceptors.Remove(interceptor);
+            ReloadColumns();
+        }
+
         private void CreateColumn(PropertyInfo propertyInfo)
         {
-            DataGridColumn column = null;
+            IColumnCreationInterceptorContext column = null;
+
             foreach (var columnCreationInterceptor in ColumnCreationInterceptors)
             {
-                var dataGridColumn = columnCreationInterceptor.Intercept(
-                    new ColumnCreationInterceptorContext(propertyInfo, this, ItemType));
-                
-                if (dataGridColumn == null)
+                var interceptorContext = columnCreationInterceptor.Intercept(
+                    new ColumnCreationInterceptorContext(propertyInfo, this, ItemType, null));
+
+                if (interceptorContext == null)
                 {
-                    break;
+                    return;
                 }
-                
-                column = dataGridColumn;
+
+                column = interceptorContext;
             }
 
-            if (column != null) DataGrid.Columns.Insert(0, column);
+            if (column?.Column != null) DataGrid.Columns.Insert(0, column.Column);
         }
 
         public override void OnApplyTemplate()
@@ -1448,13 +1461,11 @@ namespace Forge.Forms.Collections
             set => SetValue(CreateDialogPositiveContentProperty, value);
         }
 
-
         public PackIconKind? CreateDialogPositiveIcon
         {
             get => (PackIconKind) GetValue(CreateDialogPositiveIconProperty);
             set => SetValue(CreateDialogPositiveIconProperty, value);
         }
-
 
         public string CreateDialogNegativeContent
         {
@@ -1462,20 +1473,17 @@ namespace Forge.Forms.Collections
             set => SetValue(CreateDialogNegativeContentProperty, value);
         }
 
-
         public PackIconKind? CreateDialogNegativeIcon
         {
             get => (PackIconKind) GetValue(CreateDialogNegativeIconProperty);
             set => SetValue(CreateDialogNegativeIconProperty, value);
         }
 
-
         public string UpdateDialogPositiveContent
         {
             get => (string) GetValue(UpdateDialogPositiveContentProperty);
             set => SetValue(UpdateDialogPositiveContentProperty, value);
         }
-
 
         public PackIconKind? UpdateDialogPositiveIcon
         {
@@ -1502,13 +1510,11 @@ namespace Forge.Forms.Collections
             set => SetValue(UpdateDialogNegativeContentProperty, value);
         }
 
-
         public PackIconKind? UpdateDialogNegativeIcon
         {
             get => (PackIconKind) GetValue(UpdateDialogNegativeIconProperty);
             set => SetValue(UpdateDialogNegativeIconProperty, value);
         }
-
 
         public string RemoveDialogTitleContent
         {
@@ -1516,13 +1522,11 @@ namespace Forge.Forms.Collections
             set => SetValue(RemoveDialogTitleContentProperty, value);
         }
 
-
         public string RemoveDialogTextContent
         {
             get => (string) GetValue(RemoveDialogTextContentProperty);
             set => SetValue(RemoveDialogTextContentProperty, value);
         }
-
 
         public string RemoveDialogPositiveContent
         {
@@ -1530,13 +1534,11 @@ namespace Forge.Forms.Collections
             set => SetValue(RemoveDialogPositiveContentProperty, value);
         }
 
-
         public PackIconKind? RemoveDialogPositiveIcon
         {
             get => (PackIconKind) GetValue(RemoveDialogPositiveIconProperty);
             set => SetValue(RemoveDialogPositiveIconProperty, value);
         }
-
 
         public string RemoveDialogNegativeContent
         {
@@ -1544,13 +1546,11 @@ namespace Forge.Forms.Collections
             set => SetValue(RemoveDialogNegativeContentProperty, value);
         }
 
-
         public PackIconKind? RemoveDialogNegativeIcon
         {
             get => (PackIconKind) GetValue(RemoveDialogNegativeIconProperty);
             set => SetValue(RemoveDialogNegativeIconProperty, value);
         }
-
 
         public IEnumerable ItemsSource
         {

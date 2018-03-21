@@ -14,35 +14,6 @@ namespace Forge.Forms.Collections
 {
     internal class DefaultColumnCreationInterceptor : IColumnCreationInterceptor
     {
-        public DataGridColumn Intercept(IColumnCreationInterceptorContext context)
-        {
-            var path = context.Property.Name;
-
-            if (context.Property.PropertyType.GetConstructor(Type.EmptyTypes) != null)
-            {
-                if (Resolve(context, ref path)) 
-                    return null;
-            }
-            else if (context.Property.PropertyType.Namespace != null &&
-                     !context.Property.PropertyType.Namespace.StartsWith("System"))
-            {
-                return null;
-            }
-
-
-            return new MaterialDataGridTextColumn
-            {
-                Header = context.Property.GetCustomAttribute<FieldAttribute>() is FieldAttribute fieldAttribute &&
-                         !string.IsNullOrEmpty(fieldAttribute.Name)
-                    ? fieldAttribute.Name
-                    : context.Property.Name.Humanize(),
-                Binding = context.Property.CreateBinding(path),
-                EditingElementStyle =
-                    context.Parent.TryFindResource("MaterialDesignDataGridTextColumnPopupEditingStyle") as Style,
-                MaxLength = context.Property.GetCustomAttribute<StringLengthAttribute>()?.MaximumLength ?? 0
-            };
-        }
-
         private static bool Resolve(IColumnCreationInterceptorContext context, ref string path)
         {
             var newItem = Activator.CreateInstance(context.Property.PropertyType);
@@ -75,6 +46,35 @@ namespace Forge.Forms.Collections
             }
 
             return false;
+        }
+
+        public IColumnCreationInterceptorContext Intercept(IColumnCreationInterceptorContext context)
+        {
+            var path = context.Property.Name;
+
+            if (context.Property.PropertyType.GetConstructor(Type.EmptyTypes) != null)
+            {
+                if (Resolve(context, ref path))
+                    return null;
+            }
+            else if (context.Property.PropertyType.Namespace != null &&
+                     !context.Property.PropertyType.Namespace.StartsWith("System"))
+            {
+                return null;
+            }
+
+            return new ColumnCreationInterceptorContext(context.Property, context.Parent, context.ObjectType,
+                new MaterialDataGridTextColumn
+                {
+                    Header = context.Property.GetCustomAttribute<FieldAttribute>() is FieldAttribute fieldAttribute &&
+                             !string.IsNullOrEmpty(fieldAttribute.Name)
+                        ? fieldAttribute.Name
+                        : context.Property.Name.Humanize(),
+                    Binding = context.Property.CreateBinding(path),
+                    EditingElementStyle =
+                        context.Parent.TryFindResource("MaterialDesignDataGridTextColumnPopupEditingStyle") as Style,
+                    MaxLength = context.Property.GetCustomAttribute<StringLengthAttribute>()?.MaximumLength ?? 0
+                });
         }
     }
 }
