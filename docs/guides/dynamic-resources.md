@@ -79,7 +79,7 @@ The parsed grammar includes the standard boolean operators: `||` represents OR o
 
 ## Escaping curly braces
 
-If you need to output a literal curly brace, you need to escape it by typing the same character twice. For example `{{` represents a literal `"{"`.
+If you need to output a literal curly brace, you need to escape it by typing the same character twice. For example `}}` represents a literal `"}"`.
 
 If you need a verbatim string without parsing for resources at all, you can start the string with a `@` character. For example `@This will print {Binding Name}` will result in the literal string `"This will print {Binding Name}"`
 
