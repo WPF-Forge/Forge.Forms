@@ -41,8 +41,8 @@ The optional leading caret `^` indicates that the contextual resource should not
 
 The list of default converters is given below:
 
-- `IsNull` - returns whether the provided value is null (boolean).
-- `IsNotNull` - returns whether the provided value is not null (boolean).
+- `IsNull` - returns whether the provided value is null.
+- `IsNotNull` - returns whether the provided value is not null.
 - `AsBool` - returns whether the provided value is `true`.
 - `Negate` - returns whether the provided value is `false`.
 - `IsEmpty` - returns whether the provided string or collection has length 0.
