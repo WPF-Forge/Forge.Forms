@@ -27,7 +27,7 @@ A dynamic resource is declared as follows, where brackets indicate optional cont
 
 `{[^]<ResourceType> [']<ResourcePath>['][,<Padding>][:<StringFormat>][|<Converter>]}`
 
-The optional leading caret `^` indicates that the contextual resource should not be synchronized with the source. For example `{^Env ReadOnly}` checks for the presence of the `ReadOnly` flag only when the form is constructed, and will not return an updated value even if that flag is added later.
+The optional leading caret `^` indicates that the contextual resource should not be synchronized with the source. For example `{^Env ReadOnly}` checks for the presence of the `ReadOnly` flag only when the form is constructed, and will not return an updated value even if that flag is later added.
 
 `ResourceType` can be one of the listed resource types above.
 
@@ -37,7 +37,7 @@ The optional leading caret `^` indicates that the contextual resource should not
 
 `StringFormat` can be optionally added, which is applicable when the value is represented as a string. This parameter will be passed to the `ToString(format)` method. For example, `{Binding Year:yyyy}` displays the DateTime property `Year` in `yyyy` format.
 
-`Converter` specifies the value converter to be used in the established binding. If a custom converter needs to be used, it must first be registered. Example: `{Binding Name|ToUpper}` converts the `Name` property to upper case.
+`Converter` specifies the value converter to be used in the established binding. If a custom converter needs to be used, it must be registered first. Example: `{Binding Name|ToUpper}` converts the `Name` property to upper case.
 
 The list of default converters is given below:
 
