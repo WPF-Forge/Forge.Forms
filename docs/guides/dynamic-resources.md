@@ -15,7 +15,7 @@ Forge.Forms currently supports the following data sources:
 - `{ContextBinding <Property>}` - Gets the value of the specified property of current form context, and updates automatically when that value changes.
 - `{ContextProperty <Property>}` - Gets the value of the specified property of current form context, but does not update when that value changes.
 - `{DynamicResource <ResourceKey>}` - Gets the value of the specified resource key, and updates automatically when that value changes.
-- `{StaticResource <ResourceKey>`} - Gets the value of the specified resource key, but does not update when that value changes.
+- `{StaticResource <ResourceKey>}` - Gets the value of the specified resource key, but does not update when that value changes.
 - `{FileBinding <FilePath>}` - Reads the text content of specified file path, and updates automatically when the file content changes.
 - `{File <FilePath>}` - Reads the text content of specified file path, but does not update when the file content changes.
 - `{Env <EnvFlag>}` - Returns whether the specified flag key exists in current form environment, and updates automatically if that flag is added or removed.
