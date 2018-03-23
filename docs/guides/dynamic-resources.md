@@ -8,7 +8,7 @@ A dynamic resource is any value that can change while the application is running
 
 ## Resource Types
 
-Forge.Forms currently supports the following data sources.
+Forge.Forms currently supports the following data sources:
 
 - `{Binding <Property>}` - Gets the value of the specified property of current form model, and updates automatically when that value changes.
 - `{Property <Property>}` - Gets the value of the specified property of current form model, but does not update when that value changes.
@@ -23,7 +23,7 @@ Forge.Forms currently supports the following data sources.
 
 ## Syntax Specification
 
-A dynamic resource is declared as follows, where brackets indicate optional content.
+A dynamic resource is declared as follows, where brackets indicate optional content:
 
 `{[^]<ResourceType> [']<ResourcePath>['][,<Padding>][:<StringFormat>][|<Converter>]}`
 
@@ -39,7 +39,7 @@ The optional leading caret `^` indicates that the contextual resource should not
 
 `Converter` specifies the value converter to be used in the established binding. If a custom converter needs to be used, it must first be registered. Example: `{Binding Name|ToUpper}` converts the `Name` property to upper case.
 
-The list of default converters is given below.
+The list of default converters is given below:
 
 - `IsNull` - returns whether the provided value is null (boolean).
 - `IsNotNull` - returns whether the provided value is not null (boolean).
