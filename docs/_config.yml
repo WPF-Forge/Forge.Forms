@@ -16,3 +16,6 @@ guides:
   -
     path: "/guides/dynamic-resources"
     title: "Dynamic resources"
+  -
+    path: "/guides/validation"
+    title: "Validation"
