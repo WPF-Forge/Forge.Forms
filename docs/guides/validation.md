@@ -111,5 +111,8 @@ If it were non-strict then 10 would have been written despite the validation rul
 
 Note: Writing to the property is not always possible even with non-strict validation.
 If the user would have typed `"Hello"` inside the field, conversion to a number would fail.
-
 Data conversion is not in the scope of validation, therefore it is customized using the `[Binding(ConversionErrorMessage = "...")]` attribute.
+
+## Note on dynamic expressions
+
+Keep in mind that binding syntax is parsed inside arguments. If you need to specify a regular expression validation, make sure to properly [escape](dynamic-resources.md#escaping-curly-braces) your curly braces.
