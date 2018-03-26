@@ -353,9 +353,15 @@ namespace Forge.Forms.Collections
 
         public DynamicDataGrid()
         {
-            CommandBindings.Add(new CommandBinding(CreateItemCommand, ExecuteCreateItem, CanExecuteCreateItem));
-            CommandBindings.Add(new CommandBinding(UpdateItemCommand, ExecuteUpdateItem, CanExecuteUpdateItem));
-            CommandBindings.Add(new CommandBinding(RemoveItemCommand, ExecuteRemoveItem, CanExecuteRemoveItem));
+            CommandBindings.Add(new CommandBinding(CreateItemCommand,
+                (sender, args) => CreateAction.Invoke(sender, args),
+                (sender, args) => args.CanExecute = CanCreateAction.Invoke(sender, args)));
+            CommandBindings.Add(new CommandBinding(UpdateItemCommand,
+                (sender, args) => UpdateAction.Invoke(sender, args),
+                (sender, args) => args.CanExecute = CanUpdateAction.Invoke(sender, args)));
+            CommandBindings.Add(new CommandBinding(RemoveItemCommand,
+                (sender, args) => RemoveAction.Invoke(sender, args),
+                (sender, args) => args.CanExecute = CanRemoveAction.Invoke(sender, args)));
 
             MoveNextCommand = new RelayCommand(x => CurrentPage++, o => CurrentPage < LastPage);
             MoveBackCommand = new RelayCommand(x => CurrentPage--, o => CurrentPage > 1);
