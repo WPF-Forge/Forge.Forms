@@ -56,14 +56,14 @@ Besides the default resource types, inside error messages you also have access t
 For example, in the validation below, if the user enters the value 10, `{Value}` will be 10 and `{Argument}` resolves to 15.
 
 ```csharp
-[Value(MustBeGreaterThan, 15, Message = "You entered {Value}, which is not greater than {Argument}.")]
+[Value(Must.BeGreaterThan, 15, Message = "You entered {Value}, which is not greater than {Argument}.")]
 public int MyNumber { ... }
 ```
 
 You may have hardcoded the 15 inside the message string itself, but it is useful in situations where you don't have the value available immediately:
 
 ```csharp
-[Value(MustBeGreaterThan, "{ContextBinding MinimumValue}",
+[Value(Must.BeGreaterThan, "{ContextBinding MinimumValue}",
     Message = "You entered {Value}, which is not greater than {Argument}.")]
 public int MyNumber { ... }
 ```
@@ -102,7 +102,7 @@ Strict validation means that values which don't pass validation are prevented fr
 For example:
 
 ```csharp
-[Value(MustBeGreaterThan, 15, StrictValidation = true)]
+[Value(Must.BeGreaterThan, 15, StrictValidation = true)]
 public int MyNumber { ... }
 ```
 
