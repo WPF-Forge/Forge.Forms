@@ -30,6 +30,10 @@
             canResize = defaults.canResize;
         }
 
+        public bool TopMost { get;set; }
+
+        public bool BringToFront { get; set; }
+
         public string Title
         {
             get => title;

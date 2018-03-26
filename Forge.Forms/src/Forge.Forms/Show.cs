@@ -121,6 +121,13 @@ namespace Forge.Forms
                 };
 
                 window.ShowDialog();
+
+                if (options.BringToFront)
+                    window.BringIntoView();
+
+                if (options.TopMost)
+                    window.Topmost = true;
+
                 return new DialogResult(window.Form.Value, lastAction, lastActionParameter);
             }
         }
