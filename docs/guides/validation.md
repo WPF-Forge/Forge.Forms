@@ -116,3 +116,24 @@ Data conversion is not in the scope of validation, therefore it is customized us
 ## Note on dynamic expressions
 
 Keep in mind that binding syntax is parsed inside arguments. If you need to specify a regular expression validation, make sure to properly [escape](dynamic-resources.md#escaping-curly-braces) your curly braces.
+
+## List of validation types
+
+- Must.BeEqualTo - Property must equal to a value.
+- Must.NotBeEqualTo - Property must not equal to a value.
+- Must.BeGreaterThan - Property must be greater than a value.
+- Must.BeGreaterThanOrEqualTo - Property must be greater than or equal to a value.
+- Must.BeLessThan - Property must be less than a value.
+- Must.BeLessThanOrEqualTo - Property must be less than or equal to a value.
+- Must.BeEmpty - Property must be empty. A string is empty if it is null or has length 0. A collection is empty if it is null or has 0 elements.
+- Must.NotBeEmpty - Property must not be empty. A string is empty if it is null or has length 0. A collection is empty if it is null or has 0 elements.
+- Must.BeTrue - Property must be true.
+- Must.BeFalse - Property must be false.
+- Must.BeNull - Property must be null.
+- Must.NotBeNull - Property must not be null.
+- Must.ExistIn - Property must exist in a collection.
+- Must.NotExistIn - Property must not exist in a collection.
+- Must.MatchPattern - Property must match a regex pattern.
+- Must.NotMatchPattern - Property must not match a regex pattern.
+- Must.SatisfyMethod - Property value must satisfy model's static method of signature `public static bool <Argument>(ValidationContext)`. Throws if no such method is found.
+- Must.SatisfyContextMethod - Property value must satisfy context's static method of signature `public static bool <Argument>(ValidationContext)`. Does nothing if no such method is found.
