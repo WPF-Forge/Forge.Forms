@@ -5,7 +5,7 @@ WPF offers a few approaches to validation, such as adding validation rules to bi
 Because validation has an essential role in forms, we tried to make it simple and declarative.
 The WPF way did not fit with the theme of this library, which is why we added a unified and decoration-based approach.
 
-All validation rules are declared via the `ValueAttribute`. Declaring a `ValueAttribute` requires providing its validation type via the `Must condition` parameter.
+All validation rules are declared via the `ValueAttribute`. Declaring a `ValueAttribute` requires providing its validation type via the `Must condition` parameter. You are allowed to add multiple attributes to the same property, in which case all of them must be satisfied for the property to be considered valid.
 
 With a few examples you will understand the idea behind this, and your IDE auto-complete will assist you in finding the right conditions for your properties.
 
