@@ -47,7 +47,12 @@ namespace Forge.Forms.Controls
             "Environment",
             typeof(IEnvironment),
             typeof(DynamicForm),
-            new FrameworkPropertyMetadata(null));
+            new FrameworkPropertyMetadata(EnvironmentChanged));
+
+        private static void EnvironmentChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            ((DynamicForm)d).ResourceContext.RaiseEnvironmentChanged();
+        }
 
         public static readonly DependencyProperty ValueProperty = ValuePropertyKey.DependencyProperty;
 
@@ -59,7 +64,7 @@ namespace Forge.Forms.Controls
         internal readonly Dictionary<string, IDataBindingProvider> DataBindingProviders;
         internal readonly Dictionary<string, DataFormField> DataFields;
 
-        internal readonly IResourceContext ResourceContext;
+        internal readonly FormResourceContext ResourceContext;
         private double[] columns;
 
         private Grid itemsGrid;
