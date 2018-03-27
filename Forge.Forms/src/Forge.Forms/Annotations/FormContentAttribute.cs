@@ -42,6 +42,12 @@ namespace Forge.Forms.Annotations
         public bool ShareLine { get; set; }
 
         /// <summary>
+        /// Specifies whether this element will be placed inline with the decorated field.
+        /// Does nothing if the attribute is applied to a class.
+        /// </summary>
+        public bool Inline { get; set; }
+
+        /// <summary>
         /// Determines the location of this element inside its row.
         /// </summary>
         public Position LinePosition { get; set; }

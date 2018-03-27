@@ -513,7 +513,9 @@ namespace Forge.Forms.FormBuilding
                 foreach (var element in row.Elements)
                 {
                     var property = element.Property;
-                    foreach (var attr in property.GetCustomAttributes<FormContentAttribute>())
+                    foreach (var attr in property
+                        .GetCustomAttributes<FormContentAttribute>()
+                        .Where(attr => !attr.Inline))
                     {
                         (attr.InsertAfter ? after : before).Add(new AttrElementTuple(attr, attr.GetElement()));
                     }
@@ -528,7 +530,34 @@ namespace Forge.Forms.FormBuilding
                 // Field row.
                 var formRow = new FormRow();
                 formRow.Elements.AddRange(
-                    row.Elements.Select(w => new FormElementContainer(w.Column, w.ColumnSpan, w.Element)));
+                    row.Elements.Select(w =>
+                    {
+                        var beforeInline = new List<AttrElementTuple>();
+                        var afterInline = new List<AttrElementTuple>();
+                        foreach (var attr in w.Property
+                            .GetCustomAttributes<FormContentAttribute>()
+                            .Where(attr => attr.Inline))
+                        {
+                            (attr.InsertAfter ? afterInline : beforeInline).Add(
+                                new AttrElementTuple(attr, attr.GetElement()));
+                        }
+
+                        beforeInline.Sort((a, b) => a.Attr.Position.CompareTo(b.Attr.Position));
+                        afterInline.Sort((a, b) => a.Attr.Position.CompareTo(b.Attr.Position));
+
+                        w.Element.LinePosition = (Position)(-1);
+                        if (beforeInline.Count != 0 || afterInline.Count != 0)
+                        {
+                            return new FormElementContainer(w.Column, w.ColumnSpan,
+                                beforeInline
+                                    .Select(t => t.Element)
+                                    .Concat(new[] { w.Element })
+                                    .Concat(afterInline.Select(t => t.Element))
+                                    .ToList());
+                        }
+
+                        return new FormElementContainer(w.Column, w.ColumnSpan, w.Element);
+                    }));
                 rows.Add(formRow);
 
                 // After element.
