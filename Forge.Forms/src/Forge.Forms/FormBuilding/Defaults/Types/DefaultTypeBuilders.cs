@@ -2,7 +2,6 @@
 using System.Globalization;
 using System.Linq;
 using Forge.Forms.Annotations;
-using Forge.Forms.Annotations.Display;
 
 namespace Forge.Forms.FormBuilding.Defaults.Types
 {
