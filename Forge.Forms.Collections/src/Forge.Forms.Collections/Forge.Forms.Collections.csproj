@@ -45,12 +45,15 @@
   <ItemGroup>
     <Compile Include="Annotations\CrudAttribute.cs" />
     <Compile Include="Annotations\CrudIgnoreAttribute.cs" />
+    <Compile Include="ColumnCreationInterceptorContext.cs" />
+    <Compile Include="DefaultColumnCreationInterceptor.cs" />
     <Compile Include="Converters\CheckedConverter.cs" />
     <Compile Include="Converters\HeaderStyleVisibilityConverter.cs" />
     <Compile Include="Converters\PagingConverter.cs" />
     <Compile Include="DynamicDataGrid.cs" />
     <Compile Include="Enums\DynamicDataGridHeaderState.cs" />
     <Compile Include="Enums\DynamicDataGridHeaderStyle.cs" />
+    <Compile Include="Extensions\PropertyExtensions.cs" />
     <Compile Include="Extensions\UiHelpers.cs" />
     <Compile Include="Fields\CrudField.cs" />
     <Compile Include="Fields\CrudFieldBuilder.cs" />
@@ -59,6 +62,8 @@
     <Compile Include="Interfaces\AddActionContext.cs" />
     <Compile Include="Interfaces\IAddActionContext.cs" />
     <Compile Include="Interfaces\IAddActionInterceptor.cs" />
+    <Compile Include="Interfaces\IColumnCreationInterceptor.cs" />
+    <Compile Include="Interfaces\IColumnCreationInterceptorContext.cs" />
     <Compile Include="Interfaces\IRemoveActionContext.cs" />
     <Compile Include="Interfaces\IRemoveActionInterceptor.cs" />
     <Compile Include="Interfaces\IUpdateActionContext.cs" />

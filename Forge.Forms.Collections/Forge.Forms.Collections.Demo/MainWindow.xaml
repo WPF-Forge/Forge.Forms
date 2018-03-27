@@ -1,0 +1,20 @@
+﻿<controls:MetroWindow x:Class="Forge.Forms.Collections.Demo.MainWindow"
+                      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                      xmlns:collections="clr-namespace:Forge.Forms.Collections;assembly=Forge.Forms.Collections"
+                      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+                      xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+                      xmlns:models="clr-namespace:Forge.Forms.Collections.Demo.Models"
+                      mc:Ignorable="d"
+                      TitleCharacterCasing="Normal"
+                      WindowStartupLocation="CenterScreen"
+                      Title="DynamicDataGrid demo" d:DataContext="{d:DesignInstance models:TestModel}">
+    <Grid>
+        <collections:DynamicDataGrid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="20"
+                                     ItemsSource="{Binding People}"
+                                     Title="People" />
+        <materialDesign:DialogHost />
+    </Grid>
+</controls:MetroWindow>

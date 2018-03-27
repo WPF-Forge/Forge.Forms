@@ -206,6 +206,11 @@ namespace FancyGrid
 
         private void FilterToSelected(object p)
         {
+            if (CurrentColumn == null)
+            {
+                return;
+            }
+
             var tbs = this.AllChildren<TextBox>();
             TextBox tb = null;
             foreach (var item in tbs)
@@ -227,6 +232,11 @@ namespace FancyGrid
 
         private void FilterToNotSelected(object p)
         {
+            if (CurrentColumn == null)
+            {
+                return;
+            }
+
             var tbs = this.AllChildren<TextBox>();
             TextBox tb = null;
             foreach (var item in tbs)
