@@ -1,4 +1,5 @@
 ﻿using Forge.Forms.Annotations;
+using MaterialDesignThemes.Wpf;
 
 namespace Forge.Forms.Demo.Models
 {
@@ -8,8 +9,8 @@ namespace Forge.Forms.Demo.Models
         public string Username { get; set; }
 
         [Text("Verify you're human", Inline = true)]
-        [Action("listen", "LISTEN", Inline = true)]
-        [Action("refresh", "REFRESH", Inline = true)]
+        [Action("listen", "LISTEN", Inline = true, Icon = PackIconKind.VolumeMedium)]
+        [Action("refresh", "REFRESH", Inline = true, Icon = PackIconKind.Refresh)]
         public string Captcha { get; set; }
     }
 }
