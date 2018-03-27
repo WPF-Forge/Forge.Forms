@@ -6,5 +6,9 @@ namespace Forge.Forms.Demo.Models
     {
         [Action("available", "CHECK AVAILABILITY", Inline = true)]
         public string Username { get; set; }
+
+        [Action("listen", "LISTEN", Inline = true)]
+        [Action("refresh", "REFRESH", Inline = true)]
+        public string Captcha { get; set; }
     }
 }
