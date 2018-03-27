@@ -27,7 +27,7 @@ Because the `Username` is likely to be a primary key in a database, we need to s
 If the user later decides to update their personal information, they will only be able to edit `FirstName` and `LastName` properties.
 
 A simple solution would be creating two classes `UserWithUsername` and `UserWithoutUsername`, but this is against the domain-driven philosophy.
-The more elegant solution is to customize the form based on the environment it is hosted.
+The more elegant solution is to customize the form based on the environment it is hosted in.
 
 For the above example, we can listen to a `"register"` flag, which indicates that the displayed form is for the purpose of registering a new user:
 
