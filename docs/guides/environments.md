@@ -31,7 +31,7 @@ The more elegant solution is to customize the form based on the environment it i
 
 For the above example, we can listen to a `"register"` flag, which indicates that the displayed form is for the purpose of registering a new user:
 
-```
+```csharp
 class User {
     [Field(IsVisible = "{Env register}")]
     public string Username { get; set; }
@@ -47,7 +47,7 @@ In other situations that field will not be visible, which is our desired behavio
 
 Adding or removing flags to a form's environment is easy:
 
-```
+```csharp
 myForm.Environment.Add("register");
 bool isRegister = myForm.Environment.Has("register");
 myForm.Environment.Remove("register");
