@@ -52,7 +52,7 @@ namespace Forge.Forms.Controls.Internal
                 if (fillChild == null && pos == (Position)(-1))
                 {
                     fillChild = child;
-                    fillChild.Measure(new Size(availableSize.Width, double.PositiveInfinity));
+                    fillChild.Measure(availableSize);
                     fillHeight = fillChild.DesiredSize.Height;
                     continue;
                 }
