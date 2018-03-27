@@ -61,6 +61,7 @@
     <Compile Include="Models\FoodSelection.cs" />
     <Compile Include="Models\Home\Introduction.cs" />
     <Compile Include="Models\ExamplePresenter.cs" />
+    <Compile Include="Models\InlineElements.cs" />
     <Compile Include="Models\Selection.cs" />
     <Compile Include="Routes\ExamplesRoute.cs" />
     <Compile Include="Routes\HomeRoute.cs" />
@@ -73,7 +74,7 @@
     </Compile>
     <Compile Include="Views\XmlExamplesView.xaml.cs">
       <DependentUpon>XmlExamplesView.xaml</DependentUpon>
-	</Compile>
+    </Compile>
     <Page Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

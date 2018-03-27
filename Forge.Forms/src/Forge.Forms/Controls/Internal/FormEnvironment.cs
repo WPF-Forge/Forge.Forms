@@ -12,15 +12,13 @@ namespace Forge.Forms.Controls.Internal
         private readonly HashSet<string> set;
 
         public FormEnvironment()
+            : this(null)
         {
-            set = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         }
 
         public FormEnvironment(IEnumerable<string> initialValues)
         {
-            set = new HashSet<string>(
-                initialValues ?? throw new ArgumentNullException(nameof(initialValues)),
-                StringComparer.OrdinalIgnoreCase);
+            set = new HashSet<string>(initialValues ?? new string[0], StringComparer.OrdinalIgnoreCase);
         }
 
         [IndexerName("Item")]

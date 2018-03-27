@@ -9,6 +9,7 @@ namespace Forge.Forms
     public class DialogOptions : INotifyPropertyChanged
     {
         public static DialogOptions Default = new DialogOptions();
+
         private double headingFontSize = 15d;
         private double height = double.NaN;
         private Thickness padding = new Thickness(16d, 16d, 16d, 8d);
@@ -16,7 +17,7 @@ namespace Forge.Forms
         private double titleFontSize = 20d;
         private double width = 350d;
         private IFormBuilder formBuilder = FormBuilding.FormBuilder.Default;
-        private List<string> _environmentFlags = new List<string>();
+        private HashSet<string> environmentFlags = new HashSet<string>();
 
         public DialogOptions()
             : this(Default)
@@ -37,6 +38,7 @@ namespace Forge.Forms
             headingFontSize = defaults.headingFontSize;
             textFontSize = defaults.textFontSize;
             formBuilder = defaults.formBuilder;
+            environmentFlags = new HashSet<string>(defaults.environmentFlags);
         }
 
         public IFormBuilder FormBuilder
@@ -86,19 +88,19 @@ namespace Forge.Forms
 
 
         /// <summary>
-        /// Gets or sets the environment flags
+        /// Gets or sets the environment flags for the displayed form.
         /// </summary>
-        public List<string> EnvironmentFlags
+        public HashSet<string> EnvironmentFlags
         {
-            get => _environmentFlags;
+            get => environmentFlags;
             set
             {
-                if (Equals(value, _environmentFlags))
+                if (Equals(value, environmentFlags))
                 {
                     return;
                 }
 
-                _environmentFlags = value;
+                environmentFlags = value;
                 OnPropertyChanged();
             }
         }

@@ -8,6 +8,10 @@ namespace Forge.Forms.Annotations
     [AttributeUsage(AttributeTargets.Property)]
     public sealed class SelectFromAttribute : Attribute
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SelectFromAttribute"/> class.
+        /// </summary>
+        /// <param name="itemsSource">Selection item source. Accepts a collection or a dynamic resource.</param>
         public SelectFromAttribute(object itemsSource)
         {
             ItemsSource = itemsSource;

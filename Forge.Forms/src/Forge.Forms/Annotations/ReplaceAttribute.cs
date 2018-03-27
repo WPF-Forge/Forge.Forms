@@ -14,6 +14,15 @@ namespace Forge.Forms.Annotations
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]
     public class ReplaceAttribute : Attribute
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ReplaceAttribute"/> class.
+        /// </summary>
+        /// <param name="pattern">Pattern to replace on conversion. Accepts a string or a dynamic expression.</param>
+        /// <param name="replacement">
+        /// Replacement string, which can contain regex replacement expressions.
+        /// Accepts a string or a dynamic expression.
+        /// </param>
+        /// <param name="position">Do not provide a value for this argument.</param>
         public ReplaceAttribute(string pattern, string replacement, [CallerLineNumber] int position = 0)
         {
             Pattern = pattern;
@@ -23,13 +32,13 @@ namespace Forge.Forms.Annotations
 
         /// <summary>
         /// Pattern to replace on conversion.
-        /// Accepts a bound expression.
+        /// Accepts a string or a dynamic expression.
         /// </summary>
         public string Pattern { get; set; }
 
         /// <summary>
         /// Replacement string, which can contain regex replacement expressions.
-        /// Accepts a bound expression.
+        /// Accepts a string or a dynamic expression.
         /// </summary>
         public string Replacement { get; set; }
 

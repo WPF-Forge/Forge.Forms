@@ -1,5 +1,5 @@
 ﻿using System;
-using Forge.Forms.Annotations.Display;
+using Forge.Forms.Annotations;
 
 namespace Forge.Forms.FormBuilding.Defaults.Properties
 {

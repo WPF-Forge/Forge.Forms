@@ -1,5 +1,4 @@
 ﻿using Forge.Forms.Annotations;
-using Forge.Forms.Annotations.Display;
 using MaterialDesignThemes.Wpf;
 
 namespace Forge.Forms.Demo.Models
