@@ -9,7 +9,7 @@ If you are displaying a form to edit an existing object, you would add the flag 
 
 Form models can decide how to behave based on the environment by utiliziing the `{Env <Flag>}` binding expression.
 This expression resolves to `true` or `false` based on the presence of the specified flag in the current environment.
-To read more about bindings, refer to [dynamic resources](dynamic-resources.md#syntax-specification).
+To read more about bindings, refer to [dynamic resources](dynamic-resources.md).
 
 Let's suppose we have a form to register users to our system:
 
@@ -54,4 +54,4 @@ myForm.Environment.Remove("register");
 myForm.Environment.Clear();
 ```
 
-For more information you can check out the `IEnvironment` interface.
+For more information about the API, you can check out the `IEnvironment` interface.
