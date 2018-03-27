@@ -11,6 +11,7 @@ namespace Forge.Forms.Controls
         {
             DataContext = options;
             InitializeComponent();
+            Form.Environment.Add(options.EnvironmentFlags);
             Form.Context = context;
             Form.Model = model;
         }

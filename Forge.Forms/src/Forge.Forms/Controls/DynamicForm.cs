@@ -43,6 +43,12 @@ namespace Forge.Forms.Controls
             typeof(DynamicForm),
             new FrameworkPropertyMetadata(null));
 
+        public static readonly DependencyProperty EnvironmentProperty = DependencyProperty.Register(
+            "Environment",
+            typeof(IEnvironment),
+            typeof(DynamicForm),
+            new FrameworkPropertyMetadata(null));
+
         public static readonly DependencyProperty ValueProperty = ValuePropertyKey.DependencyProperty;
 
         public static HashSet<DynamicForm> ActiveForms = new HashSet<DynamicForm>();
@@ -86,9 +92,13 @@ namespace Forge.Forms.Controls
         }
 
         /// <summary>
-        /// Returns the environment flags for this control.
+        /// Gets or sets the environment flags for this control.
         /// </summary>
-        public IEnvironment Environment { get; }
+        public IEnvironment Environment
+        {
+            get => (IEnvironment)GetValue(EnvironmentProperty);
+            set => SetValue(EnvironmentProperty, value);
+        }
 
         /// <summary>
         /// Gets or sets the form builder that is responsible for building forms.
