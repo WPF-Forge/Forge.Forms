@@ -3,10 +3,11 @@
     public class UpdateActionContext : IUpdateActionContext
     {
         /// <inheritdoc />
-        public UpdateActionContext(object oldModel, object newModel)
+        public UpdateActionContext(object oldModel, object newModel, DynamicDataGrid sender)
         {
             OldModel = oldModel;
             NewModel = newModel;
+            Sender = sender;
         }
 
         /// <inheritdoc />
@@ -14,5 +15,8 @@
 
         /// <inheritdoc />
         public object OldModel { get; }
+
+        /// <inheritdoc />
+        public DynamicDataGrid Sender { get; }
     }
 }

@@ -3,5 +3,7 @@
     public interface IRemoveActionContext
     {
         object OldModel { get; }
+
+        DynamicDataGrid Sender { get; }
     }
 }

@@ -14,12 +14,16 @@ namespace Forge.Forms.Collections
         /// <inheritdoc />
         public DataGridColumn Column { get; }
 
-        public ColumnCreationInterceptorContext(PropertyInfo property, DynamicDataGrid parent, Type objectType, DataGridColumn column)
+        /// <inheritdoc />
+        public DynamicDataGrid Sender { get; }
+
+        public ColumnCreationInterceptorContext(PropertyInfo property, DynamicDataGrid parent, Type objectType, DataGridColumn column, DynamicDataGrid sender)
         {
             Property = property ?? throw new ArgumentNullException(nameof(property));
             Parent = parent ?? throw new ArgumentNullException(nameof(parent));
             ObjectType = objectType ?? throw new ArgumentNullException(nameof(objectType));
             Column = column;
+            Sender = sender;
         }
     }
 }

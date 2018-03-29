@@ -28,7 +28,7 @@ using Expression = System.Linq.Expressions.Expression;
 namespace Forge.Forms.Collections
 {
     [TemplatePart(Name = "PART_DataGrid", Type = typeof(DataGrid))]
-    public class DynamicDataGrid : Control, INotifyPropertyChanged
+    public partial class DynamicDataGrid : Control, INotifyPropertyChanged
     {
         /// <summary>
         /// Identifies the HeaderStyle dependency property.
@@ -339,10 +339,11 @@ namespace Forge.Forms.Collections
             DependencyProperty.Register("IsFilterButtonVisible", typeof(bool), typeof(DynamicDataGrid),
                 new PropertyMetadata(true));
 
-        private bool canMutate;
+        public bool CanMutate { get; private set; }
+
         private Type itemType;
 
-        private List<SortDescription> CachedSortDescriptions =
+        private List<SortDescription> _cachedSortDescriptions =
             new List<SortDescription>();
 
         static DynamicDataGrid()
@@ -903,7 +904,7 @@ namespace Forge.Forms.Collections
             foreach (var columnCreationInterceptor in ColumnCreationInterceptors)
             {
                 var interceptorContext = columnCreationInterceptor.Intercept(
-                    new ColumnCreationInterceptorContext(propertyInfo, this, ItemType, null));
+                    new ColumnCreationInterceptorContext(propertyInfo, this, ItemType, null, this));
 
                 if (interceptorContext == null)
                 {
@@ -946,7 +947,7 @@ namespace Forge.Forms.Collections
             var view = CollectionViewSource.GetDefaultView(ItemsSource);
             view.SortDescriptions.Clear();
 
-            foreach (var sortDescription in CachedSortDescriptions)
+            foreach (var sortDescription in _cachedSortDescriptions)
             {
                 view.SortDescriptions.Add(sortDescription);
                 var column = DataGrid.Columns.FirstOrDefault(c => c.SortMemberPath == sortDescription.PropertyName);
@@ -956,14 +957,14 @@ namespace Forge.Forms.Collections
                 }
             }
 
-            CachedSortDescriptions.Clear();
+            _cachedSortDescriptions.Clear();
             return view;
         }
 
         private void UpdateSorting()
         {
             var view = CollectionViewSource.GetDefaultView(DataGrid.ItemsSource);
-            CachedSortDescriptions = new List<SortDescription>(view.SortDescriptions);
+            _cachedSortDescriptions = new List<SortDescription>(view.SortDescriptions);
         }
 
         private void OnCollectionChanged(object o, NotifyCollectionChangedEventArgs notifyCollectionChangedEventArgs)
@@ -1095,9 +1096,18 @@ namespace Forge.Forms.Collections
             ItemType = null;
             ViewSource.Source = collection;
 
+            if (collection is INotifyCollectionChanged collectionChanged)
+            {
+                collectionChanged.CollectionChanged += (sender, args) =>
+                {
+                    ViewSource.Source = null;
+                    ViewSource.Source = collection;
+                };
+            }
+
             if (collection == null)
             {
-                canMutate = false;
+                CanMutate = false;
                 return;
             }
 
@@ -1111,18 +1121,18 @@ namespace Forge.Forms.Collections
 
             if (interfaces.Count > 1 || interfaces.Count == 0)
             {
-                canMutate = false;
+                CanMutate = false;
                 return;
             }
 
             var collectionType = interfaces[0];
             ItemType = collectionType.GetGenericArguments()[0];
-            canMutate = ItemType.GetConstructor(Type.EmptyTypes) != null;
+            CanMutate = ItemType.GetConstructor(Type.EmptyTypes) != null;
         }
 
         private async void ExecuteCreateItem(object sender, ExecutedRoutedEventArgs e)
         {
-            if (!canMutate)
+            if (!CanMutate)
             {
                 return;
             }
@@ -1144,7 +1154,7 @@ namespace Forge.Forms.Collections
             {
                 var collection = ItemsSource;
 
-                IAddActionContext context = new AddActionContext(result.Model);
+                IAddActionContext context = new AddActionContext(result.Model, this);
                 foreach (var globalInterceptor in AddInterceptorChain)
                 {
                     context = globalInterceptor.Intercept(context);
@@ -1169,13 +1179,13 @@ namespace Forge.Forms.Collections
 
         private void CanExecuteCreateItem(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = CanUserAdd && canMutate;
+            e.CanExecute = CanUserAdd && CanMutate;
         }
 
         private async void ExecuteUpdateItem(object sender, ExecutedRoutedEventArgs e)
         {
             var model = e.Parameter;
-            if (!canMutate || model == null || !ItemType.IsInstanceOfType(model))
+            if (!CanMutate || model == null || !ItemType.IsInstanceOfType(model))
             {
                 return;
             }
@@ -1203,7 +1213,7 @@ namespace Forge.Forms.Collections
             }
 
             var oldModel = GetOldModel(definition);
-            IUpdateActionContext context = new UpdateActionContext(oldModel, definition.Model);
+            IUpdateActionContext context = new UpdateActionContext(oldModel, definition.Model, this);
 
             foreach (var globalInterceptor in UpdateInterceptorChain)
             {
@@ -1237,7 +1247,7 @@ namespace Forge.Forms.Collections
 
         private void CanExecuteUpdateItem(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = CanUserEdit && canMutate && e.Parameter != null && ItemType.IsInstanceOfType(e.Parameter);
+            e.CanExecute = CanUserEdit && CanMutate && e.Parameter != null && ItemType.IsInstanceOfType(e.Parameter);
         }
 
         [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
@@ -1259,7 +1269,7 @@ namespace Forge.Forms.Collections
             }
 
             var model = e.Parameter;
-            if (!canMutate || model == null || !ItemType.IsInstanceOfType(e.Parameter))
+            if (!CanMutate || model == null || !ItemType.IsInstanceOfType(e.Parameter))
             {
                 if (!(e.Parameter is IEnumerable enumerable &&
                       enumerable.Cast<object>().First().GetType() == ItemType))
@@ -1293,13 +1303,13 @@ namespace Forge.Forms.Collections
                     {
                         foreach (var item in modelEnum.Cast<object>().ToList())
                         {
-                            IRemoveActionContext context = new RemoveActionContext(item);
+                            IRemoveActionContext context = new RemoveActionContext(item, this);
                             DoInterceptions(context);
                         }
                     }
                     else
                     {
-                        IRemoveActionContext context = new RemoveActionContext(model);
+                        IRemoveActionContext context = new RemoveActionContext(model, this);
                         DoInterceptions(context);
                     }
 
@@ -1348,7 +1358,7 @@ namespace Forge.Forms.Collections
 
         private void CanExecuteRemoveItem(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = CanUserRemove && canMutate && e.Parameter != null &&
+            e.CanExecute = CanUserRemove && CanMutate && e.Parameter != null &&
                            (ItemType.IsInstanceOfType(e.Parameter) || e.Parameter is IEnumerable enumerable &&
                             enumerable.Cast<object>().Any() &&
                             enumerable.Cast<object>().First().GetType() == ItemType);

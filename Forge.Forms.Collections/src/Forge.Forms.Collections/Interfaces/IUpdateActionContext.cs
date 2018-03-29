@@ -3,6 +3,9 @@
     public interface IUpdateActionContext
     {
         object NewModel { get; }
+
         object OldModel { get; }
+
+        DynamicDataGrid Sender { get; }
     }
 }

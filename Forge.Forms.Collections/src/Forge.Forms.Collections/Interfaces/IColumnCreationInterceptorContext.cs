@@ -6,9 +6,14 @@ namespace Forge.Forms.Collections.Interfaces
 {
     public interface IColumnCreationInterceptorContext
     {
-        PropertyInfo Property { get; }
-        DynamicDataGrid Parent { get; }
-        Type ObjectType { get; }
         DataGridColumn Column { get; }
+
+        Type ObjectType { get; }
+
+        DynamicDataGrid Parent { get; }
+
+        PropertyInfo Property { get; }
+
+        DynamicDataGrid Sender { get; }
     }
 }

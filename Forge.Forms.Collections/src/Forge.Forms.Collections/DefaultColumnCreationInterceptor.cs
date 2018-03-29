@@ -74,7 +74,7 @@ namespace Forge.Forms.Collections
                     EditingElementStyle =
                         context.Parent.TryFindResource("MaterialDesignDataGridTextColumnPopupEditingStyle") as Style,
                     MaxLength = context.Property.GetCustomAttribute<StringLengthAttribute>()?.MaximumLength ?? 0
-                });
+                }, context.Sender);
         }
     }
 }

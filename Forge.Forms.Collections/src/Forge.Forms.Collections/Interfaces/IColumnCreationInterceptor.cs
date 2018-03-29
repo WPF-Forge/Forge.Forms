@@ -1,6 +1,4 @@
-﻿using System.Windows.Controls;
-
-namespace Forge.Forms.Collections.Interfaces
+﻿namespace Forge.Forms.Collections.Interfaces
 {
     public interface IColumnCreationInterceptor
     {
