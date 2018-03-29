@@ -58,6 +58,7 @@
     <Compile Include="Models\BooleanLogic.cs" />
     <Compile Include="Models\Dialogs.cs" />
     <Compile Include="Models\EnvManager.cs" />
+    <Compile Include="Models\FileBindings.cs" />
     <Compile Include="Models\FoodSelection.cs" />
     <Compile Include="Models\Home\Introduction.cs" />
     <Compile Include="Models\ExamplePresenter.cs" />
@@ -143,6 +144,11 @@
     <PackageReference Include="Material.Application">
       <Version>1.0.0-CI-20171226-172359</Version>
     </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="example.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

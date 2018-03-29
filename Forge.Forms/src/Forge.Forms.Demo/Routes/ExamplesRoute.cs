@@ -75,6 +75,8 @@ namespace Forge.Forms.Demo.Routes
 
             yield return new ExamplePresenter(new EnvManager(), "Environments", large);
 
+            yield return new ExamplePresenter(new FileBindings(), "File Binding", large);
+
             yield return new ExamplePresenter(new Alert
             {
                 Message = "Item deleted."
@@ -94,7 +96,6 @@ namespace Forge.Forms.Demo.Routes
                 PositiveAction = "AGREE",
                 NegativeAction = "DISAGREE"
             }, "Confirm 2", small);
-
 
             yield return new ExamplePresenter(new Prompt<string>
             {
