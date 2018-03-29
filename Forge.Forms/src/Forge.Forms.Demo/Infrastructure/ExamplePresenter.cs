@@ -1,6 +1,6 @@
 using Material.Application.Models;
 
-namespace Forge.Forms.Demo.Models
+namespace Forge.Forms.Demo.Infrastructure
 {
     public class ExamplePresenter : ObjectPresenter
     {

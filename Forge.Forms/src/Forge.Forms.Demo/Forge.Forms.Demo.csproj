@@ -62,7 +62,7 @@
     <Compile Include="Models\FileBindings.cs" />
     <Compile Include="Models\FoodSelection.cs" />
     <Compile Include="Introduction.cs" />
-    <Compile Include="Models\ExamplePresenter.cs" />
+    <Compile Include="Infrastructure\ExamplePresenter.cs" />
     <Compile Include="Models\InlineElements.cs" />
     <Compile Include="Models\Selection.cs" />
     <Compile Include="Routes\ExamplesRoute.cs" />

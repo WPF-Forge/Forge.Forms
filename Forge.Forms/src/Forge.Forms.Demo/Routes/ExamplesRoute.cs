@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using Forge.Forms.Demo.Infrastructure;
 using Forge.Forms.Demo.Models;
 using Material.Application.Infrastructure;
 using Material.Application.Models;
@@ -64,7 +65,7 @@ namespace Forge.Forms.Demo.Routes
         {
             if (CanViewSource(out var name, out var path))
             {
-                GetRoute<SourceRoute>("title", name, "path", path).Push();
+                GetRoute<SourceRoute>("title", currentModel.DisplayString ?? name, "path", path).Push();
             }
         }
 

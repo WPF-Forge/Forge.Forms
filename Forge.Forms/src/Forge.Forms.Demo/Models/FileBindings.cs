@@ -1,5 +1,4 @@
-﻿
-using Forge.Forms.Annotations;
+﻿using Forge.Forms.Annotations;
 
 namespace Forge.Forms.Demo.Models
 {
