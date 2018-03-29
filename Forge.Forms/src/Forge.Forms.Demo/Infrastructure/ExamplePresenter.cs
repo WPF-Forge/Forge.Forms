@@ -11,5 +11,7 @@ namespace Forge.Forms.Demo.Infrastructure
         }
 
         public double PreferredWidth { get; }
+
+        public string Source { get; set; }
     }
 }

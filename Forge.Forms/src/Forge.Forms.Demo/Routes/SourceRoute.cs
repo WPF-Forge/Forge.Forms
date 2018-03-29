@@ -8,14 +8,14 @@ namespace Forge.Forms.Demo.Routes
     {
         private readonly Lazy<string> source;
 
-        public SourceRoute(string title, string path)
+        public SourceRoute(string title, string source, bool isPath)
         {
             RouteConfig.Title = title;
-            source = new Lazy<string>(() =>
+            this.source = new Lazy<string>(() =>
             {
                 try
                 {
-                    return File.ReadAllText(path);
+                    return isPath ? File.ReadAllText(source) : source;
                 }
                 catch
                 {
