@@ -68,6 +68,10 @@ You may have hardcoded the 15 inside the message string itself, but it is useful
 public int MyNumber { ... }
 ```
 
+## Default error messages
+
+If you have a common error message that is used frequently, it is probably a good candidate to initialize it in a class that inherits from `ValueAttribute`.
+
 ## Validating computed values
 
 If you need to validate a computed value instead of the raw input, you can specify a value converter as the first parameter:
