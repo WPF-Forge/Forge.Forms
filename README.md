@@ -2,7 +2,9 @@
 
 ## Introduction
 
-Do you like code-first? Do you have a lot of forms? Then this library is for you! Forge.Forms makes it easy to create code-first forms with some nice features out of the box!        
+Do you like code-first? Do you have a lot of forms? Then this library is for you! Forge.Forms makes it easy to create code-first forms with some nice features out of the box!
+
+Join us at https://gitter.im/WPF-Forge for questions or general discussion.
 
 ## Code Samples
 
