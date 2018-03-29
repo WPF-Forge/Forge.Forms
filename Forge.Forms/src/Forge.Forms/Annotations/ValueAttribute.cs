@@ -6,7 +6,7 @@ namespace Forge.Forms.Annotations
     /// Specifies a validation rule for a field.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]
-    public sealed class ValueAttribute : Attribute
+    public class ValueAttribute : Attribute
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ValueAttribute"/> class.
