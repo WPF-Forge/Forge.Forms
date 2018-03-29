@@ -42,6 +42,7 @@ namespace Forge.Forms.Demo.Models
         [Value("Length", Must.BeGreaterThan, 12,
             When = "{ContextBinding RequireLongPasswords}",
             Message = "The administrator decided that your password must be really long!")]
+        [Password]
         public string Password { get; set; }
 
         [Field(Icon = "Empty")]
@@ -49,6 +50,7 @@ namespace Forge.Forms.Demo.Models
             Message = "The entered passwords do not match.",
             ArgumentUpdatedAction = ValidationAction.ClearErrors)]
         [Value(Must.NotBeEmpty)]
+        [Password]
         public string ConfirmPassword { get; set; }
 
         [Break]

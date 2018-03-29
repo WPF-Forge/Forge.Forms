@@ -2,7 +2,7 @@
 {
     public class WindowOptions : DialogOptions
     {
-        public static WindowOptions Default = new WindowOptions();
+        public new static WindowOptions Default = new WindowOptions();
         private bool canResize;
         private bool showCloseButton;
         private bool showMaxRestoreButton = true;

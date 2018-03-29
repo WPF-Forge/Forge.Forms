@@ -42,7 +42,7 @@ namespace Forge.Forms.Demo.Models.Home
         [Break]
         [Text("<DynamicForm Model=\"{{Binding Model}}\" />", ShareLine = true)]
         [Action("copy", "COPY", Icon = "ContentCopy", Parameter = "<DynamicForm Model=\"{{Binding Model}}\" />",
-            InsertAfter = false)]
+            Placement = Placement.Before)]
         [Break]
         [Break(Height = 16d)]
         [Text("A DynamicForm has two key properties, the 'Model' property, which " +
@@ -52,7 +52,7 @@ namespace Forge.Forms.Demo.Models.Home
         [Text("Reflection happens only the first time a model is inspected, after " +
               "which its definition is cached and subsequent renders will be quite fast.")]
         [Text("See live examples for a quick overview of features.", ShareLine = true)]
-        [Action("examples", "VIEW EXAMPLES", InsertAfter = false)]
+        [Action("examples", "VIEW EXAMPLES", Placement = Placement.Before)]
         [Field(IsVisible = false)]
         public string AnnotationDummy { get; set; }
     }

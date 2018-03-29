@@ -32,7 +32,7 @@ namespace Forge.Forms.Annotations
         /// <summary>
         /// Initializes a new instance of the <see cref="ValueAttribute"/> class.
         /// </summary>
-        /// <param name="converter">Identifier of value converter to use.</param>
+        /// <param name="condition">Type of condition this validation represents.</param>
         public ValueAttribute(Must condition)
             : this(null, condition, null, false)
         {

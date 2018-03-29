@@ -26,7 +26,7 @@ namespace Forge.Forms.Annotations
             // Actions are grouped by default.
             ShareLine = true;
             // Actions are inserted after elements by default.
-            InsertAfter = true;
+            Placement = Placement.After;
             // Actions are displayed to the right by default.
             LinePosition = Annotations.Position.Right;
         }
