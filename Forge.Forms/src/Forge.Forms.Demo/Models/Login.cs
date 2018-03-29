@@ -3,7 +3,7 @@ using MaterialDesignThemes.Wpf;
 
 namespace Forge.Forms.Demo.Models
 {
-    [Title("Login to continue")]
+    [Title("Log in to continue")]
     [Action("cancel", "CANCEL", IsCancel = true, ClosesDialog = true)]
     [Action("login", "LOG IN", IsLoading = "{Binding Loading}",
         IsDefault = true, ClosesDialog = true, Validates = true)]
@@ -15,7 +15,7 @@ namespace Forge.Forms.Demo.Models
         public string Username { get; set; }
 
         // Or be dynamically assigned...
-        [Field(Icon = "{Property PasswordIcon}", InitialFocus = true)]
+        [Field(Icon = "{Property PasswordIcon}")]
         [Password]
         public string Password { get; set; }
 
