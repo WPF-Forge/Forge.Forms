@@ -2,7 +2,7 @@
 using Forge.Forms.Annotations;
 using Material.Application.Models;
 
-namespace Forge.Forms.Demo.Models.Home
+namespace Forge.Forms.Demo
 {
     public class Introduction : Model
     {

@@ -1,8 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using Forge.Forms.Demo.Models;
 using Material.Application.Infrastructure;
+using Material.Application.Models;
 using Material.Application.Routing;
 using MaterialDesignThemes.Wpf;
 
@@ -10,7 +13,12 @@ namespace Forge.Forms.Demo.Routes
 {
     public class ExamplesRoute : Route, IActionHandler
     {
+        private static readonly string ModelsDir = Path.Combine(
+            Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) ?? Directory.GetCurrentDirectory(),
+            "Models");
+
         private readonly INotificationService notificationService;
+        private readonly RefreshSource currentModelRefresh;
 
         private ExamplePresenter currentModel;
 
@@ -18,12 +26,14 @@ namespace Forge.Forms.Demo.Routes
         {
             RouteConfig.Title = "Examples";
             RouteConfig.Icon = PackIconKind.ViewList;
+            currentModelRefresh = RefreshSource().WithProperties(nameof(CurrentModel));
 
             RouteConfig.RouteCommands.Add(Command("Validate model", PackIconKind.CheckAll,
                 () => ModelState.Validate(CurrentModel.Object)));
             RouteConfig.RouteCommands.Add(Command("Reset model", PackIconKind.Undo,
                 () => ModelState.Reset(CurrentModel.Object)));
-
+            RouteConfig.RouteCommands.Add(Command("View source", PackIconKind.CodeBraces,
+                ViewSource, CanViewSource, currentModelRefresh));
             this.notificationService = notificationService;
         }
 
@@ -33,7 +43,7 @@ namespace Forge.Forms.Demo.Routes
             set
             {
                 currentModel = value;
-                NotifyPropertyChanged();
+                currentModelRefresh.Refresh();
             }
         }
 
@@ -48,6 +58,31 @@ namespace Forge.Forms.Demo.Routes
         {
             Models = new ObservableCollection<ExamplePresenter>(GetModels());
             CurrentModel = Models.FirstOrDefault();
+        }
+
+        private void ViewSource()
+        {
+            if (CanViewSource(out var name, out var path))
+            {
+                GetRoute<SourceRoute>("title", name, "path", path).Push();
+            }
+        }
+
+        private bool CanViewSource() => CanViewSource(out var _, out var _);
+
+        private bool CanViewSource(out string name, out string path)
+        {
+            var model = currentModel?.Object;
+            if (model == null)
+            {
+                name = null;
+                path = null;
+                return false;
+            }
+
+            name = model.GetType().Name;
+            path = Path.Combine(ModelsDir, name + ".cs");
+            return File.Exists(path);
         }
 
         private IEnumerable<ExamplePresenter> GetModels()

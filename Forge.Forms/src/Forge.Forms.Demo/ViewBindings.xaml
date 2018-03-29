@@ -15,4 +15,8 @@
         <views:XmlExamplesView />
     </DataTemplate>
 
+    <DataTemplate DataType="{x:Type routes:SourceRoute}">
+        <views:SourceView />
+    </DataTemplate>
+
 </ResourceDictionary>

@@ -55,23 +55,28 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Infrastructure\MaterialDesignHelper.cs" />
+    <Compile Include="Infrastructure\TextDocumentValueConverter.cs" />
     <Compile Include="Models\BooleanLogic.cs" />
     <Compile Include="Models\Dialogs.cs" />
     <Compile Include="Models\EnvManager.cs" />
     <Compile Include="Models\FileBindings.cs" />
     <Compile Include="Models\FoodSelection.cs" />
-    <Compile Include="Models\Home\Introduction.cs" />
+    <Compile Include="Introduction.cs" />
     <Compile Include="Models\ExamplePresenter.cs" />
     <Compile Include="Models\InlineElements.cs" />
     <Compile Include="Models\Selection.cs" />
     <Compile Include="Routes\ExamplesRoute.cs" />
     <Compile Include="Routes\HomeRoute.cs" />
+    <Compile Include="Routes\SourceRoute.cs" />
     <Compile Include="Routes\XmlExamplesRoute.cs" />
     <Compile Include="Views\ExamplesView.xaml.cs">
       <DependentUpon>ExamplesView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\FormView.xaml.cs">
       <DependentUpon>FormView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SourceView.xaml.cs">
+      <DependentUpon>SourceView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\XmlExamplesView.xaml.cs">
       <DependentUpon>XmlExamplesView.xaml</DependentUpon>
@@ -97,6 +102,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\SourceView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\XmlExamplesView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -107,7 +116,7 @@
     <Compile Include="Models\Login.cs" />
     <Compile Include="Models\Settings.cs" />
     <Compile Include="Models\User.cs" />
-    <Compile Include="ModelTypeToVisibilityConverter.cs" />
+    <Compile Include="Infrastructure\ModelTypeToVisibilityConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -141,6 +150,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="AvalonEdit">
+      <Version>5.0.4</Version>
+    </PackageReference>
     <PackageReference Include="Material.Application">
       <Version>1.0.0-CI-20171226-172359</Version>
     </PackageReference>
@@ -151,6 +163,9 @@
     </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>XCOPY "$(SolutionDir)\src\Forge.Forms.Demo\Models" "$(TargetDir)\Models\" /S /Y</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
