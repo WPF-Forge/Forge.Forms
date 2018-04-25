@@ -30,6 +30,15 @@ namespace Forge.Forms.Collections
     [TemplatePart(Name = "PART_DataGrid", Type = typeof(DataGrid))]
     public partial class DynamicDataGrid : Control, INotifyPropertyChanged
     {
+        public static readonly DependencyProperty CustomActionsProperty = DependencyProperty.Register(
+            nameof(CustomActions), typeof(List<DynamicDataGridAction>), typeof(DynamicDataGrid), new PropertyMetadata());
+
+        public List<DynamicDataGridAction> CustomActions
+        {
+            get { return (List<DynamicDataGridAction>) GetValue(CustomActionsProperty); }
+            set { SetValue(CustomActionsProperty, value); }
+        }
+
         /// <summary>
         /// Identifies the HeaderStyle dependency property.
         /// </summary>
