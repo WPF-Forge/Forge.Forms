@@ -5,6 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:Forge.Forms.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Padding="{Binding Padding}"
     d:DesignHeight="300"
     d:DesignWidth="300"
     mc:Ignorable="d">
@@ -12,10 +13,9 @@
         x:Name="Form"
         Width="{Binding Width}"
         Height="{Binding Height}"
-        Margin="{Binding Padding}"
-        FontSize="{Binding TextFontSize}"
-        FormBuilder="{Binding FormBuilder}"
         local:TextProperties.HeadingFontSize="{Binding HeadingFontSize}"
         local:TextProperties.TextFontSize="{Binding TextFontSize}"
-        local:TextProperties.TitleFontSize="{Binding TitleFontSize}" />
+        local:TextProperties.TitleFontSize="{Binding TitleFontSize}"
+        FontSize="{Binding TextFontSize}"
+        FormBuilder="{Binding FormBuilder}" />
 </UserControl>

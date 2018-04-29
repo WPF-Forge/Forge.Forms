@@ -43,11 +43,4 @@ namespace Forge.Forms.FormBuilding
 
         public List<FormElement> Elements { get; }
     }
-
-    public enum FormElementsAlignment
-    {
-        Stretch,
-        Left,
-        Right
-    }
 }

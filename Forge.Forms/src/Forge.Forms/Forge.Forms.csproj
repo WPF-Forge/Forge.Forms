@@ -55,6 +55,7 @@
     <Compile Include="Annotations\BreakAttribute.cs" />
     <Compile Include="Annotations\DividerAttribute.cs" />
     <Compile Include="Annotations\FormContentAttribute.cs" />
+    <Compile Include="Annotations\Placement.cs" />
     <Compile Include="Annotations\TextElementAttribute.cs" />
     <Compile Include="Annotations\DefaultFields.cs" />
     <Compile Include="Annotations\PasswordAttribute.cs" />

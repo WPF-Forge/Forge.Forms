@@ -435,11 +435,11 @@ namespace Forge.Forms.FormBuilding
 
                         break;
                     case FormContentAttribute contentAttribute:
-                        if (contentAttribute.InsertAfter)
+                        if (contentAttribute.Placement == Placement.After)
                         {
                             afterFormContent.Add(new AttrElementTuple(contentAttribute, contentAttribute.GetElement()));
                         }
-                        else
+                        else if (contentAttribute.Placement == Placement.Before)
                         {
                             beforeFormContent.Add(new AttrElementTuple(contentAttribute,
                                 contentAttribute.GetElement()));
@@ -515,7 +515,14 @@ namespace Forge.Forms.FormBuilding
                     var property = element.Property;
                     foreach (var attr in property.GetCustomAttributes<FormContentAttribute>())
                     {
-                        (attr.InsertAfter ? after : before).Add(new AttrElementTuple(attr, attr.GetElement()));
+                        if (attr.Placement == Placement.Before)
+                        {
+                            before.Add(new AttrElementTuple(attr, attr.GetElement()));
+                        }
+                        else if (attr.Placement == Placement.After)
+                        {
+                            after.Add(new AttrElementTuple(attr, attr.GetElement()));
+                        }
                     }
                 }
 
@@ -528,7 +535,27 @@ namespace Forge.Forms.FormBuilding
                 // Field row.
                 var formRow = new FormRow();
                 formRow.Elements.AddRange(
-                    row.Elements.Select(w => new FormElementContainer(w.Column, w.ColumnSpan, w.Element)));
+                    row.Elements.Select(w =>
+                    {
+                        var inlineElements = w.Property
+                            .GetCustomAttributes<FormContentAttribute>()
+                            .Where(attr => attr.Placement == Placement.Inline)
+                            .Select(attr => new AttrElementTuple(attr, attr.GetElement()))
+                            .OrderBy(tuple => tuple.Attr.Position)
+                            .ToList();
+
+                        w.Element.LinePosition = (Position)(-1);
+                        if (inlineElements.Count != 0)
+                        {
+                            return new FormElementContainer(w.Column, w.ColumnSpan,
+                                inlineElements
+                                    .Select(t => t.Element)
+                                    .Concat(new[] { w.Element })
+                                    .ToList());
+                        }
+
+                        return new FormElementContainer(w.Column, w.ColumnSpan, w.Element);
+                    }));
                 rows.Add(formRow);
 
                 // After element.

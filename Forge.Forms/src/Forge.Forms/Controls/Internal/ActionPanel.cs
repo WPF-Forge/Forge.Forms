@@ -38,36 +38,50 @@ namespace Forge.Forms.Controls.Internal
             var rightMaxHeight = 0d;
             var leftMaxWidth = 0d;
             var rightMaxWidth = 0d;
-
+            UIElement fillChild = null;
+            var fillHeight = 0d;
             for (var i = 0; i < children.Count; i++)
             {
                 var child = children[i];
-                if (child != null)
+                if (child == null)
                 {
-                    child.Measure(availableSize);
+                    continue;
+                }
+
+                var pos = GetPosition(child);
+                if (fillChild == null && pos == (Position)(-1))
+                {
+                    fillChild = child;
+                    fillChild.Measure(availableSize);
+                    fillHeight = fillChild.DesiredSize.Height;
+                    continue;
+                }
+
+                child.Measure(availableSize);
+                if (pos == Position.Right)
+                {
                     var width = child.DesiredSize.Width;
                     var height = child.DesiredSize.Height;
-                    if (GetPosition(child) == Position.Left)
-                    {
-                        leftWidth += width;
-                        leftHeight += height;
-                        leftMaxWidth = Math.Max(leftMaxWidth, width);
-                        leftMaxHeight = Math.Max(leftMaxHeight, height);
-                    }
-                    else
-                    {
-                        rightWidth += width;
-                        rightHeight += height;
-                        rightMaxWidth = Math.Max(rightMaxWidth, width);
-                        rightMaxHeight = Math.Max(rightMaxHeight, height);
-                    }
+                    rightWidth += width;
+                    rightHeight += height;
+                    rightMaxWidth = Math.Max(rightMaxWidth, width);
+                    rightMaxHeight = Math.Max(rightMaxHeight, height);
+                }
+                else
+                {
+                    var width = child.DesiredSize.Width;
+                    var height = child.DesiredSize.Height;
+                    leftWidth += width;
+                    leftHeight += height;
+                    leftMaxWidth = Math.Max(leftMaxWidth, width);
+                    leftMaxHeight = Math.Max(leftMaxHeight, height);
                 }
             }
 
             // Test for h h.
             if (leftWidth + rightWidth <= availableSize.Width)
             {
-                return new Size(leftWidth + rightWidth, Math.Max(leftMaxHeight, rightMaxHeight));
+                return new Size(leftWidth + rightWidth, Math.Max(Math.Max(leftMaxHeight, rightMaxHeight), fillHeight));
             }
 
             if (leftWidth <= availableSize.Width)
@@ -75,21 +89,21 @@ namespace Forge.Forms.Controls.Internal
                 // Test for h / h
                 if (rightWidth <= availableSize.Width)
                 {
-                    return new Size(Math.Max(leftWidth, rightWidth), leftMaxHeight + rightMaxHeight);
+                    return new Size(Math.Max(leftWidth, rightWidth), leftMaxHeight + rightMaxHeight + fillHeight);
                 }
 
                 // Return h / v
-                return new Size(Math.Max(leftWidth, rightMaxWidth), leftMaxHeight + rightHeight);
+                return new Size(Math.Max(leftWidth, rightMaxWidth), leftMaxHeight + rightHeight + fillHeight);
             }
 
             // Test for v / h
             if (rightWidth <= availableSize.Width)
             {
-                return new Size(Math.Max(leftMaxWidth, rightWidth), leftHeight + rightMaxHeight);
+                return new Size(Math.Max(leftMaxWidth, rightWidth), leftHeight + rightMaxHeight + fillHeight);
             }
 
             // Return v / v
-            return new Size(Math.Max(leftMaxWidth, rightMaxWidth), leftHeight + rightHeight);
+            return new Size(Math.Max(leftMaxWidth, rightMaxWidth), leftHeight + rightHeight + fillHeight);
         }
 
         protected override Size ArrangeOverride(Size finalSize)
@@ -105,30 +119,43 @@ namespace Forge.Forms.Controls.Internal
             var rightMaxWidth = 0d;
             var leftChildren = new List<UIElement>();
             var rightChildren = new List<UIElement>();
-
+            UIElement fillChild = null;
+            var fillHeight = 0d;
             for (var i = 0; i < children.Count; i++)
             {
                 var child = children[i];
-                if (child != null)
+                if (child == null)
+                {
+                    continue;
+                }
+
+                var pos = GetPosition(child);
+                if (fillChild == null && pos == (Position)(-1))
+                {
+                    fillChild = child;
+                    fillHeight = fillChild.DesiredSize.Height;
+                    continue;
+                }
+
+                if (pos == Position.Right)
                 {
                     var width = child.DesiredSize.Width;
                     var height = child.DesiredSize.Height;
-                    if (GetPosition(child) == Position.Left)
-                    {
-                        leftWidth += width;
-                        leftHeight += height;
-                        leftMaxWidth = Math.Max(leftMaxWidth, width);
-                        leftMaxHeight = Math.Max(leftMaxHeight, height);
-                        leftChildren.Add(child);
-                    }
-                    else
-                    {
-                        rightWidth += width;
-                        rightHeight += height;
-                        rightMaxWidth = Math.Max(rightMaxWidth, width);
-                        rightMaxHeight = Math.Max(rightMaxHeight, height);
-                        rightChildren.Add(child);
-                    }
+                    rightWidth += width;
+                    rightHeight += height;
+                    rightMaxWidth = Math.Max(rightMaxWidth, width);
+                    rightMaxHeight = Math.Max(rightMaxHeight, height);
+                    rightChildren.Add(child);
+                }
+                else
+                {
+                    var width = child.DesiredSize.Width;
+                    var height = child.DesiredSize.Height;
+                    leftWidth += width;
+                    leftHeight += height;
+                    leftMaxWidth = Math.Max(leftMaxWidth, width);
+                    leftMaxHeight = Math.Max(leftMaxHeight, height);
+                    leftChildren.Add(child);
                 }
             }
 
@@ -136,6 +163,7 @@ namespace Forge.Forms.Controls.Internal
             if (leftWidth + rightWidth <= finalSize.Width)
             {
                 StackHorizontally(leftChildren, 0d, 0d, finalSize.Height);
+                fillChild?.Arrange(new Rect(leftWidth, 0d, finalSize.Width - leftWidth - rightWidth, finalSize.Height));
                 StackHorizontally(rightChildren, finalSize.Width - rightWidth, 0d, finalSize.Height);
                 return finalSize;
             }
@@ -146,13 +174,15 @@ namespace Forge.Forms.Controls.Internal
                 if (rightWidth <= finalSize.Width)
                 {
                     StackHorizontally(leftChildren, 0d, 0d, leftMaxHeight);
-                    StackHorizontally(rightChildren, finalSize.Width - rightWidth, leftMaxHeight, rightMaxHeight);
+                    fillChild?.Arrange(new Rect(0d, leftMaxHeight, finalSize.Width, fillHeight));
+                    StackHorizontally(rightChildren, finalSize.Width - rightWidth, leftMaxHeight + fillHeight, rightMaxHeight);
                     return finalSize;
                 }
 
                 // Return h / v
                 StackHorizontally(leftChildren, 0d, 0d, leftMaxHeight);
-                StackVertically(Enumerable.Reverse(rightChildren), finalSize.Width - rightMaxWidth, leftMaxHeight, rightMaxWidth);
+                fillChild?.Arrange(new Rect(0d, leftMaxHeight, finalSize.Width, fillHeight));
+                StackVertically(Enumerable.Reverse(rightChildren), finalSize.Width - rightMaxWidth, leftMaxHeight + fillHeight, rightMaxWidth);
                 return finalSize;
             }
 
@@ -160,17 +190,19 @@ namespace Forge.Forms.Controls.Internal
             if (rightWidth <= finalSize.Width)
             {
                 StackVertically(leftChildren, 0d, 0d, leftMaxWidth);
-                StackHorizontally(rightChildren, finalSize.Width - rightWidth, leftHeight, rightMaxHeight);
+                fillChild?.Arrange(new Rect(0d, leftHeight, finalSize.Width, fillHeight));
+                StackHorizontally(rightChildren, finalSize.Width - rightWidth, leftHeight + fillHeight, rightMaxHeight);
                 return finalSize;
             }
 
             // Return v / v
             StackVertically(leftChildren, 0d, 0d, leftMaxWidth);
-            StackVertically(Enumerable.Reverse(rightChildren), finalSize.Width - rightMaxWidth, leftHeight, rightMaxWidth);
+            fillChild?.Arrange(new Rect(0d, leftHeight, finalSize.Width, fillHeight));
+            StackVertically(Enumerable.Reverse(rightChildren), finalSize.Width - rightMaxWidth, leftHeight + fillHeight, rightMaxWidth);
             return finalSize;
         }
 
-        private void StackVertically(IEnumerable<UIElement> children, double x, double y, double width)
+        private static void StackVertically(IEnumerable<UIElement> children, double x, double y, double width)
         {
             var offset = 0d;
             foreach (var child in children)
@@ -181,7 +213,7 @@ namespace Forge.Forms.Controls.Internal
             }
         }
 
-        private void StackHorizontally(List<UIElement> children, double x, double y, double height)
+        private static void StackHorizontally(List<UIElement> children, double x, double y, double height)
         {
             var offset = 0d;
             foreach (var child in children)

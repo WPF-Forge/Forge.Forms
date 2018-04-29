@@ -1,8 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
+using System.Reflection;
+using Forge.Forms.Demo.Infrastructure;
 using Forge.Forms.Demo.Models;
 using Material.Application.Infrastructure;
+using Material.Application.Models;
 using Material.Application.Routing;
 using MaterialDesignThemes.Wpf;
 
@@ -10,7 +14,12 @@ namespace Forge.Forms.Demo.Routes
 {
     public class ExamplesRoute : Route, IActionHandler
     {
+        private static readonly string ModelsDir = Path.Combine(
+            Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) ?? Directory.GetCurrentDirectory(),
+            "Models");
+
         private readonly INotificationService notificationService;
+        private readonly RefreshSource currentModelRefresh;
 
         private ExamplePresenter currentModel;
 
@@ -18,12 +27,14 @@ namespace Forge.Forms.Demo.Routes
         {
             RouteConfig.Title = "Examples";
             RouteConfig.Icon = PackIconKind.ViewList;
+            currentModelRefresh = RefreshSource().WithProperties(nameof(CurrentModel));
 
             RouteConfig.RouteCommands.Add(Command("Validate model", PackIconKind.CheckAll,
                 () => ModelState.Validate(CurrentModel.Object)));
             RouteConfig.RouteCommands.Add(Command("Reset model", PackIconKind.Undo,
                 () => ModelState.Reset(CurrentModel.Object)));
-
+            RouteConfig.RouteCommands.Add(Command("View source", PackIconKind.CodeBraces,
+                ViewSource, CanViewSource, currentModelRefresh));
             this.notificationService = notificationService;
         }
 
@@ -33,7 +44,7 @@ namespace Forge.Forms.Demo.Routes
             set
             {
                 currentModel = value;
-                NotifyPropertyChanged();
+                currentModelRefresh.Refresh();
             }
         }
 
@@ -48,6 +59,38 @@ namespace Forge.Forms.Demo.Routes
         {
             Models = new ObservableCollection<ExamplePresenter>(GetModels());
             CurrentModel = Models.FirstOrDefault();
+        }
+
+        private void ViewSource()
+        {
+            if (CanViewSource(out var name, out var source))
+            {
+                GetRoute<SourceRoute>("title", currentModel.DisplayString ?? name, "source", source, "isPath", currentModel.Source == null).Push();
+            }
+        }
+
+        private bool CanViewSource() => CanViewSource(out var _, out var _);
+
+        private bool CanViewSource(out string name, out string source)
+        {
+            var model = currentModel?.Object;
+            if (model == null)
+            {
+                name = null;
+                source = null;
+                return false;
+            }
+
+
+            name = model.GetType().Name;
+            if (currentModel.Source != null)
+            {
+                source = currentModel.Source;
+                return true;
+            }
+
+            source = Path.Combine(ModelsDir, name + ".cs");
+            return File.Exists(source);
         }
 
         private IEnumerable<ExamplePresenter> GetModels()
@@ -69,20 +112,30 @@ namespace Forge.Forms.Demo.Routes
 
             yield return new ExamplePresenter(new BooleanLogic(), "Boolean Expressions", large);
 
+            yield return new ExamplePresenter(new InlineElements(), "Inline Elements", large);
+
             //yield return new ExamplePresenter(new Crud(), "CRUD", 2 * large);
 
             yield return new ExamplePresenter(new EnvManager(), "Environments", large);
 
+            yield return new ExamplePresenter(new FileBindings(), "File Binding", large);
+
             yield return new ExamplePresenter(new Alert
             {
                 Message = "Item deleted."
-            }, "Alert", small);
+            }, "Alert", small)
+            {
+                Source = @"new Alert(""Item deleted."");"
+            };
 
             yield return new ExamplePresenter(new Confirmation
             {
                 Message = "Discard draft?",
                 PositiveAction = "DISCARD"
-            }, "Confirm 1", small);
+            }, "Confirm 1", small)
+            {
+                Source = @"new Confirmation(""Discard draft?"") { PositiveAction = ""DISCARD"" };"
+            };
 
             yield return new ExamplePresenter(new Confirmation
             {
@@ -91,20 +144,35 @@ namespace Forge.Forms.Demo.Routes
                     "Let Google help apps determine location. This means sending anonymous location data to Google, even when no apps are running.",
                 PositiveAction = "AGREE",
                 NegativeAction = "DISAGREE"
-            }, "Confirm 2", small);
-
+            }, "Confirm 2", small)
+            {
+                Source = @"new Confirmation(
+    ""Let Google help apps determine location. This means sending anonymous location data to Google, even when no apps are running."",
+    ""Use Google's location service?"", ""AGREE"", ""DISAGREE"");"
+            };
 
             yield return new ExamplePresenter(new Prompt<string>
             {
                 Title = "Enter your name"
-            }, "Prompt 1", small);
+            }, "Prompt 1", small)
+            {
+                Source = @"new Prompt<string> { Title = ""Enter your name"" };"
+            };
 
             yield return new ExamplePresenter(new Prompt<bool>
             {
                 Message = "Discard draft?",
                 PositiveAction = "DISCARD",
                 Name = "Prevent future dialogs"
-            }, "Prompt 2", small);
+            }, "Prompt 2", small)
+            {
+                Source = @"new Prompt<bool> 
+{ 
+    Message = ""Discard draft?"",
+    PositiveAction = ""DISCARD"",
+    Name = ""Prevent future dialogs""
+};"
+            };
 
             yield return new ExamplePresenter(new DataTypes(), "Data types", large);
         }

@@ -3,18 +3,18 @@
 namespace Forge.Forms.Demo.Models
 {
     [Title("Dialogs")]
-    [Action("alert", "ALERT", InsertAfter = false)]
-    [Action("confirm", "CONFIRM", InsertAfter = false)]
-    [Action("long_confirm", "LONG CONFIRM", InsertAfter = false)]
-    [Action("prompt", "PROMPT", InsertAfter = false)]
-    [Action("login", "LOGIN", InsertAfter = false)]
+    [Action("alert", "ALERT", Placement = Placement.Before)]
+    [Action("confirm", "CONFIRM", Placement = Placement.Before)]
+    [Action("long_confirm", "LONG CONFIRM", Placement = Placement.Before)]
+    [Action("prompt", "PROMPT", Placement = Placement.Before)]
+    [Action("login", "LOGIN", Placement = Placement.Before)]
     [Divider]
     [Title("Windows")]
-    [Action("alert", "ALERT", Parameter = "window", InsertAfter = false)]
-    [Action("confirm", "CONFIRM", Parameter = "window", InsertAfter = false)]
-    [Action("long_confirm", "LONG CONFIRM", Parameter = "window", InsertAfter = false)]
-    [Action("prompt", "PROMPT", Parameter = "window", InsertAfter = false)]
-    [Action("login", "LOGIN", Parameter = "window", InsertAfter = false)]
+    [Action("alert", "ALERT", Parameter = "window", Placement = Placement.Before)]
+    [Action("confirm", "CONFIRM", Parameter = "window", Placement = Placement.Before)]
+    [Action("long_confirm", "LONG CONFIRM", Parameter = "window", Placement = Placement.Before)]
+    [Action("prompt", "PROMPT", Parameter = "window", Placement = Placement.Before)]
+    [Action("login", "LOGIN", Parameter = "window", Placement = Placement.Before)]
     public class Dialogs : IActionHandler
     {
         public async void HandleAction(IActionContext actionContext)

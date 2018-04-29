@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
 
-namespace Forge.Forms.Demo
+namespace Forge.Forms.Demo.Infrastructure
 {
     public class ModelTypeToVisibilityConverter : IValueConverter
     {
