@@ -11,6 +11,11 @@ namespace Forge.Forms.Annotations
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Property, AllowMultiple = true)]
     public abstract class TextElementAttribute : FormContentAttribute
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TextElementAttribute"/> class.
+        /// </summary>
+        /// <param name="value">Text value. Accepts a string or a dynamic expression.</param>
+        /// <param name="position">The relative position of this element.</param>
         protected TextElementAttribute(string value, int position) : base(position)
         {
             Value = value;
@@ -42,7 +47,13 @@ namespace Forge.Forms.Annotations
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Property, AllowMultiple = true)]
     public sealed class TitleAttribute : TextElementAttribute
     {
-        public TitleAttribute(string value, [CallerLineNumber] int position = 0) : base(value, position)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TitleAttribute"/> class.
+        /// </summary>
+        /// <param name="value">Text value. Accepts a string or a dynamic expression.</param>
+        /// <param name="position">Do not provide a value for this argument.</param>
+        public TitleAttribute(string value, [CallerLineNumber] int position = 0)
+            : base(value, position)
         {
         }
 
@@ -66,7 +77,13 @@ namespace Forge.Forms.Annotations
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Property, AllowMultiple = true)]
     public sealed class HeadingAttribute : TextElementAttribute
     {
-        public HeadingAttribute(string value, [CallerLineNumber] int position = 0) : base(value, position)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="HeadingAttribute"/> class.
+        /// </summary>
+        /// <param name="value">Text value. Accepts a string or a dynamic expression.</param>
+        /// <param name="position">Do not provide a value for this argument.</param>
+        public HeadingAttribute(string value, [CallerLineNumber] int position = 0)
+            : base(value, position)
         {
         }
 
@@ -90,7 +107,13 @@ namespace Forge.Forms.Annotations
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Property, AllowMultiple = true)]
     public sealed class TextAttribute : TextElementAttribute
     {
-        public TextAttribute(string value, [CallerLineNumber] int position = 0) : base(value, position)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TextAttribute"/> class.
+        /// </summary>
+        /// <param name="value">Text value. Accepts a string or a dynamic expression.</param>
+        /// <param name="position">Do not provide a value for this argument.</param>
+        public TextAttribute(string value, [CallerLineNumber] int position = 0)
+            : base(value, position)
         {
         }
 

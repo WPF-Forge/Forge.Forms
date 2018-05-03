@@ -1,6 +1,6 @@
 using Material.Application.Models;
 
-namespace Forge.Forms.Demo.Models
+namespace Forge.Forms.Demo.Infrastructure
 {
     public class ExamplePresenter : ObjectPresenter
     {
@@ -11,5 +11,7 @@ namespace Forge.Forms.Demo.Models
         }
 
         public double PreferredWidth { get; }
+
+        public string Source { get; set; }
     }
 }

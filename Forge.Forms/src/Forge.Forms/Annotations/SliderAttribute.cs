@@ -1,7 +1,10 @@
 ﻿using System;
 
-namespace Forge.Forms.Annotations.Display
+namespace Forge.Forms.Annotations
 {
+    /// <summary>
+    /// Indicates that a numeric value should be displayed as a slider.
+    /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
     public class SliderAttribute : Attribute
     {

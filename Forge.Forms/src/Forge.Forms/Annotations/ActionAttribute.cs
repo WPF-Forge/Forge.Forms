@@ -6,9 +6,18 @@ using Forge.Forms.FormBuilding.Defaults;
 
 namespace Forge.Forms.Annotations
 {
+    /// <summary>
+    /// Declares an action, which is typically rendered as a button.
+    /// </summary>
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Property, AllowMultiple = true)]
     public class ActionAttribute : FormContentAttribute
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ActionAttribute"/> class.
+        /// </summary>
+        /// <param name="name">Action identifier. Accepts a string or a dynamic expression.</param>
+        /// <param name="content">Action content. Accepts a string or a dynamic expression.</param>
+        /// <param name="position">Do not provide a value for this argument.</param>
         public ActionAttribute(string name, string content, [CallerLineNumber] int position = 0)
             : base(position)
         {
@@ -17,7 +26,7 @@ namespace Forge.Forms.Annotations
             // Actions are grouped by default.
             ShareLine = true;
             // Actions are inserted after elements by default.
-            InsertAfter = true;
+            Placement = Placement.After;
             // Actions are displayed to the right by default.
             LinePosition = Annotations.Position.Right;
         }
