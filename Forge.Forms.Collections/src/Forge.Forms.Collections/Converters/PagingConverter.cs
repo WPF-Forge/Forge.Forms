@@ -11,22 +11,29 @@ namespace Forge.Forms.Collections.Converters
     {
         public object Convert(object[] value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value.Any(i => i == null))
+            try
             {
-                return value[0];
-            }
-
-            if (value[0] is ListCollectionView view && value[1] is DynamicDataGrid dataGrid)
-            {
-                var collectionView = CollectionViewSource.GetDefaultView(dataGrid.DataGrid.ItemsSource);
-
-                if (collectionView != null)
+                if (value.Any(i => i == null))
                 {
-                    view.Filter = collectionView.Filter;
+                    return value[0];
                 }
 
-                return view.Cast<object>().Skip((dataGrid.CurrentPage - 1) * dataGrid.ItemsPerPage)
-                    .Take(dataGrid.ItemsPerPage);
+                if (value[0] is ListCollectionView view && value[1] is DynamicDataGrid dataGrid)
+                {
+                    var collectionView = CollectionViewSource.GetDefaultView(dataGrid.DataGrid.ItemsSource);
+
+                    if (collectionView != null)
+                    {
+                        view.Filter = collectionView.Filter;
+                    }
+
+                    return view.Cast<object>().Skip((dataGrid.CurrentPage - 1) * dataGrid.ItemsPerPage)
+                        .Take(dataGrid.ItemsPerPage);
+                }
+            }
+            catch
+            {
+                // ignored
             }
 
             return value[0];

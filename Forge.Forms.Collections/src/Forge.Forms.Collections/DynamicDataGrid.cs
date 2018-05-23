@@ -23,7 +23,6 @@ using Forge.Forms.FormBuilding;
 using Forge.Forms.FormBuilding.Defaults;
 using MaterialDesignThemes.Wpf;
 using PropertyChanged;
-using Expression = System.Linq.Expressions.Expression;
 
 namespace Forge.Forms.Collections
 {
@@ -43,6 +42,139 @@ namespace Forge.Forms.Collections
         public static DependencyProperty CanUserAddProperty =
             DependencyProperty.Register("CanUserAdd", typeof(bool), typeof(DynamicDataGrid),
                 new PropertyMetadata(true));
+
+        public static readonly DependencyProperty RemoveActionProperty = DependencyProperty.Register(
+            nameof(RemoveAction), typeof(Action<object, ExecutedRoutedEventArgs>), typeof(DynamicDataGrid),
+            new FrameworkPropertyMetadata(
+                (Action<object, ExecutedRoutedEventArgs>) ((o, args) =>
+                {
+                    DynamicDataGrid dynamicDataGrid;
+                    if ((dynamicDataGrid = o as DynamicDataGrid) == null)
+                        return;
+                    dynamicDataGrid.ExecuteRemoveItem(o, args);
+                })));
+
+        public static readonly DependencyProperty UpdateActionProperty = DependencyProperty.Register(
+            nameof(UpdateAction), typeof(Action<object, ExecutedRoutedEventArgs>), typeof(DynamicDataGrid),
+            new PropertyMetadata((Action<object, ExecutedRoutedEventArgs>) ((o, args) =>
+            {
+                DynamicDataGrid dynamicDataGrid;
+                if ((dynamicDataGrid = o as DynamicDataGrid) == null)
+                    return;
+                dynamicDataGrid.ExecuteUpdateItem(o, args);
+            })));
+
+        public static readonly DependencyProperty CanCreateActionProperty = DependencyProperty.Register(
+            nameof(CanCreateAction), typeof(Func<object, CanExecuteRoutedEventArgs, bool>), typeof(DynamicDataGrid),
+            new PropertyMetadata((Func<object, CanExecuteRoutedEventArgs, bool>) ((o, args) =>
+            {
+                DynamicDataGrid dynamicDataGrid;
+                if ((dynamicDataGrid = o as DynamicDataGrid) != null)
+                    dynamicDataGrid.CanExecuteCreateItem(o, args);
+                return args.CanExecute;
+            })));
+
+        public Func<object, CanExecuteRoutedEventArgs, bool> CanCreateAction
+        {
+            get { return (Func<object, CanExecuteRoutedEventArgs, bool>) GetValue(CanCreateActionProperty); }
+            set
+            {
+                if (Equals(CanCreateAction, value))
+                    return;
+                SetValue(CanCreateActionProperty, value);
+                OnPropertyChanged();
+            }
+        }
+
+        public Func<object, CanExecuteRoutedEventArgs, bool> CanRemoveAction
+        {
+            get { return (Func<object, CanExecuteRoutedEventArgs, bool>) GetValue(CanRemoveActionProperty); }
+            set
+            {
+                if (Equals(CanRemoveAction, value))
+                    return;
+                SetValue(CanRemoveActionProperty, value);
+                OnPropertyChanged();
+            }
+        }
+
+        public Func<object, CanExecuteRoutedEventArgs, bool> CanUpdateAction
+        {
+            get { return (Func<object, CanExecuteRoutedEventArgs, bool>) GetValue(CanUpdateActionProperty); }
+            set
+            {
+                if (Equals(CanUpdateAction, value))
+                    return;
+                SetValue(CanUpdateActionProperty, value);
+                OnPropertyChanged();
+            }
+        }
+
+        public Action<object, ExecutedRoutedEventArgs> CreateAction
+        {
+            get { return (Action<object, ExecutedRoutedEventArgs>) GetValue(CreateActionProperty); }
+            set
+            {
+                if (Equals(CreateAction, value))
+                    return;
+                SetValue(CreateActionProperty, value);
+                OnPropertyChanged();
+            }
+        }
+
+        public Action<object, ExecutedRoutedEventArgs> RemoveAction
+        {
+            get { return (Action<object, ExecutedRoutedEventArgs>) GetValue(RemoveActionProperty); }
+            set
+            {
+                if (Equals(RemoveAction, value))
+                    return;
+                SetValue(RemoveActionProperty, value);
+                OnPropertyChanged();
+            }
+        }
+
+        public Action<object, ExecutedRoutedEventArgs> UpdateAction
+        {
+            get { return (Action<object, ExecutedRoutedEventArgs>) GetValue(UpdateActionProperty); }
+            set
+            {
+                if (Equals(UpdateAction, value))
+                    return;
+                SetValue(UpdateActionProperty, value);
+                OnPropertyChanged();
+            }
+        }
+
+        public static readonly DependencyProperty CanRemoveActionProperty = DependencyProperty.Register(
+            nameof(CanRemoveAction), typeof(Func<object, CanExecuteRoutedEventArgs, bool>), typeof(DynamicDataGrid),
+            new PropertyMetadata((Func<object, CanExecuteRoutedEventArgs, bool>) ((o, args) =>
+            {
+                DynamicDataGrid dynamicDataGrid;
+                if ((dynamicDataGrid = o as DynamicDataGrid) != null)
+                    dynamicDataGrid.CanExecuteRemoveItem(o, args);
+                return args.CanExecute;
+            })));
+
+        public static readonly DependencyProperty CanUpdateActionProperty = DependencyProperty.Register(
+            nameof(CanUpdateAction), typeof(Func<object, CanExecuteRoutedEventArgs, bool>), typeof(DynamicDataGrid),
+            new PropertyMetadata((Func<object, CanExecuteRoutedEventArgs, bool>) ((o, args) =>
+            {
+                DynamicDataGrid dynamicDataGrid;
+                if ((dynamicDataGrid = o as DynamicDataGrid) != null)
+                    dynamicDataGrid.CanExecuteUpdateItem(o, args);
+                return args.CanExecute;
+            })));
+
+        public static readonly DependencyProperty CreateActionProperty = DependencyProperty.Register(
+            nameof(CreateAction), typeof(Action<object, ExecutedRoutedEventArgs>), typeof(DynamicDataGrid),
+            new PropertyMetadata((Action<object, ExecutedRoutedEventArgs>) ((o, args) =>
+            {
+                DynamicDataGrid dynamicDataGrid;
+                if ((dynamicDataGrid = o as DynamicDataGrid) == null)
+                    return;
+                dynamicDataGrid.ExecuteCreateItem(o, args);
+            })));
 
         /// <summary>
         /// Identifies the CanUserEdit dependency property.
@@ -212,7 +344,13 @@ namespace Forge.Forms.Collections
             DependencyProperty.Register(
                 nameof(ItemsSource),
                 typeof(IEnumerable),
-                typeof(DynamicDataGrid));
+                typeof(DynamicDataGrid), new PropertyMetadata((d, o) =>
+                {
+                    if (d is DynamicDataGrid dataGrid)
+                    {
+                        dataGrid.OnItemsSource(o.NewValue);
+                    }
+                }));
 
         /// <summary>
         /// Identifies the FirstPage dependency property.
@@ -609,9 +747,17 @@ namespace Forge.Forms.Collections
                 DataGrid.Columns.Remove(dataGridColumn);
             }
 
+            var ignoreNonMarkedFields = false;
+
+            if (ItemType.GetCustomAttribute<FormAttribute>() is FormAttribute formAttribute)
+            {
+                ignoreNonMarkedFields = formAttribute.Mode == DefaultFields.None;
+            }
+
             foreach (var propertyInfo in ItemType
                 .GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly)
-                .Where(i => i.GetCustomAttribute<FieldIgnoreAttribute>() == null &&
+                .Where(i => (!ignoreNonMarkedFields || i.GetCustomAttribute<FieldAttribute>() != null) &&
+                            i.GetCustomAttribute<FieldIgnoreAttribute>() == null &&
                             i.GetCustomAttribute<CrudIgnoreAttribute>() == null)
                 .Reverse())
             {
@@ -1115,6 +1261,11 @@ namespace Forge.Forms.Collections
                 return;
             }
 
+            if (collection is INotifyCollectionChanged changed)
+            {
+                changed.CollectionChanged += (sender, args) => DataGrid.Items.Refresh();
+            }
+
             var collectionType = interfaces[0];
             ItemType = collectionType.GetGenericArguments()[0];
             canMutate = ItemType.GetConstructor(Type.EmptyTypes) != null;
@@ -1144,7 +1295,7 @@ namespace Forge.Forms.Collections
             {
                 var collection = ItemsSource;
 
-                IAddActionContext context = new AddActionContext(result.Model);
+                IAddActionContext context = new AddActionContext(ItemsSource, this, result.Model);
                 foreach (var globalInterceptor in AddInterceptorChain)
                 {
                     context = globalInterceptor.Intercept(context);
@@ -1157,12 +1308,12 @@ namespace Forge.Forms.Collections
                 if (!(collection is INotifyCollectionChanged) && DataGrid != null)
                 {
                     ItemsSource = null;
-                    AddItemToCollection(ItemType, collection, context.NewModel);
+                    AddItemToCollection(collection, context.NewModel);
                     ItemsSource = collection;
                 }
                 else
                 {
-                    AddItemToCollection(ItemType, collection, context.NewModel);
+                    AddItemToCollection(collection, context.NewModel);
                 }
             }
         }
@@ -1203,7 +1354,7 @@ namespace Forge.Forms.Collections
             }
 
             var oldModel = GetOldModel(definition);
-            IUpdateActionContext context = new UpdateActionContext(oldModel, definition.Model);
+            IUpdateActionContext context = new UpdateActionContext(ItemsSource, this, oldModel, definition.Model);
 
             foreach (var globalInterceptor in UpdateInterceptorChain)
             {
@@ -1293,13 +1444,13 @@ namespace Forge.Forms.Collections
                     {
                         foreach (var item in modelEnum.Cast<object>().ToList())
                         {
-                            IRemoveActionContext context = new RemoveActionContext(item);
+                            IRemoveActionContext context = new RemoveActionContext(ItemsSource, this, item);
                             DoInterceptions(context);
                         }
                     }
                     else
                     {
-                        IRemoveActionContext context = new RemoveActionContext(model);
+                        IRemoveActionContext context = new RemoveActionContext(ItemsSource, this, model);
                         DoInterceptions(context);
                     }
 
@@ -1330,12 +1481,12 @@ namespace Forge.Forms.Collections
             {
                 foreach (var item in modelEnum.Cast<object>().ToList())
                 {
-                    RemoveItemFromCollection(ItemType, collection, item);
+                    RemoveItemFromCollection(collection, item);
                 }
             }
             else
             {
-                RemoveItemFromCollection(ItemType, collection, model);
+                RemoveItemFromCollection(collection, model);
             }
 
             HandleCurrentPageOnMaxPagesChange();
@@ -1673,55 +1824,15 @@ namespace Forge.Forms.Collections
 
         private RelayCommand CheckboxColumnCommand { get; }
 
-        private static void AddItemToCollection(Type itemType, object collection, object item)
+        private static void AddItemToCollection(object collection, object item)
         {
-            if (!AddItemCache.TryGetValue(itemType, out var action))
-            {
-                var collectionType = typeof(ICollection<>).MakeGenericType(itemType);
-                var addMethod = collectionType.GetMethod("Add") ??
-                                throw new InvalidOperationException("This should not happen.");
-                var collectionParam = Expression.Parameter(typeof(object), "collection");
-                var itemParam = Expression.Parameter(typeof(object), "item");
-                var lambda = Expression.Lambda<Action<object, object>>(
-                    Expression.Call(
-                        Expression.Convert(collectionParam, collectionType),
-                        addMethod,
-                        Expression.Convert(itemParam, itemType)),
-                    collectionParam,
-                    itemParam
-                );
-
-                action = lambda.Compile();
-                AddItemCache[itemType] = action;
-            }
-
-            action(collection, item);
+            collection.GetType().GetMethod("Add")?.Invoke(collection, new[] {item});
         }
 
-        private void RemoveItemFromCollection(Type itemType, object collection, object item)
+        private void RemoveItemFromCollection(object collection, object item)
         {
-            if (!RemoveItemCache.TryGetValue(itemType, out var action))
-            {
-                var collectionType = typeof(ICollection<>).MakeGenericType(itemType);
-                var removeMethod = collectionType.GetMethod("Remove") ??
-                                   throw new InvalidOperationException("This should not happen.");
-                var collectionParam = Expression.Parameter(typeof(object), "collection");
-                var itemParam = Expression.Parameter(typeof(object), "item");
-                var lambda = Expression.Lambda<Action<object, object>>(
-                    Expression.Call(
-                        Expression.Convert(collectionParam, collectionType),
-                        removeMethod,
-                        Expression.Convert(itemParam, itemType)),
-                    collectionParam,
-                    itemParam
-                );
-
-                action = lambda.Compile();
-                RemoveItemCache[itemType] = action;
-            }
-
+            collection.GetType().GetMethod("Remove")?.Invoke(collection, new[] {item});
             CheckedConverter.Remove(this, item);
-            action(collection, item);
         }
 
         #endregion

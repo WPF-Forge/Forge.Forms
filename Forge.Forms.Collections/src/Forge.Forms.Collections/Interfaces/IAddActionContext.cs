@@ -1,8 +1,14 @@
-﻿namespace Forge.Forms.Collections.Interfaces
-{
-    using Forge.Forms.FormBuilding;
+﻿using System.Collections;
 
-    public interface IAddActionContext
+namespace Forge.Forms.Collections.Interfaces
+{
+    public interface IBasicActionContext
+    {
+        IEnumerable Source { get; }
+        DynamicDataGrid DataGrid { get; }
+    }
+
+    public interface IAddActionContext : IBasicActionContext
     {
         object NewModel { get; }
     }
