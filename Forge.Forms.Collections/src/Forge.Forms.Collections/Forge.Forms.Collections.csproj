@@ -96,13 +96,13 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Fody">
-      <Version>2.3.25</Version>
+      <Version>3.0.3</Version>
     </PackageReference>
     <PackageReference Include="MaterialDesignThemes">
       <Version>2.3.1.953</Version>
     </PackageReference>
     <PackageReference Include="PropertyChanged.Fody">
-      <Version>2.2.5</Version>
+      <Version>2.5.4</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
