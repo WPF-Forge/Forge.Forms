@@ -76,10 +76,7 @@ namespace Forge.Forms.Collections
 
         public Func<object, CanExecuteRoutedEventArgs, bool> CanCreateAction
         {
-            get
-            {
-                return (Func<object, CanExecuteRoutedEventArgs, bool>) GetValue(CanCreateActionProperty);
-            }
+            get { return (Func<object, CanExecuteRoutedEventArgs, bool>) GetValue(CanCreateActionProperty); }
             set
             {
                 if (Equals(CanCreateAction, value))
@@ -91,10 +88,7 @@ namespace Forge.Forms.Collections
 
         public Func<object, CanExecuteRoutedEventArgs, bool> CanRemoveAction
         {
-            get
-            {
-                return (Func<object, CanExecuteRoutedEventArgs, bool>) GetValue(CanRemoveActionProperty);
-            }
+            get { return (Func<object, CanExecuteRoutedEventArgs, bool>) GetValue(CanRemoveActionProperty); }
             set
             {
                 if (Equals(CanRemoveAction, value))
@@ -106,10 +100,7 @@ namespace Forge.Forms.Collections
 
         public Func<object, CanExecuteRoutedEventArgs, bool> CanUpdateAction
         {
-            get
-            {
-                return (Func<object, CanExecuteRoutedEventArgs, bool>) GetValue(CanUpdateActionProperty);
-            }
+            get { return (Func<object, CanExecuteRoutedEventArgs, bool>) GetValue(CanUpdateActionProperty); }
             set
             {
                 if (Equals(CanUpdateAction, value))
@@ -121,10 +112,7 @@ namespace Forge.Forms.Collections
 
         public Action<object, ExecutedRoutedEventArgs> CreateAction
         {
-            get
-            {
-                return (Action<object, ExecutedRoutedEventArgs>) GetValue(CreateActionProperty);
-            }
+            get { return (Action<object, ExecutedRoutedEventArgs>) GetValue(CreateActionProperty); }
             set
             {
                 if (Equals(CreateAction, value))
@@ -136,10 +124,7 @@ namespace Forge.Forms.Collections
 
         public Action<object, ExecutedRoutedEventArgs> RemoveAction
         {
-            get
-            {
-                return (Action<object, ExecutedRoutedEventArgs>) GetValue(RemoveActionProperty);
-            }
+            get { return (Action<object, ExecutedRoutedEventArgs>) GetValue(RemoveActionProperty); }
             set
             {
                 if (Equals(RemoveAction, value))
@@ -151,10 +136,7 @@ namespace Forge.Forms.Collections
 
         public Action<object, ExecutedRoutedEventArgs> UpdateAction
         {
-            get
-            {
-                return (Action<object, ExecutedRoutedEventArgs>) GetValue(UpdateActionProperty);
-            }
+            get { return (Action<object, ExecutedRoutedEventArgs>) GetValue(UpdateActionProperty); }
             set
             {
                 if (Equals(UpdateAction, value))
@@ -509,9 +491,12 @@ namespace Forge.Forms.Collections
 
         public DynamicDataGrid()
         {
-            CommandBindings.Add(new CommandBinding(CreateItemCommand, ExecuteCreateItem, CanExecuteCreateItem));
-            CommandBindings.Add(new CommandBinding(UpdateItemCommand, ExecuteUpdateItem, CanExecuteUpdateItem));
-            CommandBindings.Add(new CommandBinding(RemoveItemCommand, ExecuteRemoveItem, CanExecuteRemoveItem));
+            CommandBindings.Add(new CommandBinding(CreateItemCommand,
+                (sender, args) => CreateAction.Invoke(sender, args), (sender, args) => CanCreateAction.Invoke(sender, args)));
+            CommandBindings.Add(new CommandBinding(UpdateItemCommand,
+                (sender, args) => UpdateAction.Invoke(sender, args), (sender, args) => CanUpdateAction.Invoke(sender, args)));
+            CommandBindings.Add(new CommandBinding(RemoveItemCommand,
+                (sender, args) => RemoveAction.Invoke(sender, args), (sender, args) => CanRemoveAction.Invoke(sender, args)));
 
             MoveNextCommand = new RelayCommand(x => CurrentPage++, o => CurrentPage < LastPage);
             MoveBackCommand = new RelayCommand(x => CurrentPage--, o => CurrentPage > 1);
