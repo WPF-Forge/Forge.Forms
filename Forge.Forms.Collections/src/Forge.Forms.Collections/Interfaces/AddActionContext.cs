@@ -1,6 +1,4 @@
-﻿using System.Collections;
-
-namespace Forge.Forms.Collections.Interfaces
+﻿namespace Forge.Forms.Collections.Interfaces
 {
     public class AddActionContext : IAddActionContext
     {
@@ -10,20 +8,7 @@ namespace Forge.Forms.Collections.Interfaces
             NewModel = newModel;
         }
 
-        
-        internal AddActionContext(IEnumerable source, DynamicDataGrid dataGrid, object newModel) : this(newModel)
-        {
-            Source = source;
-            DataGrid = dataGrid;
-        }
-
         /// <inheritdoc />
         public object NewModel { get; }
-
-        /// <inheritdoc />
-        public IEnumerable Source { get; }
-
-        /// <inheritdoc />
-        public DynamicDataGrid DataGrid { get; }
     }
 }

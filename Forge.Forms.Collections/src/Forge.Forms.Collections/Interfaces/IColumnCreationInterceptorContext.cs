@@ -4,7 +4,7 @@ using System.Windows.Controls;
 
 namespace Forge.Forms.Collections.Interfaces
 {
-    public interface IColumnCreationInterceptorContext : IBasicActionContext
+    public interface IColumnCreationInterceptorContext
     {
         PropertyInfo Property { get; }
         DynamicDataGrid Parent { get; }

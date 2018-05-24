@@ -1,15 +1,7 @@
-﻿using System.Collections;
-
-namespace Forge.Forms.Collections.Interfaces
+﻿namespace Forge.Forms.Collections.Interfaces
 {
     public class RemoveActionContext : IRemoveActionContext
     {
-        internal RemoveActionContext(IEnumerable source, DynamicDataGrid dataGrid, object oldModel) : this(oldModel)
-        {
-            Source = source;
-            DataGrid = dataGrid;
-        }
-
         /// <inheritdoc />
         public RemoveActionContext(object oldModel)
         {
@@ -18,11 +10,5 @@ namespace Forge.Forms.Collections.Interfaces
 
         /// <inheritdoc />
         public object OldModel { get; }
-
-        /// <inheritdoc />
-        public IEnumerable Source { get; }
-
-        /// <inheritdoc />
-        public DynamicDataGrid DataGrid { get; }
     }
 }

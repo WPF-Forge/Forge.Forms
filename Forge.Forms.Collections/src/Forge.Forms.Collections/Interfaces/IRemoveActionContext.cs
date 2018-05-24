@@ -1,6 +1,6 @@
 ﻿namespace Forge.Forms.Collections.Interfaces
 {
-    public interface IRemoveActionContext: IBasicActionContext
+    public interface IRemoveActionContext
     {
         object OldModel { get; }
     }
