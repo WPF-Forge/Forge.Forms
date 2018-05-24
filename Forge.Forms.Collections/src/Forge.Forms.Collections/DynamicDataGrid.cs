@@ -297,7 +297,7 @@ namespace Forge.Forms.Collections
         /// <summary>
         /// The add interceptor chain
         /// </summary>
-        public static readonly List<IAddActionInterceptor> AddInterceptorChain = new List<IAddActionInterceptor>();
+        public static readonly List<ICreateActionInterceptor> AddInterceptorChain = new List<ICreateActionInterceptor>();
 
         /// <summary>
         /// The update interceptor chain
@@ -357,7 +357,7 @@ namespace Forge.Forms.Collections
                 (sender, args) => CreateAction.Invoke(sender, args),
                 (sender, args) => args.CanExecute = CanCreateAction.Invoke(sender, args)));
             CommandBindings.Add(new CommandBinding(UpdateItemCommand,
-                (sender, args) => UpdateAction.Invoke(sender, args),
+                (sender, args) => EditAction.Invoke(sender, args),
                 (sender, args) => args.CanExecute = CanUpdateAction.Invoke(sender, args)));
             CommandBindings.Add(new CommandBinding(RemoveItemCommand,
                 (sender, args) => RemoveAction.Invoke(sender, args),
@@ -884,13 +884,13 @@ namespace Forge.Forms.Collections
                 new DefaultColumnCreationInterceptor()
             };
 
-        public void AddInterceptor(IColumnCreationInterceptor interceptor)
+        public void AddColumnInterceptor(IColumnCreationInterceptor interceptor)
         {
             ColumnCreationInterceptors.Insert(0, interceptor);
             ReloadColumns();
         }
 
-        public void RemoveInterceptor(IColumnCreationInterceptor interceptor)
+        public void RemoveColumnInterceptor(IColumnCreationInterceptor interceptor)
         {
             ColumnCreationInterceptors.Remove(interceptor);
             ReloadColumns();
@@ -1067,12 +1067,6 @@ namespace Forge.Forms.Collections
             }
         }
 
-        private static TChildItem FindVisualChild<TChildItem>(DependencyObject obj)
-            where TChildItem : DependencyObject
-        {
-            return FindVisualChildren<TChildItem>(obj).FirstOrDefault();
-        }
-
         private void DataGridOnMouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             if (e.RightButton == MouseButtonState.Pressed)
@@ -1157,7 +1151,7 @@ namespace Forge.Forms.Collections
             {
                 var collection = ItemsSource;
 
-                IAddActionContext context = new AddActionContext(result.Model);
+                ICreateActionContext context = new CreateActionContext(result.Model);
                 foreach (var globalInterceptor in AddInterceptorChain)
                 {
                     context = globalInterceptor.Intercept(context);

@@ -2,7 +2,7 @@
 {
     using Forge.Forms.FormBuilding;
 
-    public interface IAddActionContext
+    public interface ICreateActionContext
     {
         object NewModel { get; }
     }

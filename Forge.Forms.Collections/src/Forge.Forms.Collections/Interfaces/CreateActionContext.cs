@@ -1,9 +1,9 @@
 ﻿namespace Forge.Forms.Collections.Interfaces
 {
-    public class AddActionContext : IAddActionContext
+    public class CreateActionContext : ICreateActionContext
     {
         /// <inheritdoc />
-        public AddActionContext(object newModel)
+        public CreateActionContext(object newModel)
         {
             NewModel = newModel;
         }

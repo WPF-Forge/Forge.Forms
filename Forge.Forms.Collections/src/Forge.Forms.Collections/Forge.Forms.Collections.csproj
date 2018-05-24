@@ -60,9 +60,9 @@
     <Compile Include="DynamicDataGridActions.cs" />
     <Compile Include="FormDefinitionWrapper.cs" />
     <Compile Include="GridField.cs" />
-    <Compile Include="Interfaces\AddActionContext.cs" />
-    <Compile Include="Interfaces\IAddActionContext.cs" />
-    <Compile Include="Interfaces\IAddActionInterceptor.cs" />
+    <Compile Include="Interfaces\CreateActionContext.cs" />
+    <Compile Include="Interfaces\ICreateActionContext.cs" />
+    <Compile Include="Interfaces\ICreateActionInterceptor.cs" />
     <Compile Include="Interfaces\IColumnCreationInterceptor.cs" />
     <Compile Include="Interfaces\IColumnCreationInterceptorContext.cs" />
     <Compile Include="Interfaces\IRemoveActionContext.cs" />

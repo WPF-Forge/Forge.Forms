@@ -15,13 +15,13 @@ namespace Forge.Forms.Collections
             set { SetValue(DeleteActionTextProperty, value); }
         }
 
-        public static readonly DependencyProperty AddActionTextProperty = DependencyProperty.Register(
-            nameof(AddActionText), typeof(string), typeof(DynamicDataGrid), new PropertyMetadata("Add"));
+        public static readonly DependencyProperty CreateActionTextProperty = DependencyProperty.Register(
+            nameof(CreateActionText), typeof(string), typeof(DynamicDataGrid), new PropertyMetadata("Add"));
 
-        public string AddActionText
+        public string CreateActionText
         {
-            get { return (string) GetValue(AddActionTextProperty); }
-            set { SetValue(AddActionTextProperty, value); }
+            get { return (string) GetValue(CreateActionTextProperty); }
+            set { SetValue(CreateActionTextProperty, value); }
         }
 
         public static readonly DependencyProperty EditActionTextProperty = DependencyProperty.Register(
@@ -79,8 +79,8 @@ namespace Forge.Forms.Collections
                     if (o is DynamicDataGrid d) d.ExecuteRemoveItem(o, args);
                 })));
 
-        public static readonly DependencyProperty UpdateActionProperty = DependencyProperty.Register(
-            nameof(UpdateAction), typeof(Action<object, ExecutedRoutedEventArgs>), typeof(DynamicDataGrid),
+        public static readonly DependencyProperty EditActionProperty = DependencyProperty.Register(
+            nameof(EditAction), typeof(Action<object, ExecutedRoutedEventArgs>), typeof(DynamicDataGrid),
             new PropertyMetadata(new Action<object, ExecutedRoutedEventArgs>(
                 (o, args) =>
                 {
@@ -117,10 +117,10 @@ namespace Forge.Forms.Collections
             set => SetValue(RemoveActionProperty, value);
         }
 
-        public Action<object, ExecutedRoutedEventArgs> UpdateAction
+        public Action<object, ExecutedRoutedEventArgs> EditAction
         {
-            get => (Action<object, ExecutedRoutedEventArgs>) GetValue(UpdateActionProperty);
-            set => SetValue(UpdateActionProperty, value);
+            get => (Action<object, ExecutedRoutedEventArgs>) GetValue(EditActionProperty);
+            set => SetValue(EditActionProperty, value);
         }
     }
 }
