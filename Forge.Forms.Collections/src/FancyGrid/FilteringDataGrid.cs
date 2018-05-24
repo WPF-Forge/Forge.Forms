@@ -25,13 +25,12 @@ namespace FancyGrid
             DependencyProperty.Register("CanFilter", typeof(bool), typeof(FilteringDataGrid),
                 new PropertyMetadata(false));
 
-
         /// <summary>
         /// Case sensitive filtering
         /// </summary>
         public static DependencyProperty IsFilteringCaseInternalSensitiveProperty =
             DependencyProperty.Register("IsFilteringCaseInternalSensitive", typeof(bool), typeof(FilteringDataGrid),
-                new PropertyMetadata(true));
+                new PropertyMetadata(false));
 
         /// <summary>
         /// Identifies the ClearFiltersMessage dependency property.
@@ -69,7 +68,6 @@ namespace FancyGrid
         /// </summary>
         private readonly Dictionary<string, PropertyInfo> propertyCache;
 
-
         /// <inheritdoc />
         /// <summary>
         /// Register for all text changed events
@@ -88,7 +86,7 @@ namespace FancyGrid
 
         public bool CanFilter
         {
-            get => (bool)GetValue(CanFilterProperty);
+            get => (bool) GetValue(CanFilterProperty);
             set => SetValue(CanFilterProperty, value);
         }
 
@@ -99,7 +97,7 @@ namespace FancyGrid
         /// </summary>
         public bool IsFilteringCaseInternalSensitive
         {
-            get => (bool)GetValue(IsFilteringCaseInternalSensitiveProperty);
+            get => (bool) GetValue(IsFilteringCaseInternalSensitiveProperty);
             set => SetValue(IsFilteringCaseInternalSensitiveProperty, value);
         }
 
@@ -111,7 +109,7 @@ namespace FancyGrid
         /// </value>
         public string ClearFiltersInternalMessage
         {
-            get => (string)GetValue(ClearFiltersInternalMessageProperty);
+            get => (string) GetValue(ClearFiltersInternalMessageProperty);
             set => SetValue(ClearFiltersInternalMessageProperty, value);
         }
 
@@ -123,7 +121,7 @@ namespace FancyGrid
         /// </value>
         public string IncludeItemsInternalMessage
         {
-            get => (string)GetValue(IncludeItemsInternalMessageProperty);
+            get => (string) GetValue(IncludeItemsInternalMessageProperty);
             set => SetValue(IncludeItemsInternalMessageProperty, value);
         }
 
@@ -135,7 +133,7 @@ namespace FancyGrid
         /// </value>
         public string ExcludeItemsInternalMessage
         {
-            get => (string)GetValue(ExcludeItemsInternalMessageProperty);
+            get => (string) GetValue(ExcludeItemsInternalMessageProperty);
             set => SetValue(ExcludeItemsInternalMessageProperty, value);
         }
 
@@ -146,14 +144,14 @@ namespace FancyGrid
                 return;
             }
 
-            var row = TryFindParent<DataGridRow>((DependencyObject)e.OriginalSource);
+            var row = TryFindParent<DataGridRow>((DependencyObject) e.OriginalSource);
 
             if (row == null)
             {
                 return;
             }
 
-            var cell = TryFindParent<DataGridCell>((DependencyObject)e.OriginalSource);
+            var cell = TryFindParent<DataGridCell>((DependencyObject) e.OriginalSource);
 
             if (cell == null)
             {
@@ -490,22 +488,20 @@ namespace FancyGrid
 
             if (IsFilteringCaseInternalSensitive)
             {
-                var fmContains = item.ToString().Contains(filter);
-                return fmContains;
+                return item.ToString().ToLower().Contains(filter.ToLower());
             }
 
-            var contains = item.ToString().IndexOf(filter,
-                               IsFilteringCaseInternalSensitive
-                                   ? StringComparison.OrdinalIgnoreCase
-                                   : StringComparison.Ordinal) >= 0;
-            return contains;
+            return item.ToString().IndexOf(filter,
+                       IsFilteringCaseInternalSensitive
+                           ? StringComparison.CurrentCultureIgnoreCase
+                           : StringComparison.CurrentCulture) >= 0;
         }
 
         private bool fm_Startswith(object item, string filter)
         {
             var compareMode = IsFilteringCaseInternalSensitive
-                ? StringComparison.CurrentCulture
-                : StringComparison.CurrentCultureIgnoreCase;
+                ? StringComparison.CurrentCultureIgnoreCase
+                : StringComparison.CurrentCulture;
 
             return item.ToString().StartsWith(filter, compareMode);
         }
