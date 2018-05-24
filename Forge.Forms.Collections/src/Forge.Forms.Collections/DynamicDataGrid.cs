@@ -1098,6 +1098,7 @@ namespace Forge.Forms.Collections
             if (collection == null)
             {
                 canMutate = false;
+                ViewSource.Source = null;
                 return;
             }
 
@@ -1112,12 +1113,24 @@ namespace Forge.Forms.Collections
             if (interfaces.Count > 1 || interfaces.Count == 0)
             {
                 canMutate = false;
+                ViewSource.Source = null;
                 return;
+            }
+
+            if (collection is INotifyCollectionChanged notifyCollectionChanged)
+            {
+                notifyCollectionChanged.CollectionChanged += NotifyCollectionChangedOnCollectionChanged;
             }
 
             var collectionType = interfaces[0];
             ItemType = collectionType.GetGenericArguments()[0];
             canMutate = ItemType.GetConstructor(Type.EmptyTypes) != null;
+        }
+
+        private void NotifyCollectionChangedOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            ViewSource.Source = null;
+            ViewSource.Source = sender;
         }
 
         private async void ExecuteCreateItem(object sender, ExecutedRoutedEventArgs e)
@@ -1564,7 +1577,6 @@ namespace Forge.Forms.Collections
             set
             {
                 SetValue(ItemsSourceProperty, value);
-                if (ViewSource != null) ViewSource.Source = value;
             }
         }
 

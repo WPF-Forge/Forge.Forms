@@ -14,7 +14,7 @@
     <Grid>
         <collections:DynamicDataGrid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="20"
                                      ItemsSource="{Binding People}"
-                                     Title="People" />
+                                     Title="People" IsFilteringCaseSensitive="False"  />
         <materialDesign:DialogHost />
     </Grid>
 </controls:MetroWindow>

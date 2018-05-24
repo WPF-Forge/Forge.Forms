@@ -16,7 +16,7 @@ namespace Forge.Forms.Collections.Converters
                 return value[0];
             }
 
-            if (value[0] is ListCollectionView view && value[1] is DynamicDataGrid dataGrid)
+            if (value[0] is ListCollectionView view && value[1] is DynamicDataGrid dataGrid && dataGrid.DataGrid != null)
             {
                 var collectionView = CollectionViewSource.GetDefaultView(dataGrid.DataGrid.ItemsSource);
 

@@ -6,6 +6,36 @@ namespace Forge.Forms.Collections
 {
     public partial class DynamicDataGrid
     {
+        public static readonly DependencyProperty DeleteActionTextProperty = DependencyProperty.Register(
+            nameof(DeleteActionText), typeof(string), typeof(DynamicDataGrid), new PropertyMetadata("Delete"));
+
+        public string DeleteActionText
+        {
+            get { return (string) GetValue(DeleteActionTextProperty); }
+            set { SetValue(DeleteActionTextProperty, value); }
+        }
+
+        public static readonly DependencyProperty AddActionTextProperty = DependencyProperty.Register(
+            nameof(AddActionText), typeof(string), typeof(DynamicDataGrid), new PropertyMetadata("Add"));
+
+        public string AddActionText
+        {
+            get { return (string) GetValue(AddActionTextProperty); }
+            set { SetValue(AddActionTextProperty, value); }
+        }
+
+        public static readonly DependencyProperty EditActionTextProperty = DependencyProperty.Register(
+            nameof(EditActionText), typeof(string), typeof(DynamicDataGrid), new PropertyMetadata("Edit"));
+
+        public string EditActionText
+        {
+            get { return (string) GetValue(EditActionTextProperty); }
+            set { SetValue(EditActionTextProperty, value); }
+        }
+    }
+
+    public partial class DynamicDataGrid
+    {
         public static readonly DependencyProperty CanCreateActionProperty = DependencyProperty.Register(
             nameof(CanCreateAction), typeof(Func<object, CanExecuteRoutedEventArgs, bool>), typeof(DynamicDataGrid),
             new PropertyMetadata(new Func<object, CanExecuteRoutedEventArgs, bool>((o, args) =>

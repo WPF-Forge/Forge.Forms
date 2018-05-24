@@ -199,7 +199,7 @@
                                                                      Kind="Plus" />
                                             <TextBlock Margin="24,0,0,0"
                                                        VerticalAlignment="Center"
-                                                       Text="Add" />
+                                                       Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=AddActionText}" />
                                         </StackPanel>
                                     </Button>
                                 </StackPanel>
@@ -223,9 +223,10 @@
                                              CellStyle="{StaticResource CustomDataGridLeftPadding}">
                     <DataGrid.ItemsSource>
                         <MultiBinding Converter="{StaticResource LimitItemsConverter}">
-                            <Binding Path="ViewSource.View" Mode="TwoWay"
+                            <Binding Path="ViewSource.View"
                                      RelativeSource="{RelativeSource TemplatedParent}" />
-                            <Binding Path="." Mode="TwoWay" RelativeSource="{RelativeSource TemplatedParent}" />
+                            <Binding Path="." RelativeSource="{RelativeSource TemplatedParent}" />
+                            <Binding Path="ItemsSource" RelativeSource="{RelativeSource TemplatedParent}" />
                         </MultiBinding>
                     </DataGrid.ItemsSource>
                     <fancyGrid:FilteringDataGrid.Columns>
@@ -257,7 +258,7 @@
                                                                              Kind="Pencil" />
                                                     <TextBlock Margin="24,0,0,0"
                                                                VerticalAlignment="Center"
-                                                               Text="Edit" />
+                                                               Text="{Binding RelativeSource={RelativeSource AncestorType=collections:DynamicDataGrid}, Path=EditActionText}" />
                                                 </StackPanel>
                                             </Button>
                                             <Button VerticalContentAlignment="Center"
@@ -272,7 +273,7 @@
                                                                              Kind="Delete" />
                                                     <TextBlock Margin="24,0,0,0"
                                                                VerticalAlignment="Center"
-                                                               Text="Delete" />
+                                                               Text="{Binding RelativeSource={RelativeSource AncestorType=collections:DynamicDataGrid}, Path=DeleteActionText}" />
                                                 </StackPanel>
                                             </Button>
                                         </StackPanel>
