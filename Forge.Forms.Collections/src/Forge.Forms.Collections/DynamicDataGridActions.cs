@@ -1,9 +1,83 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace Forge.Forms.Collections
 {
+    public partial class DynamicDataGrid
+    {
+        public static readonly DependencyProperty RowStyleProperty = DependencyProperty.Register(
+            "RowStyle", typeof(Style), typeof(DynamicDataGrid), new PropertyMetadata(default(Style)));
+
+        public Style RowStyle
+        {
+            get => (Style) GetValue(RowStyleProperty);
+            set => SetValue(RowStyleProperty, value);
+        }
+
+        public static readonly DependencyProperty CellStyleProperty = DependencyProperty.Register(
+            "CellStyle", typeof(Style), typeof(DynamicDataGrid), new PropertyMetadata(default(Style)));
+
+        public Style CellStyle
+        {
+            get => (Style) GetValue(CellStyleProperty);
+            set => SetValue(CellStyleProperty, value);
+        }
+
+        public static readonly DependencyProperty ColumnsProperty = DependencyProperty.Register(
+            "Columns", typeof(ObservableCollection<DataGridColumn>), typeof(DynamicDataGrid),
+            new PropertyMetadata(new ObservableCollection<DataGridColumn>(), OnColumnsPropertyChanged));
+
+        private static void OnColumnsPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is DynamicDataGrid dynamicDataGrid)
+            {
+                dynamicDataGrid.ReloadColumns();
+
+                dynamicDataGrid.Columns.CollectionChanged += (sender, args) =>
+                {
+                    dynamicDataGrid.ReloadColumns();
+                };
+            }
+        }
+
+        public ObservableCollection<DataGridColumn> Columns
+        {
+            get => (ObservableCollection<DataGridColumn>) GetValue(ColumnsProperty);
+            set => SetValue(ColumnsProperty, value);
+        }
+
+        public static readonly DependencyProperty AutoGenerateColumnsProperty = DependencyProperty.Register(
+            "AutoGenerateColumns", typeof(bool), typeof(DynamicDataGrid), new PropertyMetadata(true, OnAutoGenerateColumnsChanged));
+
+        private static void OnAutoGenerateColumnsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is DynamicDataGrid dynamicDataGrid)
+            {
+                dynamicDataGrid.ReloadColumns();
+            }
+        }
+
+        public bool AutoGenerateColumns
+        {
+            get => (bool) GetValue(AutoGenerateColumnsProperty);
+            set => SetValue(AutoGenerateColumnsProperty, value);
+        }
+
+        public void InitializeCellStyleAndColumns()
+        {
+            if (CellStyle == null)
+                CellStyle = TryFindResource("CustomDataGridCell") as Style;
+
+            Columns.CollectionChanged += (sender, args) =>
+            {
+                ReloadColumns();
+            };
+        }
+    }
+
     public partial class DynamicDataGrid
     {
         public static readonly DependencyProperty DeleteActionTextProperty = DependencyProperty.Register(
@@ -11,8 +85,8 @@ namespace Forge.Forms.Collections
 
         public string DeleteActionText
         {
-            get { return (string) GetValue(DeleteActionTextProperty); }
-            set { SetValue(DeleteActionTextProperty, value); }
+            get => (string) GetValue(DeleteActionTextProperty);
+            set => SetValue(DeleteActionTextProperty, value);
         }
 
         public static readonly DependencyProperty CreateActionTextProperty = DependencyProperty.Register(
@@ -20,8 +94,8 @@ namespace Forge.Forms.Collections
 
         public string CreateActionText
         {
-            get { return (string) GetValue(CreateActionTextProperty); }
-            set { SetValue(CreateActionTextProperty, value); }
+            get => (string) GetValue(CreateActionTextProperty);
+            set => SetValue(CreateActionTextProperty, value);
         }
 
         public static readonly DependencyProperty EditActionTextProperty = DependencyProperty.Register(
@@ -29,8 +103,8 @@ namespace Forge.Forms.Collections
 
         public string EditActionText
         {
-            get { return (string) GetValue(EditActionTextProperty); }
-            set { SetValue(EditActionTextProperty, value); }
+            get => (string) GetValue(EditActionTextProperty);
+            set => SetValue(EditActionTextProperty, value);
         }
     }
 

@@ -297,7 +297,8 @@ namespace Forge.Forms.Collections
         /// <summary>
         /// The add interceptor chain
         /// </summary>
-        public static readonly List<ICreateActionInterceptor> AddInterceptorChain = new List<ICreateActionInterceptor>();
+        public static readonly List<ICreateActionInterceptor>
+            AddInterceptorChain = new List<ICreateActionInterceptor>();
 
         /// <summary>
         /// The update interceptor chain
@@ -381,6 +382,8 @@ namespace Forge.Forms.Collections
                         ?.UpdateTarget();
                 }
             });
+
+            InitializeCellStyleAndColumns();
 
             PropertyChanged += OnPropertyChanged;
             Loaded += (s, e) => OnItemsSource(ItemsSource);
@@ -604,9 +607,22 @@ namespace Forge.Forms.Collections
                 return;
             }
 
-            foreach (var dataGridColumn in DataGrid.Columns.Except(ProtectedColumns).ToList())
+            DataGrid.Columns.Clear();
+
+            if (Columns != null && Columns.Any())
+            {      
+                foreach (var dataGridColumn in Columns)
+                {
+                    DataGrid.Columns.Add(dataGridColumn);
+                }
+            }
+
+            if (!AutoGenerateColumns)
+                return;
+
+            foreach (var dataGridColumn in ProtectedColumns)
             {
-                DataGrid.Columns.Remove(dataGridColumn);
+                DataGrid.Columns.Add(dataGridColumn);
             }
 
             foreach (var propertyInfo in ItemType
@@ -1568,10 +1584,7 @@ namespace Forge.Forms.Collections
         public IEnumerable ItemsSource
         {
             get => (IEnumerable) GetValue(ItemsSourceProperty);
-            set
-            {
-                SetValue(ItemsSourceProperty, value);
-            }
+            set { SetValue(ItemsSourceProperty, value); }
         }
 
         public CollectionViewSource ViewSource { get; set; } = new CollectionViewSource();

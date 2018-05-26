@@ -133,7 +133,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="MaterialDesignThemes">
-      <Version>2.3.1.953</Version>
+      <Version>2.4.0.1044</Version>
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

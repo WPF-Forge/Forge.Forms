@@ -56,17 +56,17 @@ namespace FancyGrid
         /// <summary>
         /// This dictionary will map a column to the filter behavior
         /// </summary>
-        private readonly Dictionary<string, Func<object, string, bool>> columnFilterModes;
+        private readonly Dictionary<string, Func<object, string, bool>> _columnFilterModes;
 
         /// <summary>
         /// This dictionary will have a list of all applied filters
         /// </summary>
-        private readonly Dictionary<string, string> columnFilters;
+        private readonly Dictionary<string, string> _columnFilters;
 
         /// <summary>
         /// Cache with properties for better performance
         /// </summary>
-        private readonly Dictionary<string, PropertyInfo> propertyCache;
+        private readonly Dictionary<string, PropertyInfo> _propertyCache;
 
         /// <inheritdoc />
         /// <summary>
@@ -74,9 +74,9 @@ namespace FancyGrid
         /// </summary>
         public FilteringDataGrid()
         {
-            columnFilters = new Dictionary<string, string>();
-            columnFilterModes = new Dictionary<string, Func<object, string, bool>>();
-            propertyCache = new Dictionary<string, PropertyInfo>();
+            _columnFilters = new Dictionary<string, string>();
+            _columnFilterModes = new Dictionary<string, Func<object, string, bool>>();
+            _propertyCache = new Dictionary<string, PropertyInfo>();
             AddHandler(TextBoxBase.TextChangedEvent, new TextChangedEventHandler(OnTextChanged), true);
             AutoGenerateColumns = false;
             DataContextChanged += FilteringDataGrid_DataContextChanged;
@@ -261,8 +261,8 @@ namespace FancyGrid
                 item.Clear();
             }
 
-            columnFilters.Clear();
-            columnFilterModes.Clear();
+            _columnFilters.Clear();
+            _columnFilterModes.Clear();
             ApplyFilters();
         }
 
@@ -270,7 +270,7 @@ namespace FancyGrid
 
         private void FilteringDataGrid_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            propertyCache.Clear();
+            _propertyCache.Clear();
         }
 
         private void OnTextChanged(object sender, TextChangedEventArgs e)
@@ -295,38 +295,38 @@ namespace FancyGrid
 
                 if (filter.StartsWith("="))
                 {
-                    columnFilterModes[columnBinding] = fm_is;
+                    _columnFilterModes[columnBinding] = fm_is;
                 }
                 else if (filter.StartsWith("!"))
                 {
-                    columnFilterModes[columnBinding] = fm_isNot;
+                    _columnFilterModes[columnBinding] = fm_isNot;
                 }
                 else if (filter.StartsWith("~"))
                 {
-                    columnFilterModes[columnBinding] = fm_doesNotContain;
+                    _columnFilterModes[columnBinding] = fm_doesNotContain;
                 }
                 else if (filter.StartsWith("<"))
                 {
-                    columnFilterModes[columnBinding] = fm_Lessthan;
+                    _columnFilterModes[columnBinding] = fm_Lessthan;
                 }
                 else if (filter.StartsWith(">"))
                 {
-                    columnFilterModes[columnBinding] = fm_GreaterThanEqual;
+                    _columnFilterModes[columnBinding] = fm_GreaterThanEqual;
                 }
                 else if (filter == "\"\"")
                 {
-                    columnFilterModes[columnBinding] = fm_blank;
+                    _columnFilterModes[columnBinding] = fm_blank;
                 }
                 else if (filter == @"*")
                 {
-                    columnFilterModes[columnBinding] = fm_notblank;
+                    _columnFilterModes[columnBinding] = fm_notblank;
                 }
                 else
                 {
-                    columnFilterModes[columnBinding] = fm_Contains;
+                    _columnFilterModes[columnBinding] = fm_Contains;
                 }
 
-                columnFilters[columnBinding] = filter.TrimStart('<', '>', '~', '=', '!');
+                _columnFilters[columnBinding] = filter.TrimStart('<', '>', '~', '=', '!');
             }
         }
 
@@ -349,14 +349,14 @@ namespace FancyGrid
 
         private bool Filter(object item)
         {
-            foreach (var filter in columnFilters)
+            foreach (var filter in _columnFilters)
             {
                 var property = GetPropertyValue(item, filter.Key);
                 if (property != null && !string.IsNullOrEmpty(filter.Value))
                 {
-                    if (columnFilterModes.ContainsKey(filter.Key))
+                    if (_columnFilterModes.ContainsKey(filter.Key))
                     {
-                        if (!columnFilterModes[filter.Key](property, filter.Value))
+                        if (!_columnFilterModes[filter.Key](property, filter.Value))
                         {
                             return false;
                         }
@@ -386,14 +386,14 @@ namespace FancyGrid
             object value = null;
 
             PropertyInfo pi;
-            if (propertyCache.ContainsKey(property))
+            if (_propertyCache.ContainsKey(property))
             {
-                pi = propertyCache[property];
+                pi = _propertyCache[property];
             }
             else
             {
                 pi = item.GetType().GetProperty(property);
-                propertyCache.Add(property, pi);
+                _propertyCache.Add(property, pi);
             }
 
             if (pi != null)
