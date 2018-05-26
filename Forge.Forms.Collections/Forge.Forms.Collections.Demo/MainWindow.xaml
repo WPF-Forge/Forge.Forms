@@ -10,11 +10,32 @@
                       mc:Ignorable="d"
                       TitleCharacterCasing="Normal"
                       WindowStartupLocation="CenterScreen"
-                      Title="DynamicDataGrid demo" d:DataContext="{d:DesignInstance models:TestModel}">
-    <Grid>
-        <collections:DynamicDataGrid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="20"
-                                     ItemsSource="{Binding People}"
-                                     Title="People" IsFilteringCaseSensitive="False"  />
+                      Title="DynamicDataGrid demo" d:DataContext="{d:DesignInstance models:MainWindowModel}">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Horizontal">
+            <StackPanel>
+                <TextBlock Text="Checkbox Column"  Style="{DynamicResource MaterialDesignBody2TextBlock}"/>
+                <ToggleButton Style="{DynamicResource MaterialDesignSwitchToggleButton}"
+                              IsChecked="{Binding IsCheckboxColumnEnabled}" />
+            </StackPanel>
+            <StackPanel>
+                <TextBlock Text="Case sensitive filter" Style="{DynamicResource MaterialDesignBody2TextBlock}"/>
+                <ToggleButton Style="{DynamicResource MaterialDesignSwitchToggleButton}"
+                              IsChecked="{Binding IsFilterCaseSensitive}" />
+            </StackPanel>
+        </StackPanel>
+        <collections:DynamicDataGrid Margin="0,10,0,0" Grid.Row="1" HorizontalAlignment="Stretch"
+                                     VerticalAlignment="Stretch"
+                                     IsFilteringEnabled="True"
+                                     HasCheckboxesColumn="{Binding IsCheckboxColumnEnabled}"
+                                     IsFilteringCaseSensitive="{Binding IsFilterCaseSensitive}"
+                                     ItemsSource="{Binding People}" AutoGenerateColumns="True"
+                                     Title="People">
+        </collections:DynamicDataGrid>
         <materialDesign:DialogHost />
     </Grid>
 </controls:MetroWindow>

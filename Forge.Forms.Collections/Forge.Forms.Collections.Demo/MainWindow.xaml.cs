@@ -1,4 +1,8 @@
-﻿using Forge.Forms.Collections.Demo.Models;
+﻿using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using System.Windows.Input;
+using Forge.Forms.Collections.Demo.Annotations;
+using Forge.Forms.Collections.Demo.Models;
 
 namespace Forge.Forms.Collections.Demo
 {
@@ -10,7 +14,7 @@ namespace Forge.Forms.Collections.Demo
         public MainWindow()
         {
             InitializeComponent();
-            DataContext = new TestModel();
+            DataContext = new MainWindowModel();
         }
     }
 }

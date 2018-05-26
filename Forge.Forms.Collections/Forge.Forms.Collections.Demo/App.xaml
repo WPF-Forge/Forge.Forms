@@ -17,9 +17,8 @@
                     Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.Indigo.xaml" />
                 <ResourceDictionary
                     Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Accent/MaterialDesignColor.Pink.xaml" />
-
-                <ResourceDictionary Source="pack://application:,,,/Forge.Forms;component/Themes/Material.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/Forge.Forms.Collections;component/Themes/Generic.xaml" />
+                <ResourceDictionary
+                    Source="pack://application:,,,/Forge.Forms.Collections;component/Themes/Generic.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <!--  MahApps Brushes  -->
             <SolidColorBrush x:Key="HighlightBrush" Color="{DynamicResource Primary700}" />
