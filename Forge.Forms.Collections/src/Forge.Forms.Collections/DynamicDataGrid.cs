@@ -13,11 +13,14 @@ using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using FancyGrid;
+using FluentCache;
+using FluentCache.Simple;
 using Forge.Forms.Annotations;
 using Forge.Forms.Collections.Annotations;
 using Forge.Forms.Collections.Converters;
 using Forge.Forms.Collections.Extensions;
 using Forge.Forms.Collections.Interfaces;
+using Forge.Forms.Collections.Repositories;
 using Forge.Forms.DynamicExpressions;
 using Forge.Forms.FormBuilding;
 using Forge.Forms.FormBuilding.Defaults;
@@ -243,13 +246,6 @@ namespace Forge.Forms.Collections
                 new PropertyMetadata());
 
         /// <summary>
-        /// Identifies the ClearFiltersMessage dependency property.
-        /// </summary>
-        public static DependencyProperty ClearFiltersMessageProperty =
-            DependencyProperty.Register("ClearFiltersMessage", typeof(string), typeof(FilteringDataGrid),
-                new PropertyMetadata("Clear all filters"));
-
-        /// <summary>
         /// Identifies the IncludeItemsMessage dependency property.
         /// </summary>
         public static DependencyProperty IncludeItemsMessageProperty =
@@ -284,11 +280,6 @@ namespace Forge.Forms.Collections
         public static readonly DependencyProperty TitleProperty =
             DependencyProperty.Register("Title", typeof(string), typeof(DynamicDataGrid),
                 new PropertyMetadata(""));
-
-        // Using a DependencyProperty as the backing store for HasCheckboxes.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty HasCheckboxesColumnProperty =
-            DependencyProperty.Register("HasCheckboxesColumn", typeof(bool), typeof(DynamicDataGrid),
-                new PropertyMetadata(true));
 
         public static readonly RoutedCommand CreateItemCommand = new RoutedCommand();
         public static readonly RoutedCommand UpdateItemCommand = new RoutedCommand();
@@ -346,10 +337,14 @@ namespace Forge.Forms.Collections
         private List<SortDescription> CachedSortDescriptions =
             new List<SortDescription>();
 
+        private static Cache<ColumnRepository> ColumnCache { get; }
+
         static DynamicDataGrid()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(DynamicDataGrid),
                 new FrameworkPropertyMetadata(typeof(DynamicDataGrid)));
+
+            ColumnCache = new FluentDictionaryCache().WithSource(new ColumnRepository());
         }
 
         public DynamicDataGrid()
@@ -459,18 +454,6 @@ namespace Forge.Forms.Collections
         }
 
         /// <summary>
-        /// Gets or sets the clear filters message.
-        /// </summary>
-        /// <value>
-        /// The clear filters message.
-        /// </value>
-        public string ClearFiltersMessage
-        {
-            get => (string) GetValue(ClearFiltersMessageProperty);
-            set => SetValue(ClearFiltersMessageProperty, value);
-        }
-
-        /// <summary>
         /// Gets or sets the include items message.
         /// </summary>
         /// <value>
@@ -517,13 +500,16 @@ namespace Forge.Forms.Collections
 
         internal FilteringDataGrid DataGrid { get; set; }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether this instance has checkboxes column.
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if this instance has checkboxes column; otherwise, <c>false</c>.
-        /// </value>
-        private bool HasCheckboxesColumn
+        public static readonly DependencyProperty HasCheckboxesColumnProperty = DependencyProperty.Register(
+            "HasCheckboxesColumn", typeof(bool), typeof(DynamicDataGrid), new PropertyMetadata(default(bool), HasCheckboxColumnChanged));
+
+        private static void HasCheckboxColumnChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if(d is DynamicDataGrid dynamicDataGrid)
+                dynamicDataGrid.ReloadColumns();
+        }
+
+        public bool HasCheckboxesColumn
         {
             get => (bool) GetValue(HasCheckboxesColumnProperty);
             set => SetValue(HasCheckboxesColumnProperty, value);
@@ -584,7 +570,7 @@ namespace Forge.Forms.Collections
         [AlsoNotifyFor(nameof(LastPage))]
         public int ItemsPerPage { get; set; } = 15;
 
-        private Type ItemType
+        internal Type ItemType
         {
             get => itemType;
             set
@@ -607,22 +593,21 @@ namespace Forge.Forms.Collections
                 return;
             }
 
-            DataGrid.Columns.Clear();
-
             if (Columns != null && Columns.Any())
-            {      
+            {
                 foreach (var dataGridColumn in Columns)
                 {
-                    DataGrid.Columns.Add(dataGridColumn);
+                    if (DataGrid.Columns.Any(i => i.Header == dataGridColumn.Header))
+                        continue;
+
+                    DataGrid.Columns.Insert(0, dataGridColumn);
                 }
             }
 
             if (!AutoGenerateColumns)
-                return;
-
-            foreach (var dataGridColumn in ProtectedColumns)
             {
-                DataGrid.Columns.Add(dataGridColumn);
+                CreateCheckboxColumn();
+                return;
             }
 
             foreach (var propertyInfo in ItemType
@@ -631,7 +616,11 @@ namespace Forge.Forms.Collections
                             i.GetCustomAttribute<CrudIgnoreAttribute>() == null)
                 .Reverse())
             {
-                CreateColumn(propertyInfo);
+                var column = ColumnCache.Method(r => r.GetColumn(propertyInfo, this))
+                    .GetValue();
+
+                if (column != null && DataGrid.Columns.All(i => i.Header != column.Header))
+                    DataGrid.Columns.Insert(0, column);
             }
 
             CreateCheckboxColumn();
@@ -799,6 +788,18 @@ namespace Forge.Forms.Collections
 
         private void CreateCheckboxColumn()
         {
+            var dataGridColumn = DataGrid.Columns.FirstOrDefault(i => Equals(i.Header, HeaderButton));
+
+            if (!HasCheckboxesColumn || dataGridColumn != null)
+            {
+                if (!HasCheckboxesColumn && dataGridColumn != null)
+                {
+                    DataGrid.Columns.Remove(dataGridColumn);
+                }
+
+                return;
+            }
+
             var rowCheckBox = new FrameworkElementFactory(typeof(CheckBox));
             rowCheckBox.SetValue(MaxWidthProperty, 18.0);
             rowCheckBox.SetValue(HorizontalAlignmentProperty, HorizontalAlignment.Left);
@@ -843,17 +844,14 @@ namespace Forge.Forms.Collections
                 }
             });
 
-            if (HasCheckboxesColumn)
+            DataGrid.Columns.Insert(0, new DataGridTemplateColumn
             {
-                DataGrid.Columns.Insert(0, new DataGridTemplateColumn
-                {
-                    CellTemplate = new DataTemplate {VisualTree = rowCheckBox},
-                    Header = HeaderButton,
-                    MaxWidth = 48,
-                    CanUserResize = false,
-                    CanUserReorder = false
-                });
-            }
+                CellTemplate = new DataTemplate {VisualTree = rowCheckBox},
+                Header = HeaderButton,
+                MaxWidth = 48,
+                CanUserResize = false,
+                CanUserReorder = false
+            });
         }
 
         private static void DynamicUsing(object resource, Action action)
@@ -894,7 +892,7 @@ namespace Forge.Forms.Collections
             return c;
         }
 
-        private List<IColumnCreationInterceptor> ColumnCreationInterceptors { get; } =
+        internal List<IColumnCreationInterceptor> ColumnCreationInterceptors { get; } =
             new List<IColumnCreationInterceptor>
             {
                 new DefaultColumnCreationInterceptor()
@@ -910,26 +908,6 @@ namespace Forge.Forms.Collections
         {
             ColumnCreationInterceptors.Remove(interceptor);
             ReloadColumns();
-        }
-
-        private void CreateColumn(PropertyInfo propertyInfo)
-        {
-            IColumnCreationInterceptorContext column = null;
-
-            foreach (var columnCreationInterceptor in ColumnCreationInterceptors)
-            {
-                var interceptorContext = columnCreationInterceptor.Intercept(
-                    new ColumnCreationInterceptorContext(propertyInfo, this, ItemType, null));
-
-                if (interceptorContext == null)
-                {
-                    return;
-                }
-
-                column = interceptorContext;
-            }
-
-            if (column?.Column != null) DataGrid.Columns.Insert(0, column.Column);
         }
 
         public override void OnApplyTemplate()
@@ -1584,7 +1562,7 @@ namespace Forge.Forms.Collections
         public IEnumerable ItemsSource
         {
             get => (IEnumerable) GetValue(ItemsSourceProperty);
-            set { SetValue(ItemsSourceProperty, value); }
+            set => SetValue(ItemsSourceProperty, value);
         }
 
         public CollectionViewSource ViewSource { get; set; } = new CollectionViewSource();

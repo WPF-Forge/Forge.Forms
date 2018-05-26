@@ -211,10 +211,8 @@
                 <fancyGrid:FilteringDataGrid Grid.Row="1"
                                              Name="PART_DataGrid"
                                              CanUserAddRows="False"
-                                             SelectionMode="Extended"
                                              IncludeItemsInternalMessage="{Binding IncludeItemsMessage, RelativeSource={RelativeSource TemplatedParent}}"
-                                             ExcludeItemsInternalMessage="{Binding ExcludeItemsMessage, RelativeSource={RelativeSource TemplatedParent}}"
-                                             ClearFiltersInternalMessage="{Binding ClearFiltersMessage, RelativeSource={RelativeSource TemplatedParent}}"
+                                             ExcludeItemsInternalMessage="{Binding ExcludeItemsMessage, RelativeSource={RelativeSource TemplatedParent}}"             
                                              IsFilteringCaseInternalSensitive="{Binding IsFilteringCaseSensitive, RelativeSource={RelativeSource TemplatedParent}}"
                                              IsReadOnly="True"
                                              Background="{Binding RelativeSource={RelativeSource AncestorType=materialDesign:Card, Mode=FindAncestor}, Path=Background}"
@@ -227,7 +225,6 @@
                             <Binding Path="ViewSource.View"
                                      RelativeSource="{RelativeSource TemplatedParent}" />
                             <Binding Path="." RelativeSource="{RelativeSource TemplatedParent}" />
-                            <Binding Path="ItemsSource" RelativeSource="{RelativeSource TemplatedParent}" />
                         </MultiBinding>
                     </DataGrid.ItemsSource>
                     <fancyGrid:FilteringDataGrid.Columns>
