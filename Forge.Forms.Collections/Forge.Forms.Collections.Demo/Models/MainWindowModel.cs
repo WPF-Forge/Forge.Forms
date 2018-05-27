@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
@@ -9,19 +9,24 @@ namespace Forge.Forms.Collections.Demo.Models
 {
     internal class MainWindowModel : INotifyPropertyChanged
     {
-        public List<Person> People { get; } = new List<Person>();
+        public ObservableCollection<Person> People { get; }
 
         public MainWindowModel()
         {
-            var x = new Faker<Person>().RuleFor(i => i.FirstName, f => f.Name.FirstName())
-                .RuleFor(i => i.LastName, f => f.Name.LastName())
-                .RuleFor(i => i.Gender, f => f.PickRandom("Male", "Female"))
-                .RuleFor(i => i.Age, f => f.Random.Int(1, 120));
-            People.AddRange(x.Generate(100));
+            People = new ObservableCollection<Person>(PersonFaker.Generate(1));
+            AddRandomPerson = new RelayCommand(o => People.Add(PersonFaker.Generate()));
         }
+
+        public ICommand AddRandomPerson { get; }
 
         private bool _isCheckboxColumnEnabled;
         private bool _isFilterCaseSensitive;
+
+        private Faker<Person> PersonFaker { get; } = new Faker<Person>()
+            .RuleFor(i => i.FirstName, f => f.Name.FirstName())
+            .RuleFor(i => i.LastName, f => f.Name.LastName())
+            .RuleFor(i => i.Gender, f => f.PickRandom("Male", "Female"))
+            .RuleFor(i => i.Age, f => f.Random.Int(1, 120));
 
         public bool IsCheckboxColumnEnabled
         {
