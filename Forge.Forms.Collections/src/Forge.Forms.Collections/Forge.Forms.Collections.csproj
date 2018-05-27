@@ -57,7 +57,6 @@
     <Compile Include="Extensions\UiHelpers.cs" />
     <Compile Include="Fields\CrudField.cs" />
     <Compile Include="Fields\CrudFieldBuilder.cs" />
-    <Compile Include="DynamicDataGridActions.cs" />
     <Compile Include="FormDefinitionWrapper.cs" />
     <Compile Include="GridField.cs" />
     <Compile Include="Interfaces\CreateActionContext.cs" />
