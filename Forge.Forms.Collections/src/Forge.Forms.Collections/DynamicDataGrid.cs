@@ -903,7 +903,7 @@ namespace Forge.Forms.Collections
             if (Columns != null && Columns.Any())
                 foreach (var dataGridColumn in Columns)
                 {
-                    if (DataGrid.Columns.Any(i => i.Header == dataGridColumn.Header))
+                    if (DataGrid.Columns.Any(i => Equals(i.Header, dataGridColumn.Header)))
                         continue;
 
                     DataGrid.Columns.Insert(0, dataGridColumn);
@@ -924,7 +924,8 @@ namespace Forge.Forms.Collections
                 var column = ColumnCache.Method(r => r.GetColumn(propertyInfo, this))
                     .GetValue();
 
-                if (column != null && DataGrid.Columns.All(i => i.Header != column.Header))
+                if (column != null && !DataGrid.Columns.Contains(column) &&
+                    DataGrid.Columns.All(i => !Equals(i.Header, column.Header)))
                     DataGrid.Columns.Insert(0, column);
             }
 
