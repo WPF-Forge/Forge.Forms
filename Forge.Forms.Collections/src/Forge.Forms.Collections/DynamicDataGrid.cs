@@ -896,7 +896,7 @@ namespace Forge.Forms.Collections
                 dynamicDataGrid.ReloadColumns();
         }
 
-        private void ReloadColumns()
+        public void ReloadColumns()
         {
             if (DataGrid == null || itemType == null) return;
 
