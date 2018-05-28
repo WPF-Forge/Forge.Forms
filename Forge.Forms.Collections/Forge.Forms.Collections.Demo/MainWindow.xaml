@@ -35,7 +35,8 @@
                                Style="{DynamicResource MaterialDesignBody1TextBlock}" />
                 </StackPanel>
                 <Separator />
-                <Button Content="Add random person" Command="{Binding AddRandomPerson}"></Button>
+                <Button Content="Add random person" Command="{Binding AddRandomPerson}" />
+                <Button Content="Click me to reload columns" Command="{Binding ReloadColumnsCommand}" />
             </ToolBar>
         </ToolBarTray>
 

@@ -1,9 +1,11 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Windows;
 using System.Windows.Input;
 using Bogus;
 using Forge.Forms.Collections.Demo.Annotations;
+using Forge.Forms.Collections.Extensions;
 
 namespace Forge.Forms.Collections.Demo.Models
 {
@@ -15,9 +17,16 @@ namespace Forge.Forms.Collections.Demo.Models
         {
             People = new ObservableCollection<Person>(PersonFaker.Generate(1));
             AddRandomPerson = new RelayCommand(o => People.Add(PersonFaker.Generate()));
+            ReloadColumnsCommand = new RelayCommand(o =>
+            {
+                var dynamicDataGrid = Application.Current.MainWindow.TryFindChild<DynamicDataGrid>();
+                dynamicDataGrid.ReloadColumns();
+            });
         }
 
         public ICommand AddRandomPerson { get; }
+
+        public ICommand ReloadColumnsCommand { get; }
 
         private bool _isCheckboxColumnEnabled;
         private bool _isFilterCaseSensitive;
