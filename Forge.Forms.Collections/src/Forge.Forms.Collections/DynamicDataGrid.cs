@@ -357,7 +357,6 @@ namespace Forge.Forms.Collections
         public static readonly List<ICreateActionInterceptor>
             AddInterceptorChain = new List<ICreateActionInterceptor>();
 
-
         public static readonly RoutedCommand CreateItemCommand = new RoutedCommand();
 
         /// <summary>
@@ -394,7 +393,6 @@ namespace Forge.Forms.Collections
             DependencyProperty.Register("CurrentPage", typeof(int), typeof(DynamicDataGrid), new PropertyMetadata(1,
                 OnCurrentPageChanged));
 
-
         /// <summary>
         ///     The is delete button visible property
         /// </summary>
@@ -412,7 +410,6 @@ namespace Forge.Forms.Collections
         public static readonly DependencyProperty HasCheckboxesColumnProperty = DependencyProperty.Register(
             "HasCheckboxesColumn", typeof(bool), typeof(DynamicDataGrid),
             new PropertyMetadata(default(bool), HasCheckboxColumnChanged));
-
 
         private List<SortDescription> cachedSortDescriptions =
             new List<SortDescription>();
