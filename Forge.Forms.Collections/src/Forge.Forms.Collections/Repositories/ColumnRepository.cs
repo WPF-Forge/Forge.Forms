@@ -25,5 +25,25 @@ namespace Forge.Forms.Collections.Repositories
 
             return column?.Column;
         }
+
+        public static DataGridColumn GetColumnStatic(PropertyInfo propertyInfo, DynamicDataGrid dataGrid)
+        {
+            IColumnCreationInterceptorContext column = null;
+
+            foreach (var columnCreationInterceptor in dataGrid.ColumnCreationInterceptors)
+            {
+                var interceptorContext = columnCreationInterceptor.Intercept(
+                    new ColumnCreationInterceptorContext(propertyInfo, dataGrid, dataGrid.ItemType, null));
+
+                if (interceptorContext == null)
+                {
+                    return null;
+                }
+
+                column = interceptorContext;
+            }
+
+            return column?.Column;
+        }
     }
 }

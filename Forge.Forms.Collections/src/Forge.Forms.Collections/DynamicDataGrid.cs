@@ -34,6 +34,14 @@ namespace Forge.Forms.Collections
     [TemplatePart(Name = "PART_DataGrid", Type = typeof(DataGrid))]
     public class DynamicDataGrid : Control, INotifyPropertyChanged
     {
+        private List<SortDescription> cachedSortDescriptions =
+            new List<SortDescription>();
+
+        private bool canMutate;
+        private Type itemType;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
         public static readonly DependencyProperty CanCreateActionProperty = DependencyProperty.Register(
             nameof(CanCreateAction), typeof(Func<object, CanExecuteRoutedEventArgs, bool>), typeof(DynamicDataGrid),
             new PropertyMetadata(new Func<object, CanExecuteRoutedEventArgs, bool>((o, args) =>
@@ -99,6 +107,13 @@ namespace Forge.Forms.Collections
 
         public static readonly DependencyProperty RowStyleProperty = DependencyProperty.Register(
             "RowStyle", typeof(Style), typeof(DynamicDataGrid), new PropertyMetadata(default(Style)));
+
+        public static readonly DependencyProperty UseColumnCacheingProperty = DependencyProperty.Register(
+            nameof(UseColumnCacheing), typeof(bool), typeof(DynamicDataGrid), new PropertyMetadata(default(bool),
+                (o, args) =>
+                {
+                    if (o is DynamicDataGrid d) d.ReloadColumns();
+                }));
 
         public static readonly DependencyProperty ColumnsProperty = DependencyProperty.Register(
             "Columns", typeof(ObservableCollection<DataGridColumn>), typeof(DynamicDataGrid),
@@ -410,12 +425,6 @@ namespace Forge.Forms.Collections
         public static readonly DependencyProperty HasCheckboxesColumnProperty = DependencyProperty.Register(
             "HasCheckboxesColumn", typeof(bool), typeof(DynamicDataGrid),
             new PropertyMetadata(default(bool), HasCheckboxColumnChanged));
-
-        private List<SortDescription> cachedSortDescriptions =
-            new List<SortDescription>();
-
-        private bool canMutate;
-        private Type itemType;
 
         public bool AutoGenerateColumns
         {
@@ -770,6 +779,12 @@ namespace Forge.Forms.Collections
         /// </value>
         public int TotalItems => GetIEnumerableCount(ItemsSource) ?? 0;
 
+        public bool UseColumnCacheing
+        {
+            get => (bool) GetValue(UseColumnCacheingProperty);
+            set => SetValue(UseColumnCacheingProperty, value);
+        }
+
         internal List<IColumnCreationInterceptor> ColumnCreationInterceptors { get; } =
             new List<IColumnCreationInterceptor>
             {
@@ -816,8 +831,6 @@ namespace Forge.Forms.Collections
         private List<DataGridColumn> ProtectedColumns { get; set; }
 
         private int SelectedItemsCount => DatagridSelectedItems.Count();
-
-        public event PropertyChangedEventHandler PropertyChanged;
 
         static DynamicDataGrid()
         {
@@ -918,8 +931,13 @@ namespace Forge.Forms.Collections
                             i.GetCustomAttribute<CrudIgnoreAttribute>() == null)
                 .Reverse())
             {
-                var column = ColumnCache.Method(r => r.GetColumn(propertyInfo, this))
-                    .GetValue();
+                DataGridColumn column = null;
+
+                if (UseColumnCacheing)
+                    column = ColumnCache.Method(r => r.GetColumn(propertyInfo, this))
+                        .GetValue();
+                else
+                    column = ColumnRepository.GetColumnStatic(propertyInfo, this);
 
                 if (column != null && !DataGrid.Columns.Contains(column) &&
                     DataGrid.Columns.All(i => !Equals(i.Header, column.Header)))
