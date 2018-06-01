@@ -3,7 +3,6 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 using System.Windows;
-using System.Windows.Controls;
 using Forge.Forms.Annotations;
 using Forge.Forms.Collections.Extensions;
 using Forge.Forms.Collections.Interfaces;
