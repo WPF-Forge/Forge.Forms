@@ -6,11 +6,13 @@
 
     <ControlTemplate x:Key="ImagePresenterTemplate" TargetType="{x:Type defaults:ImagePresenter}">
         <Image
-            HorizontalAlignment="Stretch"
-            VerticalAlignment="Stretch"
+            Width="{formBuilding:FormBinding Width}"
+            Height="{formBuilding:FormBinding Width}"
+            HorizontalAlignment="{formBuilding:FormBinding HorizontalAlignment}"
+            VerticalAlignment="{formBuilding:FormBinding VerticalAlignment}"
             Source="{formBuilding:FormBinding Source}"
-            Stretch="Uniform"
-            StretchDirection="DownOnly" />
+            Stretch="{formBuilding:FormBinding Stretch}"
+            StretchDirection="{formBuilding:FormBinding StretchDirection}" />
     </ControlTemplate>
 
 </ResourceDictionary>

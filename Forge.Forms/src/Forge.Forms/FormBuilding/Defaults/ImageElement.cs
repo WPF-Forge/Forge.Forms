@@ -2,13 +2,9 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using Forge.Forms.Controls;
 using Forge.Forms.DynamicExpressions;
-using Forge.Forms.DynamicExpressions.ValueConverters;
 
 namespace Forge.Forms.FormBuilding.Defaults
 {
@@ -65,10 +61,28 @@ namespace Forge.Forms.FormBuilding.Defaults
 
         public IValueProvider Source { get; set; }
 
+        public IValueProvider Width { get; set; }
+
+        public IValueProvider Height { get; set; }
+
+        public IValueProvider VerticalAlignment { get; set; }
+
+        public IValueProvider HorizontalAlignment { get; set; }
+
+        public IValueProvider Stretch { get; set; }
+
+        public IValueProvider StretchDirection { get; set; }
+
         protected internal override void Freeze()
         {
             base.Freeze();
             Resources.Add(nameof(Source), GetSource(Source));
+            Resources.Add(nameof(Width), Width ?? new LiteralValue(double.NaN));
+            Resources.Add(nameof(Height), Height ?? new LiteralValue(double.NaN));
+            Resources.Add(nameof(VerticalAlignment), VerticalAlignment ?? new LiteralValue(System.Windows.VerticalAlignment.Center));
+            Resources.Add(nameof(HorizontalAlignment), HorizontalAlignment ?? new LiteralValue(System.Windows.HorizontalAlignment.Stretch));
+            Resources.Add(nameof(Stretch), Stretch ?? new LiteralValue(System.Windows.Media.Stretch.Uniform));
+            Resources.Add(nameof(StretchDirection), StretchDirection ?? new LiteralValue(System.Windows.Controls.StretchDirection.DownOnly));
         }
 
         protected internal override IBindingProvider CreateBindingProvider(IResourceContext context,

@@ -337,7 +337,15 @@ namespace Forge.Forms.FormBuilding
                         break;
 
                     case "img":
-                        AddRow(new ImageAttribute(element.TryGetAttribute("src")).GetElement());
+                        AddRow(new ImageAttribute(element.TryGetAttribute("src"))
+                        {
+                            Width = element.TryGetAttribute("width"),
+                            Height = element.TryGetAttribute("height"),
+                            HorizontalAlignment = element.TryGetAttribute("align"),
+                            VerticalAlignment = element.TryGetAttribute("valign"),
+                            Stretch = element.TryGetAttribute("stretch"),
+                            StretchDirection = element.TryGetAttribute("direction")
+                        }.GetElement());
                         break;
 
                     case "br":
