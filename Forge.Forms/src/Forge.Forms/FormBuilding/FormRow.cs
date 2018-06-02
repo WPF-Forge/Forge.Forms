@@ -72,6 +72,11 @@ namespace Forge.Forms.FormBuilding
 
     internal class GridLayout : ILayout
     {
+        public GridLayout(IEnumerable<GridColumnLayout> columns)
+        {
+            Columns = columns?.ToList() ?? new List<GridColumnLayout>(0);
+        }
+
         public List<GridColumnLayout> Columns { get; }
 
         public IEnumerable<FormElement> GetElements() => Columns.SelectMany(c => c.GetElements());
@@ -134,6 +139,14 @@ namespace Forge.Forms.FormBuilding
 
     internal class Layout : ILayout
     {
+        public Layout(IEnumerable<ILayout> children, Thickness margin, VerticalAlignment verticalAlignment, HorizontalAlignment horizontalAlignment)
+        {
+            Children = children?.ToList() ?? new List<ILayout>(0);
+            Margin = margin;
+            VerticalAlignment = verticalAlignment;
+            HorizontalAlignment = horizontalAlignment;
+        }
+
         public List<ILayout> Children { get; }
 
         public Thickness Margin { get; set; }
@@ -164,6 +177,14 @@ namespace Forge.Forms.FormBuilding
 
     internal class GridColumnLayout : ILayout
     {
+        public GridColumnLayout(ILayout child, double width, double left, double right)
+        {
+            Child = child;
+            Width = width;
+            Left = left;
+            Right = right;
+        }
+
         public ILayout Child { get; }
 
         public double Width { get; }
@@ -199,6 +220,11 @@ namespace Forge.Forms.FormBuilding
 
     internal class InlineLayout : ILayout
     {
+        public InlineLayout(IEnumerable<FormElement> elements)
+        {
+            Elements = elements?.ToList() ?? new List<FormElement>(0);
+        }
+
         public List<FormElement> Elements { get; }
 
         public IEnumerable<FormElement> GetElements() => Elements;
