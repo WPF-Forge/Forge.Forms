@@ -7,7 +7,7 @@
     <ControlTemplate x:Key="ImagePresenterTemplate" TargetType="{x:Type defaults:ImagePresenter}">
         <Image
             Width="{formBuilding:FormBinding Width}"
-            Height="{formBuilding:FormBinding Width}"
+            Height="{formBuilding:FormBinding Height}"
             HorizontalAlignment="{formBuilding:FormBinding HorizontalAlignment}"
             VerticalAlignment="{formBuilding:FormBinding VerticalAlignment}"
             Source="{formBuilding:FormBinding Source}"
