@@ -47,7 +47,7 @@ namespace Forge.Forms.FormBuilding
             Column = column;
             ColumnSpan = columnSpan;
             Elements = layout.GetElements().ToList();
-
+            Layout = layout;
         }
 
         public int Column { get; }
@@ -72,12 +72,18 @@ namespace Forge.Forms.FormBuilding
 
     internal class GridLayout : ILayout
     {
-        public GridLayout(IEnumerable<GridColumnLayout> columns)
+        public GridLayout(IEnumerable<GridColumnLayout> columns, double top, double bottom)
         {
             Columns = columns?.ToList() ?? new List<GridColumnLayout>(0);
+            Top = top;
+            Bottom = bottom;
         }
 
         public List<GridColumnLayout> Columns { get; }
+
+        public double Top { get; }
+
+        public double Bottom { get; }
 
         public IEnumerable<FormElement> GetElements() => Columns.SelectMany(c => c.GetElements());
 
@@ -104,7 +110,11 @@ namespace Forge.Forms.FormBuilding
                 return null;
             }
 
-            var grid = new Grid();
+            var grid = new Grid
+            {
+                Margin = new Thickness(0d, Top, 0d, Bottom)
+            };
+
             var colnum = 0;
             foreach (var column in Columns)
             {
@@ -139,6 +149,11 @@ namespace Forge.Forms.FormBuilding
 
     internal class Layout : ILayout
     {
+        public Layout(IEnumerable<ILayout> children)
+            : this(children, new Thickness(), VerticalAlignment.Stretch, HorizontalAlignment.Stretch)
+        {
+        }
+
         public Layout(IEnumerable<ILayout> children, Thickness margin, VerticalAlignment verticalAlignment, HorizontalAlignment horizontalAlignment)
         {
             Children = children?.ToList() ?? new List<ILayout>(0);
@@ -220,23 +235,40 @@ namespace Forge.Forms.FormBuilding
 
     internal class InlineLayout : ILayout
     {
-        public InlineLayout(IEnumerable<FormElement> elements)
+        public InlineLayout(IEnumerable<ILayout> elements, double top, double bottom)
         {
-            Elements = elements?.ToList() ?? new List<FormElement>(0);
+            Elements = elements?.ToList() ?? new List<ILayout>(0);
+            Top = top;
+            Bottom = bottom;
         }
 
-        public List<FormElement> Elements { get; }
+        public List<ILayout> Elements { get; }
 
-        public IEnumerable<FormElement> GetElements() => Elements;
+        public double Top { get; }
+
+        public double Bottom { get; }
+
+        public IEnumerable<FormElement> GetElements() => Elements.SelectMany(e => e.GetElements());
 
         public FrameworkElement Build(Func<FormElement, FrameworkElement> elementBuilder)
         {
-            var panel = new ActionPanel();
+            var panel = new ActionPanel
+            {
+                Margin = new Thickness(0d, Top, 0d, Bottom)
+            };
+
             foreach (var element in Elements)
             {
-                var contentPresenter = elementBuilder(element);
-                ActionPanel.SetPosition(contentPresenter, element.LinePosition);
-                panel.Children.Add(contentPresenter);
+                if (element is FormElementLayout formElementLayout)
+                {
+                    var contentPresenter = elementBuilder(formElementLayout.Element);
+                    ActionPanel.SetPosition(contentPresenter, formElementLayout.Element.LinePosition);
+                    panel.Children.Add(contentPresenter);
+                }
+                else
+                {
+                    panel.Children.Add(element.Build(elementBuilder));
+                }
             }
 
             return panel;

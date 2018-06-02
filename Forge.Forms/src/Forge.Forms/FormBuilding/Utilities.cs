@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Windows;
 using System.Windows.Data;
 using System.Xml.Linq;
 using Forge.Forms.Annotations;
@@ -428,6 +430,49 @@ namespace Forge.Forms.FormBuilding
         private static Must Parse(string value)
         {
             return (Must)Enum.Parse(typeof(Must), value, true);
+        }
+
+        public static double ParseDouble(string value)
+        {
+            return ParseDouble(value, 0d);
+        }
+
+        public static double ParseDouble(string value, double defaultValue)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                return defaultValue;
+            }
+
+            return double.Parse(value, CultureInfo.InvariantCulture);
+        }
+
+        public static Thickness ParseThickness(string value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                return new Thickness();
+            }
+
+            var values = value.Split(' ', ',').Select(v => double.Parse(v, CultureInfo.InvariantCulture)).ToArray();
+            switch (values.Length)
+            {
+                case 0:
+                    return new Thickness();
+                case 1:
+                    return new Thickness(values[0]);
+                case 2:
+                    return new Thickness(values[0], values[1], values[0], values[1]);
+                case 3:
+                    return new Thickness(values[0], values[1], values[2], values[1]);
+                default:
+                    return new Thickness(values[0], values[1], values[2], values[3]);
+            }
+        }
+
+        public static TEnum TryParse<TEnum>(string value, TEnum defaultValue) where TEnum : struct
+        {
+            return Enum.TryParse<TEnum>(value, true, out var result) ? result : defaultValue;
         }
     }
 }

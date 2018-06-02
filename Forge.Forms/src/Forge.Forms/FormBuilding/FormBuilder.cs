@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Windows;
 using System.Xml.Linq;
 using Forge.Forms.Annotations;
 using Forge.Forms.DynamicExpressions;
@@ -9,6 +10,8 @@ using Forge.Forms.FormBuilding.Defaults;
 using Forge.Forms.FormBuilding.Defaults.Initializers;
 using Forge.Forms.FormBuilding.Defaults.Properties;
 using Forge.Forms.FormBuilding.Defaults.Types;
+using MahApps.Metro.Controls;
+using Position = Forge.Forms.Annotations.Position;
 
 namespace Forge.Forms.FormBuilding
 {
@@ -261,34 +264,20 @@ namespace Forge.Forms.FormBuilding
         public IFormDefinition GetDefinition(string xml)
         {
             var document = XDocument.Parse(xml);
-            var root = document.Root;
-            if (root == null)
+            if (document.Root == null)
             {
                 throw new InvalidOperationException("Invalid XML document.");
             }
 
-            var form = new FormDefinition(null) // null indicates dynamic type
+            ILayout Terminal(XElement element)
             {
-                Grid = Utilities.GetGridWidths(root.GetSingleOrDefaultAttribute("grid")?.Value) ?? new[] { 1d }
-            };
-
-            var gridLength = form.Grid.Length;
-
-            void AddRow(FormElement formElement)
-            {
-                form.FormRows.Add(new FormRow
-                {
-                    Elements = { new FormElementContainer(0, gridLength, formElement) }
-                });
-            }
-
-            var actions = new List<FormElement>();
-            string elementName = null;
-            foreach (var element in root.Elements())
-            {
-                elementName = element.Name.LocalName.ToLower();
+                var elementName = element.Name.LocalName.ToLower();
+                FormElement formElement;
                 switch (elementName)
                 {
+                    case "layout":
+                        return Layout(element);
+
                     case "input":
                         var typeName = element.GetSingleOrDefaultAttribute("type")?.Value ?? "string";
                         if (!TypeNames.TryGetValue(typeName, out var propertyType))
@@ -306,38 +295,37 @@ namespace Forge.Forms.FormBuilding
                         attributes.AddRange(Utilities.GetValidatorsFromElement(element));
                         var property = new DynamicProperty(fieldName, propertyType, attributes.ToArray());
                         var deserializer = TryGetDeserializer(propertyType);
-                        var formElement = Build(property, deserializer);
+                        formElement = Build(property, deserializer);
                         if (formElement != null)
                         {
-                            AddRow(formElement);
                             foreach (var initializer in FieldInitializers)
                             {
                                 initializer.Initialize(formElement, property, deserializer);
                             }
                         }
 
-                        break;
+                        return new FormElementLayout(formElement);
 
                     case "title":
-                        AddRow(new TitleAttribute(element.GetAttributeOrValue("content"))
+                        formElement = new TitleAttribute(element.GetAttributeOrValue("content"))
                         {
                             Icon = element.TryGetAttribute("icon")
-                        }.GetElement());
-                        break;
+                        }.GetElement();
+                        return new FormElementLayout(formElement);
 
                     case "heading":
-                        AddRow(new HeadingAttribute(element.GetAttributeOrValue("content"))
+                        formElement = new HeadingAttribute(element.GetAttributeOrValue("content"))
                         {
                             Icon = element.TryGetAttribute("icon")
-                        }.GetElement());
-                        break;
+                        }.GetElement();
+                        return new FormElementLayout(formElement);
 
                     case "text":
-                        AddRow(new TextAttribute(element.GetAttributeOrValue("content")).GetElement());
-                        break;
+                        formElement = new TextAttribute(element.GetAttributeOrValue("content")).GetElement();
+                        return new FormElementLayout(formElement);
 
                     case "img":
-                        AddRow(new ImageAttribute(element.TryGetAttribute("src"))
+                        formElement = new ImageAttribute(element.TryGetAttribute("src"))
                         {
                             Width = element.TryGetAttribute("width"),
                             Height = element.TryGetAttribute("height"),
@@ -345,48 +333,94 @@ namespace Forge.Forms.FormBuilding
                             VerticalAlignment = element.TryGetAttribute("valign"),
                             Stretch = element.TryGetAttribute("stretch"),
                             StretchDirection = element.TryGetAttribute("direction")
-                        }.GetElement());
-                        break;
+                        }.GetElement();
+                        return new FormElementLayout(formElement);
 
                     case "br":
-                        AddRow(new BreakAttribute
+                        formElement = new BreakAttribute
                         {
                             Height = element.TryGetAttribute("height")
-                        }.GetElement());
-                        break;
+                        }.GetElement();
+
+                        return new FormElementLayout(formElement);
 
                     case "hr":
                         var hasMargin = element.TryGetAttribute("hasMargin");
-                        AddRow((hasMargin != null
+                        formElement = (hasMargin != null
                             ? new DividerAttribute(bool.Parse(hasMargin))
-                            : new DividerAttribute()).GetElement());
-                        break;
+                            : new DividerAttribute()).GetElement();
 
+                        return new FormElementLayout(formElement);
                     case "action":
-                        actions.Add(Utilities.GetAction(element).GetElement());
-                        break;
-                }
+                        formElement = Utilities.GetAction(element).GetElement();
+                        return new FormElementLayout(formElement);
 
-                if (elementName != "action" && actions.Count != 0)
-                {
-                    form.FormRows.Add(new FormRow
-                    {
-                        Elements = { new FormElementContainer(0, gridLength, actions.ToList()) }
-                    });
-
-                    actions.Clear();
+                    default:
+                        throw new InvalidOperationException($"Unknown element '{element.Name.LocalName}'.");
                 }
             }
 
-            if (elementName == "action" && actions.Count != 0)
+            GridColumnLayout Column(XElement element)
             {
-                form.FormRows.Add(new FormRow
-                {
-                    Elements = { new FormElementContainer(0, gridLength, actions.ToList()) }
-                });
+                var elements = element.Elements().ToList();
+                var child = elements.Count == 1
+                    ? Row(elements[0])
+                    : new Layout(elements.Select(Row));
 
-                actions.Clear();
+                return new GridColumnLayout(
+                    child,
+                    Utilities.ParseDouble(element.TryGetAttribute("width"), 1d),
+                    Utilities.ParseDouble(element.TryGetAttribute("left"), 0d),
+                    Utilities.ParseDouble(element.TryGetAttribute("right"), 0d));
             }
+
+            GridLayout Grid(XElement element)
+            {
+                return new GridLayout(
+                    element.Elements().Select(Column),
+                    Utilities.ParseDouble(element.TryGetAttribute("top"), 0d),
+                    Utilities.ParseDouble(element.TryGetAttribute("bottom"), 0d));
+            }
+
+            InlineLayout Inline(XElement element)
+            {
+                return new InlineLayout(
+                    element.Elements().Select(Terminal),
+                    Utilities.ParseDouble(element.TryGetAttribute("top"), 0d),
+                    Utilities.ParseDouble(element.TryGetAttribute("bottom"), 0d));
+            }
+
+            ILayout Row(XElement element)
+            {
+                if (!string.Equals(element.Name.LocalName, "row"))
+                {
+                    return Terminal(element);
+                }
+
+                if (element
+                    .Elements()
+                    .All(e => string.Equals(e.Name.LocalName, "col", StringComparison.OrdinalIgnoreCase)))
+                {
+                    return Grid(element);
+                }
+
+                return Inline(element);
+            }
+
+            Layout Layout(XElement element)
+            {
+                return new Layout(
+                    element.Elements().Select(Row),
+                    Utilities.ParseThickness(element.TryGetAttribute("margin")),
+                    Utilities.TryParse(element.TryGetAttribute("valign"), VerticalAlignment.Stretch),
+                    Utilities.TryParse(element.TryGetAttribute("align"), HorizontalAlignment.Stretch));
+            }
+
+            var form = new FormDefinition(null); // null indicates dynamic type
+            form.FormRows.Add(new FormRow(true, 1)
+            {
+                Elements = { new FormElementContainer(0, 1, Layout(document.Root)) }
+            });
 
             form.Freeze();
             foreach (var element in form.FormRows.SelectMany(r => r.Elements).SelectMany(c => c.Elements))
@@ -396,6 +430,7 @@ namespace Forge.Forms.FormBuilding
 
             return form;
         }
+
 
         /// <summary>
         /// Clears cached form definitions.

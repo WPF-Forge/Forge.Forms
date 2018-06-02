@@ -302,6 +302,7 @@ namespace Forge.Forms.Controls
                         Grid.SetColumn(root, container.Column);
                         Grid.SetColumnSpan(root, container.ColumnSpan);
                         currentElements.Add(root);
+                        continue;
                     }
 
                     var elements = container.Elements;
