@@ -96,6 +96,57 @@ namespace Forge.Forms.FormBuilding
                 : new ValueProviderWrapper(valueProvider, valueConverter);
         }
 
+        public static IValueProvider Wrap(this IValueProvider valueProvider, IValueConverter valueConverter)
+        {
+            return valueConverter == null
+                ? valueProvider
+                : new ValueProviderWrapperWithConverterInstance(valueProvider, valueConverter);
+        }
+
+        private class ValueProviderWrapperWithConverterInstance : IValueProvider
+        {
+            private readonly IValueProvider innerProvider;
+            private readonly IValueConverter valueConverter;
+
+            public ValueProviderWrapperWithConverterInstance(IValueProvider innerProvider, IValueConverter valueConverter)
+            {
+                this.innerProvider = innerProvider;
+                this.valueConverter = valueConverter;
+            }
+
+            public BindingBase ProvideBinding(IResourceContext context)
+            {
+                var bindingBase = innerProvider.ProvideBinding(context);
+                if (bindingBase is Binding binding)
+                {
+                    binding.Converter = binding.Converter == null
+                        ? valueConverter
+                        : new ConverterWrapper(valueConverter, binding.Converter);
+                }
+
+                return bindingBase;
+            }
+
+            public object ProvideValue(IResourceContext context)
+            {
+                var value = innerProvider.ProvideValue(context);
+                if (value is Binding binding)
+                {
+                    binding.Converter = binding.Converter == null
+                        ? valueConverter
+                        : new ConverterWrapper(valueConverter, binding.Converter);
+                    return binding;
+                }
+
+                if (value is BindingBase)
+                {
+                    return value;
+                }
+
+                return valueConverter.Convert(value, typeof(object), null, CultureInfo.CurrentCulture);
+            }
+        }
+
         private class ValueProviderWrapper : IValueProvider
         {
             private readonly IValueProvider innerProvider;

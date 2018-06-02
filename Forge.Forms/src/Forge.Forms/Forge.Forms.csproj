@@ -55,6 +55,7 @@
     <Compile Include="Annotations\BreakAttribute.cs" />
     <Compile Include="Annotations\DividerAttribute.cs" />
     <Compile Include="Annotations\FormContentAttribute.cs" />
+    <Compile Include="Annotations\ImageAttribute.cs" />
     <Compile Include="Annotations\Placement.cs" />
     <Compile Include="Annotations\TextElementAttribute.cs" />
     <Compile Include="Annotations\DefaultFields.cs" />
@@ -86,6 +87,7 @@
     <Compile Include="DynamicExpressions\FileBinding.cs" />
     <Compile Include="DynamicExpressions\FileWatcher.cs" />
     <Compile Include="DynamicExpressions\MultiValueBinding.cs" />
+    <Compile Include="FormBuilding\Defaults\ImageElement.cs" />
     <Compile Include="FormBuilding\IEnvironment.cs" />
     <Compile Include="FormBuilding\PropertyWrapper.cs" />
     <Compile Include="IModelInterceptor.cs" />
@@ -241,6 +243,10 @@
     <Page Include="Themes\Material.xaml">
       <SubType>Designer</SubType>
       <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
+    <Page Include="Themes\Elements\Image.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Themes\Material\Element.Action.xaml">
       <SubType>Designer</SubType>

@@ -1,12 +1,13 @@
 <ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:controls="clr-namespace:Forge.Forms.Controls"
+    xmlns:defaults="clr-namespace:Forge.Forms.FormBuilding.Defaults"
     xmlns:formBuilding="clr-namespace:Forge.Forms.FormBuilding"
-    xmlns:defaults="clr-namespace:Forge.Forms.FormBuilding.Defaults">
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes">
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="pack://application:,,,/Forge.Forms;component/Themes/Elements/Text.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Forge.Forms;component/Themes/Elements/Image.xaml" />
         <ResourceDictionary Source="pack://application:,,,/Forge.Forms;component/Themes/Wpf.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
@@ -39,11 +40,17 @@
         </Setter>
     </Style>
 
+    <Style TargetType="defaults:ImagePresenter">
+        <Setter Property="Margin" Value="8" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Template" Value="{StaticResource ImagePresenterTemplate}" />
+    </Style>
+
     <Style x:Key="DynamicFormStyle" TargetType="{x:Type controls:DynamicForm}">
         <Setter Property="controls:TextProperties.TitleFontSize" Value="20" />
         <Setter Property="controls:TextProperties.HeadingFontSize" Value="15" />
-        <Setter Property="controls:TextProperties.TextFontSize"
-                Value="{Binding FontSize, RelativeSource={RelativeSource Self}}" />
+        <Setter Property="controls:TextProperties.TextFontSize" Value="{Binding FontSize, RelativeSource={RelativeSource Self}}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate>

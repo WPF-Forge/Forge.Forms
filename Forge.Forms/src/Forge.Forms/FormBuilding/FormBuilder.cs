@@ -336,6 +336,10 @@ namespace Forge.Forms.FormBuilding
                         AddRow(new TextAttribute(element.GetAttributeOrValue("content")).GetElement());
                         break;
 
+                    case "img":
+                        AddRow(new ImageAttribute(element.TryGetAttribute("src")).GetElement());
+                        break;
+
                     case "br":
                         AddRow(new BreakAttribute
                         {

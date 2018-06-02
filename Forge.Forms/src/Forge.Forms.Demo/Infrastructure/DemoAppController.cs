@@ -8,7 +8,6 @@ namespace Forge.Forms.Demo.Infrastructure
     {
         protected override void OnInitializing()
         {
-            MaterialDesignHelper.ReplaceDefaultHintProxies();
             var factory = Routes.RouteFactory;
             Routes.MenuRoutes.Add(InitialRoute = factory.Get<HomeRoute>());
             Routes.MenuRoutes.Add(factory.Get<ExamplesRoute>());

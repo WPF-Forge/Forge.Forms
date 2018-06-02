@@ -14,17 +14,17 @@ namespace Forge.Forms.Annotations
         /// <summary>
         /// Initializes a new instance of the <see cref="TextElementAttribute"/> class.
         /// </summary>
-        /// <param name="value">Text value. Accepts a string or a dynamic expression.</param>
+        /// <param name="source">Text value. Accepts a string or a dynamic expression.</param>
         /// <param name="position">The relative position of this element.</param>
-        protected TextElementAttribute(string value, int position) : base(position)
+        protected TextElementAttribute(string source, int position) : base(position)
         {
-            Value = value;
+            Source = source;
         }
 
         /// <summary>
         /// Element content. Accepts a string or a dynamic expression.
         /// </summary>
-        public string Value { get; }
+        public string Source { get; }
 
         /// <summary>
         /// Push text to the right to align with icons. Accepts a boolean or a dynamic resource.
@@ -35,7 +35,7 @@ namespace Forge.Forms.Annotations
         {
             if (element is ContentElement contentElement)
             {
-                contentElement.Content = Utilities.GetStringResource(Value);
+                contentElement.Content = Utilities.GetStringResource(Source);
                 contentElement.IconPadding = Utilities.GetResource<bool>(IconPadding, false, Deserializers.Boolean);
             }
         }
@@ -50,10 +50,10 @@ namespace Forge.Forms.Annotations
         /// <summary>
         /// Initializes a new instance of the <see cref="TitleAttribute"/> class.
         /// </summary>
-        /// <param name="value">Text value. Accepts a string or a dynamic expression.</param>
+        /// <param name="source">Text value. Accepts a string or a dynamic expression.</param>
         /// <param name="position">Do not provide a value for this argument.</param>
-        public TitleAttribute(string value, [CallerLineNumber] int position = 0)
-            : base(value, position)
+        public TitleAttribute(string source, [CallerLineNumber] int position = 0)
+            : base(source, position)
         {
         }
 
@@ -80,10 +80,10 @@ namespace Forge.Forms.Annotations
         /// <summary>
         /// Initializes a new instance of the <see cref="HeadingAttribute"/> class.
         /// </summary>
-        /// <param name="value">Text value. Accepts a string or a dynamic expression.</param>
+        /// <param name="source">Text value. Accepts a string or a dynamic expression.</param>
         /// <param name="position">Do not provide a value for this argument.</param>
-        public HeadingAttribute(string value, [CallerLineNumber] int position = 0)
-            : base(value, position)
+        public HeadingAttribute(string source, [CallerLineNumber] int position = 0)
+            : base(source, position)
         {
         }
 
@@ -110,10 +110,10 @@ namespace Forge.Forms.Annotations
         /// <summary>
         /// Initializes a new instance of the <see cref="TextAttribute"/> class.
         /// </summary>
-        /// <param name="value">Text value. Accepts a string or a dynamic expression.</param>
+        /// <param name="source">Text value. Accepts a string or a dynamic expression.</param>
         /// <param name="position">Do not provide a value for this argument.</param>
-        public TextAttribute(string value, [CallerLineNumber] int position = 0)
-            : base(value, position)
+        public TextAttribute(string source, [CallerLineNumber] int position = 0)
+            : base(source, position)
         {
         }
 

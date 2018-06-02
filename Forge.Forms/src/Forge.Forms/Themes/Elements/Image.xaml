@@ -1,0 +1,16 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:defaults="clr-namespace:Forge.Forms.FormBuilding.Defaults"
+    xmlns:formBuilding="clr-namespace:Forge.Forms.FormBuilding">
+
+    <ControlTemplate x:Key="ImagePresenterTemplate" TargetType="{x:Type defaults:ImagePresenter}">
+        <Image
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"
+            Source="{formBuilding:FormBinding Source}"
+            Stretch="Uniform"
+            StretchDirection="DownOnly" />
+    </ControlTemplate>
+
+</ResourceDictionary>
