@@ -285,12 +285,25 @@ namespace Forge.Forms.Controls
             currentElements.Clear();
             DataBindingProviders.Clear();
             DataFields.Clear();
+
+            FrameworkElement ElementBuilder(FormElement e) => CreateContentPresenter(e, formDefinition);
             var rowPointer = 0;
             for (var i = 0; i < rows; i++)
             {
                 var row = formDefinition.FormRows[i];
                 foreach (var container in row.Elements)
                 {
+                    // New API to allow custom layout logic
+                    if (container.Layout != null)
+                    {
+                        var root = container.Layout.Build(ElementBuilder);
+                        Grid.SetRow(root, rowPointer);
+                        Grid.SetRowSpan(root, row.RowSpan);
+                        Grid.SetColumn(root, container.Column);
+                        Grid.SetColumnSpan(root, container.ColumnSpan);
+                        currentElements.Add(root);
+                    }
+
                     var elements = container.Elements;
                     if (elements.Count == 0)
                     {
