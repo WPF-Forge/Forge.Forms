@@ -114,8 +114,10 @@ namespace Forge.Forms.Demo.Routes
     <input type=""bool"" name=""Agree"" label=""Agree to license"" defaultValue=""false"">
         <validate must=""BeTrue"">You must accept the license agreement.</validate>
     </input>
-    <action name=""reset"" content=""RESET"" icon=""close"" resets=""true"" />
-    <action name=""submit"" content=""SUBMIT"" icon=""check"" validates=""true"" />
+    <row>
+        <action name=""reset"" content=""RESET"" icon=""close"" resets=""true"" />
+        <action name=""submit"" content=""SUBMIT"" icon=""check"" validates=""true"" />
+    </row>
 </form>";
 
             BuildDefinition();
