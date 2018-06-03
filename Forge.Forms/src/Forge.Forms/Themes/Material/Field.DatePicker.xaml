@@ -32,7 +32,7 @@
                 Name="ValueHolderControl"
                 Grid.Column="1"
                 Margin="0,-14,0,0"
-                VerticalAlignment="Bottom"
+                VerticalAlignment="Center"
                 internal:FocusHelper.InitialFocus="{formBuilding:FormBinding InitialFocus}"
                 internal:SelectTextOnFocus.Active="{formBuilding:FormBinding SelectOnFocus}"
                 materialDesign:HintAssist.Hint="{formBuilding:FormBinding Name}"
