@@ -90,6 +90,7 @@
     <Compile Include="FormBuilding\Defaults\ImageElement.cs" />
     <Compile Include="FormBuilding\IEnvironment.cs" />
     <Compile Include="FormBuilding\PropertyWrapper.cs" />
+    <Compile Include="FormBuilding\SelectOption.cs" />
     <Compile Include="IModelInterceptor.cs" />
     <Compile Include="Snapshot.cs" />
     <Compile Include="WindowOptions.cs" />

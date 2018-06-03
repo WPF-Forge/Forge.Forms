@@ -347,6 +347,52 @@ namespace Forge.Forms.FormBuilding
             return attr;
         }
 
+        public static List<SelectOption> GetSelectOptionsFromElement(XElement element)
+        {
+            var result = new List<SelectOption>();
+            foreach (var child in element.Descendants("option"))
+            {
+                var value = child.TryGetAttribute("value");
+                var name = child.GetAttributeOrValue("name") ?? value ?? "";
+                value = value ?? name;
+                result.Add(new SelectOption(name, value));
+            }
+
+            return result;
+        }
+
+        // Source: https://stackoverflow.com/questions/4692340/find-types-in-all-assemblies
+        public static IEnumerable<Type> FindTypes(Func<Type, bool> predicate)
+        {
+            if (predicate == null)
+                throw new ArgumentNullException(nameof(predicate));
+
+            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+            {
+                if (!assembly.IsDynamic)
+                {
+                    Type[] exportedTypes = null;
+                    try
+                    {
+                        exportedTypes = assembly.GetExportedTypes();
+                    }
+                    catch (ReflectionTypeLoadException e)
+                    {
+                        exportedTypes = e.Types;
+                    }
+
+                    if (exportedTypes != null)
+                    {
+                        foreach (var type in exportedTypes)
+                        {
+                            if (predicate(type))
+                                yield return type;
+                        }
+                    }
+                }
+            }
+        }
+
         public static IEnumerable<ValueAttribute> GetValidatorsFromElement(XElement element)
         {
             var validators = new List<ValueAttribute>();

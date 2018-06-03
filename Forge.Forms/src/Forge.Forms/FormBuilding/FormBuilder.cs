@@ -279,13 +279,14 @@ namespace Forge.Forms.FormBuilding
                         return Layout(element);
 
                     case "input":
-                        var typeName = element.GetSingleOrDefaultAttribute("type")?.Value ?? "string";
+                    {
+                        var typeName = element.TryGetAttribute("type") ?? "string";
                         if (!TypeNames.TryGetValue(typeName, out var propertyType))
                         {
                             throw new InvalidOperationException($"Type '{typeName}' not found.");
                         }
 
-                        var fieldName = element.GetSingleOrDefaultAttribute("name")?.Value;
+                        var fieldName = element.TryGetAttribute("name");
                         var attributes = new List<Attribute>
                         {
                             Utilities.GetFieldAttributeFromElement(element),
@@ -305,6 +306,95 @@ namespace Forge.Forms.FormBuilding
                         }
 
                         return new FormElementLayout(formElement);
+                    }
+                    case "select":
+                    {
+                        var from = element.TryGetAttribute("from");
+                        object itemsSource;
+                        string typeName;
+                        string displayPath;
+                        string valuePath;
+                        Type propertyType = null;
+                        if (!string.IsNullOrEmpty(from))
+                        {
+                            if (from.StartsWith("type:"))
+                            {
+                                var qualifiedType = from.Substring("type:".Length);
+                                var nullable = false;
+                                if (qualifiedType.EndsWith("?"))
+                                {
+                                    qualifiedType = qualifiedType.Substring(0, qualifiedType.Length - 1);
+                                    nullable = true;
+                                }
+
+                                propertyType = Utilities.FindTypes(t => t.FullName == qualifiedType).FirstOrDefault();
+                                itemsSource = propertyType ?? throw new InvalidOperationException($"Could not find type '{qualifiedType}'.");
+
+                                if (propertyType.IsValueType && nullable)
+                                {
+                                    propertyType = typeof(Nullable<>).MakeGenericType(propertyType);
+                                    itemsSource = propertyType;
+                                }
+
+                                typeName = element.TryGetAttribute("type");
+                            }
+                            else
+                            {
+                                itemsSource = from;
+                                typeName = element.TryGetAttribute("type") ?? "string";
+                            }
+
+                            displayPath = element.TryGetAttribute("displayPath");
+                            valuePath = element.TryGetAttribute("valuePath");
+                        }
+                        else
+                        {
+                            typeName = "string";
+                            displayPath = "Name";
+                            valuePath = "Value";
+                            itemsSource = Utilities.GetSelectOptionsFromElement(element);
+                        }
+
+                        if (typeName != null && !TypeNames.TryGetValue(typeName, out propertyType))
+                        {
+                            throw new InvalidOperationException($"Type '{typeName}' not found.");
+                        }
+
+                        if (propertyType.IsValueType
+                            && element.TryGetAttribute("nullable") != null
+                            && (!propertyType.IsGenericType || propertyType.GetGenericTypeDefinition() != typeof(Nullable<>)))
+                        {
+                            propertyType = typeof(Nullable<>).MakeGenericType(propertyType);
+                        }
+
+                        var fieldName = element.TryGetAttribute("name");
+                        var attributes = new List<Attribute>
+                        {
+                            new SelectFromAttribute(itemsSource)
+                            {
+                                SelectionType = Utilities.TryParse(element.TryGetAttribute("as"), SelectionType.ComboBox),
+                                DisplayPath = displayPath,
+                                ValuePath = valuePath,
+                                ItemStringFormat = element.TryGetAttribute("itemStringFormat")
+                            },
+                            Utilities.GetFieldAttributeFromElement(element),
+                            Utilities.GetBindingAttributeFromElement(element)
+                        };
+
+                        attributes.AddRange(Utilities.GetValidatorsFromElement(element));
+                        var property = new DynamicProperty(fieldName, propertyType, attributes.ToArray());
+                        var deserializer = TryGetDeserializer(propertyType);
+                        formElement = Build(property, deserializer);
+                        if (formElement != null)
+                        {
+                            foreach (var initializer in FieldInitializers)
+                            {
+                                initializer.Initialize(formElement, property, deserializer);
+                            }
+                        }
+
+                        return new FormElementLayout(formElement);
+                    }
 
                     case "title":
                         formElement = new TitleAttribute(element.GetAttributeOrValue("content"))
@@ -392,7 +482,7 @@ namespace Forge.Forms.FormBuilding
 
             ILayout Row(XElement element)
             {
-                if (!string.Equals(element.Name.LocalName, "row"))
+                if (!string.Equals(element.Name.LocalName, "row", StringComparison.OrdinalIgnoreCase))
                 {
                     return Terminal(element);
                 }

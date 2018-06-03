@@ -2,11 +2,11 @@
     x:Class="Forge.Forms.Demo.Views.XmlExamplesView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:Forge.Forms.Controls;assembly=Forge.Forms"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:routes="clr-namespace:Forge.Forms.Demo.Routes"
-    xmlns:controls="clr-namespace:Forge.Forms.Controls;assembly=Forge.Forms"
     d:DataContext="{d:DesignInstance Type=routes:XmlExamplesRoute,
                                      IsDesignTimeCreatable=False}"
     d:DesignHeight="600"
@@ -38,6 +38,7 @@
                     VerticalContentAlignment="Top"
                     materialDesign:HintAssist.Hint="XML Definition"
                     AcceptsReturn="True"
+                    FontFamily="Consolas"
                     Text="{Binding XmlString}"
                     TextWrapping="Wrap"
                     VerticalScrollBarVisibility="Auto" />
