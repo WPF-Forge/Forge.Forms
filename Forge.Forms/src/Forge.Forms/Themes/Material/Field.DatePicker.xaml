@@ -31,7 +31,7 @@
             <DatePicker
                 Name="ValueHolderControl"
                 Grid.Column="1"
-                Margin="0,-14,0,0"
+                Margin="0,-1,0,0"
                 VerticalAlignment="Center"
                 internal:FocusHelper.InitialFocus="{formBuilding:FormBinding InitialFocus}"
                 internal:SelectTextOnFocus.Active="{formBuilding:FormBinding SelectOnFocus}"
