@@ -303,6 +303,8 @@ namespace Forge.Forms.FormBuilding
                             {
                                 initializer.Initialize(formElement, property, deserializer);
                             }
+
+                            formElement.LinePosition = (Position)(-1);
                         }
 
                         return new FormElementLayout(formElement);
@@ -391,6 +393,8 @@ namespace Forge.Forms.FormBuilding
                             {
                                 initializer.Initialize(formElement, property, deserializer);
                             }
+
+                            formElement.LinePosition = (Position)(-1);
                         }
 
                         return new FormElementLayout(formElement);
