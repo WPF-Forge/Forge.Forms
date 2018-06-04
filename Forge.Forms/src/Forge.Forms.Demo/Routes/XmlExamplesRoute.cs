@@ -115,7 +115,7 @@ namespace Forge.Forms.Demo.Routes
         <validate converter=""Length"" must=""BeGreaterThanOrEqualTo"" value=""6"">
             Your password has {Value|Length} characters, which is less than the required {Argument}.
         </validate>
-    </input>
+    </password>
     <input type=""string"" name=""PasswordConfirm""
            label=""Confirm password"" icon=""empty"">
         <validate must=""BeEqualTo"" value=""{Binding Password}""
