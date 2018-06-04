@@ -5,6 +5,7 @@ using Forge.Forms.FormBuilding;
 using Material.Application.Infrastructure;
 using Material.Application.Routing;
 using MaterialDesignThemes.Wpf;
+using Newtonsoft.Json;
 
 namespace Forge.Forms.Demo.Routes
 {
@@ -21,6 +22,7 @@ namespace Forge.Forms.Demo.Routes
             RouteConfig.Title = "XML Examples";
             RouteConfig.Icon = PackIconKind.Xml;
             BuildDefinitionCommand = Command(BuildDefinition);
+            RouteConfig.RouteCommands.Add(Command("View JSON", PackIconKind.CodeBraces, ViewSource));
         }
 
         public IFormDefinition CompiledDefinition
@@ -54,6 +56,23 @@ namespace Forge.Forms.Demo.Routes
         }
 
         public ICommand BuildDefinitionCommand { get; }
+
+        public object CurrentModel { get; set; }
+
+        private void ViewSource()
+        {
+            string json;
+            try
+            {
+                json = JsonConvert.SerializeObject(CurrentModel, Formatting.Indented);
+            }
+            catch
+            {
+                return;
+            }
+
+            GetRoute<SourceRoute>("title", "XML Form", "source", json, "isPath", false).Push();
+        }
 
         public void HandleAction(IActionContext actionContext)
         {

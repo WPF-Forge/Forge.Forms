@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="clr-namespace:Forge.Forms.Controls;assembly=Forge.Forms"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:infrastructure="clr-namespace:Forge.Forms.Demo.Infrastructure"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:routes="clr-namespace:Forge.Forms.Demo.Routes"
@@ -60,7 +61,11 @@
                 <ScrollViewer.Resources>
                     <SolidColorBrush x:Key="MaterialDesignPaper" Color="#FFFFFFFF" />
                 </ScrollViewer.Resources>
-                <controls:DynamicForm Margin="12,12,12,8" Model="{Binding CompiledDefinition}" />
+                <controls:DynamicForm Margin="12,12,12,8" Model="{Binding CompiledDefinition}">
+                    <infrastructure:PushBindingManager.PushBindings>
+                        <infrastructure:PushBinding Path="CurrentModel" TargetProperty="Value" />
+                    </infrastructure:PushBindingManager.PushBindings>
+                </controls:DynamicForm>
             </ScrollViewer>
         </materialDesign:Card>
         <materialDesign:ColorZone

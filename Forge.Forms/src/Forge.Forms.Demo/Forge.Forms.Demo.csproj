@@ -54,6 +54,7 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Infrastructure\PushBinding.cs" />
     <Compile Include="Infrastructure\TextDocumentValueConverter.cs" />
     <Compile Include="Models\BooleanLogic.cs" />
     <Compile Include="Models\Dialogs.cs" />
@@ -155,6 +156,9 @@
     </PackageReference>
     <PackageReference Include="Material.Application">
       <Version>1.0.0-CI-20171226-172359</Version>
+    </PackageReference>
+    <PackageReference Include="Newtonsoft.Json">
+      <Version>11.0.2</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
