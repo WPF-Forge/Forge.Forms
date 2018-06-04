@@ -116,12 +116,12 @@ namespace Forge.Forms.Demo.Routes
             Your password has {Value|Length} characters, which is less than the required {Argument}.
         </validate>
     </password>
-    <input type=""string"" name=""PasswordConfirm""
+    <password name=""PasswordConfirm""
            label=""Confirm password"" icon=""empty"">
         <validate must=""BeEqualTo"" value=""{Binding Password}""
                   onValueChanged=""ClearErrors""
                   message=""The entered passwords do not match."" />
-    </input>
+    </password>
     <br />
     <heading icon=""checkall"">Review entered information</heading>
     <text>Name: {Binding FirstName} {Binding LastName}</text>
