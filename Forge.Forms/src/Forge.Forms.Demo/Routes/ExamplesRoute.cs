@@ -104,6 +104,8 @@ namespace Forge.Forms.Demo.Routes
 
             yield return new ExamplePresenter(new User(), "User", large);
 
+            yield return new ExamplePresenter(new TextFields(), "Text Fields", large);
+
             yield return new ExamplePresenter(new Selection(), "Selection", large);
 
             yield return new ExamplePresenter(new FoodSelection(), "Food Selection", large);

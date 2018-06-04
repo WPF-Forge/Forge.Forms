@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Windows;
-using Forge.Forms.DynamicExpressions;
 
 namespace Forge.Forms.FormBuilding.Defaults
 {
@@ -12,20 +11,23 @@ namespace Forge.Forms.FormBuilding.Defaults
         }
 
         public bool IsPassword { get; set; }
-        public IValueProvider IsMultiline { get; set; }
 
-        protected internal override void Freeze()
-        {
-            base.Freeze();
-            Resources.Add(nameof(IsMultiline), IsMultiline ?? LiteralValue.False);
-        }
+        public bool IsMultiline { get; set; }
 
         protected internal override IBindingProvider CreateBindingProvider(IResourceContext context,
             IDictionary<string, IValueProvider> formResources)
         {
-            return !IsPassword
-                ? (IBindingProvider)new StringPresenter(context, Resources, formResources)
-                : new PasswordPresenter(context, Resources, formResources);
+            if (IsMultiline)
+            {
+                return new MultiLineStringPresenter(context, Resources, formResources);
+            }
+
+            if (IsPassword)
+            {
+                return new PasswordPresenter(context, Resources, formResources);
+            }
+
+            return new StringPresenter(context, Resources, formResources);
         }
     }
 
@@ -54,6 +56,22 @@ namespace Forge.Forms.FormBuilding.Defaults
         }
 
         public PasswordPresenter(IResourceContext context,
+            IDictionary<string, IValueProvider> fieldResources,
+            IDictionary<string, IValueProvider> formResources)
+            : base(context, fieldResources, formResources, true)
+        {
+        }
+    }
+
+    public class MultiLineStringPresenter : ValueBindingProvider
+    {
+        static MultiLineStringPresenter()
+        {
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(MultiLineStringPresenter),
+                new FrameworkPropertyMetadata(typeof(MultiLineStringPresenter)));
+        }
+
+        public MultiLineStringPresenter(IResourceContext context,
             IDictionary<string, IValueProvider> fieldResources,
             IDictionary<string, IValueProvider> formResources)
             : base(context, fieldResources, formResources, true)

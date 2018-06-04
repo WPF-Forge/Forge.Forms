@@ -8,6 +8,7 @@
         <ResourceDictionary
             Source="pack://application:,,,/Forge.Forms;component/Themes/Material/Field.Converted.xaml" />
         <ResourceDictionary Source="pack://application:,,,/Forge.Forms;component/Themes/Material/Field.String.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Forge.Forms;component/Themes/Material/Field.MultiLineString.xaml" />
         <ResourceDictionary Source="pack://application:,,,/Forge.Forms;component/Themes/Material/Field.Password.xaml" />
         <ResourceDictionary
             Source="pack://application:,,,/Forge.Forms;component/Themes/Material/Field.DatePicker.xaml" />
@@ -20,6 +21,7 @@
     </ResourceDictionary.MergedDictionaries>
 
     <Style BasedOn="{StaticResource MaterialStringPresenterStyle}" TargetType="{x:Type defaults:StringPresenter}" />
+    <Style BasedOn="{StaticResource MaterialMultiLineStringPresenterStyle}" TargetType="{x:Type defaults:MultiLineStringPresenter}" />
     <Style BasedOn="{StaticResource MaterialPasswordPresenterStyle}" TargetType="{x:Type defaults:PasswordPresenter}" />
     <Style BasedOn="{StaticResource MaterialConvertedPresenterStyle}" TargetType="{x:Type defaults:ConvertedPresenter}" />
     <Style BasedOn="{StaticResource MaterialCheckBoxPresenterStyle}" TargetType="{x:Type defaults:CheckBoxPresenter}" />

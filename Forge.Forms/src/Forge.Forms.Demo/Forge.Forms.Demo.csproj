@@ -63,6 +63,7 @@
     <Compile Include="Introduction.cs" />
     <Compile Include="Infrastructure\ExamplePresenter.cs" />
     <Compile Include="Models\InlineElements.cs" />
+    <Compile Include="Models\TextFields.cs" />
     <Compile Include="Models\Selection.cs" />
     <Compile Include="Routes\ExamplesRoute.cs" />
     <Compile Include="Routes\HomeRoute.cs" />

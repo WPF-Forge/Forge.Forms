@@ -56,6 +56,7 @@
     <Compile Include="Annotations\DividerAttribute.cs" />
     <Compile Include="Annotations\FormContentAttribute.cs" />
     <Compile Include="Annotations\ImageAttribute.cs" />
+    <Compile Include="Annotations\MultiLineAttribute.cs" />
     <Compile Include="Annotations\Placement.cs" />
     <Compile Include="Annotations\TextElementAttribute.cs" />
     <Compile Include="Annotations\DefaultFields.cs" />
@@ -280,6 +281,10 @@
     <Page Include="Themes\Material\Field.Slider.xaml">
       <SubType>Designer</SubType>
       <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
+    <Page Include="Themes\Material\Field.MultiLineString.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Themes\Material\Field.String.xaml">
       <SubType>Designer</SubType>

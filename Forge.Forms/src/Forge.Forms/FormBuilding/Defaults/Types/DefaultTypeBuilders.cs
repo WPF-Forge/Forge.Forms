@@ -11,7 +11,8 @@ namespace Forge.Forms.FormBuilding.Defaults.Types
         {
             return new StringField(property.Name)
             {
-                IsPassword = property.GetCustomAttribute<PasswordAttribute>() != null
+                IsPassword = property.GetCustomAttribute<PasswordAttribute>() != null,
+                IsMultiline = property.GetCustomAttribute<MultiLineAttribute>() != null
             };
         }
     }

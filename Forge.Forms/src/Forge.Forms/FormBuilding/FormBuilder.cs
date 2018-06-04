@@ -278,6 +278,7 @@ namespace Forge.Forms.FormBuilding
                     case "layout":
                         return Layout(element);
 
+                    case "textarea":
                     case "input":
                     {
                         var typeName = element.TryGetAttribute("type") ?? "string";
@@ -292,6 +293,11 @@ namespace Forge.Forms.FormBuilding
                             Utilities.GetFieldAttributeFromElement(element),
                             Utilities.GetBindingAttributeFromElement(element)
                         };
+
+                        if (elementName == "textarea")
+                        {
+                            attributes.Add(new MultiLineAttribute());
+                        }
 
                         attributes.AddRange(Utilities.GetValidatorsFromElement(element));
                         var property = new DynamicProperty(fieldName, propertyType, attributes.ToArray());
