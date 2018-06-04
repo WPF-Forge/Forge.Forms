@@ -30,7 +30,6 @@
             <TextBox
                 Name="ValueHolderControl"
                 Grid.Column="1"
-                Margin="0,-14,0,0"
                 MinLines="3"
                 VerticalAlignment="Center"
                 internal:FocusHelper.InitialFocus="{formBuilding:FormBinding InitialFocus}"
