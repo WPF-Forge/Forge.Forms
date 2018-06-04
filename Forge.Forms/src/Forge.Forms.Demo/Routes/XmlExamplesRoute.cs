@@ -110,7 +110,7 @@ namespace Forge.Forms.Demo.Routes
         <validate must=""MatchPattern"" value=""^[a-zA-Z][a-zA-Z0-9]*$""
                   message=""'{Value}' is not a valid username."" />
     </input>
-    <input type=""string"" name=""Password""
+    <password name=""Password""
            label=""Password"" icon=""key"">
         <validate converter=""Length"" must=""BeGreaterThanOrEqualTo"" value=""6"">
             Your password has {Value|Length} characters, which is less than the required {Argument}.

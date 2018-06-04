@@ -280,8 +280,10 @@ namespace Forge.Forms.FormBuilding
                     case "layout":
                         return Layout(element);
 
-                    case "textarea":
                     case "input":
+                    case "textarea":
+                    case "toggle":
+                    case "password":
                     {
                         var typeName = element.TryGetAttribute("type") ?? "string";
                         if (!TypeNames.TryGetValue(typeName, out var propertyType))
@@ -296,9 +298,20 @@ namespace Forge.Forms.FormBuilding
                             Utilities.GetBindingAttributeFromElement(element)
                         };
 
-                        if (elementName == "textarea")
+                        switch (elementName)
                         {
-                            attributes.Add(new MultiLineAttribute());
+                            case "textarea":
+                                attributes.Add(new MultiLineAttribute());
+                                propertyType = typeof(string);
+                                break;
+                            case "toggle":
+                                attributes.Add(new ToggleAttribute());
+                                propertyType = typeof(bool);
+                                break;
+                            case "password":
+                                attributes.Add(new PasswordAttribute());
+                                propertyType = typeof(string);
+                                break;
                         }
 
                         attributes.AddRange(Utilities.GetValidatorsFromElement(element));
