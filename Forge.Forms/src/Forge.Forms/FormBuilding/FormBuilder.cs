@@ -261,7 +261,9 @@ namespace Forge.Forms.FormBuilding
             return formDefinition;
         }
 
-        public IFormDefinition GetDefinition(string xml)
+        public FormDefinition GetDefinition(string xml) => GetDefinition(xml, true);
+
+        public FormDefinition GetDefinition(string xml, bool freeze)
         {
             var document = XDocument.Parse(xml);
             if (document.Root == null)
@@ -522,10 +524,9 @@ namespace Forge.Forms.FormBuilding
                 Elements = { new FormElementContainer(0, 1, Layout(document.Root)) }
             });
 
-            form.Freeze();
-            foreach (var element in form.FormRows.SelectMany(r => r.Elements).SelectMany(c => c.Elements))
+            if (freeze)
             {
-                element.Freeze();
+                form.FreezeAll();
             }
 
             return form;
