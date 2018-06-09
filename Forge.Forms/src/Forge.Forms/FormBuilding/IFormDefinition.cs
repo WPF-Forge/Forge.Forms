@@ -38,7 +38,7 @@ namespace Forge.Forms.FormBuilding
             var element = (DataFormField)definition.GetElements().FirstOrDefault(e => e is DataFormField d && d.Key == name);
             if (element != null)
             {
-                element.DefaultValue = new DynamicExpressions.LiteralValue(value);
+                element.DefaultValue = value is IValueProvider p ? p : new DynamicExpressions.LiteralValue(value); 
             }
         }
         
