@@ -71,7 +71,7 @@ namespace Forge.Forms.FormBuilding
                 Resources.Add(isNotReadOnly, IsReadOnly.Wrap("Negate"));
             }
 
-            Resources.Add(nameof(DefaultValue), DefaultValue ?? new LiteralValue(null));
+            Resources[nameof(DefaultValue)] = DefaultValue ?? LiteralValue.Null;
             Resources.Add(nameof(SelectOnFocus), SelectOnFocus ?? LiteralValue.True);
         }
 
