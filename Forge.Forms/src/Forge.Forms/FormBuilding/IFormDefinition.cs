@@ -32,5 +32,15 @@ namespace Forge.Forms.FormBuilding
                 element.Freeze();
             }
         }
+        
+        public static void UpdateDefaultValue(this FormDefinition definition, string name, object value)
+        {
+            var element = (DataFormField)definition.GetElements().FirstOrDefault(e => e is DataFormField d && d.Key == name);
+            if (element != null)
+            {
+                element.DefaultValue = new DynamicExpressions.LiteralValue(value);
+            }
+        }
+        
     }
 }
