@@ -152,12 +152,35 @@ namespace Forge.Forms.FormBuilding.Defaults
                 }
             }
 
+            var closed = false;
+            bool Close()
+            {
+                if (closed)
+                {
+                    return false;
+                }
+
+                if (context is IFrameworkResourceContext fwContext)
+                {
+                    var frameworkElement = fwContext.GetOwningElement();
+                    if (frameworkElement != null && frameworkElement.CheckAccess())
+                    {
+                        DialogHost.CloseDialogCommand.Execute(arg, frameworkElement);
+                    }
+                }
+
+                closed = true;
+                return true;
+            }
+
             var modelContext = context.GetContextInstance();
-            IActionContext actionContext = new ActionContext(model, 
+            IActionContext actionContext = new ActionContext(model,
                 modelContext,
-                action.Value, 
+                action.Value,
                 actionParameter.Value,
-                context);
+                context,
+                Close);
+
             foreach (var globalInterceptor in ActionElement.InterceptorChain)
             {
                 actionContext = globalInterceptor.InterceptAction(actionContext);
@@ -200,13 +223,9 @@ namespace Forge.Forms.FormBuilding.Defaults
                     break;
             }
 
-            if (closesDialog.Value && context is IFrameworkResourceContext fwContext)
+            if (closesDialog.Value)
             {
-                var frameworkElement = fwContext.GetOwningElement();
-                if (frameworkElement != null && frameworkElement.CheckAccess())
-                {
-                    DialogHost.CloseDialogCommand.Execute(arg, frameworkElement);
-                }
+                actionContext.CloseFormHost();
             }
         }
 
