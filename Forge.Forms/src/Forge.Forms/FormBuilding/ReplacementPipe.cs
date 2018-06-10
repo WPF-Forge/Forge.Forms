@@ -44,6 +44,44 @@ namespace Forge.Forms.FormBuilding
         }
     }
 
+    public class NumericReplacementPipe
+    {
+        private readonly Func<string, CultureInfo, NumberStyles?, object> deserializer;
+        private readonly List<RegexReplacement> replacements;
+
+        public NumericReplacementPipe(Func<string, CultureInfo, NumberStyles?, object> deserializer)
+            : this(deserializer, null)
+        {
+        }
+
+        public NumericReplacementPipe(Func<string, CultureInfo, NumberStyles?, object> deserializer,
+            IEnumerable<RegexReplacement> replacements)
+        {
+            this.deserializer = deserializer ?? throw new ArgumentNullException(nameof(deserializer));
+            this.replacements = replacements?.ToList();
+        }
+
+        public Func<string, CultureInfo, NumberStyles?, object> CreateDeserializer(IResourceContext context)
+        {
+            if (replacements == null || replacements.Count == 0)
+            {
+                return deserializer;
+            }
+
+            var compiledReplacements = replacements.Select(r => r.Compile(context));
+
+            return (value, culture, style) =>
+            {
+                foreach (var replacement in compiledReplacements)
+                {
+                    value = replacement.Replace(value);
+                }
+
+                return deserializer(value, culture, style);
+            };
+        }
+    }
+
     public class RegexReplacement
     {
         public RegexReplacement(IValueProvider pattern, IValueProvider replacement, IValueProvider regexOptions)

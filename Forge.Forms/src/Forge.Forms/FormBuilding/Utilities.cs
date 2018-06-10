@@ -335,7 +335,8 @@ namespace Forge.Forms.FormBuilding
             {
                 StringFormat = element.TryGetAttribute("stringformat"),
                 ConverterCulture = element.TryGetAttribute("conversionCulture"),
-                ConversionErrorMessage = element.TryGetAttribute("conversionError")
+                ConversionErrorMessage = element.TryGetAttribute("conversionError"),
+                NumberStyles = element.TryGetAttribute("numberStyles")
             };
 
             var expr = element.TryGetAttribute("updateSourceTrigger");

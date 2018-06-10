@@ -37,6 +37,41 @@ namespace Forge.Forms.FormBuilding.Defaults.Types
         }
     }
 
+    internal class NumericFieldBuilder : IFieldBuilder
+    {
+        public NumericFieldBuilder(Func<string, CultureInfo, NumberStyles?, object> deserializer)
+        {
+            Deserializer = deserializer ?? throw new ArgumentNullException(nameof(deserializer));
+        }
+
+        public Func<string, CultureInfo, NumberStyles?, object> Deserializer { get; }
+
+        public FormElement TryBuild(IFormProperty property, Func<string, object> deserializer)
+        {
+            var bindingAttribute = property.GetCustomAttribute<BindingAttribute>();
+            IValueProvider numberStyles = null;
+            if (bindingAttribute != null)
+            {
+                numberStyles = Utilities.GetResource<NumberStyles>(
+                    bindingAttribute.NumberStyles,
+                    null,
+                    Deserializers.Enum<NumberStyles>());
+            }
+
+            var replacements = property
+                .GetCustomAttributes<ReplaceAttribute>()
+                .OrderBy(attr => attr.Position)
+                .Select(attr => attr.GetReplacement());
+            return new NumericField(
+                property.Name,
+                property.PropertyType,
+                new NumericReplacementPipe(Deserializer, replacements))
+            {
+                NumberStyles = numberStyles
+            };
+        }
+    }
+
     internal class ConvertedFieldBuilder : IFieldBuilder
     {
         public ConvertedFieldBuilder(Func<string, CultureInfo, object> deserializer)

@@ -458,6 +458,275 @@ namespace Forge.Forms.FormBuilding
 
         #endregion
 
+        #region NumberStyles
+
+        public static object Byte(string expression, CultureInfo culture, NumberStyles? numberStyles)
+        {
+            if (numberStyles == null)
+            {
+                return Byte(expression, culture);
+            }
+
+            return byte.Parse(expression, numberStyles.Value, culture);
+        }
+
+        public static object NullableByte(string expression, CultureInfo culture, NumberStyles? numberStyles)
+        {
+            if (string.IsNullOrEmpty(expression))
+            {
+                return null;
+            }
+
+            if (numberStyles == null)
+            {
+                return Byte(expression, culture);
+            }
+
+            return byte.Parse(expression, numberStyles.Value, culture);
+        }
+
+        public static object SByte(string expression, CultureInfo culture, NumberStyles? numberStyles)
+        {
+            if (numberStyles == null)
+            {
+                return SByte(expression, culture);
+            }
+
+            return sbyte.Parse(expression, numberStyles.Value, culture);
+        }
+
+        public static object NullableSByte(string expression, CultureInfo culture, NumberStyles? numberStyles)
+        {
+            if (string.IsNullOrEmpty(expression))
+            {
+                return null;
+            }
+
+            if (numberStyles == null)
+            {
+                return SByte(expression, culture);
+            }
+
+            return sbyte.Parse(expression, numberStyles.Value, culture);
+        }
+
+        public static object Int16(string expression, CultureInfo culture, NumberStyles? numberStyles)
+        {
+            if (numberStyles == null)
+            {
+                return Int16(expression, culture);
+            }
+
+            return short.Parse(expression, numberStyles.Value, culture);
+        }
+
+        public static object NullableInt16(string expression, CultureInfo culture, NumberStyles? numberStyles)
+        {
+            if (string.IsNullOrEmpty(expression))
+            {
+                return null;
+            }
+
+            if (numberStyles == null)
+            {
+                return Int16(expression, culture);
+            }
+
+            return short.Parse(expression, numberStyles.Value, culture);
+        }
+
+        public static object Int32(string expression, CultureInfo culture, NumberStyles? numberStyles)
+        {
+            if (numberStyles == null)
+            {
+                return Int32(expression, culture);
+            }
+
+            return int.Parse(expression, numberStyles.Value, culture);
+        }
+
+        public static object NullableInt32(string expression, CultureInfo culture, NumberStyles? numberStyles)
+        {
+            if (string.IsNullOrEmpty(expression))
+            {
+                return null;
+            }
+
+            if (numberStyles == null)
+            {
+                return Int32(expression, culture);
+            }
+
+            return int.Parse(expression, numberStyles.Value, culture);
+        }
+
+        public static object Int64(string expression, CultureInfo culture, NumberStyles? numberStyles)
+        {
+            if (numberStyles == null)
+            {
+                return Int64(expression, culture);
+            }
+
+            return long.Parse(expression, numberStyles.Value, culture);
+        }
+
+        public static object NullableInt64(string expression, CultureInfo culture, NumberStyles? numberStyles)
+        {
+            if (string.IsNullOrEmpty(expression))
+            {
+                return null;
+            }
+
+            if (numberStyles == null)
+            {
+                return Int64(expression, culture);
+            }
+
+            return long.Parse(expression, numberStyles.Value, culture);
+        }
+
+        public static object UInt16(string expression, CultureInfo culture, NumberStyles? numberStyles)
+        {
+            if (numberStyles == null)
+            {
+                return UInt16(expression, culture);
+            }
+
+            return ushort.Parse(expression, numberStyles.Value, culture);
+        }
+
+        public static object NullableUInt16(string expression, CultureInfo culture, NumberStyles? numberStyles)
+        {
+            if (string.IsNullOrEmpty(expression))
+            {
+                return null;
+            }
+
+            if (numberStyles == null)
+            {
+                return UInt16(expression, culture);
+            }
+
+            return ushort.Parse(expression, numberStyles.Value, culture);
+        }
+
+        public static object UInt32(string expression, CultureInfo culture, NumberStyles? numberStyles)
+        {
+            if (numberStyles == null)
+            {
+                return UInt32(expression, culture);
+            }
+
+            return uint.Parse(expression, numberStyles.Value, culture);
+        }
+
+        public static object NullableUInt32(string expression, CultureInfo culture, NumberStyles? numberStyles)
+        {
+            if (string.IsNullOrEmpty(expression))
+            {
+                return null;
+            }
+
+            if (numberStyles == null)
+            {
+                return UInt32(expression, culture);
+            }
+
+            return uint.Parse(expression, numberStyles.Value, culture);
+        }
+
+        public static object UInt64(string expression, CultureInfo culture, NumberStyles? numberStyles)
+        {
+            if (numberStyles == null)
+            {
+                return UInt64(expression, culture);
+            }
+
+            return ulong.Parse(expression, numberStyles.Value, culture);
+        }
+
+        public static object NullableUInt64(string expression, CultureInfo culture, NumberStyles? numberStyles)
+        {
+            if (string.IsNullOrEmpty(expression))
+            {
+                return null;
+            }
+
+            if (numberStyles == null)
+            {
+                return UInt64(expression, culture);
+            }
+
+            return ulong.Parse(expression, numberStyles.Value, culture);
+        }
+
+        public static object Single(string expression, CultureInfo culture, NumberStyles? numberStyles)
+        {
+            if (numberStyles == null)
+            {
+                return Single(expression, culture);
+            }
+
+            return float.Parse(expression, numberStyles.Value, culture);
+        }
+
+        public static object NullableSingle(string expression, CultureInfo culture, NumberStyles? numberStyles)
+        {
+            if (string.IsNullOrEmpty(expression))
+            {
+                return null;
+            }
+
+            if (numberStyles == null)
+            {
+                return Single(expression, culture);
+            }
+
+            return float.Parse(expression, numberStyles.Value, culture);
+        }
+
+        public static object Double(string expression, CultureInfo culture, NumberStyles? numberStyles)
+        {
+            if (numberStyles == null)
+            {
+                return Double(expression, culture);
+            }
+
+            return double.Parse(expression, numberStyles.Value, culture);
+        }
+
+        public static object NullableDouble(string expression, CultureInfo culture, NumberStyles? numberStyles)
+        {
+            if (string.IsNullOrEmpty(expression))
+            {
+                return null;
+            }
+
+            if (numberStyles == null)
+            {
+                return Double(expression, culture);
+            }
+
+            return double.Parse(expression, numberStyles.Value, culture);
+        }
+
+        public static object Decimal(string expression, CultureInfo culture, NumberStyles? numberStyles)
+        {
+            return decimal.Parse(expression, numberStyles.Value, culture);
+        }
+
+        public static object NullableDecimal(string expression, CultureInfo culture, NumberStyles? numberStyles)
+        {
+            if (string.IsNullOrEmpty(expression))
+            {
+                return null;
+            }
+
+            return decimal.Parse(expression, numberStyles.Value, culture);
+        }
+
+        #endregion
+
         #region CultureSpecific
 
         public static object DateTime(string expression, CultureInfo culture)

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Windows.Data;
 using Forge.Forms.FormBuilding;
 
@@ -54,6 +55,13 @@ namespace Forge.Forms.Annotations
         /// Specifies the value of <see cref="Binding.ValidatesOnNotifyDataErrors"/> property.
         /// </summary>
         public bool ValidatesOnNotifyDataErrors { get; set; } = true;
+
+        /// <summary>
+        /// Specifies the value of the <see cref="NumberStyles"/> used when converting numeric values.
+        /// Accepts a <see cref="NumberStyles"/> or dynamic resource resolving to a <see cref="NumberStyles"/> value.
+        /// A null value indicates that default number style is used.
+        /// </summary>
+        public object NumberStyles { get; set; }
 
         internal void Apply(BindingOptions bindingOptions)
         {
