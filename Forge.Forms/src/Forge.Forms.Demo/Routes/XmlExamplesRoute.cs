@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using Forge.Forms.FormBuilding;
 using Material.Application.Infrastructure;
 using Material.Application.Routing;
@@ -23,6 +25,7 @@ namespace Forge.Forms.Demo.Routes
             RouteConfig.Icon = PackIconKind.Xml;
             BuildDefinitionCommand = Command(BuildDefinition);
             RouteConfig.RouteCommands.Add(Command("View JSON", PackIconKind.CodeBraces, ViewSource));
+            RouteConfig.RouteCommands.Add(Command("Print Form", PackIconKind.Printer, Print));
         }
 
         public IFormDefinition CompiledDefinition
@@ -59,6 +62,8 @@ namespace Forge.Forms.Demo.Routes
 
         public object CurrentModel { get; set; }
 
+        public Visual Form { get; set; }
+
         private void ViewSource()
         {
             string json;
@@ -72,6 +77,17 @@ namespace Forge.Forms.Demo.Routes
             }
 
             GetRoute<SourceRoute>("title", "XML Form", "source", json, "isPath", false).Push();
+        }
+
+        private void Print()
+        {
+            if (Form == null)
+            {
+                return;
+            }
+
+            var printDlg = new PrintDialog();
+            printDlg.PrintVisual(Form, "Form Printing.");
         }
 
         public void HandleAction(IActionContext actionContext)

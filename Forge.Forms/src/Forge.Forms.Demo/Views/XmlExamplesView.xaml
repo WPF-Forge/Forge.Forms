@@ -64,6 +64,7 @@
                 <controls:DynamicForm Margin="12,12,12,8" Model="{Binding CompiledDefinition}">
                     <infrastructure:PushBindingManager.PushBindings>
                         <infrastructure:PushBinding Path="CurrentModel" TargetProperty="Value" />
+                        <infrastructure:PushBinding Path="Form"  TargetProperty="" />
                     </infrastructure:PushBindingManager.PushBindings>
                 </controls:DynamicForm>
             </ScrollViewer>
