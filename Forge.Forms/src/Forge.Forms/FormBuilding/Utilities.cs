@@ -149,8 +149,41 @@ namespace Forge.Forms.FormBuilding
                     default:
                         if (typeof(T) == typeof(bool))
                         {
-                            var ast = BooleanExpression.Parse(boundExpression.StringFormat);
-                            return new MultiValueBinding(boundExpression.Resources, new BooleanMultiConverter(ast));
+                            var stringFormat = boundExpression.StringFormat;
+                            string converter = null;
+                            for (var i = stringFormat.Length - 1; i >= 0; i--)
+                            {
+                                var c = stringFormat[i];
+                                if (c == '}')
+                                {
+                                    var next = i > 0 ? stringFormat[i - 1] : '\0';
+                                    if (next == '}')
+                                    {
+                                        i--;
+                                        continue;
+                                    }
+
+                                    break;
+                                }
+
+                                if (c == '|')
+                                {
+                                    var next = i > 0 ? stringFormat[i - 1] : '\0';
+                                    if (next == '|')
+                                    {
+                                        // This will throw later anyway...
+                                        break;
+                                    }
+
+                                    converter = stringFormat.Substring(i + 1);
+                                    stringFormat = stringFormat.Substring(0, i);
+                                    break;
+                                }
+
+                            }
+
+                            var ast = BooleanExpression.Parse(stringFormat);
+                            return new MultiBooleanBinding(ast, boundExpression.Resources, converter);
                         }
 
                         throw new ArgumentException(
