@@ -24,7 +24,8 @@ namespace Forge.Forms.DynamicExpressions
                 ["ToLower"] = new ToLowerConverter(),
                 ["Length"] = new LengthValueConverter(),
                 ["ToString"] = new ToStringConverter(),
-                ["ToVisibility"] = new VisibilityConverter()
+                ["ToVisibility"] = new VisibilityConverter(),
+                ["HideOnFalse"] = new VisibilityConverter(true)
             };
 
         protected Resource(string valueConverter)
