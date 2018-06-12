@@ -52,6 +52,7 @@ The list of default converters is given below:
 - `Length` - returns the string or collection length.
 - `ToString` - calls `ToString()` on the provided value.
 - `ToVisibility` - attempts to convert the provided value to a WPF visibility value.
+- `HideOnFalse` - similar to `ToVisibility`, except that false values generate `Visibility.Hidden`.
 
 You can add custom converters in `Forge.Forms.DynamicExpressions.Resource.ValueConverters` dictionary.
 
