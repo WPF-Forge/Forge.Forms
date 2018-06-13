@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Forge.Forms.Annotations;
 using Forge.Forms.DynamicExpressions;
 
@@ -12,11 +13,14 @@ namespace Forge.Forms.FormBuilding
         protected FormElement()
         {
             Resources = new Dictionary<string, IValueProvider>();
+            Metadata = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
         }
 
         protected internal Position LinePosition { get; set; }
 
         public IDictionary<string, IValueProvider> Resources { get; set; }
+
+        public IDictionary<string, string> Metadata { get; }
 
         /// <summary>
         /// Gets or sets the bool resource that determines whether this element will be visible.

@@ -271,6 +271,20 @@ namespace Forge.Forms.FormBuilding
                 throw new InvalidOperationException("Invalid XML document.");
             }
 
+            FormElement WithMetadata(FormElement element, XElement xelement)
+            {
+                const int stroffset = 5; // "meta-".Length
+                foreach (var attr in xelement.Attributes())
+                {
+                    if (attr.Name.LocalName.StartsWith("meta-", StringComparison.OrdinalIgnoreCase))
+                    {
+                        element.Metadata[attr.Name.LocalName.Substring(stroffset)] = attr.Value;
+                    }
+                }
+
+                return element;
+            }
+
             ILayout Terminal(XElement element)
             {
                 var elementName = element.Name.LocalName.ToLower();
@@ -328,7 +342,7 @@ namespace Forge.Forms.FormBuilding
                             formElement.LinePosition = (Position)(-1);
                         }
 
-                        return new FormElementLayout(formElement);
+                        return new FormElementLayout(WithMetadata(formElement, element));
                     }
                     case "select":
                     {
@@ -418,7 +432,7 @@ namespace Forge.Forms.FormBuilding
                             formElement.LinePosition = (Position)(-1);
                         }
 
-                        return new FormElementLayout(formElement);
+                        return new FormElementLayout(WithMetadata(formElement, element));
                     }
 
                     case "title":
@@ -426,18 +440,18 @@ namespace Forge.Forms.FormBuilding
                         {
                             Icon = element.TryGetAttribute("icon")
                         }.GetElement();
-                        return new FormElementLayout(formElement);
+                        return new FormElementLayout(WithMetadata(formElement, element));
 
                     case "heading":
                         formElement = new HeadingAttribute(element.GetAttributeOrValue("content"))
                         {
                             Icon = element.TryGetAttribute("icon")
                         }.GetElement();
-                        return new FormElementLayout(formElement);
+                        return new FormElementLayout(WithMetadata(formElement, element));
 
                     case "text":
                         formElement = new TextAttribute(element.GetAttributeOrValue("content")).GetElement();
-                        return new FormElementLayout(formElement);
+                        return new FormElementLayout(WithMetadata(formElement, element));
 
                     case "img":
                         formElement = new ImageAttribute(element.TryGetAttribute("src"))
@@ -449,7 +463,7 @@ namespace Forge.Forms.FormBuilding
                             Stretch = element.TryGetAttribute("stretch"),
                             StretchDirection = element.TryGetAttribute("direction")
                         }.GetElement();
-                        return new FormElementLayout(formElement);
+                        return new FormElementLayout(WithMetadata(formElement, element));
 
                     case "br":
                         formElement = new BreakAttribute
@@ -457,7 +471,7 @@ namespace Forge.Forms.FormBuilding
                             Height = element.TryGetAttribute("height")
                         }.GetElement();
 
-                        return new FormElementLayout(formElement);
+                        return new FormElementLayout(WithMetadata(formElement, element));
 
                     case "hr":
                         var hasMargin = element.TryGetAttribute("hasMargin");
@@ -465,10 +479,10 @@ namespace Forge.Forms.FormBuilding
                             ? new DividerAttribute(bool.Parse(hasMargin))
                             : new DividerAttribute()).GetElement();
 
-                        return new FormElementLayout(formElement);
+                        return new FormElementLayout(WithMetadata(formElement, element));
                     case "action":
                         formElement = Utilities.GetAction(element).GetElement();
-                        return new FormElementLayout(formElement);
+                        return new FormElementLayout(WithMetadata(formElement, element));
 
                     default:
                         throw new InvalidOperationException($"Unknown element '{element.Name.LocalName}'.");
