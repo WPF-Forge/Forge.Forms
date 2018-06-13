@@ -130,6 +130,7 @@ namespace Forge.Forms.FormBuilding
             FieldInitializers = new List<IFieldInitializer>
             {
                 // Default initializers.
+                new MetadataInitializer(),
                 new FieldInitializer(),
                 new BindingInitializer(),
                 new ValidatorInitializer()
@@ -271,17 +272,21 @@ namespace Forge.Forms.FormBuilding
                 throw new InvalidOperationException("Invalid XML document.");
             }
 
-            FormElement WithMetadata(FormElement element, XElement xelement)
+            void AddMetadata(IDictionary<string, string> dict, XElement xelement)
             {
                 const int stroffset = 5; // "meta-".Length
                 foreach (var attr in xelement.Attributes())
                 {
                     if (attr.Name.LocalName.StartsWith("meta-", StringComparison.OrdinalIgnoreCase))
                     {
-                        element.Metadata[attr.Name.LocalName.Substring(stroffset)] = attr.Value;
+                        dict[attr.Name.LocalName.Substring(stroffset)] = attr.Value;
                     }
                 }
+            }
 
+            FormElement WithMetadata(FormElement element, XElement xelement)
+            {
+                AddMetadata(element.Metadata, xelement);
                 return element;
             }
 
@@ -546,6 +551,7 @@ namespace Forge.Forms.FormBuilding
             }
 
             var form = new FormDefinition(null); // null indicates dynamic type
+            AddMetadata(form.Metadata, document.Root);
             form.FormRows.Add(new FormRow(true, 1)
             {
                 Elements = { new FormElementContainer(0, 1, Layout(document.Root)) }
@@ -558,7 +564,6 @@ namespace Forge.Forms.FormBuilding
 
             return form;
         }
-
 
         /// <summary>
         /// Clears cached form definitions.
@@ -618,6 +623,14 @@ namespace Forge.Forms.FormBuilding
                         {
                             beforeFormContent.Add(new AttrElementTuple(contentAttribute,
                                 contentAttribute.GetElement()));
+                        }
+
+                        break;
+
+                    case MetaAttribute meta:
+                        if (!string.IsNullOrEmpty(meta.Name))
+                        {
+                            formDefinition.Metadata[meta.Name] = meta.Value;
                         }
 
                         break;

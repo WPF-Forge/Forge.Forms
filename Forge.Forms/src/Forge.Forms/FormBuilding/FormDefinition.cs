@@ -13,6 +13,7 @@ namespace Forge.Forms.FormBuilding
         {
             ModelType = modelType;
             Resources = new Dictionary<string, IValueProvider>();
+            Metadata = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
             Grid = new[] { 1d };
             FormRows = new List<FormRow>();
         }
@@ -20,6 +21,8 @@ namespace Forge.Forms.FormBuilding
         public List<FormRow> FormRows { get; set; }
 
         public Type ModelType { get; }
+
+        public IDictionary<string, string> Metadata { get; }
 
         public IDictionary<string, IValueProvider> Resources { get; set; }
 

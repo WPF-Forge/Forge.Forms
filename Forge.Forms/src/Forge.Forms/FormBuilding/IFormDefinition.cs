@@ -15,6 +15,8 @@ namespace Forge.Forms.FormBuilding
 
         IDictionary<string, IValueProvider> Resources { get; }
 
+        IDictionary<string, string> Metadata { get; }
+
         object CreateInstance(IResourceContext context);
     }
 
