@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -11,7 +12,7 @@ using Forge.Forms.FormBuilding;
 namespace Forge.Forms.Controls
 {
     [TemplatePart(Name = "PART_ItemsGrid", Type = typeof(Grid))]
-    public sealed class DynamicForm : Control, IDynamicForm
+    public sealed partial class DynamicForm : Control, IDynamicForm
     {
         public static readonly DependencyProperty ModelProperty = DependencyProperty.Register(
             "Model",
@@ -69,6 +70,7 @@ namespace Forge.Forms.Controls
 
         private Grid itemsGrid;
         private int rows;
+        private IFormDefinition currentDefinition;
 
         static DynamicForm()
         {
@@ -204,21 +206,20 @@ namespace Forge.Forms.Controls
 
         private void UpdateModel(object oldModel, object newModel)
         {
-            if (Equals(oldModel, newModel))
+            if (Equals(oldModel, newModel) || Equals(Value, newModel))
             {
                 return;
             }
 
-            if (Equals(Value, newModel))
-            {
-                return;
-            }
-
+            var oldValue = Value;
+            object newValue;
             if (newModel == null)
             {
                 // null -> Clear Form
                 ClearForm();
                 SetValue(ValuePropertyKey, null);
+                currentDefinition = null;
+                newValue = null;
             }
             else if (newModel is IFormDefinition formDefinition)
             {
@@ -226,11 +227,14 @@ namespace Forge.Forms.Controls
                 var instance = formDefinition.CreateInstance(ResourceContext);
                 RebuildForm(formDefinition);
                 SetValue(ValuePropertyKey, instance);
+                currentDefinition = formDefinition;
+                newValue = instance;
             }
             else if (oldModel != null && oldModel.GetType() == newModel.GetType())
             {
                 // Same type -> update values only.
                 SetValue(ValuePropertyKey, newModel);
+                newValue = newModel;
             }
             else if (newModel is Type type)
             {
@@ -240,12 +244,17 @@ namespace Forge.Forms.Controls
                 {
                     ClearForm();
                     SetValue(ValuePropertyKey, null);
-                    return;
+                    newValue = null;
+                }
+                else
+                {
+                    var instance = formDefinition.CreateInstance(ResourceContext);
+                    RebuildForm(formDefinition);
+                    SetValue(ValuePropertyKey, instance);
+                    newValue = instance;
                 }
 
-                var instance = formDefinition.CreateInstance(ResourceContext);
-                RebuildForm(formDefinition);
-                SetValue(ValuePropertyKey, instance);
+                currentDefinition = formDefinition;
             }
             else
             {
@@ -255,12 +264,32 @@ namespace Forge.Forms.Controls
                 {
                     ClearForm();
                     SetValue(ValuePropertyKey, null);
-                    return;
+                    newValue = null;
+                }
+                else
+                {
+                    RebuildForm(formDefinition);
+                    SetValue(ValuePropertyKey, newModel);
+                    newValue = newModel;
                 }
 
-                RebuildForm(formDefinition);
-                SetValue(ValuePropertyKey, newModel);
+                currentDefinition = formDefinition;
             }
+
+            if (!ReferenceEquals(newValue, oldValue))
+            {
+                if (oldValue is INotifyPropertyChanged oldNpc)
+                {
+                    oldNpc.PropertyChanged -= HandlePropertyChanged;
+                }
+
+                if (newValue is INotifyPropertyChanged newNpc)
+                {
+                    newNpc.PropertyChanged += HandlePropertyChanged;
+                }
+            }
+
+            HandleModelChanged();
         }
 
         public override void OnApplyTemplate()

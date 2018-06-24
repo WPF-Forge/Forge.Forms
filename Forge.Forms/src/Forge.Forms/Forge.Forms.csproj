@@ -76,7 +76,12 @@
     <Compile Include="Annotations\ValidationAction.cs" />
     <Compile Include="Annotations\ValueAttribute.cs" />
     <Compile Include="Annotations\Position.cs" />
+    <Compile Include="Behaviors\IEventContext.cs" />
+    <Compile Include="Behaviors\IModelChangedBehavior.cs" />
+    <Compile Include="Behaviors\IPropertyChangedBehavior.cs" />
+    <Compile Include="Behaviors\IPropertyChangedContext.cs" />
     <Compile Include="Controls\BoolToResizeModeConverter.cs" />
+    <Compile Include="Controls\DynamicForm.Behaviors.cs" />
     <Compile Include="Controls\DynamicFormWrapper.xaml.cs">
       <DependentUpon>DynamicFormWrapper.xaml</DependentUpon>
     </Compile>

@@ -54,6 +54,7 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Behaviors\CheckAllBehavior.cs" />
     <Compile Include="Infrastructure\PushBinding.cs" />
     <Compile Include="Infrastructure\TextDocumentValueConverter.cs" />
     <Compile Include="Models\BooleanLogic.cs" />
