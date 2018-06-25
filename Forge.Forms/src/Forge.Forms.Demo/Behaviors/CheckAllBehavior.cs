@@ -16,24 +16,25 @@ namespace Forge.Forms.Demo.Behaviors
             }
 
             // Select all only on checked.
-            if (model[context.PropertyName] is true)
+            if (model[context.PropertyName] is bool b)
             {
                 var meta = context
                     .FormDefinition
                     .GetElements()
                     .FirstOrDefault(elem => elem is DataFormField d && d.Key == context.PropertyName)
                     ?.Metadata;
+
                 if (meta == null || !meta.TryGetValue("sets", out var value))
                 {
                     return;
                 }
 
-                var props = value?.Split(new[] { ' ', ',' }, StringSplitOptions.RemoveEmptyEntries);
+                var props = value?.Split(new[] { ' ', ',' }, StringSplitOptions.RemoveEmptyEntries).Select(v => v.Trim());
                 if (props != null)
                 {
                     foreach (var prop in props)
                     {
-                        model[prop] = true;
+                        model[prop] = b;
                     }
                 }
             }
