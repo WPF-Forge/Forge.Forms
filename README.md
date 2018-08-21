@@ -20,5 +20,4 @@ For material theme, add this to App.xaml
 
 ## Getting started
 
-Read our (getting started)[
-https://wpf-forge.github.io/Forge.Forms/guides/getting-started] guide.
+Read our [getting started](https://wpf-forge.github.io/Forge.Forms/guides/getting-started) guide.
