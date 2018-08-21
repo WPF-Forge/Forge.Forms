@@ -146,14 +146,11 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Forge.Forms\Forge.Forms.csproj">
-      <Project>{4e0c323d-5afc-4105-815f-587346aa5321}</Project>
-      <Name>Forge.Forms</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="AvalonEdit">
       <Version>5.0.4</Version>
+    </PackageReference>
+    <PackageReference Include="Forge.Forms">
+      <Version>1.0.14</Version>
     </PackageReference>
     <PackageReference Include="Material.Application">
       <Version>1.0.0-CI-20171226-172359</Version>
