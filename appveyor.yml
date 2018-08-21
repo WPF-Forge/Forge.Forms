@@ -1,0 +1,28 @@
+version: 1.0.{build}
+branches:
+  only:
+  - master
+image: Visual Studio 2017
+configuration: Release
+platform: Any CPU
+assembly_info:
+  patch: true
+  file: '**\AssemblyInfo.*'
+  assembly_version: 1.0
+  assembly_file_version: '{version}'
+  assembly_informational_version: '{version}'
+before_build:
+- ps: nuget restore
+build:
+  project: Forge.Forms/src/Forge.Forms/Forge.Forms.csproj
+  verbosity: minimal
+after_build:
+- ps: nuget pack Forge.Forms/src/Forge.Forms/Forge.Forms.csproj -Version $env:APPVEYOR_BUILD_VERSION -IncludeReferencedProjects
+artifacts:
+- path: '**\Forge.Forms.*.nupkg'
+deploy:
+- provider: NuGet
+  api_key:
+    secure: ALElYwQcTMo/PpXFNBakLvjgDsuJHunVnIhbccQulTM/9mCNRhyD1HpEehGD46n/
+  on:
+    branch: master
