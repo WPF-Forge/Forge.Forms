@@ -6,11 +6,11 @@ using System.Windows;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Forge.Forms")]
-[assembly: AssemblyDescription("Schema generated material dialogs in WPF")]
+[assembly: AssemblyDescription("Dynamically generated forms and dialogs in WPF")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("Forge.Forms")]
-[assembly: AssemblyCopyright("Copyright © Edon Gashi 2016")]
+[assembly: AssemblyCopyright("Copyright © WPF-Forge 2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
