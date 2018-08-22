@@ -1,9 +1,5 @@
 # Forge.Forms
 
-Welcome to Forge.Forms
-
-# Forge.Forms
-
 ## Introduction
 
 With Forge.Forms you can create dynamic forms in WPF from classes or XML.
