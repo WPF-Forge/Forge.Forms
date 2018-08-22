@@ -99,3 +99,20 @@ await Show.Dialog().For(new Prompt<string> { Title = "What's your name?" });
 ![Confirmation](https://user-images.githubusercontent.com/12145268/44462151-efa5a580-a613-11e8-9dcd-ab4a73faec01.png)
 ![Prompt](https://user-images.githubusercontent.com/12145268/44462306-7fe3ea80-a614-11e8-8706-d69f8cab3aae.png)
 
+## Demo project
+
+We offer a demo with a lot of examples to help you get started.
+
+![Demo](https://user-images.githubusercontent.com/12145268/44462672-a6565580-a615-11e8-80a5-0d32e2c9708c.png)
+
+For every model you see in the list of examples, you can view its source from the top right menu:
+
+![View source](https://user-images.githubusercontent.com/12145268/44462746-eb7a8780-a615-11e8-9cb9-21057fc6ec71.png)
+
+To run the demo, clone the repository:
+
+```
+git clone https://github.com/WPF-Forge/Forge.Forms.git
+```
+
+And open `Forge.Forms/Forge.Forms.sln`, then run `Forge.Forms.Demo` project.
