@@ -17,7 +17,7 @@ As you can see above, MVVM patterns are fully supported. In this way, you can ex
 If you only need to display the forms as dialogs, then you can use helper class `Forge.Forms.Show` like this:
 
 ```csharp
-var result = await Show.Dialog.For<Login>();
+var result = await Show.Dialog().For<Login>();
 // result.Action stores the last action of the dialog
 if (result.Action is "login") {
   // result.Model stores the model instance
