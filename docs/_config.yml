@@ -20,5 +20,14 @@ guides:
     path: "/guides/validation"
     title: "Validation"
   -
+    path: "/guides/form-elements"
+    title: "Form Elements"
+  -
+    path: "/guides/actions"
+    title: "Actions"
+  -
     path: "/guides/environments"
     title: "Environments"
+  -
+    path: "/guides/xml"
+    title: "XML Forms"
