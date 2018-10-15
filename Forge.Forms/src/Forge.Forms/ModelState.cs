@@ -108,7 +108,7 @@ namespace Forge.Forms
                         object value;
                         if (field.DefaultValue is LiteralValue literal)
                         {
-                            value = accessor[property] is string && literal.Value == null ? string.Empty : literal.Value;
+                            value = literal.Value == null && accessor[property] is string ? string.Empty : literal.Value;
                         }
                         else
                         {
