@@ -17,8 +17,13 @@
         ComboBoxEditable,
 
         /// <summary>
-        /// A list of radio buttons is displayed.
+        /// A vertical list of radio buttons is displayed.
         /// </summary>
-        RadioButtons
+        RadioButtons,
+
+        /// <summary>
+        /// A horizontal list of radio buttons is displayed.
+        /// </summary>
+        RadioButtonsInline
     }
 }

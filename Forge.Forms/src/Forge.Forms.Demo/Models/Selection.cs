@@ -41,5 +41,8 @@ namespace Forge.Forms.Demo.Models
         public YesNo? DeselectMe { get; set; } = YesNo.Yes;
 
         public int[] Seats => new[] { 1, 2, 3, 4 };
+
+        [SelectFrom(new[] { "First item", "Second item", "Third item" }, SelectionType = SelectionType.RadioButtonsInline)]
+        public string InlineSelection { get; set; } = "First item";
     }
 }
