@@ -71,8 +71,8 @@ namespace Forge.Forms.DynamicExpressions
             var index = valueConverter.IndexOf(':');
             if (index > 0)
             {
-                valueConverter = valueConverter.Substring(0, index);
                 var parameterPart = valueConverter.Substring(index + 1);
+                valueConverter = valueConverter.Substring(0, index);
                 if (parameterPart[0] == '\'')
                 {
                     parameter = parameterPart.Substring(1);
