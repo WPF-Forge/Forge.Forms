@@ -424,7 +424,137 @@ namespace Forge.Forms.DynamicExpressions
                     }
                 }
 
-                // Skip whitespace between converter to format/end.
+                // Skip whitespace between converter to parameter/format/end.
+                while (char.IsWhiteSpace(expression[i]))
+                {
+                    if (++i == length)
+                    {
+                        throw new FormatException("Unexpected end of input.");
+                    }
+                }
+
+                // Check for value converter parameter.
+                if (c == '(')
+                {
+                    do
+                    {
+                        if (++i == length)
+                        {
+                            throw new FormatException("Unexpected end of input.");
+                        }
+                    } while (char.IsWhiteSpace(expression[i]));
+
+                    c = expression[i];
+                    if (c == '\'')
+                    {
+                        resourceConverter.Append(':');
+                        var converterParameter = new StringBuilder();
+                        while (true)
+                        {
+                            if (++i == length)
+                            {
+                                throw new FormatException("Unexpected end of input.");
+                            }
+
+                            c = expression[i];
+                            if (c != '\'')
+                            {
+                                converterParameter.Append(c);
+                            }
+                            else
+                            {
+                                if (++i == length)
+                                {
+                                    throw new FormatException("Unexpected end of input.");
+                                }
+
+                                c = expression[i];
+                                if (c == '\'')
+                                {
+                                    converterParameter.Append('\'');
+                                }
+                                else
+                                {
+                                    // End of string
+                                    while (char.IsWhiteSpace(expression[i]))
+                                    {
+                                        if (++i == length)
+                                        {
+                                            throw new FormatException("Unexpected end of input.");
+                                        }
+                                    }
+
+                                    c = expression[i];
+                                    if (c != ')')
+                                    {
+                                        throw new FormatException(
+                                            "Expected closing parenthesis after converter parameter.");
+                                    }
+
+                                    if (++i == length)
+                                    {
+                                        throw new FormatException("Unexpected end of input.");
+                                    }
+
+                                    c = expression[i];
+                                    break;
+                                }
+                            }
+                        }
+
+                        resourceConverter
+                            .Append('\'')
+                            .Append(converterParameter);
+                    }
+                    else if (c != ')')
+                    {
+                        resourceConverter.Append(':');
+                        var converterParameter = new StringBuilder();
+                        converterParameter.Append(c);
+                        while (true)
+                        {
+                            if (++i == length)
+                            {
+                                throw new FormatException("Unexpected end of input.");
+                            }
+
+                            c = expression[i];
+                            if (char.IsWhiteSpace(c))
+                            {
+                                do
+                                {
+                                    if (++i == length)
+                                    {
+                                        throw new FormatException("Unexpected end of input.");
+                                    }
+                                } while (char.IsWhiteSpace(expression[i]));
+
+                                c = expression[i];
+                                if (c != ')')
+                                {
+                                    throw new FormatException("Expected closing parenthesis after converter parameter.");
+                                }
+                            }
+
+                            if (c == ')')
+                            {
+                                if (++i == length)
+                                {
+                                    throw new FormatException("Unexpected end of input.");
+                                }
+
+                                c = expression[i];
+                                break;
+                            }
+
+                            converterParameter.Append(c);
+                        }
+
+                        resourceConverter.Append(converterParameter.ToString().ToLowerInvariant());
+                    }
+                }
+
+                // Skip whitespace between converter/parameter to format/end.
                 while (char.IsWhiteSpace(expression[i]))
                 {
                     if (++i == length)

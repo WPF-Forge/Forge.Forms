@@ -28,6 +28,15 @@ namespace Forge.Forms.DynamicExpressions
                 ["HideOnFalse"] = new VisibilityConverter(true)
             };
 
+        /// <summary>
+        /// Global cache for value converter factories that can take a parameter.
+        /// </summary>
+        public static readonly Dictionary<string, Func<object, IValueConverter>> ValueConverterFactories =
+            new Dictionary<string, Func<object, IValueConverter>>(StringComparer.OrdinalIgnoreCase)
+            {
+                ["IsEqual"] = parameter => new IsEqualConverter(parameter)
+            };
+
         protected Resource(string valueConverter)
         {
             ValueConverter = valueConverter;
@@ -56,6 +65,53 @@ namespace Forge.Forms.DynamicExpressions
             if (string.IsNullOrEmpty(valueConverter))
             {
                 return null;
+            }
+
+            object parameter = null;
+            var index = valueConverter.IndexOf(':');
+            if (index > 0)
+            {
+                valueConverter = valueConverter.Substring(0, index);
+                var parameterPart = valueConverter.Substring(index + 1);
+                if (parameterPart[0] == '\'')
+                {
+                    parameter = parameterPart.Substring(1);
+                }
+                else
+                {
+                    switch (parameterPart)
+                    {
+                        case "true":
+                            parameter = true;
+                            break;
+                        case "false":
+                            parameter = false;
+                            break;
+                        case "null":
+                            parameter = null;
+                            break;
+                        default:
+                            if (InvariantInt.TryParse(parameterPart, out var ival))
+                            {
+                                parameter = ival;
+                            }
+                            else if (InvariantDouble.TryParse(parameterPart, out var dval))
+                            {
+                                parameter = dval;
+                            }
+                            else
+                            {
+                                throw new FormatException("Invalid converter parameter.");
+                            }
+
+                            break;
+                    }
+                }
+            }
+
+            if (ValueConverterFactories.TryGetValue(valueConverter, out var f))
+            {
+                return f(parameter);
             }
 
             if (ValueConverters.TryGetValue(valueConverter, out var c))

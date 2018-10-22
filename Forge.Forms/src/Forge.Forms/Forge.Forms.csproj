@@ -111,6 +111,9 @@
     <Compile Include="DynamicExpressions\FileWatcher.cs" />
     <Compile Include="DynamicExpressions\MultiBooleanBinding.cs" />
     <Compile Include="DynamicExpressions\MultiValueBinding.cs" />
+    <Compile Include="DynamicExpressions\InvariantDouble.cs" />
+    <Compile Include="DynamicExpressions\InvariantInt.cs" />
+    <Compile Include="DynamicExpressions\ValueConverters\IsEqualConverter.cs" />
     <Compile Include="FormBuilding\Defaults\ImageElement.cs" />
     <Compile Include="FormBuilding\Defaults\Initializers\MetadataInitializer.cs" />
     <Compile Include="FormBuilding\IEnvironment.cs" />
