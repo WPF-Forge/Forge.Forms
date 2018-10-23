@@ -57,7 +57,7 @@ namespace Forge.Forms.Controls.Internal
                     passwordBox.PasswordChanged += HandlePasswordChanged;
                 }
 
-                passwordBox.Password = e.NewValue as string ?? throw new InvalidOperationException();
+                passwordBox.Password = e.NewValue as string ?? "";
             }
             catch
             {

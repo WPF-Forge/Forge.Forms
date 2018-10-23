@@ -481,27 +481,44 @@ namespace Forge.Forms.FormBuilding
             return validators;
         }
 
+        public static T WithBaseProperties<T>
+            (this T attribute, XElement element) where T : FormContentAttribute
+        {
+            attribute.IsVisible = element.TryGetAttribute("visible");
+            return attribute;
+        }
+
+        public static T WithTextProperties<T>(this T attribute, XElement element) where T : TextElementAttribute
+        {
+            attribute.IconPadding = element.TryGetAttribute("iconPadding");
+            return attribute;
+        }
+
+        private static object BoolOrText(string value)
+        {
+            if (value != null && bool.TryParse(value, out var result))
+            {
+                return result;
+            }
+
+            return value;
+        }
+
         public static ActionAttribute GetAction(XElement element)
         {
-            var action = new ActionAttribute(element.TryGetAttribute("name"), element.GetAttributeOrValue("content"));
-            var expr = element.TryGetAttribute("isDefault");
-            if (expr != null)
+            var action = new ActionAttribute(element.TryGetAttribute("name"), element.GetAttributeOrValue("content"))
             {
-                action.IsDefault = bool.Parse(expr);
-            }
-
-            expr = element.TryGetAttribute("isCancel");
-            if (expr != null)
-            {
-                action.IsCancel = bool.Parse(expr);
-            }
-
-            action.Parameter = element.TryGetAttribute("parameter");
-            action.IsEnabled = element.TryGetAttribute("enabled");
-            action.Icon = element.TryGetAttribute("icon");
-            action.Validates = element.TryGetAttribute("validates");
-            action.ClosesDialog = element.TryGetAttribute("closesDialog");
-            action.IsReset = element.TryGetAttribute("resets");
+                IsDefault = BoolOrText(element.TryGetAttribute("isDefault")),
+                IsCancel = BoolOrText(element.TryGetAttribute("isCancel")),
+                Parameter = element.TryGetAttribute("parameter"),
+                IsEnabled = BoolOrText(element.TryGetAttribute("enabled")),
+                IsLoading = BoolOrText(element.TryGetAttribute("isLoading")),
+                Icon = element.TryGetAttribute("icon"),
+                Validates = BoolOrText(element.TryGetAttribute("validates")),
+                ClosesDialog = BoolOrText(element.TryGetAttribute("closesDialog")),
+                IsReset = BoolOrText(element.TryGetAttribute("resets") ?? element.TryGetAttribute("isReset")),
+                IsPrimary = BoolOrText(element.TryGetAttribute("isPrimary"))
+            };
 
             return action;
         }

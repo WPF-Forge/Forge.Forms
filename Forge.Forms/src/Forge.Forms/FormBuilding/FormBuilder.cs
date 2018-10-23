@@ -444,18 +444,27 @@ namespace Forge.Forms.FormBuilding
                         formElement = new TitleAttribute(element.GetAttributeOrValue("content"))
                         {
                             Icon = element.TryGetAttribute("icon")
-                        }.GetElement();
+                        }
+                            .WithBaseProperties(element)
+                            .WithTextProperties(element)
+                            .GetElement();
                         return new FormElementLayout(WithMetadata(formElement, element));
 
                     case "heading":
                         formElement = new HeadingAttribute(element.GetAttributeOrValue("content"))
                         {
                             Icon = element.TryGetAttribute("icon")
-                        }.GetElement();
+                        }
+                            .WithBaseProperties(element)
+                            .WithTextProperties(element)
+                            .GetElement();
                         return new FormElementLayout(WithMetadata(formElement, element));
 
                     case "text":
-                        formElement = new TextAttribute(element.GetAttributeOrValue("content")).GetElement();
+                        formElement = new TextAttribute(element.GetAttributeOrValue("content"))
+                            .WithBaseProperties(element)
+                            .WithTextProperties(element)
+                            .GetElement();
                         return new FormElementLayout(WithMetadata(formElement, element));
 
                     case "img":
@@ -467,14 +476,18 @@ namespace Forge.Forms.FormBuilding
                             VerticalAlignment = element.TryGetAttribute("valign"),
                             Stretch = element.TryGetAttribute("stretch"),
                             StretchDirection = element.TryGetAttribute("direction")
-                        }.GetElement();
+                        }
+                            .WithBaseProperties(element)
+                            .GetElement();
                         return new FormElementLayout(WithMetadata(formElement, element));
 
                     case "br":
                         formElement = new BreakAttribute
                         {
                             Height = element.TryGetAttribute("height")
-                        }.GetElement();
+                        }
+                            .WithBaseProperties(element)
+                            .GetElement();
 
                         return new FormElementLayout(WithMetadata(formElement, element));
 
@@ -482,11 +495,15 @@ namespace Forge.Forms.FormBuilding
                         var hasMargin = element.TryGetAttribute("hasMargin");
                         formElement = (hasMargin != null
                             ? new DividerAttribute(bool.Parse(hasMargin))
-                            : new DividerAttribute()).GetElement();
+                            : new DividerAttribute())
+                            .WithBaseProperties(element)
+                            .GetElement();
 
                         return new FormElementLayout(WithMetadata(formElement, element));
                     case "action":
-                        formElement = Utilities.GetAction(element).GetElement();
+                        formElement = Utilities.GetAction(element)
+                            .WithBaseProperties(element)
+                            .GetElement();
                         return new FormElementLayout(WithMetadata(formElement, element));
 
                     default:
