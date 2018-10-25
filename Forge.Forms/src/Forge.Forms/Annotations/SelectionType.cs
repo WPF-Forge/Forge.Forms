@@ -24,6 +24,11 @@
         /// <summary>
         /// A horizontal list of radio buttons is displayed.
         /// </summary>
-        RadioButtonsInline
+        RadioButtonsInline,
+
+        /// <summary>
+        /// A horizontal list of radio buttons is displayed right aligned.
+        /// </summary>
+        RadioButtonsInlineRightAligned
     }
 }
