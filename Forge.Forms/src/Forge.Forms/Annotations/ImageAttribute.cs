@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Globalization;
 using System.Runtime.CompilerServices;
-using System.Windows.Media;
 using Forge.Forms.FormBuilding;
 using Forge.Forms.FormBuilding.Defaults;
 using Vertical = System.Windows.VerticalAlignment;

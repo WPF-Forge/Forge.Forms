@@ -96,6 +96,7 @@
     <Compile Include="Behaviors\IModelChangedBehavior.cs" />
     <Compile Include="Behaviors\IPropertyChangedBehavior.cs" />
     <Compile Include="Behaviors\IPropertyChangedContext.cs" />
+    <Compile Include="Build.cs" />
     <Compile Include="Controls\BoolToResizeModeConverter.cs" />
     <Compile Include="Controls\DynamicForm.Behaviors.cs" />
     <Compile Include="Controls\DynamicFormWrapper.xaml.cs">

@@ -10,7 +10,6 @@ using Forge.Forms.FormBuilding.Defaults;
 using Forge.Forms.FormBuilding.Defaults.Initializers;
 using Forge.Forms.FormBuilding.Defaults.Properties;
 using Forge.Forms.FormBuilding.Defaults.Types;
-using MahApps.Metro.Controls;
 using Position = Forge.Forms.Annotations.Position;
 
 namespace Forge.Forms.FormBuilding
