@@ -239,9 +239,45 @@ namespace Forge.Forms
             return !hasErrors;
         }
 
+        /// <summary>
+        /// Checks source validation state without performing any action.
+        /// </summary>
+        public static bool IsValid(object model)
+        {
+            foreach (var expression in GetBindings(model))
+            {
+                if (expression.HasValidationError)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Checks source properties' validation states without performing any action.
+        /// </summary>
+        public static bool IsValid(object model, params string[] properties)
+        {
+            foreach (var expression in GetBindings(model, properties))
+            {
+                if (expression.HasValidationError)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
         private class HiddenValidationRule : ValidationRule
         {
             public static readonly HiddenValidationRule Instance = new HiddenValidationRule();
+
+            private HiddenValidationRule()
+            {
+            }
 
             public override ValidationResult Validate(object value, CultureInfo cultureInfo)
             {
@@ -250,7 +286,8 @@ namespace Forge.Forms
         }
 
         /// <summary>
-        /// Manually invalidate a property.
+        /// Manually invalidates a property with a specified error message.
+        /// The error will disappear if <see cref="Validate(object)"/> or <see cref="ValidateWithoutUpdate(object)"/> is called.
         /// </summary>
         public static void Invalidate(object model, string property, string message)
         {

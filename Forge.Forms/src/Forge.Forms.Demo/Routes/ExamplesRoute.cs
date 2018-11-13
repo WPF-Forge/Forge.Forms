@@ -30,7 +30,19 @@ namespace Forge.Forms.Demo.Routes
             currentModelRefresh = RefreshSource().WithProperties(nameof(CurrentModel));
 
             RouteConfig.RouteCommands.Add(Command("Validate model", PackIconKind.CheckAll,
-                () => ModelState.Validate(CurrentModel.Object)));
+                () =>
+                {
+                    var isValid = ModelState.Validate(CurrentModel.Object);
+                    notificationService.Notify($"Is valid: {isValid}");
+                }));
+
+            RouteConfig.RouteCommands.Add(Command("Is valid?", PackIconKind.Help,
+                () =>
+                {
+                    var isValid = ModelState.IsValid(CurrentModel.Object);
+                    notificationService.Notify($"Is valid: {isValid}");
+                }));
+
             RouteConfig.RouteCommands.Add(Command("Reset model", PackIconKind.Undo,
                 () => ModelState.Reset(CurrentModel.Object)));
             RouteConfig.RouteCommands.Add(Command("View source", PackIconKind.CodeBraces,
@@ -121,6 +133,8 @@ namespace Forge.Forms.Demo.Routes
             yield return new ExamplePresenter(new EnvManager(), "Environments", large);
 
             yield return new ExamplePresenter(new FileBindings(), "File Binding", large);
+
+            yield return new ExamplePresenter(new CustomValidation(), "Manual invalidation", large);
 
             yield return new ExamplePresenter(new Alert
             {
