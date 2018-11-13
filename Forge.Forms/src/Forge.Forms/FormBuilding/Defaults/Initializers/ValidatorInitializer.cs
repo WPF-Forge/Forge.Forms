@@ -92,7 +92,7 @@ namespace Forge.Forms.FormBuilding.Defaults.Initializers
                                 {
                                     ModelState.Validate(model, propertyKey);
                                 }
-                                else
+                                else if (action == ValidationAction.ClearErrors)
                                 {
                                     ModelState.ClearValidationErrors(model, propertyKey);
                                 }
@@ -136,7 +136,71 @@ namespace Forge.Forms.FormBuilding.Defaults.Initializers
                             "The provided value must be a bound resource or a literal bool value.", nameof(attribute));
                     }
 
-                    isEnforcedProvider = context => boundExpression.GetBoolValue(context);
+                    var onActivation = attribute.OnActivation;
+                    var onDeactivation = attribute.OnDeactivation;
+
+                    var notifyActivation = onActivation == ValidationAction.ClearErrors || onActivation == ValidationAction.ValidateField;
+                    var notifyDeactivation = onDeactivation == ValidationAction.ClearErrors || onDeactivation == ValidationAction.ValidateField;
+                    isEnforcedProvider = context =>
+                    {
+                        var value = boundExpression.GetBoolValue(context);
+                        if (notifyActivation || notifyDeactivation)
+                        {
+                            value.ValueChanged = () =>
+                            {
+                                object model;
+                                try
+                                {
+                                    model = context.GetModelInstance();
+                                }
+                                catch
+                                {
+                                    // Something went wrong so it's best to 
+                                    // disable the feature entirely.
+                                    value.ValueChanged = null;
+                                    return;
+                                }
+
+                                if (model is ExpandoObject && modelType == null)
+                                {
+                                    // Do nothing.
+                                }
+                                else if (model == null || model.GetType() != modelType)
+                                {
+                                    // Self dispose when form indicates model change.
+                                    value.ValueChanged = null;
+                                    return;
+                                }
+
+                                if (value.Value)
+                                {
+                                    // Activated.
+                                    if (onActivation == ValidationAction.ValidateField)
+                                    {
+                                        ModelState.Validate(model, propertyKey);
+                                    }
+                                    else if (onActivation == ValidationAction.ClearErrors)
+                                    {
+                                        ModelState.ClearValidationErrors(model, propertyKey);
+                                    }
+                                }
+                                else
+                                {
+                                    // Deactivated.
+                                    if (onDeactivation == ValidationAction.ValidateField)
+                                    {
+                                        ModelState.Validate(model, propertyKey);
+                                    }
+                                    else if (onDeactivation == ValidationAction.ClearErrors)
+                                    {
+                                        ModelState.ClearValidationErrors(model, propertyKey);
+                                    }
+                                }
+                            };
+                        }
+
+                        return value;
+                    };
                     break;
                 case bool b:
                     isEnforcedProvider = context => new PlainBool(b);
@@ -315,6 +379,11 @@ namespace Forge.Forms.FormBuilding.Defaults.Initializers
                             errorProvider(context), isEnforcedProvider(context), GetConverter(context),
                             strictValidation,
                             validateOnTargetUpdated));
+                case Must.BeInvalid:
+                case Must.Fail:
+                    return new ValidatorProvider((context, pipe) => new EnforcedValidator(pipe, errorProvider(context),
+                        isEnforcedProvider(context), GetConverter(context), strictValidation,
+                        validateOnTargetUpdated));
                 default:
                     throw new ArgumentException($"Invalid validator condition for property {propertyKey}.",
                         nameof(attribute));

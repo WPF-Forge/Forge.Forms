@@ -141,3 +141,5 @@ Keep in mind that binding syntax is parsed inside arguments. If you need to spec
 - Must.NotMatchPattern - Property must not match a regex pattern.
 - Must.SatisfyMethod - Property value must satisfy model's static method of signature `public static bool <Argument>(ValidationContext)`. Throws if no such method is found.
 - Must.SatisfyContextMethod - Property value must satisfy context's static method of signature `public static bool <Argument>(ValidationContext)`. Does nothing if no such method is found.
+- Must.BeInvalid - Validation will always fail unless it's disabled via the `When` property. This is useful if validation depends on an external value.
+- Must.Fail - alias for `Must.BeInvalid`.

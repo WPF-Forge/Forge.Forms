@@ -22,7 +22,6 @@ namespace Forge.Forms.Validation
             }
 
             return ValidationResult.ValidResult;
-            ;
         }
     }
 }

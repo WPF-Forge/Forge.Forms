@@ -15,6 +15,8 @@ namespace Forge.Forms.Demo.Models
 
         private string throughModelState;
         private string throughStaticMethod;
+        private string externalValidation;
+        private bool invalidateTextbox;
 
         [Text("Click the button to invalidate the text field")]
         [Action("invalidate", "INVALIDATE")]
@@ -38,6 +40,29 @@ namespace Forge.Forms.Demo.Models
             set
             {
                 throughStaticMethod = value;
+                OnPropertyChanged();
+            }
+        }
+
+        [Text("Invalidate this property by marking the checkbox below.")]
+
+        [Value(Must.BeInvalid, When = "{Binding InvalidateTextbox}")]
+        public string ExternalValidation
+        {
+            get => externalValidation;
+            set
+            {
+                externalValidation = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool InvalidateTextbox
+        {
+            get => invalidateTextbox;
+            set
+            {
+                invalidateTextbox = value;
                 OnPropertyChanged();
             }
         }
