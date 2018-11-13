@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.0.16 [release pending]
+## 1.0.16
 
 - Added error text element.
     - You can add it via `[ErrorText]` attribute in classes.
