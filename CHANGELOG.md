@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.16 [release pending]
+
+- Added error text element.
+    - You can add it via `[ErrorText]` attribute in classes.
+    - You can add it via `<error>` tag in XML.
+
 ## 1.0.15
 
 - Added parameterized value converters which are created from factories registered in `Resource` class.

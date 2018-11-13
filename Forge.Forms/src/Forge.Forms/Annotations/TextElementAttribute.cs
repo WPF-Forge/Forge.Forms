@@ -122,4 +122,26 @@ namespace Forge.Forms.Annotations
             return new TextElement();
         }
     }
+
+    /// <summary>
+    /// Draws error text.
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Property, AllowMultiple = true)]
+    public sealed class ErrorTextAttribute : TextElementAttribute
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ErrorTextAttribute"/> class.
+        /// </summary>
+        /// <param name="source">Error text value. Accepts a string or a dynamic expression.</param>
+        /// <param name="position">Do not provide a value for this argument.</param>
+        public ErrorTextAttribute(string source, [CallerLineNumber] int position = 0)
+            : base(source, position)
+        {
+        }
+
+        protected override FormElement CreateElement()
+        {
+            return new ErrorTextElement();
+        }
+    }
 }

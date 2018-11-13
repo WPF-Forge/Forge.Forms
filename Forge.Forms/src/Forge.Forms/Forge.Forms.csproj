@@ -116,6 +116,7 @@
     <Compile Include="DynamicExpressions\ValueConverters\IsEqualConverter.cs" />
     <Compile Include="FormBuilding\Defaults\ImageElement.cs" />
     <Compile Include="FormBuilding\Defaults\Initializers\MetadataInitializer.cs" />
+    <Compile Include="FormBuilding\Defaults\ErrorTextElement.cs" />
     <Compile Include="FormBuilding\IEnvironment.cs" />
     <Compile Include="FormBuilding\PropertyWrapper.cs" />
     <Compile Include="FormBuilding\SelectOption.cs" />

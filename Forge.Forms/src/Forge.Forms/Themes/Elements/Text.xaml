@@ -64,6 +64,14 @@
             TextWrapping="Wrap" />
     </ControlTemplate>
 
+    <ControlTemplate x:Key="ErrorTextPresenterTemplate" TargetType="{x:Type defaults:ErrorTextPresenter}">
+        <TextBlock
+            Margin="{TemplateBinding Padding}"
+            FontSize="{TemplateBinding controls:TextProperties.TextFontSize}"
+            Text="{formBuilding:FormBinding Content}"
+            TextWrapping="Wrap" />
+    </ControlTemplate>
+
     <Style TargetType="defaults:TitlePresenter">
         <Setter Property="Margin" Value="8" />
         <Setter Property="FontWeight" Value="Medium" />

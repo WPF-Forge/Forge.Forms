@@ -31,6 +31,7 @@
     <Style BasedOn="{StaticResource MaterialTitlePresenterStyle}" TargetType="{x:Type defaults:TitlePresenter}" />
     <Style BasedOn="{StaticResource MaterialHeadingPresenterStyle}" TargetType="{x:Type defaults:HeadingPresenter}" />
     <Style BasedOn="{StaticResource MaterialTextPresenterStyle}" TargetType="{x:Type defaults:TextPresenter}" />
+    <Style BasedOn="{StaticResource MaterialErrorTextPresenterStyle}" TargetType="{x:Type defaults:ErrorTextPresenter}" />
     <Style BasedOn="{StaticResource MaterialActionPresenterStyle}" TargetType="{x:Type defaults:ActionPresenter}" />
     <Style BasedOn="{StaticResource MaterialDatePickerPresenterStyle}" TargetType="{x:Type defaults:DatePresenter}" />
 

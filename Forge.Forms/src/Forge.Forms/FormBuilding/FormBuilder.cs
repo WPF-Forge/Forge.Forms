@@ -466,6 +466,13 @@ namespace Forge.Forms.FormBuilding
                             .GetElement();
                         return new FormElementLayout(WithMetadata(formElement, element));
 
+                    case "error":
+                        formElement = new ErrorTextAttribute(element.GetAttributeOrValue("content"))
+                            .WithBaseProperties(element)
+                            .WithTextProperties(element)
+                            .GetElement();
+                        return new FormElementLayout(WithMetadata(formElement, element));
+
                     case "img":
                         formElement = new ImageAttribute(element.TryGetAttribute("src"))
                         {
