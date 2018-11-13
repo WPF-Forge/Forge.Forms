@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
+using System.Windows.Controls;
 using System.Windows.Data;
 using FastMember;
 using Forge.Forms.Controls;
@@ -174,6 +176,38 @@ namespace Forge.Forms
         }
 
         /// <summary>
+        /// Validates source by checking bindings shallowly.
+        /// </summary>
+        public static bool ValidateWithoutUpdate(object model)
+        {
+            var hasErrors = false;
+            foreach (var expression in GetBindings(model))
+            {
+                expression.ValidateWithoutUpdate();
+                hasErrors = hasErrors || expression.HasValidationError;
+            }
+
+            return !hasErrors;
+        }
+
+        /// <summary>
+        /// Validates source properties by checking bindings shallowly.
+        /// </summary>
+        public static bool ValidateWithoutUpdate(object model, params string[] properties)
+        {
+            var hasErrors = false;
+            foreach (var expression in GetBindings(model, properties))
+            {
+                // The only way to validate is to attempt a write-through,
+                // otherwise non-strict validation won't fire.
+                expression.ValidateWithoutUpdate();
+                hasErrors = hasErrors || expression.HasValidationError;
+            }
+
+            return !hasErrors;
+        }
+
+        /// <summary>
         /// Validates source by flushing bindings.
         /// </summary>
         public static bool Validate(object model)
@@ -203,6 +237,29 @@ namespace Forge.Forms
             }
 
             return !hasErrors;
+        }
+
+        private class HiddenValidationRule : ValidationRule
+        {
+            public static readonly HiddenValidationRule Instance = new HiddenValidationRule();
+
+            public override ValidationResult Validate(object value, CultureInfo cultureInfo)
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        /// <summary>
+        /// Manually invalidate a property.
+        /// </summary>
+        public static void Invalidate(object model, string property, string message)
+        {
+            foreach (var expression in GetBindings(model, new[] { property }))
+            {
+                System.Windows.Controls.Validation.MarkInvalid(
+                    expression,
+                    new ValidationError(HiddenValidationRule.Instance, expression, message, null));
+            }
         }
 
         internal static bool IsModel(object value)
