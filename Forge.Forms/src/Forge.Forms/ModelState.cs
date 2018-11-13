@@ -152,7 +152,6 @@ namespace Forge.Forms
             }
         }
 
-
         /// <summary>
         /// Clear validation errors from source properties.
         /// </summary>
@@ -177,6 +176,7 @@ namespace Forge.Forms
 
         /// <summary>
         /// Validates source by checking bindings shallowly.
+        /// You should generally use <see cref="Validate(object)"/> for better compatibility.
         /// </summary>
         public static bool ValidateWithoutUpdate(object model)
         {
@@ -192,6 +192,7 @@ namespace Forge.Forms
 
         /// <summary>
         /// Validates source properties by checking bindings shallowly.
+        /// You should generally use <see cref="Validate(object, string[])"/> for better compatibility.
         /// </summary>
         public static bool ValidateWithoutUpdate(object model, params string[] properties)
         {
@@ -241,6 +242,7 @@ namespace Forge.Forms
 
         /// <summary>
         /// Checks source validation state without performing any action.
+        /// To access error messages use <see cref="GetValidationErrors(object)"/>.
         /// </summary>
         public static bool IsValid(object model)
         {
@@ -257,6 +259,7 @@ namespace Forge.Forms
 
         /// <summary>
         /// Checks source properties' validation states without performing any action.
+        /// To access error messages use <see cref="GetValidationErrors(object, string[])"/>.
         /// </summary>
         public static bool IsValid(object model, params string[] properties)
         {
@@ -269,6 +272,56 @@ namespace Forge.Forms
             }
 
             return true;
+        }
+
+        /// <summary>
+        /// Retrieves all validation errors for model.
+        /// </summary>
+        public static string[] GetValidationErrors(object model)
+        {
+            var errors = new List<string>();
+            foreach (var expression in GetBindings(model))
+            {
+                if (!expression.HasValidationError)
+                {
+                    continue;
+                }
+
+                foreach (var error in expression.ValidationErrors)
+                {
+                    if (error.ErrorContent is string str)
+                    {
+                        errors.Add(str);
+                    }
+                }
+            }
+
+            return errors.ToArray();
+        }
+
+        /// <summary>
+        /// Retrieves validation errors for given properties.
+        /// </summary>
+        public static string[] GetValidationErrors(object model, params string[] properties)
+        {
+            var errors = new List<string>();
+            foreach (var expression in GetBindings(model, properties))
+            {
+                if (!expression.HasValidationError)
+                {
+                    continue;
+                }
+
+                foreach (var error in expression.ValidationErrors)
+                {
+                    if (error.ErrorContent is string str)
+                    {
+                        errors.Add(str);
+                    }
+                }
+            }
+
+            return errors.ToArray();
         }
 
         private class HiddenValidationRule : ValidationRule
