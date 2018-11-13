@@ -11,6 +11,7 @@
     - `GetValidationErrors` returns the list of error strings from specified properties/whole model.
 - Added `Must.BeInvalid` (and `Must.Fail` alias) validator for external validation. This validator always fails, so you must combine it with the `When` condition.
 - Added `ValueAttribute.OnActivation` and `ValueAttribute.OnDeactivation` validation actions which specify what happens when the validator is enabled/disabled from the `When` condition.
+- Added `SelectionType.RadioButtonsInline` for horizontal layout of radio buttons in selections.
 
 ## 1.0.14
 
