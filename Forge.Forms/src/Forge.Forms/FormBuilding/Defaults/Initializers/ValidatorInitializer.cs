@@ -380,7 +380,6 @@ namespace Forge.Forms.FormBuilding.Defaults.Initializers
                             strictValidation,
                             validateOnTargetUpdated));
                 case Must.BeInvalid:
-                case Must.Fail:
                     return new ValidatorProvider((context, pipe) => new EnforcedValidator(pipe, errorProvider(context),
                         isEnforcedProvider(context), GetConverter(context), strictValidation,
                         validateOnTargetUpdated));

@@ -111,8 +111,8 @@ namespace Forge.Forms.Annotations
         BeInvalid,
 
         /// <summary>
-        /// Alias for <see cref="BeInvalid"/>.
+        /// Property will be invalid unless the validator is disabled. Alias for <see cref="BeInvalid"/>.
         /// </summary>
-        Fail
+        Fail = BeInvalid
     }
 }

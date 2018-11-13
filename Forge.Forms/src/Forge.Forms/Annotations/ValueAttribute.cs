@@ -55,7 +55,7 @@ namespace Forge.Forms.Annotations
             Argument = argument;
             HasValue = hasValue;
             ValidatesOnTargetUpdated = false;
-            if (condition == Must.BeInvalid || condition == Must.Fail)
+            if (condition == Must.Fail)
             {
                 OnActivation = ValidationAction.ValidateField;
                 OnDeactivation = ValidationAction.ValidateField;
