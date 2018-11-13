@@ -2,30 +2,56 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Forge.Forms.Annotations;
+using Forge.Forms.Validation;
 
 namespace Forge.Forms.Demo.Models
 {
-    [Text("Click the button to invalidate the text field")]
-    [Action("invalidate", "INVALIDATE")]
     public class CustomValidation : IActionHandler, INotifyPropertyChanged
     {
-        private string text;
-
-        public string Text
+        public static bool Validate(ValidationContext validationContext)
         {
-            get => text;
+            return false;
+        }
+
+        private string throughModelState;
+        private string throughStaticMethod;
+
+        [Text("Click the button to invalidate the text field")]
+        [Action("invalidate", "INVALIDATE")]
+        public string ThroughModelState
+        {
+            get => throughModelState;
             set
             {
-                text = value;
+                throughModelState = value;
+                OnPropertyChanged();
+            }
+        }
+
+        [Text("Trigger validation from the popup menu or from the button below.")]
+        [Action("validate", "VALIDATE")]
+
+        [Value(Must.SatisfyMethod, nameof(Validate))]
+        public string ThroughStaticMethod
+        {
+            get => throughStaticMethod;
+            set
+            {
+                throughStaticMethod = value;
                 OnPropertyChanged();
             }
         }
 
         public void HandleAction(IActionContext actionContext)
         {
-            if (actionContext.Action is "invalidate")
+            switch (actionContext.Action)
             {
-                ModelState.Invalidate(this, nameof(Text), "Invalid value.");
+                case "invalidate":
+                    ModelState.Invalidate(this, nameof(ThroughModelState), "Invalid value.");
+                    break;
+                case "validate":
+                    ModelState.Validate(this, nameof(ThroughStaticMethod));
+                    break;
             }
         }
 
@@ -35,5 +61,5 @@ namespace Forge.Forms.Demo.Models
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-    } 
+    }
 }

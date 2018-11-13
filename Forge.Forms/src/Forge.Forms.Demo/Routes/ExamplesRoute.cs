@@ -134,7 +134,7 @@ namespace Forge.Forms.Demo.Routes
 
             yield return new ExamplePresenter(new FileBindings(), "File Binding", large);
 
-            yield return new ExamplePresenter(new CustomValidation(), "Manual invalidation", large);
+            yield return new ExamplePresenter(new CustomValidation(), "Validation", large);
 
             yield return new ExamplePresenter(new Alert
             {
