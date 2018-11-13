@@ -15,4 +15,4 @@
 
 ## 1.0.14
 
-- Stable NuGet release
+- Stable NuGet release.
