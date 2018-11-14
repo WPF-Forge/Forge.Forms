@@ -116,11 +116,13 @@
     <Compile Include="DynamicExpressions\ValueConverters\IsEqualConverter.cs" />
     <Compile Include="FormBuilding\Defaults\ImageElement.cs" />
     <Compile Include="FormBuilding\Defaults\Initializers\MetadataInitializer.cs" />
+    <Compile Include="FormBuilding\Defaults\ErrorTextElement.cs" />
     <Compile Include="FormBuilding\IEnvironment.cs" />
     <Compile Include="FormBuilding\PropertyWrapper.cs" />
     <Compile Include="FormBuilding\SelectOption.cs" />
     <Compile Include="IModelInterceptor.cs" />
     <Compile Include="Snapshot.cs" />
+    <Compile Include="Validation\EnforcedValidator.cs" />
     <Compile Include="WindowOptions.cs" />
     <Compile Include="DialogOptions.cs" />
     <Compile Include="Controls\DialogWindow.xaml.cs">

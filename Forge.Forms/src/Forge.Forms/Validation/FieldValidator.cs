@@ -71,7 +71,7 @@ namespace Forge.Forms.Validation
                     return ValidationResult.ValidResult;
                 }
 
-                // When there's no pipe validation must return eagerly.
+                // When there's no pipe, validation must return eagerly.
                 // Properties will not be updated this way as validation will stop binding.
                 var isValid = ValidateValue(ValueConverter != null
                     ? ValueConverter.Convert(value, typeof(object), null, cultureInfo)

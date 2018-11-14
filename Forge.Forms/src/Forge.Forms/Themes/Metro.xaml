@@ -22,6 +22,7 @@
     <Style BasedOn="{StaticResource MetroTitlePresenterStyle}" TargetType="{x:Type defaults:TitlePresenter}" />
     <Style BasedOn="{StaticResource MetroHeadingPresenterStyle}" TargetType="{x:Type defaults:HeadingPresenter}" />
     <Style BasedOn="{StaticResource MetroTextPresenterStyle}" TargetType="{x:Type defaults:TextPresenter}" />
+    <Style BasedOn="{StaticResource MetroErrorTextPresenterStyle}" TargetType="{x:Type defaults:ErrorTextPresenter}" />
 
     <Style BasedOn="{StaticResource MetroActionPresenterStyle}" TargetType="{x:Type defaults:ActionPresenter}" />
 

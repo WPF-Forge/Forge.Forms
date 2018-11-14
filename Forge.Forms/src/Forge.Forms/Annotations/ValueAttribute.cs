@@ -55,6 +55,11 @@ namespace Forge.Forms.Annotations
             Argument = argument;
             HasValue = hasValue;
             ValidatesOnTargetUpdated = false;
+            if (condition == Must.Fail)
+            {
+                OnActivation = ValidationAction.ValidateField;
+                OnDeactivation = ValidationAction.ValidateField;
+            }
         }
 
         /// <summary>
@@ -98,8 +103,18 @@ namespace Forge.Forms.Annotations
         public bool ValidatesOnTargetUpdated { get; set; }
 
         /// <summary>
-        /// Specifies what happens when argument values change.
+        /// Specifies what happens when <see cref="Argument"/> values change.
         /// </summary>
         public ValidationAction ArgumentUpdatedAction { get; set; }
+
+        /// <summary>
+        /// Specifies what happens when the validator is activated.
+        /// </summary>
+        public ValidationAction OnActivation { get; set; }
+
+        /// <summary>
+        /// Specifies what happens when the validator is deactivated.
+        /// </summary>
+        public ValidationAction OnDeactivation { get; set; }
     }
 }

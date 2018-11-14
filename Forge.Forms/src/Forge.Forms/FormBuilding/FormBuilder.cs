@@ -10,7 +10,6 @@ using Forge.Forms.FormBuilding.Defaults;
 using Forge.Forms.FormBuilding.Defaults.Initializers;
 using Forge.Forms.FormBuilding.Defaults.Properties;
 using Forge.Forms.FormBuilding.Defaults.Types;
-using MahApps.Metro.Controls;
 using Position = Forge.Forms.Annotations.Position;
 
 namespace Forge.Forms.FormBuilding
@@ -462,6 +461,13 @@ namespace Forge.Forms.FormBuilding
 
                     case "text":
                         formElement = new TextAttribute(element.GetAttributeOrValue("content"))
+                            .WithBaseProperties(element)
+                            .WithTextProperties(element)
+                            .GetElement();
+                        return new FormElementLayout(WithMetadata(formElement, element));
+
+                    case "error":
+                        formElement = new ErrorTextAttribute(element.GetAttributeOrValue("content"))
                             .WithBaseProperties(element)
                             .WithTextProperties(element)
                             .GetElement();

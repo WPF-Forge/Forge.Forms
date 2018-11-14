@@ -58,6 +58,7 @@
     <Compile Include="Infrastructure\PushBinding.cs" />
     <Compile Include="Infrastructure\TextDocumentValueConverter.cs" />
     <Compile Include="Models\BooleanLogic.cs" />
+    <Compile Include="Models\CustomValidation.cs" />
     <Compile Include="Models\Dialogs.cs" />
     <Compile Include="Models\EnvManager.cs" />
     <Compile Include="Models\FileBindings.cs" />
@@ -65,6 +66,7 @@
     <Compile Include="Introduction.cs" />
     <Compile Include="Infrastructure\ExamplePresenter.cs" />
     <Compile Include="Models\InlineElements.cs" />
+    <Compile Include="Models\TextElements.cs" />
     <Compile Include="Models\TextFields.cs" />
     <Compile Include="Models\Selection.cs" />
     <Compile Include="Routes\ExamplesRoute.cs" />

@@ -8,7 +8,7 @@ using System.Windows;
 [assembly: AssemblyTitle("Forge.Forms")]
 [assembly: AssemblyDescription("Dynamically generated forms and dialogs in WPF")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("WPF-Forge")]
 [assembly: AssemblyProduct("Forge.Forms")]
 [assembly: AssemblyCopyright("Copyright © WPF-Forge 2018")]
 [assembly: AssemblyTrademark("")]

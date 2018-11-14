@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
+using System.Windows.Controls;
 using System.Windows.Data;
 using FastMember;
 using Forge.Forms.Controls;
@@ -150,7 +152,6 @@ namespace Forge.Forms
             }
         }
 
-
         /// <summary>
         /// Clear validation errors from source properties.
         /// </summary>
@@ -171,6 +172,40 @@ namespace Forge.Forms
             {
                 System.Windows.Controls.Validation.ClearInvalid(expression);
             }
+        }
+
+        /// <summary>
+        /// Validates source by checking bindings shallowly.
+        /// You should generally use <see cref="Validate(object)"/> for better compatibility.
+        /// </summary>
+        public static bool ValidateWithoutUpdate(object model)
+        {
+            var hasErrors = false;
+            foreach (var expression in GetBindings(model))
+            {
+                expression.ValidateWithoutUpdate();
+                hasErrors = hasErrors || expression.HasValidationError;
+            }
+
+            return !hasErrors;
+        }
+
+        /// <summary>
+        /// Validates source properties by checking bindings shallowly.
+        /// You should generally use <see cref="Validate(object, string[])"/> for better compatibility.
+        /// </summary>
+        public static bool ValidateWithoutUpdate(object model, params string[] properties)
+        {
+            var hasErrors = false;
+            foreach (var expression in GetBindings(model, properties))
+            {
+                // The only way to validate is to attempt a write-through,
+                // otherwise non-strict validation won't fire.
+                expression.ValidateWithoutUpdate();
+                hasErrors = hasErrors || expression.HasValidationError;
+            }
+
+            return !hasErrors;
         }
 
         /// <summary>
@@ -203,6 +238,118 @@ namespace Forge.Forms
             }
 
             return !hasErrors;
+        }
+
+        /// <summary>
+        /// Checks source validation state without performing any action.
+        /// To access error messages use <see cref="GetValidationErrors(object)"/>.
+        /// </summary>
+        public static bool IsValid(object model)
+        {
+            foreach (var expression in GetBindings(model))
+            {
+                if (expression.HasValidationError)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Checks source properties' validation states without performing any action.
+        /// To access error messages use <see cref="GetValidationErrors(object, string[])"/>.
+        /// </summary>
+        public static bool IsValid(object model, params string[] properties)
+        {
+            foreach (var expression in GetBindings(model, properties))
+            {
+                if (expression.HasValidationError)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Retrieves all validation errors for model.
+        /// </summary>
+        public static string[] GetValidationErrors(object model)
+        {
+            var errors = new List<string>();
+            foreach (var expression in GetBindings(model))
+            {
+                if (!expression.HasValidationError)
+                {
+                    continue;
+                }
+
+                foreach (var error in expression.ValidationErrors)
+                {
+                    if (error.ErrorContent is string str)
+                    {
+                        errors.Add(str);
+                    }
+                }
+            }
+
+            return errors.ToArray();
+        }
+
+        /// <summary>
+        /// Retrieves validation errors for given properties.
+        /// </summary>
+        public static string[] GetValidationErrors(object model, params string[] properties)
+        {
+            var errors = new List<string>();
+            foreach (var expression in GetBindings(model, properties))
+            {
+                if (!expression.HasValidationError)
+                {
+                    continue;
+                }
+
+                foreach (var error in expression.ValidationErrors)
+                {
+                    if (error.ErrorContent is string str)
+                    {
+                        errors.Add(str);
+                    }
+                }
+            }
+
+            return errors.ToArray();
+        }
+
+        private class HiddenValidationRule : ValidationRule
+        {
+            public static readonly HiddenValidationRule Instance = new HiddenValidationRule();
+
+            private HiddenValidationRule()
+            {
+            }
+
+            public override ValidationResult Validate(object value, CultureInfo cultureInfo)
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        /// <summary>
+        /// Manually invalidates a property with a specified error message.
+        /// The error will disappear if <see cref="Validate(object)"/> or <see cref="ValidateWithoutUpdate(object)"/> is called.
+        /// </summary>
+        public static void Invalidate(object model, string property, string message)
+        {
+            foreach (var expression in GetBindings(model, new[] { property }))
+            {
+                System.Windows.Controls.Validation.MarkInvalid(
+                    expression,
+                    new ValidationError(HiddenValidationRule.Instance, expression, message, null));
+            }
         }
 
         internal static bool IsModel(object value)

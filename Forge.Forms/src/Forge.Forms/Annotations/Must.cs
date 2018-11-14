@@ -103,6 +103,16 @@ namespace Forge.Forms.Annotations
         /// <see cref="ValidationContext" /> context).
         /// Does nothing if no such method is found.
         /// </summary>
-        SatisfyContextMethod
+        SatisfyContextMethod,
+
+        /// <summary>
+        /// Property will be invalid unless the validator is disabled.
+        /// </summary>
+        BeInvalid,
+
+        /// <summary>
+        /// Property will be invalid unless the validator is disabled. Alias for <see cref="BeInvalid"/>.
+        /// </summary>
+        Fail = BeInvalid
     }
 }
