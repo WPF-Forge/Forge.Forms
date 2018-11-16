@@ -168,6 +168,43 @@ namespace Forge.Forms.FormBuilding
                 ["decimal?"] = typeof(decimal?)
             };
 
+            TypeConstructors = new Dictionary<string, Func<TypeConstructionContext, TypeConstructor>>(StringComparer.OrdinalIgnoreCase)
+            {
+                ["string"] = _ => typeof(string),
+                ["text"] = _ => typeof(string),
+                ["textarea"] = _ => new TypeConstructor(typeof(string), new MultiLineAttribute()),
+                ["password"] = _ => new TypeConstructor(typeof(string), new PasswordAttribute()),
+                ["datetime"] = _ => typeof(DateTime),
+                ["bool"] = _ => typeof(bool),
+                ["toggle"] = _ => new TypeConstructor(typeof(bool), new ToggleAttribute()),
+                ["char"] = _ => typeof(char),
+                ["byte"] = _ => typeof(byte),
+                ["sbyte"] = _ => typeof(sbyte),
+                ["short"] = _ => typeof(short),
+                ["int"] = _ => typeof(int),
+                ["long"] = _ => typeof(long),
+                ["ushort"] = _ => typeof(ushort),
+                ["uint"] = _ => typeof(uint),
+                ["ulong"] = _ => typeof(ulong),
+                ["float"] = _ => typeof(float),
+                ["double"] = _ => typeof(double),
+                ["decimal"] = _ => typeof(decimal),
+                ["datetime?"] = _ => typeof(DateTime?),
+                ["bool?"] = _ => typeof(bool?),
+                ["char?"] = _ => typeof(char?),
+                ["byte?"] = _ => typeof(byte?),
+                ["sbyte?"] = _ => typeof(sbyte?),
+                ["short?"] = _ => typeof(short?),
+                ["int?"] = _ => typeof(int?),
+                ["long?"] = _ => typeof(long?),
+                ["ushort?"] = _ => typeof(ushort?),
+                ["uint?"] = _ => typeof(uint?),
+                ["ulong?"] = _ => typeof(ulong?),
+                ["float?"] = _ => typeof(float?),
+                ["double?"] = _ => typeof(double?),
+                ["decimal?"] = _ => typeof(decimal?)
+            };
+
             TypeDeserializers = new Dictionary<Type, Func<string, object>>
             {
                 // Default deserializers - culture invariant.
@@ -222,7 +259,13 @@ namespace Forge.Forms.FormBuilding
         /// </summary>
         public Dictionary<Type, List<IFieldBuilder>> TypeBuilders { get; }
 
+        [Obsolete("Use CustomXmlTypes instead.")]
         public Dictionary<string, Type> TypeNames { get; }
+
+        /// <summary>
+        /// Registers type factories that are queried for XML input building.
+        /// </summary>
+        public Dictionary<string, Func<TypeConstructionContext, TypeConstructor>> TypeConstructors { get; }
 
         /// <summary>
         /// Stores functions to parse string representations of types.
@@ -304,17 +347,22 @@ namespace Forge.Forms.FormBuilding
                     case "password":
                     {
                         var typeName = element.TryGetAttribute("type") ?? "string";
-                        if (!TypeNames.TryGetValue(typeName, out var propertyType))
+                        var attributes = new List<Attribute>();
+                        Type propertyType;
+                        if (elementName == "input" && TypeConstructors.TryGetValue(typeName, out var constructor))
+                        {
+                            var data = constructor(new XmlConstructionContext(element));
+                            propertyType = data.PropertyType;
+                            attributes.AddRange(data.CustomAttributes);
+                        }
+                        else if (!TypeNames.TryGetValue(typeName, out propertyType))
                         {
                             throw new InvalidOperationException($"Type '{typeName}' not found.");
                         }
 
                         var fieldName = element.TryGetAttribute("name");
-                        var attributes = new List<Attribute>
-                        {
-                            Utilities.GetFieldAttributeFromElement(element),
-                            Utilities.GetBindingAttributeFromElement(element)
-                        };
+                        attributes.Add(Utilities.GetFieldAttributeFromElement(element));
+                        attributes.Add(Utilities.GetBindingAttributeFromElement(element));
 
                         switch (elementName)
                         {
