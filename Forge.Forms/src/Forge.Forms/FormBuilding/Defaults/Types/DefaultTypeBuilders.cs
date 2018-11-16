@@ -38,11 +38,10 @@ namespace Forge.Forms.FormBuilding.Defaults.Types
             {
                 return new TimeField(property.Name);
             }
-            else
-            {
-                return new DateField(property.Name);
-            }
+
+            return new DateField(property.Name);
         }
+    }
 
     internal class ConvertedFieldBuilder : IFieldBuilder
     {
