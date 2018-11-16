@@ -33,9 +33,16 @@ namespace Forge.Forms.FormBuilding.Defaults.Types
     {
         public FormElement TryBuild(IFormProperty property, Func<string, object> deserializer)
         {
-            return new DateField(property.Name);
+            var isTime = property.GetCustomAttribute<TimeAttribute>() != null;
+            if (isTime)
+            {
+                return new TimeField(property.Name);
+            }
+            else
+            {
+                return new DateField(property.Name);
+            }
         }
-    }
 
     internal class ConvertedFieldBuilder : IFieldBuilder
     {

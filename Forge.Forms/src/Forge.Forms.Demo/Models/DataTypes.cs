@@ -93,5 +93,9 @@ namespace Forge.Forms.Demo.Models
 
         [Field(Row = "10", ToolTip = "@public decimal? NullableDecimal { get; set; }")]
         public decimal? NullableDecimal { get; set; }
+
+        [Time]
+        [Field(Row = "10", ToolTip = "@public DateTime Time { get; set; }")]
+        public DateTime Time { get; set; }
     }
 }

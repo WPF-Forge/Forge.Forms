@@ -120,6 +120,7 @@ namespace Forge.Forms.Demo.Routes
             You said you are born in the year {Value:yyyy}. Are you really from the future?
         </validate>
     </input>
+    <input type=""time?"" name=""TimeOfBirth"" label=""Time of birth"" tooltip=""We really must know!""/>
     <heading>Account details</heading>
     <input type=""string"" name=""Username""
            label=""Username"" icon=""account"" >

@@ -79,6 +79,7 @@
     <Compile Include="Annotations\DefaultFields.cs" />
     <Compile Include="Annotations\PasswordAttribute.cs" />
     <Compile Include="Annotations\SliderAttribute.cs" />
+    <Compile Include="Annotations\TimeAttribute.cs" />
     <Compile Include="Annotations\ToggleAttribute.cs" />
     <Compile Include="Annotations\EnumDisplayAttribute.cs" />
     <Compile Include="Annotations\FieldAttribute.cs" />
@@ -114,6 +115,7 @@
     <Compile Include="DynamicExpressions\InvariantDouble.cs" />
     <Compile Include="DynamicExpressions\InvariantInt.cs" />
     <Compile Include="DynamicExpressions\ValueConverters\IsEqualConverter.cs" />
+    <Compile Include="FormBuilding\Defaults\TimeField.cs" />
     <Compile Include="FormBuilding\Defaults\ImageElement.cs" />
     <Compile Include="FormBuilding\Defaults\Initializers\MetadataInitializer.cs" />
     <Compile Include="FormBuilding\Defaults\ErrorTextElement.cs" />
@@ -296,6 +298,10 @@
     <Page Include="Themes\Material\Field.Converted.xaml">
       <SubType>Designer</SubType>
       <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
+    <Page Include="Themes\Material\Field.TimePicker.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Themes\Material\Field.DatePicker.xaml">
       <SubType>Designer</SubType>

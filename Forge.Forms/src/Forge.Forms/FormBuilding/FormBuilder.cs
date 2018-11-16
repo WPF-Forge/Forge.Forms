@@ -139,6 +139,7 @@ namespace Forge.Forms.FormBuilding
             {
                 ["string"] = typeof(string),
                 ["datetime"] = typeof(DateTime),
+                ["time"] = typeof(DateTime),
                 ["bool"] = typeof(bool),
                 ["char"] = typeof(char),
                 ["byte"] = typeof(byte),
@@ -153,6 +154,7 @@ namespace Forge.Forms.FormBuilding
                 ["double"] = typeof(double),
                 ["decimal"] = typeof(decimal),
                 ["datetime?"] = typeof(DateTime?),
+                ["time?"] = typeof(DateTime?),
                 ["bool?"] = typeof(bool?),
                 ["char?"] = typeof(char?),
                 ["byte?"] = typeof(byte?),
@@ -175,6 +177,7 @@ namespace Forge.Forms.FormBuilding
                 ["textarea"] = _ => new TypeConstructor(typeof(string), new MultiLineAttribute()),
                 ["password"] = _ => new TypeConstructor(typeof(string), new PasswordAttribute()),
                 ["datetime"] = _ => typeof(DateTime),
+                ["time"] = _ => typeof(DateTime),
                 ["bool"] = _ => typeof(bool),
                 ["toggle"] = _ => new TypeConstructor(typeof(bool), new ToggleAttribute()),
                 ["char"] = _ => typeof(char),
@@ -190,6 +193,7 @@ namespace Forge.Forms.FormBuilding
                 ["double"] = _ => typeof(double),
                 ["decimal"] = _ => typeof(decimal),
                 ["datetime?"] = _ => typeof(DateTime?),
+                ["time?"] = _ => typeof(DateTime?),
                 ["bool?"] = _ => typeof(bool?),
                 ["char?"] = _ => typeof(char?),
                 ["byte?"] = _ => typeof(byte?),
@@ -363,6 +367,11 @@ namespace Forge.Forms.FormBuilding
                         var fieldName = element.TryGetAttribute("name");
                         attributes.Add(Utilities.GetFieldAttributeFromElement(element));
                         attributes.Add(Utilities.GetBindingAttributeFromElement(element));
+
+                        if (typeName == "time" || typeName == "time?")
+                        {
+                            attributes.Add(new TimeAttribute());
+                        }
 
                         switch (elementName)
                         {

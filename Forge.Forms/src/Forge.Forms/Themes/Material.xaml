@@ -12,6 +12,8 @@
         <ResourceDictionary Source="pack://application:,,,/Forge.Forms;component/Themes/Material/Field.Password.xaml" />
         <ResourceDictionary
             Source="pack://application:,,,/Forge.Forms;component/Themes/Material/Field.DatePicker.xaml" />
+        <ResourceDictionary
+            Source="pack://application:,,,/Forge.Forms;component/Themes/Material/Field.TimePicker.xaml" />
         <ResourceDictionary Source="pack://application:,,,/Forge.Forms;component/Themes/Material/Field.Switch.xaml" />
         <ResourceDictionary
             Source="pack://application:,,,/Forge.Forms;component/Themes/Material/Field.Selection.xaml" />
@@ -34,5 +36,6 @@
     <Style BasedOn="{StaticResource MaterialErrorTextPresenterStyle}" TargetType="{x:Type defaults:ErrorTextPresenter}" />
     <Style BasedOn="{StaticResource MaterialActionPresenterStyle}" TargetType="{x:Type defaults:ActionPresenter}" />
     <Style BasedOn="{StaticResource MaterialDatePickerPresenterStyle}" TargetType="{x:Type defaults:DatePresenter}" />
+    <Style BasedOn="{StaticResource MaterialTimePickerPresenterStyle}" TargetType="{x:Type defaults:TimePresenter}" />
 
 </ResourceDictionary>
