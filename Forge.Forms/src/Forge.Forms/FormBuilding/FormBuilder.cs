@@ -259,7 +259,7 @@ namespace Forge.Forms.FormBuilding
         /// </summary>
         public Dictionary<Type, List<IFieldBuilder>> TypeBuilders { get; }
 
-        [Obsolete("Use CustomXmlTypes instead.")]
+        [Obsolete("Use " + nameof(TypeConstructors) + " instead.")]
         public Dictionary<string, Type> TypeNames { get; }
 
         /// <summary>
