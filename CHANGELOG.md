@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0.17
+
+- Added FormBuilder.TypeConstructors that allows registering custom factories for custom XML input `type` attributes.
+- Added TimePicker control
+    - You can add it by decorating `DateTime` class properties with the `[Time]` attribute. Property `Is24Hours` can be assigned to a boolean or a dynamic resource.
+    - You can add it via `<input type="time" ... />` in XML. Attribute `is24hours` can be assigned to a boolean or a dynamic resource.
+- Fixed `MaterialColoredIconStyle` validation brush fill for invalid controls.
+
 ## 1.0.16
 
 - Added error text element.

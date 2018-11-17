@@ -5,18 +5,14 @@
 
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="pack://application:,,,/Forge.Forms;component/Themes/Material/Field.CheckBox.xaml" />
-        <ResourceDictionary
-            Source="pack://application:,,,/Forge.Forms;component/Themes/Material/Field.Converted.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Forge.Forms;component/Themes/Material/Field.Converted.xaml" />
         <ResourceDictionary Source="pack://application:,,,/Forge.Forms;component/Themes/Material/Field.String.xaml" />
         <ResourceDictionary Source="pack://application:,,,/Forge.Forms;component/Themes/Material/Field.MultiLineString.xaml" />
         <ResourceDictionary Source="pack://application:,,,/Forge.Forms;component/Themes/Material/Field.Password.xaml" />
-        <ResourceDictionary
-            Source="pack://application:,,,/Forge.Forms;component/Themes/Material/Field.DatePicker.xaml" />
-        <ResourceDictionary
-            Source="pack://application:,,,/Forge.Forms;component/Themes/Material/Field.TimePicker.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Forge.Forms;component/Themes/Material/Field.DatePicker.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Forge.Forms;component/Themes/Material/Field.TimePicker.xaml" />
         <ResourceDictionary Source="pack://application:,,,/Forge.Forms;component/Themes/Material/Field.Switch.xaml" />
-        <ResourceDictionary
-            Source="pack://application:,,,/Forge.Forms;component/Themes/Material/Field.Selection.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Forge.Forms;component/Themes/Material/Field.Selection.xaml" />
         <ResourceDictionary Source="pack://application:,,,/Forge.Forms;component/Themes/Material/Field.Slider.xaml" />
         <ResourceDictionary Source="pack://application:,,,/Forge.Forms;component/Themes/Material/Element.Text.xaml" />
         <ResourceDictionary Source="pack://application:,,,/Forge.Forms;component/Themes/Material/Element.Action.xaml" />

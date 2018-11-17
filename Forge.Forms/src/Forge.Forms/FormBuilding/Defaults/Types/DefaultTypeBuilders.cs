@@ -33,10 +33,13 @@ namespace Forge.Forms.FormBuilding.Defaults.Types
     {
         public FormElement TryBuild(IFormProperty property, Func<string, object> deserializer)
         {
-            var isTime = property.GetCustomAttribute<TimeAttribute>() != null;
-            if (isTime)
+            var timeAttribute = property.GetCustomAttribute<TimeAttribute>();
+            if (timeAttribute != null)
             {
-                return new TimeField(property.Name);
+                return new TimeField(property.Name)
+                {
+                    Is24Hours = Utilities.GetResource<bool>(timeAttribute.Is24Hours, false, Deserializers.Boolean)
+                };
             }
 
             return new DateField(property.Name);

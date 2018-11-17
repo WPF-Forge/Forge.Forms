@@ -10,6 +10,7 @@ using Forge.Forms.FormBuilding.Defaults;
 using Forge.Forms.FormBuilding.Defaults.Initializers;
 using Forge.Forms.FormBuilding.Defaults.Properties;
 using Forge.Forms.FormBuilding.Defaults.Types;
+using Forge.Forms.FormBuilding.Xml;
 using Position = Forge.Forms.Annotations.Position;
 
 namespace Forge.Forms.FormBuilding
@@ -177,7 +178,7 @@ namespace Forge.Forms.FormBuilding
                 ["textarea"] = _ => new TypeConstructor(typeof(string), new MultiLineAttribute()),
                 ["password"] = _ => new TypeConstructor(typeof(string), new PasswordAttribute()),
                 ["datetime"] = _ => typeof(DateTime),
-                ["time"] = _ => new TypeConstructor(typeof(DateTime), new TimeAttribute()),
+                ["time"] = DefaultTypeConstructors.Time,
                 ["bool"] = _ => typeof(bool),
                 ["toggle"] = _ => new TypeConstructor(typeof(bool), new ToggleAttribute()),
                 ["char"] = _ => typeof(char),
@@ -193,7 +194,7 @@ namespace Forge.Forms.FormBuilding
                 ["double"] = _ => typeof(double),
                 ["decimal"] = _ => typeof(decimal),
                 ["datetime?"] = _ => typeof(DateTime?),
-                ["time?"] = _ => new TypeConstructor(typeof(DateTime?), new TimeAttribute()),
+                ["time?"] = DefaultTypeConstructors.NullableTime,
                 ["bool?"] = _ => typeof(bool?),
                 ["char?"] = _ => typeof(char?),
                 ["byte?"] = _ => typeof(byte?),

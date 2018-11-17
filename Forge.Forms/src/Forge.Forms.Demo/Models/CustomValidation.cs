@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Forge.Forms.Annotations;
 using Forge.Forms.Validation;
+using MaterialDesignThemes.Wpf;
 
 namespace Forge.Forms.Demo.Models
 {
@@ -20,6 +21,7 @@ namespace Forge.Forms.Demo.Models
 
         [Text("Click the button to invalidate the text field")]
         [Action("invalidate", "INVALIDATE")]
+        [Field(Icon = PackIconKind.Textbox)]
         public string ThroughModelState
         {
             get => throughModelState;
@@ -34,6 +36,7 @@ namespace Forge.Forms.Demo.Models
         [Action("validate", "VALIDATE")]
 
         [Value(Must.SatisfyMethod, nameof(Validate))]
+        [Field(Icon = PackIconKind.Textbox)]
         public string ThroughStaticMethod
         {
             get => throughStaticMethod;
@@ -47,6 +50,7 @@ namespace Forge.Forms.Demo.Models
         [Text("Invalidate this property by marking the checkbox below.")]
 
         [Value(Must.BeInvalid, When = "{Binding InvalidateTextbox}")]
+        [Field(Icon = PackIconKind.Textbox)]
         public string ExternalValidation
         {
             get => externalValidation;

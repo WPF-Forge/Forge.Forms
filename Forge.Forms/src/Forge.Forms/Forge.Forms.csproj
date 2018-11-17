@@ -123,6 +123,7 @@
     <Compile Include="FormBuilding\PropertyWrapper.cs" />
     <Compile Include="FormBuilding\SelectOption.cs" />
     <Compile Include="FormBuilding\TypeConstructor.cs" />
+    <Compile Include="FormBuilding\Xml\DefaultTypeConstructors.cs" />
     <Compile Include="IModelInterceptor.cs" />
     <Compile Include="Snapshot.cs" />
     <Compile Include="Validation\EnforcedValidator.cs" />
