@@ -51,6 +51,7 @@ The list of default converters is given below:
 - `ToLower` - converts the provided string to lower case.
 - `Length` - returns the string or collection length.
 - `ToString` - calls `ToString()` on the provided value.
+- `IsEqual(arg)` - returns whether the provided value is equal to `arg`. `arg` can only be a literal value. Examples: `IsEqual(true)`, `IsEqual(false)`, `IsEqual(2.5)`, `IsEqual('Hello')`.
 - `ToVisibility` - attempts to convert the provided value to a WPF visibility value.
 - `HideOnFalse` - similar to `ToVisibility`, except that false values generate `Visibility.Hidden`.
 
