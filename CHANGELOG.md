@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.19
+
+- Added support for `IsEnabled` in attributes or `enabled` in XML.
+
 ## 1.0.18
 
 - Fixed bug with bound expressions not escaping curly braces properly.

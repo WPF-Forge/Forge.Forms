@@ -50,6 +50,12 @@ Determines whether the field is editable. This property has effect only when the
 
 Accepts a `boolean` or a `dynamic resource`.
 
+#### [Field(IsEnabled = ...)]
+
+Determines whether the field is enabled. Disabled fields are usually greyed out.
+
+Accepts a `boolean` or a `dynamic resource`.
+
 #### [Field(DefaultValue = ...)]
 
 Determines the default value of this field. This value is applied when `ModelState.Reset` is called, or an `Action` with `IsReset = true` is clicked.
