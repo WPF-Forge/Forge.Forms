@@ -12,6 +12,7 @@ namespace Forge.Forms.DynamicExpressions
         public BoundExpression(string value)
         {
             StringFormat = value ?? throw new ArgumentNullException(nameof(value));
+            Resources = new List<IValueProvider>(0);
             IsPlainString = true;
         }
 
@@ -143,9 +144,9 @@ namespace Forge.Forms.DynamicExpressions
             return this;
         }
 
-        private string UnescapedStringFormat()
+        public string UnescapedStringFormat()
         {
-            return StringFormat.Replace("{{", "{").Replace("}}", "}");
+            return StringFormat?.Replace("{{", "{").Replace("}}", "}");
         }
 
         public static IValueProvider ParseSimplified(string expression)

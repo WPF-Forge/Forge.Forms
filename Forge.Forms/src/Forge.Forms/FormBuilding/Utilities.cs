@@ -142,21 +142,24 @@ namespace Forge.Forms.FormBuilding
                 var boundExpression = BoundExpression.Parse(expression);
                 switch (boundExpression.Resources.Count)
                 {
-                    case 0 when deserializer != null:
-                        return new LiteralValue(deserializer(expression));
+                    case 0:
+                        return new LiteralValue(
+                            deserializer != null && boundExpression.StringFormat != null
+                            ? deserializer(boundExpression.UnescapedStringFormat())
+                            : boundExpression.UnescapedStringFormat());
                     case 1 when boundExpression.StringFormat == null:
                         return new CoercedValueProvider<T>(boundExpression.Resources[0], defaultValue);
                     default:
                         if (typeof(T) == typeof(bool))
                         {
-                            var stringFormat = boundExpression.StringFormat;
+                            var expr = boundExpression.UnescapedStringFormat();
                             string converter = null;
-                            for (var i = stringFormat.Length - 1; i >= 0; i--)
+                            for (var i = expr.Length - 1; i >= 0; i--)
                             {
-                                var c = stringFormat[i];
+                                var c = expr[i];
                                 if (c == '}')
                                 {
-                                    var next = i > 0 ? stringFormat[i - 1] : '\0';
+                                    var next = i > 0 ? expr[i - 1] : '\0';
                                     if (next == '}')
                                     {
                                         i--;
@@ -168,21 +171,21 @@ namespace Forge.Forms.FormBuilding
 
                                 if (c == '|')
                                 {
-                                    var next = i > 0 ? stringFormat[i - 1] : '\0';
+                                    var next = i > 0 ? expr[i - 1] : '\0';
                                     if (next == '|')
                                     {
                                         // This will throw later anyway...
                                         break;
                                     }
 
-                                    converter = stringFormat.Substring(i + 1);
-                                    stringFormat = stringFormat.Substring(0, i);
+                                    converter = expr.Substring(i + 1);
+                                    expr = expr.Substring(0, i);
                                     break;
                                 }
 
                             }
 
-                            var ast = BooleanExpression.Parse(stringFormat);
+                            var ast = BooleanExpression.Parse(expr);
                             return new MultiBooleanBinding(ast, boundExpression.Resources, converter);
                         }
 
