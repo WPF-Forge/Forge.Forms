@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.18
+
+- Fixed bug with bound expressions not escaping curly braces properly.
+
 ## 1.0.17
 
 - Added FormBuilder.TypeConstructors that allows registering custom factories for custom XML input `type` attributes.
