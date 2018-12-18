@@ -2,7 +2,7 @@
 
 ## 1.0.19
 
-- Added support for `IsEnabled` in attributes or `enabled` in XML.
+- Added support for `IsEnabled` in attributes or `enabled` in XML for input elements.
 
 ## 1.0.18
 
