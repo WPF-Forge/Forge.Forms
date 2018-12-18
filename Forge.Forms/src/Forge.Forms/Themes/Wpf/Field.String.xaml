@@ -45,6 +45,7 @@
                 internal:FocusHelper.InitialFocus="{formBuilding:FormBinding InitialFocus}"
                 internal:SelectTextOnFocus.Active="{formBuilding:FormBinding SelectOnFocus}"
                 FontSize="{TemplateBinding FontSize}"
+                IsEnabled="{formBuilding:FormBinding IsEnabled}"
                 IsReadOnly="{formBuilding:FormBinding IsReadOnly}"
                 Text="{formBuilding:FormBinding Value}"
                 ToolTip="{formBuilding:FormBinding ToolTip}" />

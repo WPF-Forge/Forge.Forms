@@ -40,7 +40,8 @@
                 internal:FocusHelper.InitialFocus="{formBuilding:FormBinding InitialFocus}"
                 Content="Toggle"
                 FontSize="{TemplateBinding FontSize}"
-                IsChecked="{formBuilding:FormBinding Value}" />
+                IsChecked="{formBuilding:FormBinding Value}"
+                IsEnabled="{formBuilding:FormBinding IsEnabled}" />
         </Grid>
     </ControlTemplate>
 

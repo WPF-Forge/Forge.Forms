@@ -36,6 +36,7 @@
                 Content="{formBuilding:FormBinding Name}"
                 FontSize="{TemplateBinding FontSize}"
                 IsChecked="{formBuilding:FormBinding Value}"
+                IsEnabled="{formBuilding:FormBinding IsEnabled}"
                 ToolTip="{formBuilding:FormBinding ToolTip}" />
         </Grid>
     </ControlTemplate>

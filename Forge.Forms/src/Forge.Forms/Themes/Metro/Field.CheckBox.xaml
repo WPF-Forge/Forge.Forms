@@ -37,6 +37,7 @@
                 Content="{formBuilding:FormBinding Name}"
                 FontSize="{TemplateBinding FontSize}"
                 IsChecked="{formBuilding:FormBinding Value}"
+                IsEnabled="{formBuilding:FormBinding IsEnabled}"
                 Style="{StaticResource MetroCheckBox}"
                 ToolTip="{formBuilding:FormBinding ToolTip}" />
         </Grid>

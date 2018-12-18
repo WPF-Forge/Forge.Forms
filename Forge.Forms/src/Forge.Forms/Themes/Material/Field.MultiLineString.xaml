@@ -35,6 +35,7 @@
                 internal:SelectTextOnFocus.Active="{formBuilding:FormBinding SelectOnFocus}"
                 materialDesign:HintAssist.Hint="{formBuilding:FormBinding Name}"
                 AcceptsReturn="True"
+                IsEnabled="{formBuilding:FormBinding IsEnabled}"
                 IsReadOnly="{formBuilding:FormBinding IsReadOnly}"
                 MinLines="3"
                 Style="{StaticResource MaterialDesignTextAreaTextBox}"

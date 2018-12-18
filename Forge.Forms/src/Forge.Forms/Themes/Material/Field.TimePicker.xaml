@@ -36,6 +36,7 @@
                 internal:SelectTextOnFocus.Active="{formBuilding:FormBinding SelectOnFocus}"
                 materialDesign:HintAssist.Hint="{formBuilding:FormBinding Name}"
                 Is24Hours="{formBuilding:FormBinding Is24Hours}"
+                IsEnabled="{formBuilding:FormBinding IsEnabled}"
                 SelectedTime="{formBuilding:FormBinding Value}"
                 Style="{StaticResource MaterialDesignFloatingHintTimePicker}"
                 ToolTip="{formBuilding:FormBinding ToolTip}" />

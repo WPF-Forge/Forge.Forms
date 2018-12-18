@@ -60,6 +60,7 @@
                 internal:FocusHelper.InitialFocus="{formBuilding:FormBinding InitialFocus}"
                 FontSize="{TemplateBinding FontSize}"
                 IsChecked="{formBuilding:FormBinding Value}"
+                IsEnabled="{formBuilding:FormBinding IsEnabled}"
                 Style="{StaticResource MaterialDesignSwitchToggleButton}" />
         </Grid>
     </ControlTemplate>

@@ -45,6 +45,7 @@
                 Margin="0,4,0,0"
                 VerticalAlignment="Center"
                 internal:FocusHelper.InitialFocus="{formBuilding:FormBinding InitialFocus}"
+                IsEnabled="{formBuilding:FormBinding IsEnabled}"
                 Maximum="{formBuilding:FormBinding Maximum}"
                 Minimum="{formBuilding:FormBinding Minimum}"
                 Style="{StaticResource MaterialDesignSlider}"

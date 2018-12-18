@@ -47,6 +47,11 @@ namespace Forge.Forms.Annotations
         public object IsReadOnly { get; set; }
 
         /// <summary>
+        /// Determines whether the field is enabled. Accepts a boolean or a dynamic resource.
+        /// </summary>
+        public object IsEnabled { get; set; }
+
+        /// <summary>
         /// Determines the default value of this field. Accepts an object of the same type as the property type
         /// or a dynamic expression. Some types such as DateTime and numbers can be deserialized from strings.
         /// </summary>

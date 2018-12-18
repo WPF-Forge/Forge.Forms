@@ -37,6 +37,7 @@
                 controls:TextBoxHelper.Watermark="{formBuilding:FormBinding Name}"
                 internal:FocusHelper.InitialFocus="{formBuilding:FormBinding InitialFocus}"
                 FontSize="{TemplateBinding FontSize}"
+                IsEnabled="{formBuilding:FormBinding IsEnabled}"
                 IsReadOnly="{formBuilding:FormBinding IsReadOnly}"
                 Style="{StaticResource MetroTextBox}"
                 Text="{formBuilding:FormBinding Value}"

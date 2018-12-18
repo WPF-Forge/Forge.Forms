@@ -21,6 +21,7 @@ namespace Forge.Forms.FormBuilding.Defaults.Initializers
             }
 
             element.IsVisible = Utilities.GetResource<bool>(attr.IsVisible, true, Deserializers.Boolean);
+            element.IsEnabled = Utilities.GetResource<bool>(attr.IsEnabled, true, Deserializers.Boolean);
             element.InitialFocus = Utilities.GetResource<bool>(attr.InitialFocus, false, Deserializers.Boolean);
             if (element is FormField field)
             {

@@ -36,6 +36,7 @@
                 internal:FocusHelper.InitialFocus="{formBuilding:FormBinding InitialFocus}"
                 internal:SelectTextOnFocus.Active="{formBuilding:FormBinding SelectOnFocus}"
                 materialDesign:HintAssist.Hint="{formBuilding:FormBinding Name}"
+                IsEnabled="{formBuilding:FormBinding IsEnabled}"
                 SelectedDate="{formBuilding:FormBinding Value}"
                 Style="{StaticResource MaterialDesignFloatingHintDatePicker}"
                 ToolTip="{formBuilding:FormBinding ToolTip}" />

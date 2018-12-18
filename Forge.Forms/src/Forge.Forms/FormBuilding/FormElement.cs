@@ -28,6 +28,11 @@ namespace Forge.Forms.FormBuilding
         public IValueProvider IsVisible { get; set; }
 
         /// <summary>
+        /// Gets or sets the bool resource that determines whether this element will be enabled.
+        /// </summary>
+        public IValueProvider IsEnabled { get; set; }
+
+        /// <summary>
         /// Gets or sets the bool resource that determines whether this element will receive initial focus.
         /// </summary>
         public IValueProvider InitialFocus { get; set; }
@@ -35,6 +40,7 @@ namespace Forge.Forms.FormBuilding
         protected internal virtual void Freeze()
         {
             Resources.Add(nameof(IsVisible), IsVisible ?? LiteralValue.True);
+            Resources.Add(nameof(IsEnabled), IsEnabled ?? LiteralValue.True);
             Resources.Add(nameof(InitialFocus), InitialFocus ?? LiteralValue.False);
         }
 

@@ -35,6 +35,7 @@
                 internal:FocusHelper.InitialFocus="{formBuilding:FormBinding InitialFocus}"
                 internal:SelectTextOnFocus.Active="{formBuilding:FormBinding SelectOnFocus}"
                 materialDesign:HintAssist.Hint="{formBuilding:FormBinding Name}"
+                IsEnabled="{formBuilding:FormBinding IsEnabled}"
                 IsReadOnly="{formBuilding:FormBinding IsReadOnly}"
                 Style="{StaticResource MaterialDesignFloatingHintTextBox}"
                 Text="{formBuilding:FormBinding Value}"

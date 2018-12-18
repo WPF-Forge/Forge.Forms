@@ -358,8 +358,9 @@ namespace Forge.Forms.FormBuilding
             {
                 Name = element.TryGetAttribute("label"),
                 DefaultValue = element.TryGetAttribute("defaultValue"),
-                IsVisible = element.TryGetAttribute("visible"),
-                IsReadOnly = element.TryGetAttribute("readonly"),
+                IsVisible = BoolOrText(element.TryGetAttribute("visible")),
+                IsEnabled = BoolOrText(element.TryGetAttribute("enabled")),
+                IsReadOnly = BoolOrText(element.TryGetAttribute("readonly")),
                 Icon = element.TryGetAttribute("icon"),
                 ToolTip = element.TryGetAttribute("tooltip")
             };
