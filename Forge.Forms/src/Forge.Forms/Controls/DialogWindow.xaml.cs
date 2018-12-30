@@ -12,6 +12,7 @@ namespace Forge.Forms.Controls
         {
             DataContext = options;
             InitializeComponent();
+            Loaded += (sender, e) => MoveFocus(new TraversalRequest(FocusNavigationDirection.Next));
             Form.Environment.Add(options.EnvironmentFlags);
             Form.Context = context;
             Form.Model = model;
