@@ -21,6 +21,10 @@ Actions are added through the `[Action]` attribute. Actions have these propertie
 
 Properties regarding layout are discussed in [form elements](form-elements.md).
 
+## Dialog actions
+
+It is common to use actions only when the form is hosted in a dialog. For this reason you can use `[DialogAction]` attribute. DialogAction has `IsVisible = {Env DialogHostContext}` and `ClosesDialog = true` by default.
+
 ## Handling actions
 
 When an action is performed, an `IActionContext` is created and is passed to:

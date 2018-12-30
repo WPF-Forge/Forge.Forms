@@ -69,6 +69,7 @@
     <Compile Include="Annotations\CardAttribute.cs" />
     <Compile Include="Annotations\ActionAttribute.cs" />
     <Compile Include="Annotations\BreakAttribute.cs" />
+    <Compile Include="Annotations\DialogActionAttribute.cs" />
     <Compile Include="Annotations\DividerAttribute.cs" />
     <Compile Include="Annotations\FormContentAttribute.cs" />
     <Compile Include="Annotations\ImageAttribute.cs" />

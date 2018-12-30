@@ -4,8 +4,11 @@
 
 - `Prompt<T>` now validates input on positive action.
 - Metro dialog window no longer forces controls theme.
+- Metro dialog window now passes initial focus to the controls.
 - Added ComboBox control to WPF theme.
 - Added `IsDefault` and `IsCancel` bindings in WPF and Metro actions.
+- Added `[DialogAction]` action that is visible only when the form is hosted in a dialog. This action has `ClosesDialog = true` by default.
+- Dialogs and dialog windows have environment flag `DialogHostContext` added by default. 
 
 ## 1.0.19
 

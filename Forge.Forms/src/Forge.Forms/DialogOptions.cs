@@ -17,7 +17,10 @@ namespace Forge.Forms
         private double titleFontSize = 20d;
         private double width = 350d;
         private IFormBuilder formBuilder = FormBuilding.FormBuilder.Default;
-        private HashSet<string> environmentFlags = new HashSet<string>();
+        private HashSet<string> environmentFlags = new HashSet<string>
+        {
+            "DialogHostContext"
+        };
 
         public DialogOptions()
             : this(Default)
