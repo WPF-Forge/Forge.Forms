@@ -14,6 +14,7 @@ namespace Forge.Forms
     [Action("positive", "{Binding PositiveAction}",
         IsDefault = true,
         ClosesDialog = true,
+        Validates = true,
         IsVisible = "{Binding PositiveAction|IsNotEmpty}",
         Icon = "{Binding PositiveActionIcon}")]
     public sealed class Prompt<T> : DialogBase
