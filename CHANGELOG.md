@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.20
+
+- `Prompt<T>` now validates input on positive action.
+- Metro dialog window no longer forces controls theme.
+- Added ComboBox control to WPF theme.
+- Added `IsDefault` and `IsCancel` bindings in WPF and Metro actions.
+
 ## 1.0.19
 
 - Added support for `IsEnabled` in attributes or `enabled` in XML for input elements. 
