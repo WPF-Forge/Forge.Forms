@@ -8,12 +8,14 @@
         <ResourceDictionary Source="pack://application:,,,/Forge.Forms;component/Themes/Wpf/Field.Password.xaml" />
         <ResourceDictionary Source="pack://application:,,,/Forge.Forms;component/Themes/Wpf/Field.Converted.xaml" />
         <ResourceDictionary Source="pack://application:,,,/Forge.Forms;component/Themes/Wpf/Field.String.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Forge.Forms;component/Themes/Wpf/Field.MultiLineString.xaml" />
         <ResourceDictionary Source="pack://application:,,,/Forge.Forms;component/Themes/Wpf/Field.Switch.xaml" />
         <ResourceDictionary Source="pack://application:,,,/Forge.Forms;component/Themes/Wpf/Field.Selection.xaml" />
         <ResourceDictionary Source="pack://application:,,,/Forge.Forms;component/Themes/Wpf/Element.Action.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
     <Style BasedOn="{StaticResource WpfStringPresenterStyle}" TargetType="{x:Type defaults:StringPresenter}" />
+    <Style BasedOn="{StaticResource WpfMultiLineStringPresenterStyle}" TargetType="{x:Type defaults:MultiLineStringPresenter}" />
     <Style BasedOn="{StaticResource WpfPasswordPresenterStyle}" TargetType="{x:Type defaults:PasswordPresenter}" />
     <Style BasedOn="{StaticResource WpfConvertedPresenterStyle}" TargetType="{x:Type defaults:ConvertedPresenter}" />
     <Style BasedOn="{StaticResource WpfCheckBoxPresenterStyle}" TargetType="{x:Type defaults:CheckBoxPresenter}" />
