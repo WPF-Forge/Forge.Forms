@@ -9,6 +9,7 @@
         <ResourceDictionary Source="pack://application:,,,/Forge.Forms;component/Themes/Wpf/Field.Converted.xaml" />
         <ResourceDictionary Source="pack://application:,,,/Forge.Forms;component/Themes/Wpf/Field.String.xaml" />
         <ResourceDictionary Source="pack://application:,,,/Forge.Forms;component/Themes/Wpf/Field.Switch.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Forge.Forms;component/Themes/Wpf/Field.Selection.xaml" />
         <ResourceDictionary Source="pack://application:,,,/Forge.Forms;component/Themes/Wpf/Element.Action.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
@@ -17,6 +18,7 @@
     <Style BasedOn="{StaticResource WpfConvertedPresenterStyle}" TargetType="{x:Type defaults:ConvertedPresenter}" />
     <Style BasedOn="{StaticResource WpfCheckBoxPresenterStyle}" TargetType="{x:Type defaults:CheckBoxPresenter}" />
     <Style BasedOn="{StaticResource WpfSwitchPresenterStyle}" TargetType="{x:Type defaults:SwitchPresenter}" />
+    <Style BasedOn="{StaticResource WpfSelectionPresenterStyle}" TargetType="{x:Type defaults:SelectionPresenter}" />
 
     <Style BasedOn="{StaticResource WpfActionPresenterStyle}" TargetType="{x:Type defaults:ActionPresenter}" />
 
