@@ -40,7 +40,7 @@ When an action is performed, an `IActionContext` is created and is passed to:
 - `Context` - form context at the time of invocation.
 - `Action` - action identifier, usually `ActionAttribute.ActionName`.
 - `ActionParameter` - resolved value of `ActionAttribute.Parameter`.
-- `ResourceContext` - form's associated `IResourceContext`.
+- `ResourceContext` - form's associated `IResourceContext`. Usually this will also be an `IFrameworkResourceContext` which you can use to resolve the `DynamicForm` hosting the form.
 - `CloseFormHost()` - closes form host when invoked. Useful when you have asynchronous action handling.
 
 As noted above, both model and form context can handle actions. As a guideline, we suggest this pattern:
