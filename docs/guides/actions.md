@@ -48,3 +48,12 @@ As noted above, both model and form context can handle actions. As a guideline, 
 - Model instances should handle actions if they are directly related to their state, e.g. reset or validate fields.
 - Context instances should handle actions that manage state outside of the model scope, e.g. save submitted form to database.
 - Interceptors should listen to actions for logging, syncing with other plugins, etc.
+
+## Intercepting actions
+
+You can write custom plugins or reusable logic and attach them to `ActionElement.InterceptorChain` or `ActionElement.ActionInterceptor`. An `IActionInterceptor` must implement `IActionContext InterceptAction(IActionContext actionContext)` which takes the current action context and can do things like:
+
+- Perform side effects based on the action context.
+- Return `null` to cancel action propagation to other handlers.
+- Return a different `IActionContext` to allow proxying or injection.
+- Return the original unmodified `IActionContext` and only "tap" the action event for side effects.
