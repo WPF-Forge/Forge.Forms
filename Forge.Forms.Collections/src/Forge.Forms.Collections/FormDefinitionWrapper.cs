@@ -21,6 +21,8 @@ namespace Forge.Forms.Collections
         public Type ModelType => inner.ModelType;
 
         public IDictionary<string, IValueProvider> Resources => inner.Resources;
+        
+        public IDictionary<string, string> Metadata => inner.Metadata;
 
         public object CreateInstance(IResourceContext context)
         {
