@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Forge.Forms.Annotations;
 using MaterialDesignThemes.Wpf;
@@ -8,7 +7,7 @@ namespace Forge.Forms.Demo.Models
 {
     [Title("Log in to continue")]
     [Action("cancel", "CANCEL", IsCancel = true, ClosesDialog = true)]
-    [Action("{Binding Readable}", "LOG IN {Binding Readable}", IsLoading = "{Binding Loading}",
+    [Action("login", "LOG IN", IsLoading = "{Binding Loading}",
         IsDefault = true, ClosesDialog = true, Validates = true)]
     public class Login : IActionHandler, INotifyPropertyChanged
     {
@@ -29,8 +28,6 @@ namespace Forge.Forms.Demo.Models
                 OnPropertyChanged();
             }
         }
-
-        public object Readable => DateTime.Now;
 
         // Or be dynamically assigned...
         [Field(Icon = "{Property PasswordIcon}")]
