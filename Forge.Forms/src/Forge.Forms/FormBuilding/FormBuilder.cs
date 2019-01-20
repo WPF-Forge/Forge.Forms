@@ -38,6 +38,7 @@ namespace Forge.Forms.FormBuilding
             PropertyBuilders = new List<IFieldBuilder>
             {
                 // Default property builders.
+                new DirectContentBuilder(),
                 new SelectFromBuilder(),
                 new SliderBuilder()
             };

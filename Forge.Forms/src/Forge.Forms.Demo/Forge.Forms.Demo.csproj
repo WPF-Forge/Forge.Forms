@@ -60,6 +60,7 @@
     <Compile Include="Models\BooleanLogic.cs" />
     <Compile Include="Models\CustomValidation.cs" />
     <Compile Include="Models\Dialogs.cs" />
+    <Compile Include="Models\DirectContent.cs" />
     <Compile Include="Models\EnvManager.cs" />
     <Compile Include="Models\FileBindings.cs" />
     <Compile Include="Models\FoodSelection.cs" />

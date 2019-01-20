@@ -92,7 +92,6 @@ namespace Forge.Forms.FormBuilding
                 .OrderBy(p => p.Token)
                 .Select(i => i.PropertyInfo);
 
-
             switch (mode)
             {
                 case DefaultFields.AllIncludingReadonly:

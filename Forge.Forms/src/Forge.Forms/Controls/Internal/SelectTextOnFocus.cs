@@ -16,9 +16,8 @@ namespace Forge.Forms.Controls.Internal
 
         private static void ActivePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is TextBox)
+            if (d is TextBox textBox)
             {
-                var textBox = d as TextBox;
                 if ((e.NewValue as bool?).GetValueOrDefault(false))
                 {
                     textBox.GotKeyboardFocus += OnKeyboardFocusSelectText;

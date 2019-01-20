@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Windows;
-using System.Windows.Controls;
 
 namespace Forge.Forms.Controls.Internal
 {
@@ -14,12 +13,12 @@ namespace Forge.Forms.Controls.Internal
                 typeof(FocusHelper),
                 new PropertyMetadata(false, OnInitialFocusPropertyChanged));
 
-        public static bool GetInitialFocus(Control control)
+        public static bool GetInitialFocus(FrameworkElement control)
         {
             return (bool)control.GetValue(InitialFocusProperty);
         }
 
-        public static void SetInitialFocus(Control control, bool value)
+        public static void SetInitialFocus(FrameworkElement control, bool value)
         {
             control.SetValue(InitialFocusProperty, value);
         }
@@ -27,7 +26,7 @@ namespace Forge.Forms.Controls.Internal
         private static void OnInitialFocusPropertyChanged(
             DependencyObject obj, DependencyPropertyChangedEventArgs args)
         {
-            if (!(obj is Control control))
+            if (!(obj is FrameworkElement control))
             {
                 return;
             }
@@ -44,7 +43,7 @@ namespace Forge.Forms.Controls.Internal
 
         private static void HandleFocus(object sender, EventArgs e)
         {
-            ((Control)sender).Focus();
+            ((FrameworkElement)sender).Focus();
         }
     }
 }

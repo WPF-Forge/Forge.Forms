@@ -70,6 +70,7 @@
     <Compile Include="Annotations\ActionAttribute.cs" />
     <Compile Include="Annotations\BreakAttribute.cs" />
     <Compile Include="Annotations\DialogActionAttribute.cs" />
+    <Compile Include="Annotations\DirectContentAttribute.cs" />
     <Compile Include="Annotations\DividerAttribute.cs" />
     <Compile Include="Annotations\FormContentAttribute.cs" />
     <Compile Include="Annotations\ImageAttribute.cs" />
@@ -116,6 +117,8 @@
     <Compile Include="DynamicExpressions\InvariantDouble.cs" />
     <Compile Include="DynamicExpressions\InvariantInt.cs" />
     <Compile Include="DynamicExpressions\ValueConverters\IsEqualConverter.cs" />
+    <Compile Include="FormBuilding\Defaults\DirectContentField.cs" />
+    <Compile Include="FormBuilding\Defaults\Properties\DirectContentBuilder.cs" />
     <Compile Include="FormBuilding\Defaults\TimeField.cs" />
     <Compile Include="FormBuilding\Defaults\ImageElement.cs" />
     <Compile Include="FormBuilding\Defaults\Initializers\MetadataInitializer.cs" />

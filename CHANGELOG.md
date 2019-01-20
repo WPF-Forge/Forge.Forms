@@ -8,7 +8,9 @@
 - Added ComboBox control to WPF theme.
 - Added `IsDefault` and `IsCancel` bindings in WPF and Metro actions.
 - Added `[DialogAction]` action that is visible only when the form is hosted in a dialog. This action has `ClosesDialog = true` by default.
-- Dialogs and dialog windows have environment flag `DialogHostContext` added by default. 
+- Dialogs and dialog windows have environment flag `DialogHostContext` added by default.
+- Fixed getter only properties throwing two-way binding errors.
+- Added `[DirectContent]` attribute that allows passing element rendering directly to WPF.
 
 ## 1.0.19
 

@@ -48,8 +48,8 @@
     <controls:DynamicForm
         x:Name="Form"
         Margin="{Binding Padding}"
-        FormBuilder="{Binding FormBuilder}"
         controls:TextProperties.HeadingFontSize="{Binding HeadingFontSize}"
         controls:TextProperties.TextFontSize="{Binding TextFontSize}"
-        controls:TextProperties.TitleFontSize="{Binding TitleFontSize}" />
+        controls:TextProperties.TitleFontSize="{Binding TitleFontSize}"
+        FormBuilder="{Binding FormBuilder}" />
 </metro:MetroWindow>

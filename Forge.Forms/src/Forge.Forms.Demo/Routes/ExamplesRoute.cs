@@ -138,6 +138,8 @@ namespace Forge.Forms.Demo.Routes
 
             yield return new ExamplePresenter(new CustomValidation(), "Validation", large);
 
+            yield return new ExamplePresenter(new DirectContent(), "Direct Content", large);
+
             yield return new ExamplePresenter(new Alert
             {
                 Message = "Item deleted."

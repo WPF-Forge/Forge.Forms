@@ -8,7 +8,8 @@ namespace Forge.Forms.FormBuilding.Defaults
 {
     public sealed class ConvertedField : DataFormField
     {
-        public ConvertedField(string key, Type propertyType, ReplacementPipe replacementPipe) : base(key, propertyType)
+        public ConvertedField(string key, Type propertyType, ReplacementPipe replacementPipe) 
+            : base(key, propertyType)
         {
             ReplacementPipe = replacementPipe;
             CreateBinding = false;
@@ -35,7 +36,7 @@ namespace Forge.Forms.FormBuilding.Defaults
             {
                 Resources.Add("Value",
                     new ConvertedDataBinding(Key, BindingOptions, Validators, ReplacementPipe,
-                        ConversionErrorMessage ?? (ctx => new PlainErrorStringProvider("Invalid value."))));
+                        ConversionErrorMessage ?? (ctx => new PlainErrorStringProvider("Invalid value.")), StrictlyReadOnly));
             }
         }
 

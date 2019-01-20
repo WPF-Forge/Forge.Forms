@@ -38,6 +38,8 @@ namespace Forge.Forms.FormBuilding
 
         protected internal bool CreateBinding { get; set; } = true;
 
+        protected bool StrictlyReadOnly => IsReadOnly is LiteralValue v && v.Value is true;
+
         protected internal override void Freeze()
         {
             const string isNotReadOnly = "IsNotReadOnly";
@@ -54,7 +56,7 @@ namespace Forge.Forms.FormBuilding
                 }
                 else
                 {
-                    Resources.Add("Value", new DataBinding(Key, BindingOptions, Validators));
+                    Resources.Add("Value", new DataBinding(Key, BindingOptions, Validators, StrictlyReadOnly));
                 }
             }
 

@@ -4,12 +4,26 @@
     xmlns:controls="clr-namespace:Forge.Forms.Controls"
     xmlns:defaults="clr-namespace:Forge.Forms.FormBuilding.Defaults"
     xmlns:formBuilding="clr-namespace:Forge.Forms.FormBuilding"
+    xmlns:internal="clr-namespace:Forge.Forms.Controls.Internal"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes">
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="pack://application:,,,/Forge.Forms;component/Themes/Elements/Text.xaml" />
         <ResourceDictionary Source="pack://application:,,,/Forge.Forms;component/Themes/Elements/Image.xaml" />
         <ResourceDictionary Source="pack://application:,,,/Forge.Forms;component/Themes/Wpf.xaml" />
     </ResourceDictionary.MergedDictionaries>
+
+    <Style TargetType="defaults:DirectContentPresenter">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="defaults:DirectContentPresenter">
+                    <ContentControl
+                        internal:FocusHelper.InitialFocus="{formBuilding:FormBinding InitialFocus}"
+                        Content="{formBuilding:FormBinding Value}"
+                        ToolTip="{formBuilding:FormBinding ToolTip}" />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 
     <Style TargetType="defaults:DividerPresenter">
         <Setter Property="Foreground" Value="{DynamicResource MaterialDesignDivider}" />
@@ -35,7 +49,7 @@
         <Setter Property="Height" Value="{formBuilding:FormBinding Height}" />
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate />
+                <ControlTemplate TargetType="defaults:BreakPresenter" />
             </Setter.Value>
         </Setter>
     </Style>
@@ -53,7 +67,7 @@
         <Setter Property="controls:TextProperties.TextFontSize" Value="{Binding FontSize, RelativeSource={RelativeSource Self}}" />
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate>
+                <ControlTemplate TargetType="{x:Type controls:DynamicForm}">
                     <Grid Name="PART_ItemsGrid" Margin="{TemplateBinding Padding}" />
                 </ControlTemplate>
             </Setter.Value>
@@ -65,7 +79,7 @@
         <Setter Property="Margin" Value="0" />
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate>
+                <ControlTemplate TargetType="{x:Type defaults:CardPresenter}">
                     <materialDesign:Card HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
                 </ControlTemplate>
             </Setter.Value>

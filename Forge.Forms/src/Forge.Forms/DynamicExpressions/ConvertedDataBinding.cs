@@ -11,12 +11,22 @@ namespace Forge.Forms.DynamicExpressions
         public ConvertedDataBinding(string propertyPath, BindingOptions bindingOptions,
             List<IValidatorProvider> validationRules, ReplacementPipe replacementPipe,
             Func<IResourceContext, IErrorStringProvider> conversionErrorStringProvider)
+            : this(propertyPath, bindingOptions, validationRules,
+                replacementPipe, conversionErrorStringProvider, false)
+        {
+        }
+
+        public ConvertedDataBinding(string propertyPath, BindingOptions bindingOptions,
+            List<IValidatorProvider> validationRules, ReplacementPipe replacementPipe,
+            Func<IResourceContext, IErrorStringProvider> conversionErrorStringProvider,
+            bool oneWay)
         {
             PropertyPath = propertyPath;
             BindingOptions = bindingOptions ?? throw new ArgumentNullException(nameof(bindingOptions));
             ReplacementPipe = replacementPipe ?? throw new ArgumentNullException(nameof(replacementPipe));
             ValidationRules = validationRules ?? new List<IValidatorProvider>();
             ConversionErrorStringProvider = conversionErrorStringProvider;
+            OneWay = oneWay;
         }
 
         public string PropertyPath { get; }
@@ -29,9 +39,16 @@ namespace Forge.Forms.DynamicExpressions
 
         public Func<IResourceContext, IErrorStringProvider> ConversionErrorStringProvider { get; }
 
+        public bool OneWay { get; }
+
         public BindingBase ProvideBinding(IResourceContext context)
         {
             var binding = context.CreateModelBinding(PropertyPath);
+            if (OneWay)
+            {
+                binding.Mode = BindingMode.OneWay;
+            }
+
             BindingOptions.Apply(binding);
             var deserializer = ReplacementPipe.CreateDeserializer(context);
             binding.Converter = new StringTypeConverter(deserializer);
