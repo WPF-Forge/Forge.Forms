@@ -1284,9 +1284,9 @@ namespace Forge.Forms.Collections
                 }
 
                 if (!(collection is INotifyCollectionChanged) && DataGrid != null)
-                {
-                    ItemsSource = null;
+                {   
                     AddItemToCollection(ItemType, collection, context.NewModel);
+                    ItemsSource = null;
                     ItemsSource = collection;
                 }
                 else
