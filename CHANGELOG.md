@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.0.20
+## 1.1.0 [WIP]
 
 - `Prompt<T>` now validates input on positive action.
 - Metro dialog window no longer forces controls theme.
@@ -10,6 +10,7 @@
 - Added `[DialogAction]` action that is visible only when the form is hosted in a dialog. This action has `ClosesDialog = true` by default.
 - Dialogs and dialog windows have environment flag `DialogHostContext` added by default.
 - Fixed getter only properties throwing two-way binding errors.
+- Added `SelectionType.RadioButtonsInlineRightAligned` for right-aligned radio buttons.
 - Added `[DirectContent]` attribute that allows passing element rendering directly to WPF.
 
 ## 1.0.19
