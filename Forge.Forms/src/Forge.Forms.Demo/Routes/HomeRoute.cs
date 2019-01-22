@@ -1,6 +1,6 @@
 ﻿using System.Windows;
-using Material.Application.Infrastructure;
-using Material.Application.Routing;
+using Forge.Application.Infrastructure;
+using Forge.Application.Routing;
 using MaterialDesignThemes.Wpf;
 
 namespace Forge.Forms.Demo.Routes
@@ -17,7 +17,7 @@ namespace Forge.Forms.Demo.Routes
             Model = new Introduction();
         }
 
-        public object Model { get; }
+        public Introduction Model { get; }
 
         public void HandleAction(IActionContext actionContext)
         {

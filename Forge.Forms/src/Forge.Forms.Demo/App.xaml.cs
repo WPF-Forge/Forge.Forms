@@ -1,5 +1,4 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 using Forge.Forms.Demo.Infrastructure;
 
 namespace Forge.Forms.Demo
@@ -7,26 +6,14 @@ namespace Forge.Forms.Demo
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>
-    public partial class App : Application
+    public partial class App
     {
-        public App()
-        {
-            Controller = new DemoAppController();
-        }
+        public DemoAppController Controller { get; } = new DemoAppController();
 
-        public DemoAppController Controller { get; }
-
-        [STAThread]
-        public static void Main()
-        {
-            var app = new App();
-            app.InitializeComponent();
-            app.Run();
-        }
-
-        protected void OnStartup(object sender, StartupEventArgs e)
+        protected override void OnStartup(StartupEventArgs e)
         {
             Controller.ShowApplicationWindow();
+            base.OnStartup(e);
         }
     }
 }

@@ -3,11 +3,11 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using Forge.Application.Infrastructure;
+using Forge.Application.Models;
+using Forge.Application.Routing;
 using Forge.Forms.Demo.Infrastructure;
 using Forge.Forms.Demo.Models;
-using Material.Application.Infrastructure;
-using Material.Application.Models;
-using Material.Application.Routing;
 using MaterialDesignThemes.Wpf;
 
 namespace Forge.Forms.Demo.Routes
