@@ -17,9 +17,4 @@
   <ItemGroup>
     <ProjectReference Include="..\Forge.Forms\Forge.Forms.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Page Update="App.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
 </Project>
