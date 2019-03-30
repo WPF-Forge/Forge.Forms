@@ -158,8 +158,8 @@
     <PackageReference Include="AvalonEdit">
       <Version>5.0.4</Version>
     </PackageReference>
-    <PackageReference Include="Material.Application">
-      <Version>1.0.0-CI-20171226-172359</Version>
+    <PackageReference Include="Forge.Application">
+      <Version>2.20190123.2-ci</Version>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>11.0.2</Version>
