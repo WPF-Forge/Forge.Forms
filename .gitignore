@@ -6,6 +6,7 @@
 *.user
 *.userosscache
 *.sln.docstates
+*.DotSettings
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
@@ -218,5 +219,3 @@ FakesAssemblies/
 _Pvt_Extensions
 
 \.idea/
-
-Forge\.Forms/Forge\.Forms\.sln\.DotSettings
