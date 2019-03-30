@@ -38,7 +38,7 @@
                 IsEnabled="{formBuilding:FormBinding IsEnabled}"
                 IsReadOnly="{formBuilding:FormBinding IsReadOnly}"
                 MinLines="3"
-                Style="{StaticResource MaterialDesignTextAreaTextBox}"
+                Style="{StaticResource MaterialDesignOutlinedTextFieldTextBox}"
                 Text="{formBuilding:FormBinding Value}"
                 TextWrapping="Wrap"
                 ToolTip="{formBuilding:FormBinding ToolTip}" />
