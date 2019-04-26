@@ -12,10 +12,11 @@
 - Fixed getter only properties throwing two-way binding errors.
 - Added `SelectionType.RadioButtonsInlineRightAligned` for right-aligned radio buttons.
 - Added `[DirectContent]` attribute that allows passing element rendering directly to WPF.
+- Changed resource reference from `MaterialDesignTextAreaTextBox` to `MaterialDesignOutlinedTextFieldTextBox`
 
 ## 1.0.19
 
-- Added support for `IsEnabled` in attributes or `enabled` in XML for input elements. 
+- Added support for `IsEnabled` in attributes or `enabled` in XML for input elements.
 
 ## 1.0.18
 
