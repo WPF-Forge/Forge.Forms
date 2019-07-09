@@ -116,5 +116,10 @@ namespace Forge.Forms.Annotations
         /// Specifies what happens when the validator is deactivated.
         /// </summary>
         public ValidationAction OnDeactivation { get; set; }
+
+        /// <summary>
+        /// Specifies the validation action when property value is null.
+        /// </summary>
+        public NullValueValidateAction NullValueValidation { get; set; }
     }
 }

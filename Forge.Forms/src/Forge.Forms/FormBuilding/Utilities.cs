@@ -478,6 +478,22 @@ namespace Forge.Forms.FormBuilding
                     attr.ArgumentUpdatedAction = (ValidationAction)Enum.Parse(typeof(ValidationAction), expr, true);
                 }
 
+                expr = child.TryGetAttribute("onActive");
+                if (expr != null)
+                {
+                    attr.OnActivation = (ValidationAction)Enum.Parse(typeof(ValidationAction), expr, true);
+                }
+
+                expr = child.TryGetAttribute("onDeactive");
+                if (expr != null)
+                {
+                    attr.OnDeactivation = (ValidationAction)Enum.Parse(typeof(ValidationAction), expr, true);
+                }
+                expr = child.TryGetAttribute("nullValueValidation");
+                if (expr != null)
+                {
+                    attr.NullValueValidation = (NullValueValidateAction)Enum.Parse(typeof(NullValueValidateAction), expr, true);
+                }               
                 validators.Add(attr);
             }
 

@@ -76,6 +76,7 @@
     <Compile Include="Annotations\ImageAttribute.cs" />
     <Compile Include="Annotations\Meta.cs" />
     <Compile Include="Annotations\MultiLineAttribute.cs" />
+    <Compile Include="Annotations\NullValueValidateAction.cs" />
     <Compile Include="Annotations\Placement.cs" />
     <Compile Include="Annotations\TextElementAttribute.cs" />
     <Compile Include="Annotations\DefaultFields.cs" />

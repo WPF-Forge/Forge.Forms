@@ -1,6 +1,7 @@
 ﻿using System.Globalization;
 using System.Windows.Controls;
 using System.Windows.Data;
+using Forge.Forms.Annotations;
 using Forge.Forms.DynamicExpressions;
 
 namespace Forge.Forms.Validation
@@ -8,7 +9,8 @@ namespace Forge.Forms.Validation
     public abstract class FieldValidator : ValidationRule
     {
         protected FieldValidator(ValidationPipe pipe, IErrorStringProvider errorProvider, IBoolProxy isEnforced,
-            IValueConverter valueConverter, bool strictValidation, bool validatesOnTargetUpdated)
+            IValueConverter valueConverter, bool strictValidation, bool validatesOnTargetUpdated,
+            NullValueValidateAction nullValueValidateAction = NullValueValidateAction.Default)
             : base(ValidationStep.ConvertedProposedValue, validatesOnTargetUpdated)
         {
             ValidationPipe = pipe;
@@ -16,6 +18,7 @@ namespace Forge.Forms.Validation
             ValueConverter = valueConverter;
             IsEnforced = isEnforced;
             StrictValidation = strictValidation;
+            NullValueValidation = nullValueValidateAction;
         }
 
         public IValueConverter ValueConverter { get; }
@@ -28,8 +31,16 @@ namespace Forge.Forms.Validation
 
         public bool StrictValidation { get; }
 
+        public NullValueValidateAction NullValueValidation { get; }
+
         public sealed override ValidationResult Validate(object value, CultureInfo cultureInfo)
         {
+
+            if (value == null && NullValueValidation == NullValueValidateAction.AlwaysTrue)
+            {
+                return ValidationResult.ValidResult;
+            }
+
             if (ValidationPipe != null)
             {
                 // Pass if another validator has already reported an error.

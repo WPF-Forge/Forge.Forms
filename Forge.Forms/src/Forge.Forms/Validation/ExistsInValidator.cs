@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.Linq;
 using System.Windows.Data;
+using Forge.Forms.Annotations;
 using Forge.Forms.DynamicExpressions;
 
 namespace Forge.Forms.Validation
@@ -10,9 +11,10 @@ namespace Forge.Forms.Validation
     {
         public ExistsInValidator(ValidationPipe pipe, IProxy argument, IErrorStringProvider errorProvider,
             IBoolProxy isEnforced,
-            IValueConverter valueConverter, bool strictValidation, bool validatesOnTargetUpdated)
+            IValueConverter valueConverter, bool strictValidation, bool validatesOnTargetUpdated,
+            NullValueValidateAction nullValueValidateAction = NullValueValidateAction.Default)
             : base(pipe, argument, errorProvider, isEnforced, valueConverter, strictValidation,
-                validatesOnTargetUpdated)
+                validatesOnTargetUpdated,nullValueValidateAction)
         {
         }
 

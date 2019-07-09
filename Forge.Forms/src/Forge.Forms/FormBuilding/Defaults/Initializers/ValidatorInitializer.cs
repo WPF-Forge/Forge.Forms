@@ -77,11 +77,8 @@ namespace Forge.Forms.FormBuilding.Defaults.Initializers
                                     return;
                                 }
 
-                                if (model is ExpandoObject && modelType == null)
-                                {
-                                    // Do nothing.
-                                }
-                                else if (model == null || model.GetType() != modelType)
+                                //delete old logic (if model is ExpandoObject then do nothing)
+                                if (model == null || model.GetType() != modelType)
                                 {
                                     // Self dispose when form indicates model change.
                                     value.ValueChanged = null;
@@ -161,11 +158,8 @@ namespace Forge.Forms.FormBuilding.Defaults.Initializers
                                     return;
                                 }
 
-                                if (model is ExpandoObject && modelType == null)
-                                {
-                                    // Do nothing.
-                                }
-                                else if (model == null || model.GetType() != modelType)
+                                //delete old logic (if model is ExpandoObject then do nothing)
+                                if (model == null || model.GetType() != modelType)
                                 {
                                     // Self dispose when form indicates model change.
                                     value.ValueChanged = null;
@@ -282,40 +276,41 @@ namespace Forge.Forms.FormBuilding.Defaults.Initializers
 
                 return converter;
             }
-
+            //NullValueValidateAction nullValueValidateAction = NullValueValidateAction.Default
             var strictValidation = attribute.StrictValidation;
             var validateOnTargetUpdated = attribute.ValidatesOnTargetUpdated;
+            var nullValueValidation = attribute.NullValueValidation;
             switch (attribute.Condition)
             {
                 case Must.BeEqualTo:
                     return new ValidatorProvider((context, pipe) => new EqualsValidator(pipe, argumentProvider(context),
                         errorProvider(context), isEnforcedProvider(context), GetConverter(context), strictValidation,
-                        validateOnTargetUpdated));
+                        validateOnTargetUpdated, nullValueValidation));
                 case Must.NotBeEqualTo:
                     return new ValidatorProvider((context, pipe) => new NotEqualsValidator(pipe,
                         argumentProvider(context),
                         errorProvider(context), isEnforcedProvider(context), GetConverter(context), strictValidation,
-                        validateOnTargetUpdated));
+                        validateOnTargetUpdated, nullValueValidation));
                 case Must.BeGreaterThan:
                     return new ValidatorProvider((context, pipe) => new GreaterThanValidator(pipe,
                         argumentProvider(context),
                         errorProvider(context), isEnforcedProvider(context), GetConverter(context), strictValidation,
-                        validateOnTargetUpdated));
+                        validateOnTargetUpdated, nullValueValidation));
                 case Must.BeGreaterThanOrEqualTo:
                     return new ValidatorProvider((context, pipe) => new GreaterThanEqualValidator(pipe,
                         argumentProvider(context),
                         errorProvider(context), isEnforcedProvider(context), GetConverter(context), strictValidation,
-                        validateOnTargetUpdated));
+                        validateOnTargetUpdated, nullValueValidation));
                 case Must.BeLessThan:
                     return new ValidatorProvider((context, pipe) => new LessThanValidator(pipe,
                         argumentProvider(context),
                         errorProvider(context), isEnforcedProvider(context), GetConverter(context), strictValidation,
-                        validateOnTargetUpdated));
+                        validateOnTargetUpdated, nullValueValidation));
                 case Must.BeLessThanOrEqualTo:
                     return new ValidatorProvider((context, pipe) => new LessThanEqualValidator(pipe,
                         argumentProvider(context),
                         errorProvider(context), isEnforcedProvider(context), GetConverter(context), strictValidation,
-                        validateOnTargetUpdated));
+                        validateOnTargetUpdated, nullValueValidation));
                 case Must.BeEmpty:
                     return new ValidatorProvider((context, pipe) => new EmptyValidator(pipe, errorProvider(context),
                         isEnforcedProvider(context), GetConverter(context), strictValidation,
@@ -344,22 +339,22 @@ namespace Forge.Forms.FormBuilding.Defaults.Initializers
                     return new ValidatorProvider((context, pipe) => new ExistsInValidator(pipe,
                         argumentProvider(context),
                         errorProvider(context), isEnforcedProvider(context), GetConverter(context), strictValidation,
-                        validateOnTargetUpdated));
+                        validateOnTargetUpdated, nullValueValidation));
                 case Must.NotExistIn:
                     return new ValidatorProvider((context, pipe) => new NotExistsInValidator(pipe,
                         argumentProvider(context),
                         errorProvider(context), isEnforcedProvider(context), GetConverter(context), strictValidation,
-                        validateOnTargetUpdated));
+                        validateOnTargetUpdated, nullValueValidation));
                 case Must.MatchPattern:
                     return new ValidatorProvider((context, pipe) => new MatchPatternValidator(pipe,
                         argumentProvider(context),
                         errorProvider(context), isEnforcedProvider(context), GetConverter(context), strictValidation,
-                        validateOnTargetUpdated));
+                        validateOnTargetUpdated, nullValueValidation));
                 case Must.NotMatchPattern:
                     return new ValidatorProvider((context, pipe) => new NotMatchPatternValidator(pipe,
                         argumentProvider(context),
                         errorProvider(context), isEnforcedProvider(context), GetConverter(context), strictValidation,
-                        validateOnTargetUpdated));
+                        validateOnTargetUpdated, nullValueValidation));
                 case Must.SatisfyContextMethod:
                     var methodName = GetMethodName(attribute.Argument, propertyKey);
                     var propertyName = propertyKey;
@@ -504,6 +499,78 @@ namespace Forge.Forms.FormBuilding.Defaults.Initializers
             {
                 return null;
             }
+        }
+    }
+
+    /// <summary>
+    /// make a simple class to provide binding-enfoce indicator
+    /// So we don't need to rely on modeltype to determine whether references should be released. 
+    /// this means that the expandoObject type model can also use these feature correctly.
+    /// </summary>
+
+    internal class BindingEnforcedProvider
+    {
+        private ValidationAction onActivation;
+        private ValidationAction onDeactivation;
+        private BoundExpression boundExpression;
+        private string propertyKey;
+        public BindingEnforcedProvider(string propertyKey, BoundExpression expr, ValidationAction onActivation, ValidationAction onDeactivation)
+        {
+            this.propertyKey = propertyKey;
+            this.onActivation = onActivation;
+            this.onDeactivation = onDeactivation;
+            this.boundExpression = expr;
+        }
+
+        public IBoolProxy ProvideValue(IResourceContext context)
+        {
+            var value = boundExpression.GetBoolValue(context);
+            var notifyActivation = onActivation == ValidationAction.ClearErrors || onActivation == ValidationAction.ValidateField;
+            var notifyDeactivation = onDeactivation == ValidationAction.ClearErrors || onDeactivation == ValidationAction.ValidateField;
+            if (notifyActivation || notifyDeactivation)
+            {
+                value.ValueChanged = () =>
+                {
+                    object model;
+                    try
+                    {
+                        model = context.GetModelInstance();
+                    }
+                    catch
+                    {
+                        // Something went wrong so it's best to 
+                        // disable the feature entirely.
+                        value.ValueChanged = null;
+                        return;
+                    }
+
+                    if (value.Value)
+                    {
+                        // Activated.
+                        if (onActivation == ValidationAction.ValidateField)
+                        {
+                            ModelState.Validate(model, propertyKey);
+                        }
+                        else if (onActivation == ValidationAction.ClearErrors)
+                        {
+                            ModelState.ClearValidationErrors(model, propertyKey);
+                        }
+                    }
+                    else
+                    {
+                        // Deactivated.
+                        if (onDeactivation == ValidationAction.ValidateField)
+                        {
+                            ModelState.Validate(model, propertyKey);
+                        }
+                        else if (onDeactivation == ValidationAction.ClearErrors)
+                        {
+                            ModelState.ClearValidationErrors(model, propertyKey);
+                        }
+                    }
+                };
+            }
+            return value;
         }
     }
 }
