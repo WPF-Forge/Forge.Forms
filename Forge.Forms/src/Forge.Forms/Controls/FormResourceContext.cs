@@ -26,6 +26,8 @@ namespace Forge.Forms.Controls
 
         public IEnvironment Environment => Form.Environment;
 
+        public IReadOnlyFormDefinition ModelDefinition => Form?.FormDefinition;
+
         public object GetModelInstance()
         {
             return Form.Value;

@@ -29,13 +29,14 @@ namespace Forge.Forms.FormBuilding.Defaults.Initializers
             var modelType = property.DeclaringType;
             foreach (var attr in attributes)
             {
-                dataField.Validators.Add(CreateValidator(modelType, dataField.Key, attr, deserializer));
+                dataField.Validators.Add(CreateValidator(property, dataField.Key, attr, deserializer));
             }
         }
 
-        private static IValidatorProvider CreateValidator(Type modelType, string propertyKey, ValueAttribute attribute,
+        private static IValidatorProvider CreateValidator(IFormProperty property, string propertyKey, ValueAttribute attribute,
             Func<string, object> deserializer)
         {
+            var modelType = property.DeclaringType;
             Func<IResourceContext, IProxy> argumentProvider;
             var argument = attribute.Argument;
             if (argument is string expression)
@@ -65,9 +66,11 @@ namespace Forge.Forms.FormBuilding.Defaults.Initializers
                             value.ValueChanged = () =>
                             {
                                 object model;
+                                IReadOnlyFormDefinition formDefinition;
                                 try
                                 {
                                     model = context.GetModelInstance();
+                                    formDefinition = context.ModelDefinition;
                                 }
                                 catch
                                 {
@@ -76,9 +79,10 @@ namespace Forge.Forms.FormBuilding.Defaults.Initializers
                                     value.ValueChanged = null;
                                     return;
                                 }
-
-                                //delete old logic (if model is ExpandoObject then do nothing)
-                                if (model == null || model.GetType() != modelType)
+                                //delete old logic (if model is ExpandoObject then do nothing) 
+                                //because we have a better way to determine if the model has changed.
+                                //This allows dynamic models to use these features correctly.
+                                if (model == null || formDefinition == null || !Equals(formDefinition, property.DeclaringForm))
                                 {
                                     // Self dispose when form indicates model change.
                                     value.ValueChanged = null;
@@ -132,7 +136,6 @@ namespace Forge.Forms.FormBuilding.Defaults.Initializers
                         throw new ArgumentException(
                             "The provided value must be a bound resource or a literal bool value.", nameof(attribute));
                     }
-
                     var onActivation = attribute.OnActivation;
                     var onDeactivation = attribute.OnDeactivation;
 
@@ -146,9 +149,11 @@ namespace Forge.Forms.FormBuilding.Defaults.Initializers
                             value.ValueChanged = () =>
                             {
                                 object model;
+                                IReadOnlyFormDefinition formDefinition;
                                 try
                                 {
                                     model = context.GetModelInstance();
+                                    formDefinition = context.ModelDefinition;
                                 }
                                 catch
                                 {
@@ -157,9 +162,10 @@ namespace Forge.Forms.FormBuilding.Defaults.Initializers
                                     value.ValueChanged = null;
                                     return;
                                 }
-
-                                //delete old logic (if model is ExpandoObject then do nothing)
-                                if (model == null || model.GetType() != modelType)
+                                //delete old logic (if model is ExpandoObject then do nothing) 
+                                //because we have a better way to determine if the model has changed.
+                                //This allows dynamic models to use these features correctly.
+                                if (model == null || formDefinition == null || !Equals(formDefinition,property.DeclaringForm))
                                 {
                                     // Self dispose when form indicates model change.
                                     value.ValueChanged = null;
@@ -499,78 +505,6 @@ namespace Forge.Forms.FormBuilding.Defaults.Initializers
             {
                 return null;
             }
-        }
-    }
-
-    /// <summary>
-    /// make a simple class to provide binding-enfoce indicator
-    /// So we don't need to rely on modeltype to determine whether references should be released. 
-    /// this means that the expandoObject type model can also use these feature correctly.
-    /// </summary>
-
-    internal class BindingEnforcedProvider
-    {
-        private ValidationAction onActivation;
-        private ValidationAction onDeactivation;
-        private BoundExpression boundExpression;
-        private string propertyKey;
-        public BindingEnforcedProvider(string propertyKey, BoundExpression expr, ValidationAction onActivation, ValidationAction onDeactivation)
-        {
-            this.propertyKey = propertyKey;
-            this.onActivation = onActivation;
-            this.onDeactivation = onDeactivation;
-            this.boundExpression = expr;
-        }
-
-        public IBoolProxy ProvideValue(IResourceContext context)
-        {
-            var value = boundExpression.GetBoolValue(context);
-            var notifyActivation = onActivation == ValidationAction.ClearErrors || onActivation == ValidationAction.ValidateField;
-            var notifyDeactivation = onDeactivation == ValidationAction.ClearErrors || onDeactivation == ValidationAction.ValidateField;
-            if (notifyActivation || notifyDeactivation)
-            {
-                value.ValueChanged = () =>
-                {
-                    object model;
-                    try
-                    {
-                        model = context.GetModelInstance();
-                    }
-                    catch
-                    {
-                        // Something went wrong so it's best to 
-                        // disable the feature entirely.
-                        value.ValueChanged = null;
-                        return;
-                    }
-
-                    if (value.Value)
-                    {
-                        // Activated.
-                        if (onActivation == ValidationAction.ValidateField)
-                        {
-                            ModelState.Validate(model, propertyKey);
-                        }
-                        else if (onActivation == ValidationAction.ClearErrors)
-                        {
-                            ModelState.ClearValidationErrors(model, propertyKey);
-                        }
-                    }
-                    else
-                    {
-                        // Deactivated.
-                        if (onDeactivation == ValidationAction.ValidateField)
-                        {
-                            ModelState.Validate(model, propertyKey);
-                        }
-                        else if (onDeactivation == ValidationAction.ClearErrors)
-                        {
-                            ModelState.ClearValidationErrors(model, propertyKey);
-                        }
-                    }
-                };
-            }
-            return value;
         }
     }
 }

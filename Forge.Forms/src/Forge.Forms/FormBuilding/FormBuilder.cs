@@ -320,6 +320,8 @@ namespace Forge.Forms.FormBuilding
                 throw new InvalidOperationException("Invalid XML document.");
             }
 
+            var form = new FormDefinition(null); // null indicates dynamic type
+
             void AddMetadata(IDictionary<string, string> dict, XElement xelement)
             {
                 const int stroffset = 5; // "meta-".Length
@@ -387,7 +389,7 @@ namespace Forge.Forms.FormBuilding
                         }
 
                         attributes.AddRange(Utilities.GetValidatorsFromElement(element));
-                        var property = new DynamicProperty(fieldName, propertyType, attributes.ToArray());
+                        var property = new DynamicProperty(fieldName, propertyType, attributes.ToArray(), form);
                         var deserializer = TryGetDeserializer(propertyType);
                         formElement = Build(property, deserializer);
                         if (formElement != null)
@@ -399,7 +401,7 @@ namespace Forge.Forms.FormBuilding
 
                             formElement.LinePosition = (Position)(-1);
                         }
-
+                        form.FormProperties.Add(property);
                         return new FormElementLayout(WithMetadata(formElement, element));
                     }
                     case "select":
@@ -477,7 +479,7 @@ namespace Forge.Forms.FormBuilding
                         };
 
                         attributes.AddRange(Utilities.GetValidatorsFromElement(element));
-                        var property = new DynamicProperty(fieldName, propertyType, attributes.ToArray());
+                        var property = new DynamicProperty(fieldName, propertyType, attributes.ToArray(),form);
                         var deserializer = TryGetDeserializer(propertyType);
                         formElement = Build(property, deserializer);
                         if (formElement != null)
@@ -489,7 +491,7 @@ namespace Forge.Forms.FormBuilding
 
                             formElement.LinePosition = (Position)(-1);
                         }
-
+                        form.FormProperties.Add(property);
                         return new FormElementLayout(WithMetadata(formElement, element));
                     }
 
@@ -627,12 +629,13 @@ namespace Forge.Forms.FormBuilding
                     Utilities.TryParse(element.TryGetAttribute("align"), HorizontalAlignment.Stretch));
             }
 
-            var form = new FormDefinition(null); // null indicates dynamic type
+            
             AddMetadata(form.Metadata, document.Root);
             form.FormRows.Add(new FormRow(true, 1)
             {
                 Elements = { new FormElementContainer(0, 1, Layout(document.Root)) }
             });
+
 
             if (freeze)
             {
@@ -722,7 +725,7 @@ namespace Forge.Forms.FormBuilding
             // Pass one - get list of valid properties.
             var properties = Utilities
                 .GetProperties(type, mode)
-                .Select(p => new PropertyInfoWrapper(p))
+                .Select(p => new PropertyInfoWrapper(p, formDefinition))
                 .ToArray();
 
             // Pass two - build form elements.
@@ -755,7 +758,7 @@ namespace Forge.Forms.FormBuilding
                     wrapper.Column = attr.Column;
                     wrapper.ColumnSpan = attr.ColumnSpan;
                 }
-
+                formDefinition.FormProperties.Add(property);
                 elements.Add(wrapper);
             }
 

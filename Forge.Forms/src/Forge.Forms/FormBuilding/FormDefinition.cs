@@ -8,27 +8,38 @@ namespace Forge.Forms.FormBuilding
     public class FormDefinition : IFormDefinition
     {
         private bool frozen;
+        private readonly Dictionary<string, IValueProvider> resources;
+        private readonly Dictionary<string, string> metadata;
 
         public FormDefinition(Type modelType)
         {
             ModelType = modelType;
-            Resources = new Dictionary<string, IValueProvider>();
-            Metadata = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            resources = new Dictionary<string, IValueProvider>();
+            metadata = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
             Grid = new[] { 1d };
             FormRows = new List<FormRow>();
+            FormProperties = new List<IFormProperty>();
         }
 
         public List<FormRow> FormRows { get; set; }
 
         public Type ModelType { get; }
 
-        public IDictionary<string, string> Metadata { get; }
-
-        public IDictionary<string, IValueProvider> Resources { get; set; }
+        public IDictionary<string, string> Metadata => metadata;
+        public IDictionary<string, IValueProvider> Resources => resources;
 
         public double[] Grid { get; set; }
 
         IReadOnlyList<FormRow> IFormDefinition.FormRows => FormRows;
+
+        internal List<IFormProperty> FormProperties { get; }
+        
+
+        IReadOnlyCollection<IFormProperty> IReadOnlyFormDefinition.FormProperties => FormProperties;
+
+        IReadOnlyDictionary<string, IValueProvider> IReadOnlyFormDefinition.Resources => resources;
+
+        IReadOnlyDictionary<string, string> IReadOnlyFormDefinition.Metadata => metadata;
 
         public object CreateInstance(IResourceContext context)
         {

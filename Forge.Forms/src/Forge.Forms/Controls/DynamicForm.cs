@@ -151,6 +151,8 @@ namespace Forge.Forms.Controls
             set => SetValue(ModelProperty, value);
         }
 
+        public IReadOnlyFormDefinition FormDefinition => currentDefinition;
+
         /// <summary>
         /// Gets the value of the current model instance.
         /// </summary>

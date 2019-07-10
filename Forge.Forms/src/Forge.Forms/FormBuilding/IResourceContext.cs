@@ -14,6 +14,11 @@ namespace Forge.Forms.FormBuilding
         IEnvironment Environment { get; }
 
         /// <summary>
+        /// Gets the <see cref="FormDefinition"> for current model
+        /// </summary>
+        IReadOnlyFormDefinition ModelDefinition { get; }
+
+        /// <summary>
         /// Gets current model instance.
         /// </summary>
         object GetModelInstance();

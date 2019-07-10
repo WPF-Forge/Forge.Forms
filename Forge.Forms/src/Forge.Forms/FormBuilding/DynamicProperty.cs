@@ -7,12 +7,13 @@ namespace Forge.Forms.FormBuilding
     public class DynamicProperty : IFormProperty
     {
         private readonly Attribute[] attributes;
-
-        public DynamicProperty(string name, Type propertyType, Attribute[] attributes)
+        private readonly IFormDefinition formDefinition;
+        public DynamicProperty(string name, Type propertyType, Attribute[] attributes, IFormDefinition formDefinition)
         {
             this.attributes = attributes;
             Name = name;
             PropertyType = propertyType;
+            this.formDefinition = formDefinition;
         }
 
         public string Name { get; }
@@ -20,6 +21,8 @@ namespace Forge.Forms.FormBuilding
         public Type PropertyType { get; }
 
         public Type DeclaringType => null;
+
+        public IReadOnlyFormDefinition DeclaringForm => formDefinition;
 
         public bool CanWrite => true;
 

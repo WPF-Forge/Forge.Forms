@@ -5,14 +5,26 @@ using Forge.Forms.DynamicExpressions;
 
 namespace Forge.Forms.FormBuilding
 {
-    public interface IFormDefinition
+    /// <summary>
+    /// Define a read-only interface so that we can still
+    /// access it in read-only mode after it is built
+    /// </summary>
+    public interface IReadOnlyFormDefinition
+    {
+        IReadOnlyDictionary<string, IValueProvider> Resources { get; }
+
+        IReadOnlyDictionary<string, string> Metadata { get; }
+
+        IReadOnlyCollection<IFormProperty> FormProperties { get; }
+
+        Type ModelType { get; }
+    }
+    public interface IFormDefinition: IReadOnlyFormDefinition
     {
         IReadOnlyList<FormRow> FormRows { get; }
 
         double[] Grid { get; }
-
-        Type ModelType { get; }
-
+        
         IDictionary<string, IValueProvider> Resources { get; }
 
         IDictionary<string, string> Metadata { get; }

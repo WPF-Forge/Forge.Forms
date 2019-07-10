@@ -7,10 +7,11 @@ namespace Forge.Forms.FormBuilding
     internal class PropertyInfoWrapper : IFormProperty
     {
         private readonly PropertyInfo property;
-
-        public PropertyInfoWrapper(PropertyInfo property)
+        private readonly IFormDefinition formDefinition;
+        public PropertyInfoWrapper(PropertyInfo property,IFormDefinition formDefinition)
         {
             this.property = property;
+            this.formDefinition = formDefinition;
         }
 
         public string Name => property.Name;
@@ -18,6 +19,7 @@ namespace Forge.Forms.FormBuilding
         public Type PropertyType => property.PropertyType;
 
         public Type DeclaringType => property.DeclaringType;
+        public IReadOnlyFormDefinition DeclaringForm => formDefinition;
 
         public bool CanWrite => property.CanWrite && property.GetSetMethod(true).IsPublic;
 

@@ -11,6 +11,8 @@ namespace Forge.Forms.FormBuilding
 
         Type DeclaringType { get; }
 
+        IReadOnlyFormDefinition DeclaringForm { get; }
+
         bool CanWrite { get; }
 
         T GetCustomAttribute<T>() where T : Attribute;
