@@ -66,6 +66,8 @@ namespace Forge.Forms.Tests
 
         public IEnvironment Environment => throw new NotImplementedException();
 
+        public IReadOnlyFormDefinition ModelDefinition =>null;
+
         public object GetModelInstance()
         {
             return form.Value;
