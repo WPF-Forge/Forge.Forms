@@ -150,16 +150,24 @@ namespace Forge.Forms.FormBuilding
     internal class Layout : ILayout
     {
         public Layout(IEnumerable<ILayout> children)
-            : this(children, new Thickness(), VerticalAlignment.Stretch, HorizontalAlignment.Stretch)
+            : this(children, new Thickness(), VerticalAlignment.Stretch, HorizontalAlignment.Stretch, null, null)
         {
         }
 
-        public Layout(IEnumerable<ILayout> children, Thickness margin, VerticalAlignment verticalAlignment, HorizontalAlignment horizontalAlignment)
+        public Layout(
+            IEnumerable<ILayout> children,
+            Thickness margin,
+            VerticalAlignment verticalAlignment,
+            HorizontalAlignment horizontalAlignment,
+            double? minHeight,
+            double? maxHeight)
         {
             Children = children?.ToList() ?? new List<ILayout>(0);
             Margin = margin;
             VerticalAlignment = verticalAlignment;
             HorizontalAlignment = horizontalAlignment;
+            MinHeight = minHeight;
+            MaxHeight = maxHeight;
         }
 
         public List<ILayout> Children { get; }
@@ -170,23 +178,41 @@ namespace Forge.Forms.FormBuilding
 
         public HorizontalAlignment HorizontalAlignment { get; }
 
+        public double? MinHeight { get; }
+
+        public double? MaxHeight { get; }
+
         public IEnumerable<FormElement> GetElements() => Children.SelectMany(c => c.GetElements());
 
         public FrameworkElement Build(Func<FormElement, FrameworkElement> elementBuilder)
         {
-            var panel = new StackPanel
-            {
-                Margin = Margin,
-                VerticalAlignment = VerticalAlignment,
-                HorizontalAlignment = HorizontalAlignment
-            };
-
+            var stackPanel = new StackPanel();
             foreach (var child in Children)
             {
-                panel.Children.Add(child.Build(elementBuilder));
+                stackPanel.Children.Add(child.Build(elementBuilder));
             }
 
-            return panel;
+            var scrollViewer = new ScrollViewer
+            {
+                Content = stackPanel,
+                Margin = Margin,
+                VerticalAlignment = VerticalAlignment,
+                HorizontalAlignment = HorizontalAlignment,
+                HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled,
+                VerticalScrollBarVisibility = ScrollBarVisibility.Auto
+            };
+
+            if (MinHeight != null)
+            {
+                scrollViewer.MinHeight = MinHeight.Value;
+            }
+
+            if (MaxHeight != null)
+            {
+                scrollViewer.MaxHeight = MaxHeight.Value;
+            }
+
+            return scrollViewer;
         }
     }
 

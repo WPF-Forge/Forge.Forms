@@ -1,6 +1,10 @@
 # Changelog
 
-## 1.1.0 [WIP]
+## 1.1.1
+
+- Added `minheight` and `maxheight` to xml `<layout>` element. If content overflows `maxheight` a vertical scroll bar appears.
+
+## 1.1.0
 
 - `Prompt<T>` now validates input on positive action.
 - Metro dialog window no longer forces controls theme.

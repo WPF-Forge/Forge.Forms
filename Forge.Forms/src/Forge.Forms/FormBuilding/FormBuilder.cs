@@ -624,7 +624,9 @@ namespace Forge.Forms.FormBuilding
                     element.Elements().Select(Row),
                     Utilities.ParseThickness(element.TryGetAttribute("margin")),
                     Utilities.TryParse(element.TryGetAttribute("valign"), VerticalAlignment.Stretch),
-                    Utilities.TryParse(element.TryGetAttribute("align"), HorizontalAlignment.Stretch));
+                    Utilities.TryParse(element.TryGetAttribute("align"), HorizontalAlignment.Stretch),
+                    Utilities.ParseNullableDouble(element.TryGetAttribute("minHeight")),
+                    Utilities.ParseNullableDouble(element.TryGetAttribute("maxHeight")));
             }
 
             var form = new FormDefinition(null); // null indicates dynamic type

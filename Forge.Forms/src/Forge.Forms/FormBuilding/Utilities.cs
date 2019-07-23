@@ -536,6 +536,16 @@ namespace Forge.Forms.FormBuilding
             return ParseDouble(value, 0d);
         }
 
+        public static double? ParseNullableDouble(string value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                return null;
+            }
+
+            return double.Parse(value, CultureInfo.InvariantCulture);
+        }
+
         public static double ParseDouble(string value, double defaultValue)
         {
             if (string.IsNullOrWhiteSpace(value))
