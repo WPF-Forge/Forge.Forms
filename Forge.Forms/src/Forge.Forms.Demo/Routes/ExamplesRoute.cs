@@ -122,6 +122,8 @@ namespace Forge.Forms.Demo.Routes
 
             yield return new ExamplePresenter(new Selection(), "Selection", large);
 
+            yield return new ExamplePresenter(new SelectionMemberPaths(), "Selection Member Paths", large);
+
             yield return new ExamplePresenter(new FoodSelection(), "Food Selection", large);
 
             yield return new ExamplePresenter(new Dialogs(), "Dialogs", large);

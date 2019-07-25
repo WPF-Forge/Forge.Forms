@@ -67,6 +67,7 @@
     <Compile Include="Introduction.cs" />
     <Compile Include="Infrastructure\ExamplePresenter.cs" />
     <Compile Include="Models\InlineElements.cs" />
+    <Compile Include="Models\SelectionMemberPaths.cs" />
     <Compile Include="Models\TextElements.cs" />
     <Compile Include="Models\TextFields.cs" />
     <Compile Include="Models\Selection.cs" />
