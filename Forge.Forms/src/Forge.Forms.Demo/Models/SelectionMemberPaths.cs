@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using Forge.Forms.Annotations;
 
@@ -18,6 +19,21 @@ namespace Forge.Forms.Demo.Models
         public override string ToString() => $"{FirstName} {LastName} (ToString())";
     }
 
+    public class UserWrapper
+    {
+        public UserWrapper(SelectionUser value)
+        {
+            Value = value;
+        }
+
+        public SelectionUser Value { get; set; }
+
+        public override string ToString()
+        {
+            return $"[{Value.Id}] {Value.FirstName} {Value.LastName}";
+        }
+    }
+
     public class SelectionMemberPaths
     {
         public List<SelectionUser> Users { get; } = new List<SelectionUser>
@@ -27,6 +43,8 @@ namespace Forge.Forms.Demo.Models
             new SelectionUser { Id = 3, FirstName = "First3", LastName = "Last3" },
             new SelectionUser { Id = 4, FirstName = "First4", LastName = "Last4" }
         };
+
+        public List<UserWrapper> WrappedUsers => Users.Select(user => new UserWrapper(user)).ToList();
 
         public string UserDisplayProperty => "FirstName";
 
@@ -44,5 +62,8 @@ namespace Forge.Forms.Demo.Models
 
         [SelectFrom("{Binding Users}", ValuePath = "Id")]
         public int WithValuePath { get; set; }
+
+        [SelectFrom("{Binding WrappedUsers}", ValuePath = "Value")]
+        public SelectionUser WithWrapper { get; set; }
     }
 }
