@@ -285,81 +285,82 @@ namespace Forge.Forms.FormBuilding.Defaults.Initializers
 
             var strictValidation = attribute.StrictValidation;
             var validateOnTargetUpdated = attribute.ValidatesOnTargetUpdated;
+            var ignoreNullOrEmpty = attribute.IgnoreNullOrEmpty;
             switch (attribute.Condition)
             {
                 case Must.BeEqualTo:
                     return new ValidatorProvider((context, pipe) => new EqualsValidator(pipe, argumentProvider(context),
                         errorProvider(context), isEnforcedProvider(context), GetConverter(context), strictValidation,
-                        validateOnTargetUpdated));
+                        validateOnTargetUpdated, ignoreNullOrEmpty));
                 case Must.NotBeEqualTo:
                     return new ValidatorProvider((context, pipe) => new NotEqualsValidator(pipe,
                         argumentProvider(context),
                         errorProvider(context), isEnforcedProvider(context), GetConverter(context), strictValidation,
-                        validateOnTargetUpdated));
+                        validateOnTargetUpdated, ignoreNullOrEmpty));
                 case Must.BeGreaterThan:
                     return new ValidatorProvider((context, pipe) => new GreaterThanValidator(pipe,
                         argumentProvider(context),
                         errorProvider(context), isEnforcedProvider(context), GetConverter(context), strictValidation,
-                        validateOnTargetUpdated));
+                        validateOnTargetUpdated, ignoreNullOrEmpty));
                 case Must.BeGreaterThanOrEqualTo:
                     return new ValidatorProvider((context, pipe) => new GreaterThanEqualValidator(pipe,
                         argumentProvider(context),
                         errorProvider(context), isEnforcedProvider(context), GetConverter(context), strictValidation,
-                        validateOnTargetUpdated));
+                        validateOnTargetUpdated, ignoreNullOrEmpty));
                 case Must.BeLessThan:
                     return new ValidatorProvider((context, pipe) => new LessThanValidator(pipe,
                         argumentProvider(context),
                         errorProvider(context), isEnforcedProvider(context), GetConverter(context), strictValidation,
-                        validateOnTargetUpdated));
+                        validateOnTargetUpdated, ignoreNullOrEmpty));
                 case Must.BeLessThanOrEqualTo:
                     return new ValidatorProvider((context, pipe) => new LessThanEqualValidator(pipe,
                         argumentProvider(context),
                         errorProvider(context), isEnforcedProvider(context), GetConverter(context), strictValidation,
-                        validateOnTargetUpdated));
+                        validateOnTargetUpdated, ignoreNullOrEmpty));
                 case Must.BeEmpty:
                     return new ValidatorProvider((context, pipe) => new EmptyValidator(pipe, errorProvider(context),
                         isEnforcedProvider(context), GetConverter(context), strictValidation,
-                        validateOnTargetUpdated));
+                        validateOnTargetUpdated, ignoreNullOrEmpty));
                 case Must.NotBeEmpty:
                     return new ValidatorProvider((context, pipe) => new NotEmptyValidator(pipe, errorProvider(context),
                         isEnforcedProvider(context), GetConverter(context), strictValidation,
-                        validateOnTargetUpdated));
+                        validateOnTargetUpdated, ignoreNullOrEmpty));
                 case Must.BeTrue:
                     return new ValidatorProvider((context, pipe) => new TrueValidator(pipe, errorProvider(context),
                         isEnforcedProvider(context), GetConverter(context), strictValidation,
-                        validateOnTargetUpdated));
+                        validateOnTargetUpdated, ignoreNullOrEmpty));
                 case Must.BeFalse:
                     return new ValidatorProvider((context, pipe) => new FalseValidator(pipe, errorProvider(context),
                         isEnforcedProvider(context), GetConverter(context), strictValidation,
-                        validateOnTargetUpdated));
+                        validateOnTargetUpdated, ignoreNullOrEmpty));
                 case Must.BeNull:
                     return new ValidatorProvider((context, pipe) => new NullValidator(pipe, errorProvider(context),
                         isEnforcedProvider(context), GetConverter(context), strictValidation,
-                        validateOnTargetUpdated));
+                        validateOnTargetUpdated, ignoreNullOrEmpty));
                 case Must.NotBeNull:
                     return new ValidatorProvider((context, pipe) => new NotNullValidator(pipe, errorProvider(context),
                         isEnforcedProvider(context), GetConverter(context), strictValidation,
-                        validateOnTargetUpdated));
+                        validateOnTargetUpdated, ignoreNullOrEmpty));
                 case Must.ExistIn:
                     return new ValidatorProvider((context, pipe) => new ExistsInValidator(pipe,
                         argumentProvider(context),
                         errorProvider(context), isEnforcedProvider(context), GetConverter(context), strictValidation,
-                        validateOnTargetUpdated));
+                        validateOnTargetUpdated, ignoreNullOrEmpty));
                 case Must.NotExistIn:
                     return new ValidatorProvider((context, pipe) => new NotExistsInValidator(pipe,
                         argumentProvider(context),
                         errorProvider(context), isEnforcedProvider(context), GetConverter(context), strictValidation,
-                        validateOnTargetUpdated));
+                        validateOnTargetUpdated, ignoreNullOrEmpty));
                 case Must.MatchPattern:
                     return new ValidatorProvider((context, pipe) => new MatchPatternValidator(pipe,
                         argumentProvider(context),
                         errorProvider(context), isEnforcedProvider(context), GetConverter(context), strictValidation,
-                        validateOnTargetUpdated));
+                        validateOnTargetUpdated, ignoreNullOrEmpty));
                 case Must.NotMatchPattern:
                     return new ValidatorProvider((context, pipe) => new NotMatchPatternValidator(pipe,
                         argumentProvider(context),
                         errorProvider(context), isEnforcedProvider(context), GetConverter(context), strictValidation,
-                        validateOnTargetUpdated));
+                        validateOnTargetUpdated, ignoreNullOrEmpty));
                 case Must.SatisfyContextMethod:
                     var methodName = GetMethodName(attribute.Argument, propertyKey);
                     var propertyName = propertyKey;
@@ -367,8 +368,7 @@ namespace Forge.Forms.FormBuilding.Defaults.Initializers
                         (context, pipe) => new MethodInvocationValidator(pipe,
                             GetContextMethodValidator(propertyName, methodName, context),
                             errorProvider(context), isEnforcedProvider(context), GetConverter(context),
-                            strictValidation,
-                            validateOnTargetUpdated));
+                            strictValidation, validateOnTargetUpdated, ignoreNullOrEmpty));
                 case Must.SatisfyMethod:
                     var type = modelType;
                     methodName = GetMethodName(attribute.Argument, propertyKey);
@@ -377,12 +377,11 @@ namespace Forge.Forms.FormBuilding.Defaults.Initializers
                         (context, pipe) => new MethodInvocationValidator(pipe,
                             GetModelMethodValidator(type, propertyName, methodName, context),
                             errorProvider(context), isEnforcedProvider(context), GetConverter(context),
-                            strictValidation,
-                            validateOnTargetUpdated));
+                            strictValidation, validateOnTargetUpdated, ignoreNullOrEmpty));
                 case Must.BeInvalid:
                     return new ValidatorProvider((context, pipe) => new EnforcedValidator(pipe, errorProvider(context),
                         isEnforcedProvider(context), GetConverter(context), strictValidation,
-                        validateOnTargetUpdated));
+                        validateOnTargetUpdated, ignoreNullOrEmpty));
                 default:
                     throw new ArgumentException($"Invalid validator condition for property {propertyKey}.",
                         nameof(attribute));

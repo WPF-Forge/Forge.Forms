@@ -7,8 +7,14 @@ namespace Forge.Forms.Validation
 {
     public abstract class FieldValidator : ValidationRule
     {
-        protected FieldValidator(ValidationPipe pipe, IErrorStringProvider errorProvider, IBoolProxy isEnforced,
-            IValueConverter valueConverter, bool strictValidation, bool validatesOnTargetUpdated)
+        protected FieldValidator(
+            ValidationPipe pipe,
+            IErrorStringProvider errorProvider,
+            IBoolProxy isEnforced,
+            IValueConverter valueConverter,
+            bool strictValidation,
+            bool validatesOnTargetUpdated,
+            bool ignoreNullOrEmpty)
             : base(ValidationStep.ConvertedProposedValue, validatesOnTargetUpdated)
         {
             ValidationPipe = pipe;
@@ -16,6 +22,7 @@ namespace Forge.Forms.Validation
             ValueConverter = valueConverter;
             IsEnforced = isEnforced;
             StrictValidation = strictValidation;
+            IgnoreNullOrEmpty = ignoreNullOrEmpty;
         }
 
         public IValueConverter ValueConverter { get; }
@@ -28,12 +35,20 @@ namespace Forge.Forms.Validation
 
         public bool StrictValidation { get; }
 
+        public bool IgnoreNullOrEmpty { get; }
+
         public sealed override ValidationResult Validate(object value, CultureInfo cultureInfo)
         {
             if (ValidationPipe != null)
             {
                 // Pass if another validator has already reported an error.
                 if (ValidationPipe.Error != null)
+                {
+                    return ValidationResult.ValidResult;
+                }
+
+                // Optionally ignore null/empty values.
+                if (IgnoreNullOrEmpty && value == null || value is "")
                 {
                     return ValidationResult.ValidResult;
                 }
@@ -66,6 +81,12 @@ namespace Forge.Forms.Validation
             }
             else
             {
+                // Optionally ignore null/empty values.
+                if (IgnoreNullOrEmpty && value == null || value is "")
+                {
+                    return ValidationResult.ValidResult;
+                }
+
                 if (!IsEnforced.Value)
                 {
                     return ValidationResult.ValidResult;

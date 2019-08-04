@@ -98,6 +98,12 @@ namespace Forge.Forms.Annotations
         public bool StrictValidation { get; set; }
 
         /// <summary>
+        /// If set to true, null or empty srings will be ignored
+        /// and validation will pass for this rule.
+        /// </summary>
+        public bool IgnoreNullOrEmpty { get; set; }
+
+        /// <summary>
         /// Determines whether property changes cause validation.
         /// </summary>
         public bool ValidatesOnTargetUpdated { get; set; }

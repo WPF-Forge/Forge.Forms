@@ -8,9 +8,22 @@ namespace Forge.Forms.Validation
 {
     public class NotEmptyValidator : FieldValidator
     {
-        public NotEmptyValidator(ValidationPipe pipe, IErrorStringProvider errorProvider, IBoolProxy isEnforced,
-            IValueConverter valueConverter, bool strictValidation, bool validatesOnTargetUpdated)
-            : base(pipe, errorProvider, isEnforced, valueConverter, strictValidation, validatesOnTargetUpdated)
+        public NotEmptyValidator(
+            ValidationPipe pipe,
+            IErrorStringProvider errorProvider,
+            IBoolProxy isEnforced,
+            IValueConverter valueConverter,
+            bool strictValidation,
+            bool validatesOnTargetUpdated,
+            bool ignoreNullOrEmpty)
+            : base(
+                pipe,
+                errorProvider,
+                isEnforced,
+                valueConverter,
+                strictValidation,
+                validatesOnTargetUpdated,
+                ignoreNullOrEmpty)
         {
         }
 

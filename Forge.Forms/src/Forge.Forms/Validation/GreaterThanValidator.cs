@@ -7,11 +7,24 @@ namespace Forge.Forms.Validation
 {
     public class GreaterThanValidator : ComparisonValidator
     {
-        public GreaterThanValidator(ValidationPipe pipe, IProxy argument, IErrorStringProvider errorProvider,
+        public GreaterThanValidator(
+            ValidationPipe pipe, 
+            IProxy argument, 
+            IErrorStringProvider errorProvider,
             IBoolProxy isEnforced,
-            IValueConverter valueConverter, bool strictValidation, bool validatesOnTargetUpdated)
-            : base(pipe, argument, errorProvider, isEnforced, valueConverter, strictValidation,
-                validatesOnTargetUpdated)
+            IValueConverter valueConverter,
+            bool strictValidation, 
+            bool validatesOnTargetUpdated,
+            bool ignoreNullOrEmpty)
+            : base(
+                pipe, 
+                argument,
+                errorProvider,
+                isEnforced,
+                valueConverter, 
+                strictValidation,
+                validatesOnTargetUpdated,
+                ignoreNullOrEmpty)
         {
         }
 

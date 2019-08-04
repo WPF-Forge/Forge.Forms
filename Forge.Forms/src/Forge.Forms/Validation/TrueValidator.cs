@@ -6,10 +6,22 @@ namespace Forge.Forms.Validation
 {
     public class TrueValidator : FieldValidator
     {
-        public TrueValidator(ValidationPipe pipe, IErrorStringProvider errorProvider, IBoolProxy isEnforced,
+        public TrueValidator(
+            ValidationPipe pipe, 
+            IErrorStringProvider errorProvider, 
+            IBoolProxy isEnforced,
             IValueConverter valueConverter,
-            bool strictValidation, bool validatesOnTargetUpdated)
-            : base(pipe, errorProvider, isEnforced, valueConverter, strictValidation, validatesOnTargetUpdated)
+            bool strictValidation, 
+            bool validatesOnTargetUpdated,
+            bool ignoreNullOrEmpty)
+            : base(
+                pipe, 
+                errorProvider, 
+                isEnforced, 
+                valueConverter, 
+                strictValidation, 
+                validatesOnTargetUpdated,
+                ignoreNullOrEmpty)
         {
         }
 

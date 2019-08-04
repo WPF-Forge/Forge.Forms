@@ -478,6 +478,12 @@ namespace Forge.Forms.FormBuilding
                     attr.ArgumentUpdatedAction = (ValidationAction)Enum.Parse(typeof(ValidationAction), expr, true);
                 }
 
+                expr = child.TryGetAttribute("ignoreNullOrEmpty");
+                if (expr != null)
+                {
+                    attr.IgnoreNullOrEmpty = bool.Parse(expr);
+                }
+
                 validators.Add(attr);
             }
 
