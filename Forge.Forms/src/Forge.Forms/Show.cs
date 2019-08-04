@@ -114,6 +114,11 @@ namespace Forge.Forms
                 object lastAction = null;
                 object lastActionParameter = null;
                 var window = new DialogWindow(model, context, options);
+                if (options.TopMost)
+                {
+                    window.Topmost = true;
+                }
+
                 window.Form.OnAction += (s, e) =>
                 {
                     lastAction = e.ActionContext.Action;
@@ -121,12 +126,11 @@ namespace Forge.Forms
                 };
 
                 window.ShowDialog();
-
                 if (options.BringToFront)
-                    window.BringIntoView();
-
-                if (options.TopMost)
-                    window.Topmost = true;
+                {
+                    window.Activate();
+                    window.Focus();
+                }
 
                 return new DialogResult(window.Form.Value, lastAction, lastActionParameter);
             }
