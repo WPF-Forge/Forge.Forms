@@ -14,10 +14,24 @@ namespace Forge.Forms.Demo.Models
             return false;
         }
 
+        private string ignoreEmptyOrNulls;
         private string throughModelState;
         private string throughStaticMethod;
         private string externalValidation;
         private bool invalidateTextbox;
+
+        [Value("Length", Must.BeGreaterThanOrEqualTo, 6, IgnoreNullOrEmpty = true,
+            Message = "Type at least 6 characters or leave this field empty.")]
+        [Field(Icon = PackIconKind.Textbox)]
+        public string IgnoreEmptyOrNulls
+        {
+            get => ignoreEmptyOrNulls;
+            set
+            {
+                ignoreEmptyOrNulls = value;
+                OnPropertyChanged();
+            }
+        }
 
         [Text("Click the button to invalidate the text field")]
         [Action("invalidate", "INVALIDATE")]
