@@ -8,6 +8,7 @@
         <ResourceDictionary Source="pack://application:,,,/Forge.Forms;component/Themes/Metro/Field.Converted.xaml" />
         <ResourceDictionary Source="pack://application:,,,/Forge.Forms;component/Themes/Metro/Field.String.xaml" />
         <ResourceDictionary Source="pack://application:,,,/Forge.Forms;component/Themes/Metro/Field.Password.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Forge.Forms;component/Themes/Metro/Field.DatePicker.xaml" />
         <ResourceDictionary Source="pack://application:,,,/Forge.Forms;component/Themes/Metro/Field.Switch.xaml" />
         <ResourceDictionary Source="pack://application:,,,/Forge.Forms;component/Themes/Metro/Element.Text.xaml" />
         <ResourceDictionary Source="pack://application:,,,/Forge.Forms;component/Themes/Metro/Element.Action.xaml" />
@@ -15,6 +16,7 @@
 
     <Style BasedOn="{StaticResource MetroStringPresenterStyle}" TargetType="{x:Type defaults:StringPresenter}" />
     <Style BasedOn="{StaticResource MetroPasswordPresenterStyle}" TargetType="{x:Type defaults:PasswordPresenter}" />
+    <Style BasedOn="{StaticResource MetroDatePickerPresenterStyle}" TargetType="{x:Type defaults:DatePresenter}" />
     <Style BasedOn="{StaticResource MetroConvertedPresenterStyle}" TargetType="{x:Type defaults:ConvertedPresenter}" />
     <Style BasedOn="{StaticResource MetroCheckBoxPresenterStyle}" TargetType="{x:Type defaults:CheckBoxPresenter}" />
     <Style BasedOn="{StaticResource MetroSwitchPresenterStyle}" TargetType="{x:Type defaults:SwitchPresenter}" />
