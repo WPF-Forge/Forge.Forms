@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using System.Windows.Input;
 using Forge.Forms.Controls;
 using Forge.Forms.FormBuilding;
 using MaterialDesignThemes.Wpf;
@@ -130,6 +131,7 @@ namespace Forge.Forms
                 {
                     window.Activate();
                     window.Focus();
+                    Keyboard.Focus(window);
                 }
 
                 return new DialogResult(window.Form.Value, lastAction, lastActionParameter);
