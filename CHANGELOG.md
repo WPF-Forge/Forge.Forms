@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.2
+
+- Added property `IgnoreNullOrEmpty` to validation attributes. If this property is set to `true` then validation will pass if the value is null or an empty string. This is useful when a field is optional and validation needs to occur only when a value is given.
+- Added DatePicker to metro theme.
+- Fixed behavior of `WindowOptions.TopMost` and `WindowOptions.BringToFront`.
+
 ## 1.1.1
 
 - Added `minheight` and `maxheight` to xml `<layout>` element. If content overflows `maxheight` a vertical scroll bar appears.

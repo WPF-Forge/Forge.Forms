@@ -1,4 +1,5 @@
-﻿using Forge.Forms.Annotations;
+﻿using System.Threading.Tasks;
+using Forge.Forms.Annotations;
 
 namespace Forge.Forms.Demo.Models
 {
@@ -24,13 +25,14 @@ namespace Forge.Forms.Demo.Models
             var longConfirm = new Confirmation(
                 "Let Google help apps determine location. This means sending anonymous location data to Google, even when no apps are running.",
                 "Use Google's location service?", "TURN ON SPEED BOOST", "NO THANKS");
-
+            var opts = new WindowOptions { BringToFront = true, Width = 275d };
+            await Task.Delay(2000);
             if (parameter is "window")
             {
                 switch (action)
                 {
                     case "alert":
-                        await Show.Window(275d).For(new Alert("Hello world!"));
+                        await Show.Window(opts).For(new Alert("Hello world!"));
                         break;
                     case "confirm":
                         await Show.Window(275d).For(new Confirmation("Delete item?"));
