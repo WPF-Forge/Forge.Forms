@@ -10,6 +10,10 @@ With Forge.Forms you can create dynamic forms in WPF from classes or XML.
 
 Join us at https://gitter.im/WPF-Forge for questions or general discussion.
 
+## Getting started
+
+Read our [getting started](https://wpf-forge.github.io/Forge.Forms/guides/getting-started) guide.
+
 ## Installation
 
 ```
@@ -48,7 +52,3 @@ await Show.Window().For(new Alert("Hello world!"));
 ```
 
 Note: if you are using `Show.Dialog()` without specifying a dialog identifier, it expects you to have a `DialogHost` in your XAML tree.
-
-## Getting started
-
-Read our [getting started](https://wpf-forge.github.io/Forge.Forms/guides/getting-started) guide.
