@@ -44,7 +44,13 @@
                 SelectedValue="{formBuilding:FormBinding Value}"
                 SelectedValuePath="{formBuilding:FormBinding ValuePath}"
                 Style="{StaticResource MaterialDesignFloatingHintComboBox}"
-                ToolTip="{formBuilding:FormBinding ToolTip}" />
+                ToolTip="{formBuilding:FormBinding ToolTip}">
+                <ComboBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <VirtualizingStackPanel />
+                    </ItemsPanelTemplate>
+                </ComboBox.ItemsPanel>
+            </ComboBox>
         </Grid>
     </ControlTemplate>
 
@@ -79,7 +85,13 @@
                 ItemsSource="{formBuilding:FormBinding ItemsSource}"
                 Style="{StaticResource MaterialDesignFloatingHintComboBox}"
                 Text="{formBuilding:FormBinding Value}"
-                ToolTip="{formBuilding:FormBinding ToolTip}" />
+                ToolTip="{formBuilding:FormBinding ToolTip}">
+                <ComboBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <VirtualizingStackPanel />
+                    </ItemsPanelTemplate>
+                </ComboBox.ItemsPanel>
+            </ComboBox>
         </Grid>
     </ControlTemplate>
 
