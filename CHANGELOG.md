@@ -1,14 +1,11 @@
 # Changelog
 
-## 1.1.3
-
-- Dropdown selections are now virtualized for better performance.
-
 ## 1.1.2
 
 - Added property `IgnoreNullOrEmpty` to validation attributes. If this property is set to `true` then validation will pass if the value is null or an empty string. This is useful when a field is optional and validation needs to occur only when a value is given.
 - Added DatePicker to metro theme.
 - Fixed behavior of `WindowOptions.TopMost` and `WindowOptions.BringToFront`.
+- Dropdown selections are now virtualized for better performance.
 
 ## 1.1.1
 
