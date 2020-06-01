@@ -63,7 +63,7 @@ namespace Forge.Forms.Collections
             }
 
             return new ColumnCreationInterceptorContext(context.Property, context.Parent, context.ObjectType,
-                new MaterialDataGridTextColumn
+                new DataGridTextColumn
                 {
                     Header = context.Property.GetCustomAttribute<FieldAttribute>() is FieldAttribute fieldAttribute &&
                              !string.IsNullOrEmpty(fieldAttribute.Name)

@@ -40,7 +40,7 @@
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 internal:FocusHelper.InitialFocus="{formBuilding:FormBinding InitialFocus}"
-                IsChecked="{formBuilding:FormBinding Value}"
+                IsOn="{formBuilding:FormBinding Value}"
                 IsEnabled="{formBuilding:FormBinding IsEnabled}"
                 Style="{StaticResource MahApps.Metro.Styles.ToggleSwitch.Win10}" />
         </Grid>

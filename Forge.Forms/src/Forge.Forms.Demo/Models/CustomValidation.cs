@@ -22,7 +22,7 @@ namespace Forge.Forms.Demo.Models
 
         [Value("Length", Must.BeGreaterThanOrEqualTo, 6, IgnoreNullOrEmpty = true,
             Message = "Type at least 6 characters or leave this field empty.")]
-        [Field(Icon = PackIconKind.Textbox)]
+        [Field(Icon = PackIconKind.TextBox)]
         public string IgnoreEmptyOrNulls
         {
             get => ignoreEmptyOrNulls;
@@ -35,7 +35,7 @@ namespace Forge.Forms.Demo.Models
 
         [Text("Click the button to invalidate the text field")]
         [Action("invalidate", "INVALIDATE")]
-        [Field(Icon = PackIconKind.Textbox)]
+        [Field(Icon = PackIconKind.TextBox)]
         public string ThroughModelState
         {
             get => throughModelState;
@@ -50,7 +50,7 @@ namespace Forge.Forms.Demo.Models
         [Action("validate", "VALIDATE")]
 
         [Value(Must.SatisfyMethod, nameof(Validate))]
-        [Field(Icon = PackIconKind.Textbox)]
+        [Field(Icon = PackIconKind.TextBox)]
         public string ThroughStaticMethod
         {
             get => throughStaticMethod;
@@ -64,7 +64,7 @@ namespace Forge.Forms.Demo.Models
         [Text("Invalidate this property by marking the checkbox below.")]
 
         [Value(Must.BeInvalid, When = "{Binding InvalidateTextbox}")]
-        [Field(Icon = PackIconKind.Textbox)]
+        [Field(Icon = PackIconKind.TextBox)]
         public string ExternalValidation
         {
             get => externalValidation;

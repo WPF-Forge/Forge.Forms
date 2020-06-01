@@ -137,7 +137,7 @@
                             </Button>
                         </StackPanel>
 
-                        <TextBlock Style="{StaticResource MaterialDesignTitleTextBlock}"
+                        <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}"
                                    Foreground="{DynamicResource PrimaryHueLightForegroundBrush}"
                                    VerticalAlignment="Center"
                                    Text="{Binding Path=SelectedItems.Count, RelativeSource={RelativeSource TemplatedParent}, StringFormat={}{0} items selected}">
@@ -154,7 +154,7 @@
                             </TextBlock.Visibility>
                         </TextBlock>
 
-                        <TextBlock Style="{StaticResource MaterialDesignHeadlineTextBlock}"
+                        <TextBlock Style="{StaticResource MaterialDesignHeadline5TextBlock}"
                                    Visibility="{Binding RelativeSource={RelativeSource TemplatedParent} ,Path=HeaderStyle, Converter={StaticResource HeaderVisibilityConverter}, 
                                    ConverterParameter={x:Static collections:DynamicDataGridHeaderStyle.Standard}}"
                                    Text="{TemplateBinding Title}" />
