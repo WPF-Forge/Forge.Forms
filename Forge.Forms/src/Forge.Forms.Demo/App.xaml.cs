@@ -16,14 +16,6 @@ namespace Forge.Forms.Demo
 
         public DemoAppController Controller { get; }
 
-        [STAThread]
-        public static void Main()
-        {
-            var app = new App();
-            app.InitializeComponent();
-            app.Run();
-        }
-
         protected void OnStartup(object sender, StartupEventArgs e)
         {
             Controller.ShowApplicationWindow();
