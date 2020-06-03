@@ -34,6 +34,17 @@ namespace Forge.Forms.Collections
     [TemplatePart(Name = "PART_DataGrid", Type = typeof(DataGrid))]
     public class DynamicDataGrid : Control, INotifyPropertyChanged
     {
+        #region Constants
+
+        public const string PositiveCreateAction = "DynamicDataGrid_CreateDialogPositive";
+        public const string NegativeCreateAction = "DynamicDataGrid_CreateDialogNegative";
+        public const string PositiveUpdateAction = "DynamicDataGrid_UpdateDialogPositive";
+        public const string NegativeUpdateAction = "DynamicDataGrid_UpdateDialogNegative";
+        public const string NegativeDeleteAction = "DynamicDataGrid_DeleteDialogNegative";
+        public const string PositiveDeleteAction = "DynamicDataGrid_DeleteDialogNegative";
+
+        #endregion
+
         private List<SortDescription> cachedSortDescriptions =
             new List<SortDescription>();
 
@@ -41,6 +52,8 @@ namespace Forge.Forms.Collections
         private Type itemType;
 
         public event PropertyChangedEventHandler PropertyChanged;
+
+         
 
         public static readonly DependencyProperty CanCreateActionProperty = DependencyProperty.Register(
             nameof(CanCreateAction), typeof(Func<object, CanExecuteRoutedEventArgs, bool>), typeof(DynamicDataGrid),
@@ -107,13 +120,6 @@ namespace Forge.Forms.Collections
 
         public static readonly DependencyProperty RowStyleProperty = DependencyProperty.Register(
             "RowStyle", typeof(Style), typeof(DynamicDataGrid), new PropertyMetadata(default(Style)));
-
-        public static readonly DependencyProperty UseColumnCacheingProperty = DependencyProperty.Register(
-            nameof(UseColumnCacheing), typeof(bool), typeof(DynamicDataGrid), new PropertyMetadata(default(bool),
-                (o, args) =>
-                {
-                    if (o is DynamicDataGrid d) d.ReloadColumns();
-                }));
 
         public static readonly DependencyProperty ColumnsProperty = DependencyProperty.Register(
             "Columns", typeof(ObservableCollection<DataGridColumn>), typeof(DynamicDataGrid),
@@ -365,6 +371,33 @@ namespace Forge.Forms.Collections
                 typeof(DialogOptions),
                 typeof(DynamicDataGrid),
                 new FrameworkPropertyMetadata(DialogOptions.Default, ItemsSourceChanged));
+
+        public static readonly DependencyProperty IsLoadingProperty = DependencyProperty.Register(
+            "IsLoading", typeof(bool), typeof(DynamicDataGrid), new PropertyMetadata(default(bool)));
+
+        public bool IsLoading
+        {
+            get { return (bool) GetValue(IsLoadingProperty); }
+            set { SetValue(IsLoadingProperty, value); }
+        }
+
+        public static readonly DependencyProperty LoadingTextProperty = DependencyProperty.Register(
+            "LoadingText", typeof(string), typeof(DynamicDataGrid), new PropertyMetadata("Loading..."));
+
+        public string LoadingText
+        {
+            get { return (string) GetValue(LoadingTextProperty); }
+            set { SetValue(LoadingTextProperty, value); }
+        }
+
+        public static readonly DependencyProperty ModifyCollectionProperty = DependencyProperty.Register(
+            "ModifyCollection", typeof(bool), typeof(DynamicDataGrid), new PropertyMetadata(default(bool)));
+
+        public bool ModifyCollection
+        {
+            get { return (bool) GetValue(ModifyCollectionProperty); }
+            set { SetValue(ModifyCollectionProperty, value); }
+        }
 
         /// <summary>
         ///     The add interceptor chain
@@ -779,12 +812,6 @@ namespace Forge.Forms.Collections
         /// </value>
         public int TotalItems => GetIEnumerableCount(ItemsSource) ?? 0;
 
-        public bool UseColumnCacheing
-        {
-            get => (bool) GetValue(UseColumnCacheingProperty);
-            set => SetValue(UseColumnCacheingProperty, value);
-        }
-
         internal List<IColumnCreationInterceptor> ColumnCreationInterceptors { get; } =
             new List<IColumnCreationInterceptor>
             {
@@ -874,16 +901,73 @@ namespace Forge.Forms.Collections
             InitializeCellStyleAndColumns();
 
             PropertyChanged += OnPropertyChanged;
-            Loaded += (s, e) => OnItemsSource(ItemsSource);
+            Loaded += OnLoaded;
+            Unloaded += OnUnloaded;
+        }
+
+        private void OnLoaded(object sender, RoutedEventArgs e)
+        {
+            OnItemsSource(ItemsSource);
+        }
+
+        private void OnUnloaded(object sender, RoutedEventArgs e)
+        {
+            Loaded -= OnLoaded;
+            Unloaded -= OnUnloaded;
+            Columns.CollectionChanged -= ColumnsOnCollectionChanged;
+
+            if (DataGrid.Items is INotifyCollectionChanged changeableCollection)
+            {
+                changeableCollection.CollectionChanged -= OnCollectionChanged;
+            }
+
+            DataGrid.AfterSorting -= DataGridOnSorting;
+            DataGrid.MouseDoubleClick -= DataGridOnMouseDoubleClick;
+            DataGrid.MouseEnter -= MouseEnterHandler;
+            DataGrid.Columns.Clear();
+            DataGrid = null;
         }
 
         private static void OnColumnsPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if (d is DynamicDataGrid dynamicDataGrid)
             {
-                dynamicDataGrid.ReloadColumns();
+                dynamicDataGrid.Columns.CollectionChanged += dynamicDataGrid.ColumnsOnCollectionChanged;
+            }
+        }
 
-                dynamicDataGrid.Columns.CollectionChanged += (sender, args) => { dynamicDataGrid.ReloadColumns(); };
+        internal void ColumnsOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            var ne = e;
+            if (ne.Action == NotifyCollectionChangedAction.Reset)
+            {
+                DataGrid.Columns.Clear();
+                foreach (DataGridColumn column in ne.NewItems)
+                {
+                    DataGrid.Columns.Add(column);
+                }
+            }
+            else if (ne.Action == NotifyCollectionChangedAction.Add)
+            {
+                foreach (DataGridColumn column in ne.NewItems)
+                {
+                    DataGrid.Columns.Add(column);
+                }
+            }
+            else if (ne.Action == NotifyCollectionChangedAction.Move)
+            {
+                DataGrid.Columns.Move(ne.OldStartingIndex, ne.NewStartingIndex);
+            }
+            else if (ne.Action == NotifyCollectionChangedAction.Remove)
+            {
+                foreach (DataGridColumn column in ne.OldItems)
+                {
+                    DataGrid.Columns.Remove(column);
+                }
+            }
+            else if (ne.Action == NotifyCollectionChangedAction.Replace)
+            {
+                DataGrid.Columns[ne.NewStartingIndex] = ne.NewItems[0] as DataGridColumn;
             }
         }
 
@@ -896,8 +980,6 @@ namespace Forge.Forms.Collections
         {
             if (CellStyle == null)
                 CellStyle = TryFindResource("CustomDataGridCell") as Style;
-
-            Columns.CollectionChanged += (sender, args) => { ReloadColumns(); };
         }
 
         private static void HasCheckboxColumnChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -910,15 +992,6 @@ namespace Forge.Forms.Collections
         {
             if (DataGrid == null || itemType == null) return;
 
-            if (Columns != null && Columns.Any())
-                foreach (var dataGridColumn in Columns)
-                {
-                    if (DataGrid.Columns.Any(i => Equals(i.Header, dataGridColumn.Header)))
-                        continue;
-
-                    DataGrid.Columns.Insert(0, dataGridColumn);
-                }
-
             if (!AutoGenerateColumns)
             {
                 CreateCheckboxColumn();
@@ -926,18 +999,12 @@ namespace Forge.Forms.Collections
             }
 
             foreach (var propertyInfo in ItemType
-                .GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly)
+                .GetProperties(BindingFlags.Public | BindingFlags.Instance)
                 .Where(i => i.GetCustomAttribute<FieldIgnoreAttribute>() == null &&
                             i.GetCustomAttribute<CrudIgnoreAttribute>() == null)
                 .Reverse())
             {
-                DataGridColumn column = null;
-
-                if (UseColumnCacheing)
-                    column = ColumnCache.Method(r => r.GetColumn(propertyInfo, this))
-                        .GetValue();
-                else
-                    column = ColumnRepository.GetColumnStatic(propertyInfo, this);
+                var column = ColumnRepository.GetColumnStatic(propertyInfo, this);
 
                 if (column != null && !DataGrid.Columns.Contains(column) &&
                     DataGrid.Columns.All(i => !Equals(i.Header, column.Header)))
@@ -1080,6 +1147,18 @@ namespace Forge.Forms.Collections
             ReloadColumns();
         }
 
+        private DataGrid GetDataGridParent(DataGridColumn column)
+        {
+            var propertyInfo = column.GetType().GetProperty("DataGridOwner", BindingFlags.Instance | BindingFlags.NonPublic);
+            return propertyInfo?.GetValue(column, null) as DataGrid;
+        }
+
+        private void SetDataGridParent(DataGridColumn column, DataGrid dataGrid)
+        {
+            var propertyInfo = column.GetType().GetProperty("DataGridOwner", BindingFlags.Instance | BindingFlags.NonPublic);
+            propertyInfo?.SetValue(column, dataGrid);
+        }
+
         public override void OnApplyTemplate()
         {
             PerPageComboBox = Template.FindName("PART_PerPage", this) as ComboBox;
@@ -1089,6 +1168,13 @@ namespace Forge.Forms.Collections
             {
                 ((INotifyCollectionChanged) DataGrid.Items).CollectionChanged += OnCollectionChanged;
                 DataGrid.AfterSorting += DataGridOnSorting;
+
+                foreach (var column in Columns.Reverse())
+                {
+                    DataGrid.Columns.Insert(0, column);
+                }
+
+                OnColumnsPropertyChanged(this, default);
             }
 
             SetupPerPageCombobox();
@@ -1249,6 +1335,25 @@ namespace Forge.Forms.Collections
             canMutate = ItemType.GetConstructor(Type.EmptyTypes) != null;
         }
 
+        private Type GetCollectionItemType(object collection)
+        {
+            var interfaces = collection
+                .GetType()
+                .GetInterfaces()
+                .Where(t =>
+                    t.IsGenericType &&
+                    t.GetGenericTypeDefinition() == typeof(ICollection<>))
+                .ToList();
+            
+            if (interfaces.Count > 1 || interfaces.Count == 0)
+            {
+                return null;
+            }
+            
+            var collectionType = interfaces[0];
+            return collectionType.GetGenericArguments()[0];
+        }
+
         private void NotifyCollectionChangedOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             ViewSource.Source = null;
@@ -1272,7 +1377,7 @@ namespace Forge.Forms.Collections
                 return;
             }
 
-            if (result.Action is "DynamicDataGrid_CreateDialogPositive")
+            if (result.Action is PositiveCreateAction && ModifyCollection)
             {
                 var collection = ItemsSource;
 
@@ -1322,7 +1427,7 @@ namespace Forge.Forms.Collections
                 return;
             }
 
-            if (result.Action is "DynamicDataGrid_UpdateDialogNegative")
+            if (result.Action is NegativeUpdateAction)
             {
                 definition.Snapshot.Apply(model);
                 return;
@@ -1398,11 +1503,14 @@ namespace Forge.Forms.Collections
                     )
                     {
                         PositiveActionIcon = RemoveDialogPositiveIcon,
-                        NegativeActionIcon = RemoveDialogNegativeIcon
+                        NegativeActionIcon = RemoveDialogNegativeIcon,
+                        PositiveActionName = PositiveDeleteAction,
+                        NegativeActionName = NegativeDeleteAction,
+                        Parameter = model
                     });
                 DialogOptions.EnvironmentFlags.Remove("delete");
 
-                if (result.Action is "positive")
+                if (result.Action is PositiveDeleteAction && ModifyCollection)
                 {
                     var collection = ItemsSource;
 
@@ -1443,11 +1551,13 @@ namespace Forge.Forms.Collections
 
         private void RemoveItems(object model, IEnumerable collection)
         {
+            var collectionItemType = GetCollectionItemType(collection);
+            
             if (model is IEnumerable modelEnum)
                 foreach (var item in modelEnum.Cast<object>().ToList())
-                    RemoveItemFromCollection(ItemType, collection, item);
+                    RemoveItemFromCollection(collectionItemType, collection, item);
             else
-                RemoveItemFromCollection(ItemType, collection, model);
+                RemoveItemFromCollection(collectionItemType, collection, model);
 
             HandleCurrentPageOnMaxPagesChange();
         }
@@ -1484,6 +1594,8 @@ namespace Forge.Forms.Collections
         private UpdateFormDefinition GetUpdateDefinition(object model)
         {
             var formDefinition = FormBuilder.GetDefinition(ItemType);
+     
+
             return new UpdateFormDefinition(
                 formDefinition,
                 model,
@@ -1510,7 +1622,7 @@ namespace Forge.Forms.Collections
         {
             return new ActionElement
             {
-                Action = new LiteralValue("DynamicDataGrid_CreateDialogPositive"),
+                Action = new LiteralValue(PositiveCreateAction),
                 Content = new LiteralValue(CreateDialogPositiveContent),
                 Icon = new LiteralValue(CreateDialogPositiveIcon),
                 ClosesDialog = LiteralValue.True,
@@ -1523,7 +1635,7 @@ namespace Forge.Forms.Collections
         {
             return new ActionElement
             {
-                Action = new LiteralValue("DynamicDataGrid_CreateDialogNegative"),
+                Action = new LiteralValue(NegativeCreateAction),
                 Content = new LiteralValue(CreateDialogNegativeContent),
                 Icon = new LiteralValue(CreateDialogNegativeIcon),
                 ClosesDialog = LiteralValue.True,
@@ -1535,7 +1647,7 @@ namespace Forge.Forms.Collections
         {
             return new ActionElement
             {
-                Action = new LiteralValue("DynamicDataGrid_UpdateDialogPositive"),
+                Action = new LiteralValue(PositiveUpdateAction),
                 Content = new LiteralValue(UpdateDialogPositiveContent),
                 Icon = new LiteralValue(UpdateDialogPositiveIcon),
                 ClosesDialog = LiteralValue.True,
@@ -1548,7 +1660,7 @@ namespace Forge.Forms.Collections
         {
             return new ActionElement
             {
-                Action = new LiteralValue("DynamicDataGrid_UpdateDialogNegative"),
+                Action = new LiteralValue(NegativeUpdateAction),
                 Content = new LiteralValue(UpdateDialogNegativeContent),
                 Icon = new LiteralValue(UpdateDialogNegativeIcon),
                 ClosesDialog = LiteralValue.True,
@@ -1766,7 +1878,15 @@ namespace Forge.Forms.Collections
         private static readonly Dictionary<Type, Action<object, object>> RemoveItemCache =
             new Dictionary<Type, Action<object, object>>();
 
+        public static readonly DependencyProperty HeaderProperty = DependencyProperty.Register("Header", typeof(UIElement), typeof(DynamicDataGrid), new PropertyMetadata(default(ContentPresenter)));
+
         private RelayCommand CheckboxColumnCommand { get; }
+
+        public UIElement Header
+        {
+            get { return (UIElement) GetValue(HeaderProperty); }
+            set { SetValue(HeaderProperty, value); }
+        }
 
         private static void AddItemToCollection(Type itemType, object collection, object item)
         {

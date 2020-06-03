@@ -8,6 +8,7 @@
     xmlns:fancyGrid="clr-namespace:FancyGrid;assembly=FancyGrid"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:system="clr-namespace:System;assembly=mscorlib"
     mc:Ignorable="d">
 
     <ResourceDictionary.MergedDictionaries>
@@ -18,7 +19,9 @@
 
     <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     <converters:PagingConverter x:Key="LimitItemsConverter" />
+    <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
     <converters:HeaderStyleVisibilityConverter x:Key="HeaderVisibilityConverter" />
+    <system:Boolean x:Key="True">True</system:Boolean>
 
     <Style x:Key="CustomDataGridCell" TargetType="{x:Type DataGridCell}">
         <Setter Property="FontSize"
@@ -88,85 +91,105 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <Border Margin="24,0,14,0" Padding="20" Grid.Row="0">
+                <Border Margin="14,0,14,0" Padding="20" Grid.Row="0">
                     <Grid>
-                        <Rectangle Fill="{DynamicResource PrimaryHueLightBrush}" Opacity=".3" Margin="-48,-20,-48,-20">
-                            <Rectangle.Visibility>
-                                <MultiBinding Converter="{StaticResource HeaderVisibilityConverter}">
-                                    <Binding Path="SelectedItems.Count"
-                                             RelativeSource="{RelativeSource TemplatedParent}" />
-                                    <Binding Path="HeaderStyle" RelativeSource="{RelativeSource TemplatedParent}" />
-                                    <Binding Path="."
-                                             Source="{x:Static collections:DynamicDataGridHeaderStyle.AlternativeColored}" />
-                                    <Binding Path="."
-                                             Source="{x:Static collections:DynamicDataGridHeaderState.Selected}" />
-                                </MultiBinding>
-                            </Rectangle.Visibility>
-                        </Rectangle>
-                        <StackPanel Orientation="Horizontal">
-                            <Button Style="{StaticResource MaterialDesignFlatButton}"
-                                    Command="{x:Static collections:DynamicDataGrid.CreateItemCommand}"
-                                    Content="{TemplateBinding CreateDialogPositiveContent}">
-                                <Button.Visibility>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <Grid Visibility="{TemplateBinding Header, Converter={StaticResource HeaderVisibilityConverter}}">
+                            <Rectangle Fill="{DynamicResource PrimaryHueLightBrush}" Opacity=".3" Margin="-48,-20,-48,-20">
+                                <Rectangle.Visibility>
                                     <MultiBinding Converter="{StaticResource HeaderVisibilityConverter}">
                                         <Binding Path="SelectedItems.Count"
-                                                 RelativeSource="{RelativeSource TemplatedParent}" />
+                                             RelativeSource="{RelativeSource TemplatedParent}" />
                                         <Binding Path="HeaderStyle" RelativeSource="{RelativeSource TemplatedParent}" />
                                         <Binding Path="."
-                                                 Source="{x:Static collections:DynamicDataGridHeaderStyle.Alternative}" />
+                                             Source="{x:Static collections:DynamicDataGridHeaderStyle.AlternativeColored}" />
                                         <Binding Path="."
-                                                 Source="{x:Static collections:DynamicDataGridHeaderState.All}" />
+                                             Source="{x:Static collections:DynamicDataGridHeaderState.Selected}" />
                                     </MultiBinding>
-                                </Button.Visibility>
-                            </Button>
-                            <Button Style="{StaticResource MaterialDesignFlatButton}"
+                                </Rectangle.Visibility>
+                            </Rectangle>
+
+                            <StackPanel Name="AlternativeHeader" Orientation="Horizontal">
+                                <StackPanel.Visibility>
+                                    <MultiBinding Converter="{StaticResource HeaderVisibilityConverter}">
+                                        <Binding Path="SelectedItems.Count"
+                                             RelativeSource="{RelativeSource TemplatedParent}" />
+                                        <Binding Path="HeaderStyle" RelativeSource="{RelativeSource TemplatedParent}" />
+                                        <Binding Path="."
+                                             Source="{x:Static collections:DynamicDataGridHeaderStyle.Alternative}" />
+                                        <Binding Path="."
+                                             Source="{x:Static collections:DynamicDataGridHeaderState.All}" />
+                                    </MultiBinding>
+                                </StackPanel.Visibility>
+
+                                <Button Style="{StaticResource MaterialDesignFlatButton}"
+                                    Command="{x:Static collections:DynamicDataGrid.CreateItemCommand}"
+                                    Content="{TemplateBinding CreateDialogPositiveContent}" />
+                                <Button Style="{StaticResource MaterialDesignFlatButton}"
                                     Content="{TemplateBinding RemoveDialogPositiveContent}"
                                     Command="{x:Static collections:DynamicDataGrid.RemoveItemCommand}"
                                     CommandParameter="{Binding Path=SelectedItems, RelativeSource={RelativeSource AncestorType={x:Type collections:DynamicDataGrid}}}">
-                                <Button.Visibility>
-                                    <MultiBinding Converter="{StaticResource HeaderVisibilityConverter}">
-                                        <Binding Path="SelectedItems.Count"
+                                    <Button.Visibility>
+                                        <MultiBinding Converter="{StaticResource HeaderVisibilityConverter}">
+                                            <Binding Path="SelectedItems.Count"
                                                  RelativeSource="{RelativeSource TemplatedParent}" />
-                                        <Binding Path="HeaderStyle" RelativeSource="{RelativeSource TemplatedParent}" />
-                                        <Binding Path="."
+                                            <Binding Path="HeaderStyle" RelativeSource="{RelativeSource TemplatedParent}" />
+                                            <Binding Path="."
                                                  Source="{x:Static collections:DynamicDataGridHeaderStyle.Alternative}" />
-                                        <Binding Path="."
+                                            <Binding Path="."
                                                  Source="{x:Static collections:DynamicDataGridHeaderState.Selected}" />
-                                    </MultiBinding>
-                                </Button.Visibility>
-                            </Button>
-                        </StackPanel>
+                                        </MultiBinding>
+                                    </Button.Visibility>
+                                </Button>
+                            </StackPanel>
 
-                        <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}"
+                            <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}"
                                    Foreground="{DynamicResource PrimaryHueLightForegroundBrush}"
                                    VerticalAlignment="Center"
                                    Text="{Binding Path=SelectedItems.Count, RelativeSource={RelativeSource TemplatedParent}, StringFormat={}{0} items selected}">
-                            <TextBlock.Visibility>
-                                <MultiBinding Converter="{StaticResource HeaderVisibilityConverter}">
-                                    <Binding Path="SelectedItems.Count"
+                                <TextBlock.Visibility>
+                                    <MultiBinding Converter="{StaticResource HeaderVisibilityConverter}">
+                                        <Binding Path="SelectedItems.Count"
                                              RelativeSource="{RelativeSource TemplatedParent}" />
-                                    <Binding Path="HeaderStyle" RelativeSource="{RelativeSource TemplatedParent}" />
-                                    <Binding Path="."
+                                        <Binding Path="HeaderStyle" RelativeSource="{RelativeSource TemplatedParent}" />
+                                        <Binding Path="."
                                              Source="{x:Static collections:DynamicDataGridHeaderStyle.AlternativeColored}" />
-                                    <Binding Path="."
+                                        <Binding Path="."
                                              Source="{x:Static collections:DynamicDataGridHeaderState.Selected}" />
-                                </MultiBinding>
-                            </TextBlock.Visibility>
-                        </TextBlock>
+                                    </MultiBinding>
+                                </TextBlock.Visibility>
+                            </TextBlock>
 
-                        <TextBlock Style="{StaticResource MaterialDesignHeadline5TextBlock}"
+                            <TextBlock Style="{StaticResource MaterialDesignHeadline5TextBlock}"
                                    Visibility="{Binding RelativeSource={RelativeSource TemplatedParent} ,Path=HeaderStyle, Converter={StaticResource HeaderVisibilityConverter}, 
                                    ConverterParameter={x:Static collections:DynamicDataGridHeaderStyle.Standard}}"
                                    Text="{TemplateBinding Title}" />
+                        </Grid>
 
-                        <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                        <ContentPresenter Grid.Column="0" x:Name="PART_Header"
+                                          VerticalAlignment="Top"
+                                          Content="{Binding Header, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"
+                                          DockPanel.Dock="Right"
+                                          Focusable="False" />
+
+                        <Grid Grid.Column="1" HorizontalAlignment="Right">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
                             <Button materialDesign:RippleAssist.RippleSizeMultiplier="0.6"
                                     materialDesign:RippleAssist.IsCentered="True" Margin="0,0,24,0"
                                     Command="{TemplateBinding ToggleFilterCommand}"
                                     Style="{StaticResource MaterialDesignToolButton}">
                                 <materialDesign:PackIcon Kind="FilterVariant" Height="24" Width="24" />
                             </Button>
-                            <Button materialDesign:RippleAssist.RippleSizeMultiplier="0.6"
+
+                            <Button Grid.Column="1" materialDesign:RippleAssist.RippleSizeMultiplier="0.6"
                                     materialDesign:RippleAssist.IsCentered="True" Margin="0,0,24,0"
                                     Command="{x:Static collections:DynamicDataGrid.RemoveItemCommand}"
                                     CommandParameter="{Binding Path=SelectedItems, RelativeSource={RelativeSource AncestorType={x:Type collections:DynamicDataGrid}}}"
@@ -174,7 +197,9 @@
                                     Style="{StaticResource MaterialDesignToolButton}">
                                 <materialDesign:PackIcon Kind="Delete" Height="24" Width="24" />
                             </Button>
+
                             <materialDesign:PopupBox x:Name="PopupBox" HorizontalAlignment="Right"
+                                                     Grid.Column="2"
                                                      PlacementMode="BottomAndAlignLeftEdges"
                                                      materialDesign:RippleAssist.RippleSizeMultiplier="0.6"
                                                      materialDesign:RippleAssist.IsCentered="True"
@@ -204,17 +229,37 @@
                                     </Button>
                                 </StackPanel>
                             </materialDesign:PopupBox>
-                        </StackPanel>
+                        </Grid>
                     </Grid>
                 </Border>
 
+                <Grid VerticalAlignment="Center" HorizontalAlignment="Center"
+                      Visibility="{Binding IsLoading, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BoolToVisibilityConverter}}"
+                      Grid.Row="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <ProgressBar IsIndeterminate="True"
+                                 Style="{StaticResource MaterialDesignCircularProgressBar}" />
+                    <TextBlock Grid.Row="1"
+                               Text="{Binding LoadingText, RelativeSource={RelativeSource TemplatedParent}}" />
+                </Grid>
+
                 <fancyGrid:FilteringDataGrid Grid.Row="1"
+                                             Visibility="{Binding IsLoading, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter={StaticResource True}}"
                                              Name="PART_DataGrid"
                                              CanUserAddRows="False"
                                              IncludeItemsInternalMessage="{Binding IncludeItemsMessage, RelativeSource={RelativeSource TemplatedParent}}"
-                                             ExcludeItemsInternalMessage="{Binding ExcludeItemsMessage, RelativeSource={RelativeSource TemplatedParent}}"             
+                                             ExcludeItemsInternalMessage="{Binding ExcludeItemsMessage, RelativeSource={RelativeSource TemplatedParent}}"
                                              IsFilteringCaseInternalSensitive="{Binding IsFilteringCaseSensitive, RelativeSource={RelativeSource TemplatedParent}}"
                                              IsReadOnly="True"
+                                             EnableRowVirtualization="True"
+                                             EnableColumnVirtualization="True"
+                                             VirtualizingPanel.IsVirtualizingWhenGrouping="True"
+                                             VirtualizingPanel.VirtualizationMode="Standard"
+                                             VirtualizingPanel.IsVirtualizing="True"
+                                             ScrollViewer.CanContentScroll="True"
                                              Background="{Binding RelativeSource={RelativeSource AncestorType=materialDesign:Card, Mode=FindAncestor}, Path=Background}"
                                              CanFilter="{Binding IsFilteringEnabled, RelativeSource={RelativeSource TemplatedParent}}"
                                              Style="{StaticResource CustomDataGrid}"

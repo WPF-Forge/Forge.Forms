@@ -43,11 +43,12 @@
                             <StackPanel Orientation="Horizontal" Background="Transparent">
                                 <materialDesign:ListSortDirectionIndicator Width="0" Height="12"
                                                                            x:Name="SortDirectionIndicator"
+                                                                           VerticalAlignment="Center"
                                                                            ListSortDirection="{TemplateBinding SortDirection}" />
                                 <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                                   RecognizesAccessKey="True"
                                                   SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
-                                                  VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                                  VerticalAlignment="Center"
                                                   Margin="{TemplateBinding Padding}" />
                             </StackPanel>
                         </Border>

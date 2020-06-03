@@ -26,6 +26,12 @@ namespace FancyGrid.Converters
                         return Visibility.Collapsed;
                     }
 
+                    if (DynamicDataGridExtensions.GetCanUserFilter(header.Column) is {} x && !x)
+                    {
+                        return Visibility.Collapsed;
+                    }
+                  
+
                     if (!PropertyDescriptors.Contains(header))
                     {
                         DependencyPropertyDescriptor
