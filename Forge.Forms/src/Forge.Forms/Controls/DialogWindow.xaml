@@ -26,14 +26,14 @@
     <metro:MetroWindow.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colors.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Clean/Clean.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/themes/light.indigo.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Clean/controls.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <controls:BoolToResizeModeConverter x:Key="BoolToResizeModeConverter" />
         </ResourceDictionary>
     </metro:MetroWindow.Resources>
     <metro:MetroWindow.Style>
-        <StaticResource ResourceKey="CleanWindowStyleKey" />
+        <StaticResource ResourceKey="MahApps.Styles.MetroWindow.Clean" />
     </metro:MetroWindow.Style>
     <metro:MetroWindow.ResizeMode>
         <Binding Converter="{StaticResource BoolToResizeModeConverter}" Path="CanResize" />
