@@ -5,18 +5,26 @@ namespace Forge.Forms
     [Form(Mode = DefaultFields.None)]
     [Title("{Binding Title}", IsVisible = "{Binding Title|IsNotEmpty}")]
     [Text("{Binding Message}", IsVisible = "{Binding Message|IsNotEmpty}")]
-    [Action("negative", "{Binding NegativeAction}",
+    [Action("{Binding NegativeActionName}", "{Binding NegativeAction}",
         IsCancel = true,
         ClosesDialog = true,
         IsVisible = "{Binding NegativeAction|IsNotEmpty}",
         Icon = "{Binding NegativeActionIcon}")]
-    [Action("positive", "{Binding PositiveAction}",
+    [Action("{Binding PositiveActionName}", "{Binding PositiveAction}",
         IsDefault = true,
         ClosesDialog = true,
         IsVisible = "{Binding PositiveAction|IsNotEmpty}",
         Icon = "{Binding PositiveActionIcon}")]
     public sealed class Confirmation : DialogBase
     {
+        [FieldIgnore]
+        public string PositiveActionName { get; set; } = "positive";
+        
+        [FieldIgnore]
+        public string NegativeActionName { get; set; } = "negative";
+        
+        public object Parameter { get; set; }
+        
         public Confirmation()
         {
         }
