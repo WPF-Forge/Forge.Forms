@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
@@ -96,13 +96,16 @@ namespace Forge.Forms
                             continue;
                         }
 
-                        if (type.IsValueType)
+                        if (field.IsReadOnly == null || field.IsReadOnly.ProvideValue(context) is bool b && !b)
                         {
-                            accessor[property] = Activator.CreateInstance(field.PropertyType);
-                        }
-                        else
-                        {
-                            accessor[property] = null;
+                            if (type.IsValueType)
+                            {
+                                accessor[property] = Activator.CreateInstance(field.PropertyType);
+                            }
+                            else
+                            {
+                                accessor[property] = null;
+                            }
                         }
                     }
                     else
@@ -110,7 +113,9 @@ namespace Forge.Forms
                         object value;
                         if (field.DefaultValue is LiteralValue literal)
                         {
-                            value = literal.Value == null && accessor[property] is string ? string.Empty : literal.Value;
+                            value = literal.Value == null && accessor[property] is string
+                                ? string.Empty
+                                : literal.Value;
                         }
                         else
                         {
