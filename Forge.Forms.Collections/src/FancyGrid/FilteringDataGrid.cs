@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Threading;
@@ -275,14 +275,17 @@ namespace FancyGrid
 
         private void OnTextChanged(object sender, TextChangedEventArgs e)
         {
-            var filterTextBox = e.OriginalSource as TextBox;
-
-            var header = TryFindParent<DataGridColumnHeader>(filterTextBox);
-            if (header != null)
+            debounceTimer.Debounce(400, o =>
             {
-                UpdateFilter(filterTextBox, header);
-                ApplyFilters();
-            }
+                var filterTextBox = e.OriginalSource as TextBox;
+
+                var header = TryFindParent<DataGridColumnHeader>(filterTextBox);
+                if (header != null)
+                {
+                    UpdateFilter(filterTextBox, header);
+                    ApplyFilters();
+                }
+            });
         }
 
         private void UpdateFilter(TextBox textBox, DataGridColumnHeader header)
