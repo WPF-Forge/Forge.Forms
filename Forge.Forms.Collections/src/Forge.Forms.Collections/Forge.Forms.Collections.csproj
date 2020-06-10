@@ -5,16 +5,31 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <PackageId>Redbaty.Forge.Forms.Collections</PackageId>
     <LangVersion>latest</LangVersion>
+    <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
   </PropertyGroup>
+  
   <ItemGroup>
-    <PackageReference Include="FluentCache" Version="4.0.0.2" />
     <PackageReference Include="Fody" Version="6.2.0" />
-    <PackageReference Include="Humanizer" Version="2.8.11" />
+    <PackageReference Include="Humanizer.Core" Version="2.8.11" />
     <PackageReference Include="MaterialDesignThemes" Version="3.1.3" />
-    <PackageReference Include="PropertyChanged.Fody" Version="3.2.8" />
+    <PackageReference Include="PropertyChanged.Fody" Version="3.2.8" PrivateAssets="All" />
   </ItemGroup>
+  
   <ItemGroup>
     <ProjectReference Include="..\..\..\Forge.Forms\src\Forge.Forms\Forge.Forms.csproj" />
-    <ProjectReference Include="..\FancyGrid\FancyGrid.csproj" />
+    <ProjectReference Include="..\FancyGrid\FancyGrid.csproj">
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+      <IncludeAssets>FancyGrid.dll</IncludeAssets>
+    </ProjectReference>
+    <ProjectReference Include="..\System.Windows.Data\System.Windows.Data.csproj">
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+      <IncludeAssets>System.Windows.Data.dll</IncludeAssets>
+    </ProjectReference>
   </ItemGroup>
+
+  <Target DependsOnTargets="ResolveReferences" Name="CopyProjectReferencesToPackage">
+    <ItemGroup>
+      <BuildOutputInPackage Include="@(ReferenceCopyLocalPaths->WithMetadataValue('ReferenceSourceTarget', 'ProjectReference'))"/>
+    </ItemGroup>
+  </Target>
 </Project>

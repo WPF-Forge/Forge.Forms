@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Windows;
@@ -14,8 +14,6 @@ using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using FancyGrid;
-using FluentCache;
-using FluentCache.Simple;
 using Forge.Forms.Annotations;
 using Forge.Forms.Collections.Annotations;
 using Forge.Forms.Collections.Converters;
@@ -32,45 +30,19 @@ using Expression = System.Linq.Expressions.Expression;
 namespace Forge.Forms.Collections
 {
     [TemplatePart(Name = "PART_DataGrid", Type = typeof(DataGrid))]
+    [SuppressPropertyChangedWarnings]
     public class DynamicDataGrid : Control, INotifyPropertyChanged, IDisposable
     {
-        #region Constants
-
-        public const string PositiveCreateAction = "DynamicDataGrid_CreateDialogPositive";
-        public const string NegativeCreateAction = "DynamicDataGrid_CreateDialogNegative";
-        public const string PositiveUpdateAction = "DynamicDataGrid_UpdateDialogPositive";
-        public const string NegativeUpdateAction = "DynamicDataGrid_UpdateDialogNegative";
-        public const string NegativeDeleteAction = "DynamicDataGrid_DeleteDialogNegative";
-        public const string PositiveDeleteAction = "DynamicDataGrid_DeleteDialogNegative";
-
-        #endregion
-
-        private List<SortDescription> _cachedSortDescriptions =
-            new List<SortDescription>();
-
-        private bool _canMutate;
-        private Type _itemType;
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
         public static readonly DependencyProperty ActionsOnCreateProperty = DependencyProperty.Register(
             "ActionsOnCreate", typeof(bool), typeof(DynamicDataGrid), new PropertyMetadata(true));
 
-        public bool ActionsOnCreate
-        {
-            get { return (bool) GetValue(ActionsOnCreateProperty); }
-            set { SetValue(ActionsOnCreateProperty, value); }
-        }
+        public static readonly DependencyProperty ViewProperty = DependencyProperty.Register(
+            "View", typeof(PagedCollectionView), typeof(DynamicDataGrid),
+            new PropertyMetadata(default(PagedCollectionView)));
 
         public static readonly DependencyProperty ActionsOnUpdateProperty = DependencyProperty.Register(
             "ActionsOnUpdate", typeof(bool), typeof(DynamicDataGrid), new PropertyMetadata(true));
 
-        public bool ActionsOnUpdate
-        {
-            get { return (bool) GetValue(ActionsOnUpdateProperty); }
-            set { SetValue(ActionsOnUpdateProperty, value); }
-        }
-        
         public static readonly DependencyProperty CanCreateActionProperty = DependencyProperty.Register(
             nameof(CanCreateAction), typeof(Func<object, CanExecuteRoutedEventArgs, bool>), typeof(DynamicDataGrid),
             new PropertyMetadata(new Func<object, CanExecuteRoutedEventArgs, bool>((o, args) =>
@@ -391,29 +363,11 @@ namespace Forge.Forms.Collections
         public static readonly DependencyProperty IsLoadingProperty = DependencyProperty.Register(
             "IsLoading", typeof(bool), typeof(DynamicDataGrid), new PropertyMetadata(default(bool)));
 
-        public bool IsLoading
-        {
-            get { return (bool) GetValue(IsLoadingProperty); }
-            set { SetValue(IsLoadingProperty, value); }
-        }
-
         public static readonly DependencyProperty LoadingTextProperty = DependencyProperty.Register(
             "LoadingText", typeof(string), typeof(DynamicDataGrid), new PropertyMetadata("Loading..."));
 
-        public string LoadingText
-        {
-            get { return (string) GetValue(LoadingTextProperty); }
-            set { SetValue(LoadingTextProperty, value); }
-        }
-
         public static readonly DependencyProperty ModifyCollectionProperty = DependencyProperty.Register(
             "ModifyCollection", typeof(bool), typeof(DynamicDataGrid), new PropertyMetadata(default(bool)));
-
-        public bool ModifyCollection
-        {
-            get { return (bool) GetValue(ModifyCollectionProperty); }
-            set { SetValue(ModifyCollectionProperty, value); }
-        }
 
         /// <summary>
         ///     The add interceptor chain
@@ -474,6 +428,104 @@ namespace Forge.Forms.Collections
         public static readonly DependencyProperty HasCheckboxesColumnProperty = DependencyProperty.Register(
             "HasCheckboxesColumn", typeof(bool), typeof(DynamicDataGrid),
             new PropertyMetadata(default(bool), HasCheckboxColumnChanged));
+        
+        public static readonly DependencyProperty ItemsOfTextProperty = DependencyProperty.Register(
+            "ItemsOfText", typeof(string), typeof(FilteringDataGrid), new PropertyMetadata("{0}-{1} of {2}"));
+
+        public string ItemsOfText
+        {
+            get { return (string) GetValue(ItemsOfTextProperty); }
+            set { SetValue(ItemsOfTextProperty, value); }
+        }
+
+        private List<SortDescription> _cachedSortDescriptions =
+            new List<SortDescription>();
+
+        private bool _canMutate;
+        private Type _itemType;
+        private int lastPage;
+        private int totalItems;
+
+        static DynamicDataGrid()
+        {
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(DynamicDataGrid),
+                new FrameworkPropertyMetadata(typeof(DynamicDataGrid)));
+        }
+
+        public DynamicDataGrid()
+        {
+            SetValue(ColumnsProperty, new ObservableCollection<DataGridColumn>());
+
+            CommandBindings.Add(new CommandBinding(CreateItemCommand,
+                (sender, args) => CreateAction.Invoke(sender, args),
+                (sender, args) => args.CanExecute = CanCreateAction.Invoke(sender, args)));
+            CommandBindings.Add(new CommandBinding(UpdateItemCommand,
+                (sender, args) => EditAction.Invoke(sender, args),
+                (sender, args) => args.CanExecute = CanUpdateAction.Invoke(sender, args)));
+            CommandBindings.Add(new CommandBinding(RemoveItemCommand,
+                (sender, args) => RemoveAction.Invoke(sender, args),
+                (sender, args) => args.CanExecute = CanRemoveAction.Invoke(sender, args)));
+
+            MoveNextCommand = new RelayCommand(x => CurrentPage++, o => CurrentPage < LastPage);
+            MoveBackCommand = new RelayCommand(x => CurrentPage--, o => CurrentPage > 1);
+            MoveLastCommand = new RelayCommand(x => CurrentPage = LastPage, o => CurrentPage < LastPage);
+            MoveFirstCommand = new RelayCommand(x => CurrentPage = 1, o => CurrentPage > 1);
+            MoveToPageCommand = new RelayCommand(
+                x => CurrentPage = int.Parse((string) x),
+                o => int.TryParse((string) o, out var val) && val != CurrentPage);
+            ToggleFilterCommand = new RelayCommand(x => IsFilteringEnabled = !IsFilteringEnabled);
+            CheckboxColumnCommand = new RelayCommand(sender =>
+            {
+                if (sender is DataGridRow row)
+                {
+                    CheckedConverter.SetChecked(this, row.Item, !CheckedConverter.IsChecked(this, row.Item));
+                    BindingOperations
+                        .GetMultiBindingExpression(row.TryFindChild<CheckBox>(), ToggleButton.IsCheckedProperty)
+                        ?.UpdateTarget();
+                }
+            });
+
+            InitializeCellStyleAndColumns();
+
+            PropertyChanged += OnPropertyChanged;
+            Loaded += OnLoaded;
+        }
+
+        public bool ActionsOnCreate
+        {
+            get => (bool) GetValue(ActionsOnCreateProperty);
+            set => SetValue(ActionsOnCreateProperty, value);
+        }
+
+        public PagedCollectionView View
+        {
+            get => (PagedCollectionView) GetValue(ViewProperty);
+            set => SetValue(ViewProperty, value);
+        }
+
+        public bool ActionsOnUpdate
+        {
+            get => (bool) GetValue(ActionsOnUpdateProperty);
+            set => SetValue(ActionsOnUpdateProperty, value);
+        }
+
+        public bool IsLoading
+        {
+            get => (bool) GetValue(IsLoadingProperty);
+            set => SetValue(IsLoadingProperty, value);
+        }
+
+        public string LoadingText
+        {
+            get => (string) GetValue(LoadingTextProperty);
+            set => SetValue(LoadingTextProperty, value);
+        }
+
+        public bool ModifyCollection
+        {
+            get => (bool) GetValue(ModifyCollectionProperty);
+            set => SetValue(ModifyCollectionProperty, value);
+        }
 
         public bool AutoGenerateColumns
         {
@@ -577,6 +629,7 @@ namespace Forge.Forms.Collections
             {
                 IsSelectAll = false;
                 SetValue(CurrentPageProperty, value);
+                View?.MoveToPage(value - 1);
             }
         }
 
@@ -690,7 +743,6 @@ namespace Forge.Forms.Collections
         /// <value>
         ///     The items per page.
         /// </value>
-        [AlsoNotifyFor(nameof(LastPage))]
         public int ItemsPerPage { get; set; } = 15;
 
         /// <summary>
@@ -699,7 +751,15 @@ namespace Forge.Forms.Collections
         /// <value>
         ///     The last page.
         /// </value>
-        public int LastPage => Math.Max((int) Math.Ceiling((double) TotalItems / ItemsPerPage), 1);
+        public int LastPage
+        {
+            get => lastPage;
+            set
+            {
+                lastPage = value;
+                OnPropertyChanged(nameof(PaginationPageNumbers));
+            }
+        }
 
         /// <summary>
         ///     Gets or sets the move back command.
@@ -826,7 +886,15 @@ namespace Forge.Forms.Collections
         /// <value>
         ///     The total items.
         /// </value>
-        public int TotalItems => GetIEnumerableCount(ItemsSource) ?? 0;
+        public int TotalItems
+        {
+            get => totalItems;
+            set
+            {
+                totalItems = value;
+                OnPropertyChanged(nameof(TotalItems));
+            }
+        }
 
         internal List<IColumnCreationInterceptor> ColumnCreationInterceptors { get; } =
             new List<IColumnCreationInterceptor>
@@ -871,50 +939,23 @@ namespace Forge.Forms.Collections
 
         private int SelectedItemsCount => DatagridSelectedItems.Count();
 
-        static DynamicDataGrid()
+        public void Dispose()
         {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(DynamicDataGrid),
-                new FrameworkPropertyMetadata(typeof(DynamicDataGrid)));
+            Loaded -= OnLoaded;
+            Columns.CollectionChanged -= ColumnsOnCollectionChanged;
+
+            if (DataGrid.Items is INotifyCollectionChanged changeableCollection)
+                changeableCollection.CollectionChanged -= OnCollectionChanged;
+
+            DataGrid.AfterSorting -= DataGridOnSorting;
+            DataGrid.MouseDoubleClick -= DataGridOnMouseDoubleClick;
+            DataGrid.MouseEnter -= MouseEnterHandler;
+            DataGrid.Columns.Clear();
+            DataGrid = null;
+            Columns.Clear();
         }
 
-        public DynamicDataGrid()
-        {
-            SetValue(ColumnsProperty, new ObservableCollection<DataGridColumn>());
-
-            CommandBindings.Add(new CommandBinding(CreateItemCommand,
-                (sender, args) => CreateAction.Invoke(sender, args),
-                (sender, args) => args.CanExecute = CanCreateAction.Invoke(sender, args)));
-            CommandBindings.Add(new CommandBinding(UpdateItemCommand,
-                (sender, args) => EditAction.Invoke(sender, args),
-                (sender, args) => args.CanExecute = CanUpdateAction.Invoke(sender, args)));
-            CommandBindings.Add(new CommandBinding(RemoveItemCommand,
-                (sender, args) => RemoveAction.Invoke(sender, args),
-                (sender, args) => args.CanExecute = CanRemoveAction.Invoke(sender, args)));
-
-            MoveNextCommand = new RelayCommand(x => CurrentPage++, o => CurrentPage < LastPage);
-            MoveBackCommand = new RelayCommand(x => CurrentPage--, o => CurrentPage > 1);
-            MoveLastCommand = new RelayCommand(x => CurrentPage = LastPage, o => CurrentPage < LastPage);
-            MoveFirstCommand = new RelayCommand(x => CurrentPage = 1, o => CurrentPage > 1);
-            MoveToPageCommand = new RelayCommand(
-                x => CurrentPage = int.Parse((string) x),
-                o => int.TryParse((string) o, out var val) && val != CurrentPage);
-            ToggleFilterCommand = new RelayCommand(x => IsFilteringEnabled = !IsFilteringEnabled);
-            CheckboxColumnCommand = new RelayCommand(sender =>
-            {
-                if (sender is DataGridRow row)
-                {
-                    CheckedConverter.SetChecked(this, row.Item, !CheckedConverter.IsChecked(this, row.Item));
-                    BindingOperations
-                        .GetMultiBindingExpression(row.TryFindChild<CheckBox>(), ToggleButton.IsCheckedProperty)
-                        ?.UpdateTarget();
-                }
-            });
-
-            InitializeCellStyleAndColumns();
-
-            PropertyChanged += OnPropertyChanged;
-            Loaded += OnLoaded;
-        }
+        public event PropertyChangedEventHandler PropertyChanged;
 
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
@@ -924,9 +965,7 @@ namespace Forge.Forms.Collections
         private static void OnColumnsPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if (d is DynamicDataGrid dynamicDataGrid)
-            {
                 dynamicDataGrid.Columns.CollectionChanged += dynamicDataGrid.ColumnsOnCollectionChanged;
-            }
         }
 
         internal void ColumnsOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -938,17 +977,11 @@ namespace Forge.Forms.Collections
             if (ne.Action == NotifyCollectionChangedAction.Reset)
             {
                 DataGrid.Columns.Clear();
-                foreach (DataGridColumn column in ne.NewItems)
-                {
-                    DataGrid.Columns.Add(column);
-                }
+                foreach (DataGridColumn column in ne.NewItems) DataGrid.Columns.Add(column);
             }
             else if (ne.Action == NotifyCollectionChangedAction.Add)
             {
-                foreach (DataGridColumn column in ne.NewItems)
-                {
-                    DataGrid.Columns.Add(column);
-                }
+                foreach (DataGridColumn column in ne.NewItems) DataGrid.Columns.Add(column);
             }
             else if (ne.Action == NotifyCollectionChangedAction.Move)
             {
@@ -956,10 +989,7 @@ namespace Forge.Forms.Collections
             }
             else if (ne.Action == NotifyCollectionChangedAction.Remove)
             {
-                foreach (DataGridColumn column in ne.OldItems)
-                {
-                    DataGrid.Columns.Remove(column);
-                }
+                foreach (DataGridColumn column in ne.OldItems) DataGrid.Columns.Remove(column);
             }
             else if (ne.Action == NotifyCollectionChangedAction.Replace)
             {
@@ -1110,26 +1140,6 @@ namespace Forge.Forms.Collections
             }
         }
 
-        private static int? GetIEnumerableCount(IEnumerable enumerable)
-        {
-            switch (enumerable)
-            {
-                case null:
-                    return null;
-                case ICollection col:
-                    return col.Count;
-            }
-
-            var c = 0;
-            var e = enumerable.GetEnumerator();
-            DynamicUsing(e, () =>
-            {
-                while (e.MoveNext()) c++;
-            });
-
-            return c;
-        }
-
         public void AddColumnInterceptor(IColumnCreationInterceptor interceptor)
         {
             ColumnCreationInterceptors.Insert(0, interceptor);
@@ -1152,10 +1162,7 @@ namespace Forge.Forms.Collections
                 ((INotifyCollectionChanged) DataGrid.Items).CollectionChanged += OnCollectionChanged;
                 DataGrid.AfterSorting += DataGridOnSorting;
 
-                foreach (var column in Columns.Reverse())
-                {
-                    DataGrid.Columns.Insert(0, column);
-                }
+                foreach (var column in Columns.Reverse()) DataGrid.Columns.Insert(0, column);
 
                 OnColumnsPropertyChanged(this, default);
             }
@@ -1176,24 +1183,22 @@ namespace Forge.Forms.Collections
 
         private ICollectionView UpdateView()
         {
-            var view = CollectionViewSource.GetDefaultView(ItemsSource);
-            view.SortDescriptions.Clear();
+            View.SortDescriptions.Clear();
 
             foreach (var sortDescription in _cachedSortDescriptions)
             {
-                view.SortDescriptions.Add(sortDescription);
+                View.SortDescriptions.Add(sortDescription);
                 var column = DataGrid.Columns.FirstOrDefault(c => c.SortMemberPath == sortDescription.PropertyName);
                 if (column != null) column.SortDirection = sortDescription.Direction;
             }
 
             _cachedSortDescriptions.Clear();
-            return view;
+            return View;
         }
 
         private void UpdateSorting()
         {
-            var view = CollectionViewSource.GetDefaultView(DataGrid.ItemsSource);
-            _cachedSortDescriptions = new List<SortDescription>(view.SortDescriptions);
+            _cachedSortDescriptions = new List<SortDescription>(View.SortDescriptions);
         }
 
         private void OnCollectionChanged(object o, NotifyCollectionChangedEventArgs notifyCollectionChangedEventArgs)
@@ -1270,15 +1275,16 @@ namespace Forge.Forms.Collections
 
         private void OnItemsSource(object collection)
         {
+            DeleteView();
             ItemType = null;
-            ViewSource.Source = collection;
 
-            if (collection == null)
+            if (!(collection is IEnumerable en))
             {
                 _canMutate = false;
-                ViewSource.Source = null;
                 return;
             }
+
+            CreateView(en);
 
             var interfaces = collection
                 .GetType()
@@ -1291,7 +1297,7 @@ namespace Forge.Forms.Collections
             if (interfaces.Count > 1 || interfaces.Count == 0)
             {
                 _canMutate = false;
-                ViewSource.Source = null;
+                View = null;
                 return;
             }
 
@@ -1301,6 +1307,31 @@ namespace Forge.Forms.Collections
             var collectionType = interfaces[0];
             ItemType = collectionType.GetGenericArguments()[0];
             _canMutate = ItemType.GetConstructor(Type.EmptyTypes) != null;
+        }
+
+        private void CreateView(IEnumerable en)
+        {
+            View = new PagedCollectionView(en)
+            {
+                Culture = CultureInfo.CurrentUICulture
+            };
+            View.PropertyChanged += ViewOnPropertyChanged;
+            View.PageSize = ItemsPerPage;
+            View.MoveToFirstPage();
+        }
+
+        private void ViewOnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            TotalItems = View.ItemCount;
+            LastPage = Math.Max((int) Math.Ceiling((double) TotalItems / ItemsPerPage), 1);
+        }
+
+        private void DeleteView()
+        {
+            if (View != null)
+                View.PropertyChanged -= ViewOnPropertyChanged;
+
+            View = null;
         }
 
         private Type GetCollectionItemType(object collection)
@@ -1313,10 +1344,7 @@ namespace Forge.Forms.Collections
                     t.GetGenericTypeDefinition() == typeof(ICollection<>))
                 .ToList();
 
-            if (interfaces.Count > 1 || interfaces.Count == 0)
-            {
-                return null;
-            }
+            if (interfaces.Count > 1 || interfaces.Count == 0) return null;
 
             var collectionType = interfaces[0];
             return collectionType.GetGenericArguments()[0];
@@ -1324,8 +1352,10 @@ namespace Forge.Forms.Collections
 
         private void NotifyCollectionChangedOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            ViewSource.Source = null;
-            ViewSource.Source = sender;
+            DeleteView();
+
+            if (sender is IEnumerable en)
+                CreateView(en);
         }
 
         private async void ExecuteCreateItem()
@@ -1478,7 +1508,6 @@ namespace Forge.Forms.Collections
                 DialogOptions.EnvironmentFlags.Remove("delete");
 
                 if (result.Action is PositiveDeleteAction && ModifyCollection)
-                {
                     if (ItemsSource is ICollection collection)
                     {
                         if (model is IEnumerable modelEnum)
@@ -1509,7 +1538,6 @@ namespace Forge.Forms.Collections
                         IsSelectAll = IsSelectAll && SelectedItemsCount > 0;
                         HeaderButton.IsChecked = IsSelectAll;
                     }
-                }
             }
             catch
             {
@@ -1540,17 +1568,19 @@ namespace Forge.Forms.Collections
         private IFormDefinition GetCreateDefinition()
         {
             var formDefinition = FormBuilder.GetDefinition(ItemType);
-            return ActionsOnCreate ? AddRows(formDefinition, new FormRow(true, 1)
-            {
-                Elements =
+            return ActionsOnCreate
+                ? AddRows(formDefinition, new FormRow(true, 1)
                 {
-                    new FormElementContainer(0, formDefinition.Grid.Length, new List<FormElement>
+                    Elements =
                     {
-                        GetCreateNegativeAction().FreezeResources(),
-                        GetCreatePositiveAction().FreezeResources()
-                    })
-                }
-            }) : formDefinition;
+                        new FormElementContainer(0, formDefinition.Grid.Length, new List<FormElement>
+                        {
+                            GetCreateNegativeAction().FreezeResources(),
+                            GetCreatePositiveAction().FreezeResources()
+                        })
+                    }
+                })
+                : formDefinition;
         }
 
         private UpdateFormDefinition GetUpdateDefinition(object model)
@@ -1561,22 +1591,24 @@ namespace Forge.Forms.Collections
             return new UpdateFormDefinition(
                 formDefinition,
                 model,
-                ActionsOnUpdate ? formDefinition.FormRows.Concat(
-                    new[]
-                    {
-                        new FormRow(true, 1)
+                ActionsOnUpdate
+                    ? formDefinition.FormRows.Concat(
+                        new[]
                         {
-                            Elements =
+                            new FormRow(true, 1)
                             {
-                                new FormElementContainer(0, formDefinition.Grid.Length, new List<FormElement>
+                                Elements =
                                 {
-                                    GetUpdateNegativeAction().FreezeResources(),
-                                    GetUpdatePositiveAction().FreezeResources()
-                                })
+                                    new FormElementContainer(0, formDefinition.Grid.Length, new List<FormElement>
+                                    {
+                                        GetUpdateNegativeAction().FreezeResources(),
+                                        GetUpdatePositiveAction().FreezeResources()
+                                    })
+                                }
                             }
                         }
-                    }
-                ).ToList().AsReadOnly() : formDefinition.FormRows
+                    ).ToList().AsReadOnly()
+                    : formDefinition.FormRows
             );
         }
 
@@ -1643,6 +1675,17 @@ namespace Forge.Forms.Collections
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
+        #region Constants
+
+        public const string PositiveCreateAction = "DynamicDataGrid_CreateDialogPositive";
+        public const string NegativeCreateAction = "DynamicDataGrid_CreateDialogNegative";
+        public const string PositiveUpdateAction = "DynamicDataGrid_UpdateDialogPositive";
+        public const string NegativeUpdateAction = "DynamicDataGrid_UpdateDialogNegative";
+        public const string NegativeDeleteAction = "DynamicDataGrid_DeleteDialogNegative";
+        public const string PositiveDeleteAction = "DynamicDataGrid_DeleteDialogNegative";
+
+        #endregion
 
         #region Dependency properties
 
@@ -1749,8 +1792,6 @@ namespace Forge.Forms.Collections
             set => SetValue(ItemsSourceProperty, value);
         }
 
-        public CollectionViewSource ViewSource { get; set; } = new CollectionViewSource();
-
         public IEnumerable<string> PaginationPageNumbers
         {
             get
@@ -1779,7 +1820,7 @@ namespace Forge.Forms.Collections
 
                     foreach (var i in range)
                     {
-                        if (l != default(int))
+                        if (l != default)
                         {
                             if (i - l == 2)
                                 yield return (l + 1).ToString();
@@ -1847,8 +1888,8 @@ namespace Forge.Forms.Collections
 
         public UIElement Header
         {
-            get { return (UIElement) GetValue(HeaderProperty); }
-            set { SetValue(HeaderProperty, value); }
+            get => (UIElement) GetValue(HeaderProperty);
+            set => SetValue(HeaderProperty, value);
         }
 
         private static void AddItemToCollection(Type itemType, object collection, object item)
@@ -1878,10 +1919,7 @@ namespace Forge.Forms.Collections
 
         private void RemoveItemsFromCollection(Type itemType, ICollection collection, IEnumerable itemsToRemove)
         {
-            foreach (var o in itemsToRemove)
-            {
-                RemoveItemFromCollection(itemType, collection, o);
-            }
+            foreach (var o in itemsToRemove) RemoveItemFromCollection(itemType, collection, o);
         }
 
         private void RemoveItemFromCollection(Type itemType, ICollection collection, object item)
@@ -1891,7 +1929,7 @@ namespace Forge.Forms.Collections
                 RemoveItemsFromCollection(itemType, collection, e);
                 return;
             }
-            
+
             if (!RemoveItemCache.TryGetValue(itemType, out var action))
             {
                 var collectionType = typeof(ICollection<>).MakeGenericType(itemType);
@@ -1917,23 +1955,5 @@ namespace Forge.Forms.Collections
         }
 
         #endregion
-
-        public void Dispose()
-        {
-            Loaded -= OnLoaded;
-            Columns.CollectionChanged -= ColumnsOnCollectionChanged;
-
-            if (DataGrid.Items is INotifyCollectionChanged changeableCollection)
-            {
-                changeableCollection.CollectionChanged -= OnCollectionChanged;
-            }
-
-            DataGrid.AfterSorting -= DataGridOnSorting;
-            DataGrid.MouseDoubleClick -= DataGridOnMouseDoubleClick;
-            DataGrid.MouseEnter -= MouseEnterHandler;
-            DataGrid.Columns.Clear();
-            DataGrid = null;
-            Columns.Clear();
-        }
     }
 }

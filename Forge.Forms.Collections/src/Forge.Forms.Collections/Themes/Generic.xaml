@@ -21,6 +21,7 @@
     <converters:PagingConverter x:Key="LimitItemsConverter" />
     <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
     <converters:HeaderStyleVisibilityConverter x:Key="HeaderVisibilityConverter" />
+    <converters:ItemsTextConverter x:Key="ItemsTextConverter" />
     <system:Boolean x:Key="True">True</system:Boolean>
 
     <Style x:Key="CustomDataGridCell" TargetType="{x:Type DataGridCell}">
@@ -263,15 +264,9 @@
                                              Background="{Binding RelativeSource={RelativeSource AncestorType=materialDesign:Card, Mode=FindAncestor}, Path=Background}"
                                              CanFilter="{Binding IsFilteringEnabled, RelativeSource={RelativeSource TemplatedParent}}"
                                              Style="{StaticResource CustomDataGrid}"
+                                             ItemsSource="{TemplateBinding View}"
                                              CellStyle="{Binding CellStyle, RelativeSource={RelativeSource TemplatedParent}}"
                                              RowStyle="{Binding RowStyle, RelativeSource={RelativeSource TemplatedParent}}">
-                    <DataGrid.ItemsSource>
-                        <MultiBinding Converter="{StaticResource LimitItemsConverter}">
-                            <Binding Path="ViewSource.View"
-                                     RelativeSource="{RelativeSource TemplatedParent}" />
-                            <Binding Path="." RelativeSource="{RelativeSource TemplatedParent}" />
-                        </MultiBinding>
-                    </DataGrid.ItemsSource>
                     <fancyGrid:FilteringDataGrid.Columns>
                         <DataGridTemplateColumn Width="*">
                             <DataGridTemplateColumn.CellTemplate>
@@ -341,12 +336,13 @@
                                        VerticalAlignment="Center" Margin="0,0,32,0"
                                        d:DataContext="{d:DesignInstance collections:DynamicDataGrid}">
                                 <TextBlock.Text>
-                                    <MultiBinding StringFormat="{}{0}-{1} of {2}">
+                                    <MultiBinding Converter="{StaticResource ItemsTextConverter}">
                                         <Binding Path="CurrentMinItem"
                                                  RelativeSource="{RelativeSource TemplatedParent}" />
                                         <Binding Path="CurrentMaxItem"
                                                  RelativeSource="{RelativeSource TemplatedParent}" />
                                         <Binding Path="TotalItems" RelativeSource="{RelativeSource TemplatedParent}" />
+                                        <Binding Path="ItemsOfText" RelativeSource="{RelativeSource TemplatedParent}" />
                                     </MultiBinding>
                                 </TextBlock.Text>
 

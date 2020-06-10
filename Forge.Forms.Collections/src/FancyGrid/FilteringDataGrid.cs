@@ -1,5 +1,6 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
@@ -53,6 +54,15 @@ namespace FancyGrid
             DependencyProperty.Register("ExcludeItemsInternalMessage", typeof(string), typeof(FilteringDataGrid),
                 new PropertyMetadata("Exclude items like this"));
 
+        public static readonly DependencyProperty ItemsCountProperty = DependencyProperty.Register(
+            "ItemsCount", typeof(int), typeof(FilteringDataGrid), new PropertyMetadata(default(int)));
+
+        public int ItemsCount
+        {
+            get { return (int) GetValue(ItemsCountProperty); }
+            set { SetValue(ItemsCountProperty, value); }
+        }
+        
         /// <summary>
         /// This dictionary will map a column to the filter behavior
         /// </summary>
@@ -67,6 +77,10 @@ namespace FancyGrid
         /// Cache with properties for better performance
         /// </summary>
         private readonly Dictionary<string, PropertyInfo> _propertyCache;
+
+        private PagedCollectionView View => ItemsSource as PagedCollectionView;
+
+        private DebounceDispatcher debounceTimer = new DebounceDispatcher();
 
         /// <inheritdoc />
         /// <summary>
@@ -340,14 +354,16 @@ namespace FancyGrid
             FilterToken?.Cancel();
             FilterToken = new CancellationTokenSource();
 
-            Dispatcher.Invoke(() =>
-            {
-                var view = CollectionViewSource.GetDefaultView(ItemsSource);
-                view.Filter = Filter;
+            if (View != null)
+                Dispatcher.Invoke(() =>
+                {
+                    View.Filter = null;
+                    View.Filter = Filter;
+                    View.MoveToFirstPage();
 
-                var expression = BindingOperations.GetMultiBindingExpression(this, ItemsSourceProperty);
-                expression?.UpdateTarget();
-            }, DispatcherPriority.Normal, FilterToken.Token);
+                    var expression = BindingOperations.GetMultiBindingExpression(this, ItemsSourceProperty);
+                    expression?.UpdateTarget();
+                }, DispatcherPriority.Normal, FilterToken.Token);
         }
 
         private bool Filter(object item)
@@ -495,9 +511,9 @@ namespace FancyGrid
             }
 
             return item.ToString().IndexOf(filter,
-                       IsFilteringCaseInternalSensitive
-                           ? StringComparison.CurrentCultureIgnoreCase
-                           : StringComparison.CurrentCulture) >= 0;
+                IsFilteringCaseInternalSensitive
+                    ? StringComparison.CurrentCultureIgnoreCase
+                    : StringComparison.CurrentCulture) >= 0;
         }
 
         private bool fm_Startswith(object item, string filter)
