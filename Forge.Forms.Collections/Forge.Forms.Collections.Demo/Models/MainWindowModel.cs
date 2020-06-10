@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Input;
@@ -15,7 +16,8 @@ namespace Forge.Forms.Collections.Demo.Models
 
         public MainWindowModel()
         {
-            People = new ObservableCollection<Person>(PersonFaker.Generate(1));
+            People = new ObservableCollection<Person>(PersonFaker.Generate(1000).OrderBy(i => i.FirstName)
+                .ThenBy(i => i.LastName));
             AddRandomPerson = new RelayCommand(o => People.Add(PersonFaker.Generate()));
             ReloadColumnsCommand = new RelayCommand(o =>
             {
