@@ -359,6 +359,7 @@ namespace Forge.Forms.FormBuilding
                 DefaultValue = element.TryGetAttribute("defaultValue"),
                 IsVisible = BoolOrText(element.TryGetAttribute("visible")),
                 IsEnabled = BoolOrText(element.TryGetAttribute("enabled")),
+                InitialFocus = BoolOrText(element.TryGetAttribute("initialFocus")),
                 IsReadOnly = BoolOrText(element.TryGetAttribute("readonly")),
                 Icon = element.TryGetAttribute("icon"),
                 ToolTip = element.TryGetAttribute("tooltip")
