@@ -13,167 +13,74 @@ namespace Forge.Forms.DynamicExpressions.MultiValueConverters
                 values[0] != null &&
                 values[1] != null)
             {
-                if (values[0] is decimal dc1)
+                switch (values[0])
                 {
-                    if (values[1] is decimal dc2)
-                    {
-                        return dc1 / dc2;
-                    }
-                    else if (values[1] is double d2)
-                    {
-                        return dc1 / (decimal)d2;
-                    }
-                    else if (values[1] is float f2)
-                    {
-                        return dc1 / (decimal)f2;
-                    }
-                    else if (values[1] is long l2)
-                    {
-                        return dc1 / l2;
-                    }
-                    else if (values[1] is int i2)
-                    {
-                        return dc1 / i2;
-                    }
-                    else if (values[1] is short s2)
-                    {
-                        return dc1 / s2;
-                    }
-                }
-                else if (values[0] is double d1)
-                {
-                    if (values[1] is decimal dc2)
-                    {
-                        return d1 / (double)dc2;
-                    }
-                    else if (values[1] is double d2)
-                    {
-                        return d1 / d2;
-                    }
-                    else if (values[1] is float f2)
-                    {
-                        return d1 / f2;
-                    }
-                    else if (values[1] is long l2)
-                    {
-                        return d1 / l2;
-                    }
-                    else if (values[1] is int i2)
-                    {
-                        return d1 / i2;
-                    }
-                    else if (values[1] is short s2)
-                    {
-                        return d1 / s2;
-                    }
-                }
-                else if (values[0] is float f1)
-                {
-                    if (values[1] is decimal dc2)
-                    {
-                        return f1 / (double)dc2;
-                    }
-                    else if (values[1] is double d2)
-                    {
-                        return f1 / d2;
-                    }
-                    else if (values[1] is float f2)
-                    {
-                        return f1 / f2;
-                    }
-                    else if (values[1] is long l2)
-                    {
-                        return f1 / l2;
-                    }
-                    else if (values[1] is int i2)
-                    {
-                        return f1 / i2;
-                    }
-                    else if (values[1] is short s2)
-                    {
-                        return f1 / s2;
-                    }
-                }
-                else if (values[0] is long l1)
-                {
-                    if (values[1] is decimal dc2)
-                    {
-                        return l1 / (double)dc2;
-                    }
-                    else if (values[1] is double d2)
-                    {
-                        return l1 / d2;
-                    }
-                    else if (values[1] is float f2)
-                    {
-                        return l1 / f2;
-                    }
-                    else if (values[1] is long l2)
-                    {
-                        return l1 / l2;
-                    }
-                    else if (values[1] is int i2)
-                    {
-                        return l1 / i2;
-                    }
-                    else if (values[1] is short s2)
-                    {
-                        return l1 / s2;
-                    }
-                }
-                else if (values[0] is int i1)
-                {
-                    if (values[1] is decimal dc2)
-                    {
-                        return i1 / (double)dc2;
-                    }
-                    else if (values[1] is double d2)
-                    {
-                        return i1 / d2;
-                    }
-                    else if (values[1] is float f2)
-                    {
-                        return i1 / f2;
-                    }
-                    else if (values[1] is long l2)
-                    {
-                        return i1 / l2;
-                    }
-                    else if (values[1] is int i2)
-                    {
-                        return i1 / i2;
-                    }
-                    else if (values[1] is short s2)
-                    {
-                        return i1 / s2;
-                    }
-                }
-                else if (values[0] is short s1)
-                {
-                    if (values[1] is decimal dc2)
-                    {
-                        return s1 / (double)dc2;
-                    }
-                    else if (values[1] is double d2)
-                    {
-                        return s1 / d2;
-                    }
-                    else if (values[1] is float f2)
-                    {
-                        return s1 / f2;
-                    }
-                    else if (values[1] is long l2)
-                    {
-                        return s1 / l2;
-                    }
-                    else if (values[1] is int i2)
-                    {
-                        return s1 / i2;
-                    }
-                    else if (values[1] is short s2)
-                    {
-                        return s1 / s2;
-                    }
+                    case decimal dc1:
+                        switch (values[1])
+                        {
+                            case decimal dc2: return dc1 / dc2;
+                            case double d2: return dc1 / (decimal)d2;
+                            case float f2: return dc1 / (decimal)f2;
+                            case long l2: return dc1 / l2;
+                            case int i2: return dc1 / i2;
+                            case short s2: return dc1 / s2;
+                        }
+                        break;
+                    case double d1:
+                        switch (values[1])
+                        {
+                            case decimal dc2: return (decimal)d1 / dc2;
+                            case double d2: return d1 / d2;
+                            case float f2: return d1 / f2;
+                            case long l2: return d1 / l2;
+                            case int i2: return d1 / i2;
+                            case short s2: return d1 / s2;
+                        }
+                        break;
+                    case float f1:
+                        switch (values[1])
+                        {
+                            case decimal dc2: return (decimal)f1 / dc2;
+                            case double d2: return f1 / d2;
+                            case float f2: return f1 / f2;
+                            case long l2: return f1 / l2;
+                            case int i2: return f1 / i2;
+                            case short s2: return f1 / s2;
+                        }
+                        break;
+                    case long l1:
+                        switch (values[1])
+                        {
+                            case decimal dc2: return l1 / dc2;
+                            case double d2: return l1 / d2;
+                            case float f2: return l1 / f2;
+                            case long l2: return l1 / l2;
+                            case int i2: return l1 / i2;
+                            case short s2: return l1 / s2;
+                        }
+                        break;
+                    case int i1:
+                        switch (values[1])
+                        {
+                            case decimal dc2: return i1 / dc2;
+                            case double d2: return i1 / d2;
+                            case float f2: return i1 / f2;
+                            case long l2: return i1 / l2;
+                            case int i2: return i1 / i2;
+                            case short s2: return i1 / s2;
+                        }
+                        break;
+                    case short s1:
+                        switch (values[1])
+                        {
+                            case decimal dc2: return s1 / dc2;
+                            case double d2: return s1 / d2;
+                            case float f2: return s1 / f2;
+                            case long l2: return s1 / l2;
+                            case int i2: return s1 / i2;
+                            case short s2: return s1 / s2;
+                        }
+                        break;
                 }
             }
 

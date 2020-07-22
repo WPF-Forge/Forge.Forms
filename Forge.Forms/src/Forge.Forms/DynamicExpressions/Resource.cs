@@ -44,7 +44,6 @@ namespace Forge.Forms.DynamicExpressions
         public static readonly Dictionary<string, IMultiValueConverter> MultiValueConverters =
             new Dictionary<string, IMultiValueConverter>(StringComparer.OrdinalIgnoreCase)
             {
-                ["Append"] = new AppendMultiConverter(),
                 ["Divide"] = new DivideMultiConverter(),
                 ["Multiply"] = new MultiplyMultiConverter(),
             };
@@ -52,7 +51,6 @@ namespace Forge.Forms.DynamicExpressions
         public static readonly Dictionary<string, Func<object, IMultiValueConverter>> MultiValueConverterFactories =
             new Dictionary<string, Func<object, IMultiValueConverter>>(StringComparer.OrdinalIgnoreCase)
             {
-                ["Append"] = parameter => new AppendMultiConverter(parameter),
             };
 
         protected Resource(string valueConverter)

@@ -117,7 +117,6 @@
     <Compile Include="DynamicExpressions\MultiValueBinding.cs" />
     <Compile Include="DynamicExpressions\InvariantDouble.cs" />
     <Compile Include="DynamicExpressions\InvariantInt.cs" />
-    <Compile Include="DynamicExpressions\MultiValueConverters\AppendMultiConverter.cs" />
     <Compile Include="DynamicExpressions\MultiValueConverters\DivideMultiConverter.cs" />
     <Compile Include="DynamicExpressions\MultiValueConverters\MultiplyMultiConverter.cs" />
     <Compile Include="DynamicExpressions\ValueConverters\IsEqualConverter.cs" />
@@ -425,6 +424,5 @@
       <Generator>XamlIntelliSenseFileGenerator</Generator>
     </Page>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
