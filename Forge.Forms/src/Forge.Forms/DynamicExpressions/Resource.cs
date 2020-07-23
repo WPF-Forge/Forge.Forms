@@ -1,6 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Text;
+using System.Windows;
 using System.Windows.Data;
+using Forge.Forms.DynamicExpressions.MultiValueConverters;
 using Forge.Forms.DynamicExpressions.ValueConverters;
 using Forge.Forms.FormBuilding;
 
@@ -35,6 +39,18 @@ namespace Forge.Forms.DynamicExpressions
             new Dictionary<string, Func<object, IValueConverter>>(StringComparer.OrdinalIgnoreCase)
             {
                 ["IsEqual"] = parameter => new IsEqualConverter(parameter)
+            };
+
+        public static readonly Dictionary<string, IMultiValueConverter> MultiValueConverters =
+            new Dictionary<string, IMultiValueConverter>(StringComparer.OrdinalIgnoreCase)
+            {
+                ["Divide"] = new DivideMultiConverter(),
+                ["Multiply"] = new MultiplyMultiConverter(),
+            };
+
+        public static readonly Dictionary<string, Func<object, IMultiValueConverter>> MultiValueConverterFactories =
+            new Dictionary<string, Func<object, IMultiValueConverter>>(StringComparer.OrdinalIgnoreCase)
+            {
             };
 
         protected Resource(string valueConverter)
@@ -125,6 +141,78 @@ namespace Forge.Forms.DynamicExpressions
             }
 
             throw new InvalidOperationException($"Value converter '{valueConverter}' not found.");
+        }
+
+        protected IMultiValueConverter GetMultiValueConverter(IResourceContext context)
+        {
+            return GetMultiValueConverter(context, ValueConverter);
+        }
+
+        protected internal static IMultiValueConverter GetMultiValueConverter(IResourceContext context, string valueConverter)
+        {
+            if (string.IsNullOrEmpty(valueConverter))
+            {
+                return null;
+            }
+
+            object parameter = null;
+            var index = valueConverter.IndexOf(':');
+            if (index > 0)
+            {
+                var parameterPart = valueConverter.Substring(index + 1);
+                valueConverter = valueConverter.Substring(0, index);
+                if (parameterPart[0] == '\'')
+                {
+                    parameter = parameterPart.Substring(1);
+                }
+                else
+                {
+                    switch (parameterPart)
+                    {
+                        case "true":
+                            parameter = true;
+                            break;
+                        case "false":
+                            parameter = false;
+                            break;
+                        case "null":
+                            parameter = null;
+                            break;
+                        default:
+                            if (InvariantInt.TryParse(parameterPart, out var ival))
+                            {
+                                parameter = ival;
+                            }
+                            else if (InvariantDouble.TryParse(parameterPart, out var dval))
+                            {
+                                parameter = dval;
+                            }
+                            else
+                            {
+                                throw new FormatException("Invalid converter parameter.");
+                            }
+
+                            break;
+                    }
+                }
+            }
+
+            if (MultiValueConverterFactories.TryGetValue(valueConverter, out var f))
+            {
+                return f(parameter);
+            }
+
+            if (MultiValueConverters.TryGetValue(valueConverter, out var m))
+            {
+                return m;
+            }
+
+            if (context != null && context.TryFindResource(valueConverter) is IMultiValueConverter converter)
+            {
+                return converter;
+            }
+
+            throw new InvalidOperationException($"MultiBinding converter '{valueConverter}' not found.");
         }
 
         public override bool Equals(object obj)

@@ -647,6 +647,9 @@ namespace Forge.Forms.DynamicExpressions
                 case "File":
                     resource = new FileBinding(key, false, converter);
                     break;
+                case "MultiBinding":
+                    resource = new MultiPropertyBinding(key.Split(' '), false, converter);
+                    break;
                 default:
                     resource = contextualResource?.Invoke(resourceTypeString + key, oneTimeBind, converter);
                     if (resource != null)
