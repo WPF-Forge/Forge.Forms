@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.4
+
+- Added support for `MultiBinding` syntax in dynamic resources.
+
 ## 1.1.3
 
 - Added `initialFocus` property for XML fields.
