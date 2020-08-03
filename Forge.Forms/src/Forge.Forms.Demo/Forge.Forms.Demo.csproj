@@ -55,6 +55,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Behaviors\CheckAllBehavior.cs" />
+    <Compile Include="Converters\DivideMultiConverter.cs" />
+    <Compile Include="Converters\MultiplyMultiConverter.cs" />
     <Compile Include="Infrastructure\PushBinding.cs" />
     <Compile Include="Infrastructure\TextDocumentValueConverter.cs" />
     <Compile Include="Models\BooleanLogic.cs" />

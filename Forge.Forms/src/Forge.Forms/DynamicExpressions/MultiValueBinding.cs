@@ -20,7 +20,7 @@ namespace Forge.Forms.DynamicExpressions
 
         public BindingBase ProvideBinding(IResourceContext context)
         {
-            var multiBinding = new MultiBinding
+            var multiBinding = new System.Windows.Data.MultiBinding
             {
                 Converter = Converter
             };

@@ -4,7 +4,6 @@ using System.Globalization;
 using System.Text;
 using System.Windows;
 using System.Windows.Data;
-using Forge.Forms.DynamicExpressions.MultiValueConverters;
 using Forge.Forms.DynamicExpressions.ValueConverters;
 using Forge.Forms.FormBuilding;
 
@@ -44,8 +43,6 @@ namespace Forge.Forms.DynamicExpressions
         public static readonly Dictionary<string, IMultiValueConverter> MultiValueConverters =
             new Dictionary<string, IMultiValueConverter>(StringComparer.OrdinalIgnoreCase)
             {
-                ["Divide"] = new DivideMultiConverter(),
-                ["Multiply"] = new MultiplyMultiConverter(),
             };
 
         public static readonly Dictionary<string, Func<object, IMultiValueConverter>> MultiValueConverterFactories =

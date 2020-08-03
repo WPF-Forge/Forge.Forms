@@ -58,6 +58,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Forge.Forms.Demo\Forge.Forms.Demo.csproj">
+      <Project>{9366f07d-d5de-4b19-987c-b27c40476685}</Project>
+      <Name>Forge.Forms.Demo</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Forge.Forms\Forge.Forms.csproj">
       <Project>{703572ce-5a7e-4b37-9f12-ff9a11483de2}</Project>
       <Name>Forge.Forms</Name>

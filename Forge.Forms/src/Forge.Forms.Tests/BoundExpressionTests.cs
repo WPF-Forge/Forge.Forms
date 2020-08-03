@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Data;
+using Forge.Forms.Demo.Converters;
 using Forge.Forms.DynamicExpressions;
 using Forge.Forms.FormBuilding;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -386,6 +387,30 @@ namespace Forge.Forms.Tests
 
             expression = BoundExpression.Parse("{Binding Name|ToUpper}");
             Assert.IsNull(expression.StringFormat);
+        }
+
+        [TestMethod]
+        public void TestMultiConverters()
+        {
+            // Add some multiconverters for testing
+            Resource.MultiValueConverters["Divide"] = new DivideMultiConverter();
+            Resource.MultiValueConverters["Multiply"] = new MultiplyMultiConverter();
+
+            var context = new DummyFormContext(new DummyForm
+            {
+                Value = new Model
+                {
+                    Value = 5,
+                },
+                Context = new List<int> { 1, 2, 3, 4, 5 }
+            });
+
+            var expression =
+                BoundExpression.Parse(
+                    "{MultiBinding {Binding Value} {Binding Value} |Multiply:0.000}");
+
+            var str = expression.GetStringValue(context).Value;
+            Assert.AreEqual("25.000", str);
         }
 
         [TestMethod]

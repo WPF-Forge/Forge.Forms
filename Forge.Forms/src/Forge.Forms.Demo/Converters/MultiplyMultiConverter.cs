@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
 
-namespace Forge.Forms.DynamicExpressions.MultiValueConverters
+namespace Forge.Forms.Demo.Converters
 {
     public class MultiplyMultiConverter : IMultiValueConverter
     {
