@@ -1,23 +1,24 @@
-﻿using System.Windows.Data;
+﻿using System.Collections.Generic;
+using System.Windows.Data;
 using Forge.Forms.FormBuilding;
 
 namespace Forge.Forms.DynamicExpressions
 {
-    public sealed class MultiPropertyBinding : Resource
+    public sealed class MultiBinding : Resource
     {
-        public MultiPropertyBinding(string[] propertyPaths, bool oneTimeBinding)
-            : this(propertyPaths, oneTimeBinding, null)
+        public MultiBinding(Resource[] resources, bool oneTimeBinding)
+            : this(resources, oneTimeBinding, null)
         {
         }
 
-        public MultiPropertyBinding(string[] propertyPaths, bool oneTimeBinding, string valueConverter)
+        public MultiBinding(Resource[] resources, bool oneTimeBinding, string valueConverter)
             : base(valueConverter)
         {
-            PropertyPaths = propertyPaths;
+            Resources = resources;
             OneTimeBinding = oneTimeBinding;
         }
 
-        public string[] PropertyPaths { get; }
+        public Resource[] Resources { get; }
 
         public bool OneTimeBinding { get; }
 
@@ -25,11 +26,11 @@ namespace Forge.Forms.DynamicExpressions
 
         public override BindingBase ProvideBinding(IResourceContext context)
         {
-            var multiBinding = new MultiBinding();
+            var multiBinding = new System.Windows.Data.MultiBinding();
             multiBinding.Converter = GetMultiValueConverter(context);
-            foreach (var propertyPath in PropertyPaths)
+            foreach (var resource in Resources)
             {
-                multiBinding.Bindings.Add(context.CreateModelBinding(propertyPath));
+                multiBinding.Bindings.Add(resource.ProvideBinding(context));
             }
 
             multiBinding.Mode = OneTimeBinding ? BindingMode.OneTime : BindingMode.OneWay;
@@ -38,9 +39,9 @@ namespace Forge.Forms.DynamicExpressions
 
         public override bool Equals(Resource other)
         {
-            if (other is MultiPropertyBinding resource)
+            if (other is MultiBinding resource)
             {
-                return PropertyPaths == resource.PropertyPaths
+                return Resources == resource.Resources
                        && OneTimeBinding == resource.OneTimeBinding
                        && ValueConverter == resource.ValueConverter;
             }
@@ -50,7 +51,7 @@ namespace Forge.Forms.DynamicExpressions
 
         public override int GetHashCode()
         {
-            return PropertyPaths.GetHashCode() ^ (OneTimeBinding ? 123456789 : 741852963);
+            return Resources.GetHashCode() ^ (OneTimeBinding ? 123456789 : 741852963);
         }
     }
 }

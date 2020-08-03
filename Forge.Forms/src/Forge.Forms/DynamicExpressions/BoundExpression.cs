@@ -71,7 +71,7 @@ namespace Forge.Forms.DynamicExpressions
                 return binding;
             }
 
-            var multiBinding = new MultiBinding
+            var multiBinding = new System.Windows.Data.MultiBinding
             {
                 StringFormat = StringFormat
             };
@@ -240,6 +240,9 @@ namespace Forge.Forms.DynamicExpressions
             var resourceConverter = new StringBuilder();
             var resourceFormat = new StringBuilder();
             var oneTimeBind = false;
+            bool isInMultiBinding = false;
+            var multiBindingOneTimeBind = false;
+            var multiBindingResources = new List<Resource>();
             var length = expression.Length;
             char c;
             outside:
@@ -321,6 +324,26 @@ namespace Forge.Forms.DynamicExpressions
                 }
             }
 
+            if (resourceType.ToString() == "MultiBinding")
+            {
+                // Set a flag that all bindings after this should be added to a multibinding converter's bindings
+                // until the MultiBinding is closed
+                isInMultiBinding = true;
+                multiBindingOneTimeBind = oneTimeBind;
+                multiBindingResources.Clear();
+                resourceType.Clear();
+                c = expression[i];
+                if (c == '{')
+                {
+                    i++;
+                    goto readResource;
+                }
+                else
+                {
+                    throw new FormatException("MultiBinding must contain at least one resource.");
+                }
+            }
+
             // Resource name.
             if (expression[i] == '\'')
             {
@@ -382,6 +405,7 @@ namespace Forge.Forms.DynamicExpressions
                 }
             }
 
+            endOfMultiBinding:
             // Skip whitespace between name and converter/format/end.
             while (char.IsWhiteSpace(expression[i]))
             {
@@ -648,7 +672,8 @@ namespace Forge.Forms.DynamicExpressions
                     resource = new FileBinding(key, false, converter);
                     break;
                 case "MultiBinding":
-                    resource = new MultiPropertyBinding(key.Split(' '), false, converter);
+                    resource = new MultiBinding(multiBindingResources.ToArray(), false, converter);
+                    isInMultiBinding = false;
                     break;
                 default:
                     resource = contextualResource?.Invoke(resourceTypeString + key, oneTimeBind, converter);
@@ -660,26 +685,74 @@ namespace Forge.Forms.DynamicExpressions
                     throw new FormatException("Invalid resource type.");
             }
 
-            var index = resources.IndexOf(resource);
-            if (index == -1)
+            if (isInMultiBinding)
             {
-                index = resources.Count;
-                resources.Add(resource);
-            }
+                if (resource is Resource r)
+                {
+                    multiBindingResources.Add(r);
+                }
+                else
+                {
+                    throw new FormatException("Only resources can be added to a MultiBinding.");
+                }
 
-            stringFormat.Append(index);
-            if (resourceFormat.Length != 0)
+                // Skip whitespace.
+                while (char.IsWhiteSpace(expression[i]))
+                {
+                    if (++i == length)
+                    {
+                        throw new FormatException("Unexpected end of input.");
+                    }
+                }
+
+                c = expression[i];
+                if (c == '{')
+                {
+                    i++;
+                    resourceType.Clear();
+                    resourceName.Clear();
+                    resourceFormat.Clear();
+                    resourceConverter.Clear();
+                    oneTimeBind = false;
+                    goto readResource;
+                }
+                else
+                {
+                    resourceType.Clear();
+                    resourceName.Clear();
+                    resourceFormat.Clear();
+                    resourceConverter.Clear();
+                    oneTimeBind = false;
+                    resourceType.Append("MultiBinding");
+                    goto endOfMultiBinding;
+                }
+            }
+            else
             {
-                stringFormat.Append(resourceFormat);
-            }
+                var index = resources.IndexOf(resource);
+                if (index == -1)
+                {
+                    index = resources.Count;
+                    resources.Add(resource);
+                }
 
-            stringFormat.Append('}');
+                stringFormat.Append(index);
+                if (resourceFormat.Length != 0)
+                {
+                    stringFormat.Append(resourceFormat);
+                }
+
+
+                stringFormat.Append('}');
+            }
 
             resourceType.Clear();
             resourceName.Clear();
             resourceFormat.Clear();
             resourceConverter.Clear();
             oneTimeBind = false;
+            multiBindingOneTimeBind = false;
+            multiBindingResources.Clear();
             goto outside;
         }
 

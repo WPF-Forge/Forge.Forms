@@ -389,6 +389,26 @@ namespace Forge.Forms.Tests
         }
 
         [TestMethod]
+        public void TestMultiConverters()
+        {
+            var context = new DummyFormContext(new DummyForm
+            {
+                Value = new Model
+                {
+                    Value = 5,
+                },
+                Context = new List<int> { 1, 2, 3, 4, 5 }
+            });
+
+            var expression =
+                BoundExpression.Parse(
+                    "{MultiBinding {Binding Value} {Binding Value} |Multiply:0.000}");
+
+            var str = expression.GetStringValue(context).Value;
+            Assert.AreEqual("25.000", str);
+        }
+
+        [TestMethod]
         public void TestApostropheSyntax()
         {
             var expression = BoundExpression.Parse("Hello, {Binding 'FirstName'}");
