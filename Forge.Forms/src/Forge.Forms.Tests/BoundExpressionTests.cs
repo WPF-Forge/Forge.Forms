@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Data;
+using Forge.Forms.Demo.Converters;
 using Forge.Forms.DynamicExpressions;
 using Forge.Forms.FormBuilding;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -391,6 +392,10 @@ namespace Forge.Forms.Tests
         [TestMethod]
         public void TestMultiConverters()
         {
+            // Add some multiconverters for testing
+            Resource.MultiValueConverters["Divide"] = new DivideMultiConverter();
+            Resource.MultiValueConverters["Multiply"] = new MultiplyMultiConverter();
+
             var context = new DummyFormContext(new DummyForm
             {
                 Value = new Model
