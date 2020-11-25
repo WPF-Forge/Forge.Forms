@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 using Forge.Forms.Controls;
 using Forge.Forms.FormBuilding;
@@ -119,6 +120,8 @@ namespace Forge.Forms
                 {
                     window.Topmost = true;
                 }
+
+                window.Owner = Application.Current.MainWindow;
 
                 window.Form.OnAction += (s, e) =>
                 {

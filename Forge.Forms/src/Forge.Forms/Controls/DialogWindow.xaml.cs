@@ -15,11 +15,6 @@ namespace Forge.Forms.Controls
 			InitializeComponent();
 			Loaded += (sender, e) =>
 			{
-				if (options.CenterOnParentWindow)
-				{
-					this.Left = Application.Current.MainWindow.Left + (Application.Current.MainWindow.Width / 2) - (this.Width / 2);
-					this.Top = Application.Current.MainWindow.Top + (Application.Current.MainWindow.Height / 2) - (this.Height / 2);
-				}
 				MoveFocus(new TraversalRequest(FocusNavigationDirection.Next));
 			};
 			Form.Environment.Add(options.EnvironmentFlags);
