@@ -48,7 +48,7 @@ namespace Forge.Forms.Validation
                 }
 
                 // Optionally ignore null/empty values.
-                if (IgnoreNullOrEmpty && value == null || value is "")
+                if (IgnoreNullOrEmpty && (value == null || value is ""))
                 {
                     return ValidationResult.ValidResult;
                 }

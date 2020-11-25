@@ -11,7 +11,7 @@ namespace Forge.Forms.Demo.Models
         IsDefault = true, ClosesDialog = true, Validates = true)]
     public class Login : IActionHandler, INotifyPropertyChanged
     {
-        private string username;
+        private string username = "";
         private string password;
         private bool rememberMe;
         private bool loading;
