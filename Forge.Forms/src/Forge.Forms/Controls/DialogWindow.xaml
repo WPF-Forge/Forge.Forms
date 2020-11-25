@@ -21,8 +21,7 @@
     ShowTitleBar="False"
     SizeToContent="Height"
     TextOptions.TextFormattingMode="Ideal"
-    TextOptions.TextRenderingMode="Auto"
-    WindowStartupLocation="CenterScreen">
+    TextOptions.TextRenderingMode="Auto">
     <metro:MetroWindow.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>

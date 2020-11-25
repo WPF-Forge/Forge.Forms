@@ -7,6 +7,7 @@
         private bool showCloseButton;
         private bool showMaxRestoreButton = true;
         private bool showMinButton;
+        private bool centerOnParentWindow = true;
 
         private string title = "Dialog";
 
@@ -100,6 +101,20 @@
             set
             {
                 if (value == canResize)
+                {
+                    return;
+                }
+
+                canResize = value;
+                OnPropertyChanged();
+            }
+        }
+        public bool CenterOnParentWindow
+        {
+            get => centerOnParentWindow;
+            set
+            {
+                if (value == centerOnParentWindow)
                 {
                     return;
                 }
