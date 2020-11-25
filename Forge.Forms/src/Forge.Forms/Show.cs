@@ -113,7 +113,7 @@ namespace Forge.Forms
 
 			private DialogResult ShowWindow(object model)
 			{
-				return Application.Current.Dispatcher.InvokeAsync(() =>
+				return Application.Current.Dispatcher.Invoke(() =>
 				{
 					object lastAction = null;
 					object lastActionParameter = null;
@@ -139,7 +139,7 @@ namespace Forge.Forms
 						Keyboard.Focus(window);
 					}
 					return new DialogResult(window.Form.Value, lastAction, lastActionParameter);
-				}).Result;
+				});
 			}
 		}
 
