@@ -8,6 +8,8 @@
 
 With Forge.Forms you can create dynamic forms in WPF from classes or XML.
 
+This repo contains the latest (runable) Metro Apps and MaterialDesign Themes NuGet packages as well as their referenced libraries. However, please consider this repo to be experimental.
+
 Join us at https://gitter.im/WPF-Forge for questions or general discussion.
 
 ## Getting started
