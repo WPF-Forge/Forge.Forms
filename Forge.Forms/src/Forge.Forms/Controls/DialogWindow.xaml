@@ -22,18 +22,19 @@
     SizeToContent="Height"
     TextOptions.TextFormattingMode="Ideal"
     TextOptions.TextRenderingMode="Auto"
-    WindowStartupLocation="CenterScreen">
+    WindowStartupLocation="CenterOwner">
     <metro:MetroWindow.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colors.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Clean/Clean.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Clean/MetroWindow.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <controls:BoolToResizeModeConverter x:Key="BoolToResizeModeConverter" />
         </ResourceDictionary>
     </metro:MetroWindow.Resources>
     <metro:MetroWindow.Style>
-        <StaticResource ResourceKey="CleanWindowStyleKey" />
+        <StaticResource ResourceKey="MahApps.Styles.MetroWindow.Clean" />
     </metro:MetroWindow.Style>
     <metro:MetroWindow.ResizeMode>
         <Binding Converter="{StaticResource BoolToResizeModeConverter}" Path="CanResize" />

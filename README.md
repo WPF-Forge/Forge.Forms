@@ -10,9 +10,15 @@ With Forge.Forms you can create dynamic forms in WPF from classes or XML.
 
 Join us at https://gitter.im/WPF-Forge for questions or general discussion.
 
-## Getting started
+To get started, check out our [guide](https://wpf-forge.github.io/Forge.Forms/guides/getting-started)
+or follow the [installation](#installation) instructions below.
 
-Read our [getting started](https://wpf-forge.github.io/Forge.Forms/guides/getting-started) guide.
+## Warning
+
+The library ships with dependencies to UI toolkits (Material and Mahapps.Metro).
+Because of this, it does not age well and is often a pain to install and manage via NuGet.
+
+Please consider this project/repository to be experimental until a better and cleaner approach has been developed.
 
 ## Installation
 
