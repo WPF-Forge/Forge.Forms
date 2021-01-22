@@ -127,12 +127,6 @@ namespace Forge.Forms
                 };
 
                 window.ShowDialog();
-                if (options.BringToFront)
-                {
-                    window.Activate();
-                    window.Focus();
-                    Keyboard.Focus(window);
-                }
 
                 return new DialogResult(window.Form.Value, lastAction, lastActionParameter);
             }
