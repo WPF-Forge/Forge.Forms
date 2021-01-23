@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.2.0 (beta)
+
+- Upgrade UI framework dependencies. Thanks to @BenjaminSieg and @ChezzPlaya.
+- Fix window focus/keyboard focus when showing windows. Thanks to @aalex675.
+
 ## 1.1.4
 
 - Added support for `MultiBinding` syntax in dynamic resources.
