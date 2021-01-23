@@ -8,14 +8,28 @@ namespace Forge.Forms.Controls
     /// </summary>
     public partial class DialogWindow : MetroWindow
     {
+        private WindowOptions options;
+
         public DialogWindow(object model, object context, WindowOptions options)
         {
+            this.options = options;
             DataContext = options;
             InitializeComponent();
-            Loaded += (sender, e) => MoveFocus(new TraversalRequest(FocusNavigationDirection.Next));
+            Loaded += DialogWindow_Loaded;
             Form.Environment.Add(options.EnvironmentFlags);
             Form.Context = context;
             Form.Model = model;
+        }
+
+        private void DialogWindow_Loaded(object sender, System.Windows.RoutedEventArgs e)
+        {
+            if (options.BringToFront)
+            {
+                this.Activate();
+                this.Focus();
+            }
+
+            MoveFocus(new TraversalRequest(FocusNavigationDirection.Next));
         }
 
         private void CloseDialogCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
